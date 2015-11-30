@@ -11,19 +11,7 @@
 	<description><![CDATA[
 		<h1>Sermon Distributor (v.1.2.9)</h1>
 		<div style="clear: both;"></div>
-		<p>Distributor is a highly advanced sermon distributor that runs on the [Joomla 3.x] (http://www.joomla.org) framework. You can link a shared folder from Dropbox to the component and use Dropbox as your file host, not to mention the advanced auto builder that gives you the ability to simply load sermons to your website by only adding them to Dropbox.
-
-The best way to see all your options is to install this component on you Joomla website and test all features yourself. Here is a [direct download link] (https://github.com/SermonDistributor/Joomla-3-Component/archive/master.zip)
-
-### Example Website, That Has Over 6000 Audio Files
-
-[LoudVoice.org] (http://www.loudvoice.org)
-
-### Some Video Demonstrations
-
-+ [Setup overview] (https://youtu.be/yMPp1Cp3W_0?t=20m)
-+ [Setup Dropbox] (https://youtu.be/btpKFDk0-dI)
-+ [Component Build] (https://youtu.be/yMPp1Cp3W_0)</p>
+		<p>Distributor is a highly advanced sermon distributor that runs on the [Joomla 3.x] (http://www.joomla.org) framework. You can link a shared folder from Dropbox to the component and use Dropbox as your file host, not to mention the advanced auto builder that gives you the ability to simply load sermons to your website by only adding them to Dropbox.</p>
 		<p>Created by <a href="https://www.vdm.io/" target="_blank">Llewellyn van der Merwe</a>
 	]]></description>
 

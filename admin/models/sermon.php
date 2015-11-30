@@ -108,7 +108,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.sermon');
 			}
 		}
-		$this->sermondafs = $item->id;
+		$this->sermonnrql = $item->id;
 
 		return $item;
 	}
@@ -118,7 +118,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getRhestastics()
+	public function getUaqstastics()
 	{
 		// [6911] Get the user object.
 		$user = JFactory::getUser();
@@ -144,15 +144,15 @@ class SermondistributorModelSermon extends JModelAdmin
 		$query->select($db->quoteName('i.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'i') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('i.id') . ')');
 
-		// [6939] Filter by sermondafs global.
-		$sermondafs = $this->sermondafs;
-		if (is_numeric($sermondafs ))
+		// [6939] Filter by sermonnrql global.
+		$sermonnrql = $this->sermonnrql;
+		if (is_numeric($sermonnrql ))
 		{
-			$query->where('a.sermon = ' . (int) $sermondafs );
+			$query->where('a.sermon = ' . (int) $sermonnrql );
 		}
-		elseif (is_string($sermondafs))
+		elseif (is_string($sermonnrql))
 		{
-			$query->where('a.sermon = ' . $db->quote($sermondafs));
+			$query->where('a.sermon = ' . $db->quote($sermonnrql));
 		}
 		else
 		{
