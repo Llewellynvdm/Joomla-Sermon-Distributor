@@ -96,7 +96,7 @@ class SermondistributorModelSeries extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.series');
 			}
 		}
-		$this->seriespyts = $item->id;
+		$this->seriesnhqe = $item->id;
 
 		return $item;
 	}
@@ -106,7 +106,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getAoqsermons()
+	public function getWffsermons()
 	{
 		// [6911] Get the user object.
 		$user = JFactory::getUser();
@@ -130,15 +130,15 @@ class SermondistributorModelSeries extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [6939] Filter by seriespyts global.
-		$seriespyts = $this->seriespyts;
-		if (is_numeric($seriespyts ))
+		// [6939] Filter by seriesnhqe global.
+		$seriesnhqe = $this->seriesnhqe;
+		if (is_numeric($seriesnhqe ))
 		{
-			$query->where('a.series = ' . (int) $seriespyts );
+			$query->where('a.series = ' . (int) $seriesnhqe );
 		}
-		elseif (is_string($seriespyts))
+		elseif (is_string($seriesnhqe))
 		{
-			$query->where('a.series = ' . $db->quote($seriespyts));
+			$query->where('a.series = ' . $db->quote($seriesnhqe));
 		}
 		else
 		{
@@ -193,9 +193,9 @@ class SermondistributorModelSeries extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [10850] convert link_type
-					$item->link_type = $this->selectionTranslationAoqsermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationWffsermons($item->link_type, 'link_type');
 					// [10850] convert source
-					$item->source = $this->selectionTranslationAoqsermons($item->source, 'source');
+					$item->source = $this->selectionTranslationWffsermons($item->source, 'source');
 				}
 			}
 
@@ -209,7 +209,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationAoqsermons($value,$name)
+	public function selectionTranslationWffsermons($value,$name)
 	{
 		// [10876] Array of link_type language strings
 		if ($name == 'link_type')
