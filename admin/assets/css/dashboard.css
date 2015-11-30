@@ -1,0 +1,172 @@
+/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
+				Vast Development Method 
+/-------------------------------------------------------------------------------------------------------/
+
+	@version		1.2.9
+	@build			30th November, 2015
+	@created		22nd October, 2015
+	@package		Sermon Distributor
+	@subpackage		dashboard.css
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@copyright		Copyright (C) 2015. All Rights Reserved
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
+ (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
+.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
+\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
+
+/------------------------------------------------------------------------------------------------------*/
+
+/* CSS Document */
+
+.dashboard-container {
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+.dashboard-container [class*="span"] {
+    display: block;
+    float: none;
+    margin-left: 0;
+    width: auto;
+}
+.dashboard-container:before, .dashboard-container:after {
+    content: "";
+    display: table;
+}
+.dashboard-container:after {
+    clear: both;
+}
+.dashboard-container [class*="span"] {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    min-height: 145px;
+    min-width: 96px;
+    width: 100%;
+}
+.dashboard-container [class*="span"]:first-child {
+    margin-left: 0;
+}
+.dashboard-wraper {
+    background: none repeat scroll 0 0 hsl(0, 0%, 93%);
+    border-radius: 5px;
+    float: left;
+    margin: 1%;
+    padding: 3px;
+    width: 17%;
+    min-height: 194px;
+    min-width: 96px;
+}
+.dashboard-content a {
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 96%) 47%, hsl(0, 0%, 93%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
+    border: 1px solid hsl(0, 0%, 85%);
+    border-radius: 4px;
+    box-shadow: 0 0 3px hsla(0, 0%, 0%, 0.1) inset;
+    color: hsl(0, 0%, 20%);
+    display: block;
+    min-height: 89px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+}
+.dashboard-content a:hover {
+    background: linear-gradient(to bottom, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 100%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
+    color: hsl(200, 100%, 30%);
+    text-decoration: none;
+}
+.dashboard-title {
+    display: block;
+    padding-top: 5px;
+}
+.dashboard-info {
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 96%) 47%, hsl(0, 0%, 93%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
+    border: 1px solid hsl(0, 0%, 85%);
+    border-radius: 4px;
+    box-shadow: 0 0 3px hsla(0, 0%, 0%, 0.1) inset;
+    color: hsl(0, 0%, 20%);
+    display: block;
+    font-size: 12px;
+    padding: 10px;
+    text-align: center;
+}
+.dashboard-info span {
+    display: block;
+    text-align: center;
+}
+.dashboard-info img {
+    margin: 0 auto;
+}
+.dashboard-table {
+    border-top: 1px solid hsl(0, 0%, 87%);
+    margin-top: 5px;
+    width: 100%;
+}
+.dashboard-info h5 {
+    font-size: 11px;
+    font-weight: bold;
+}
+.dashboard-block {
+    background: linear-gradient(to bottom, hsl(0, 0%, 95%) 0%, hsl(0, 0%, 86%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
+    border: 1px solid hsl(0, 0%, 76%);
+    border-radius: 3px;
+    box-shadow: 0 1px 0 hsl(0, 0%, 98%) inset;
+    margin-bottom: 20px;
+}
+.dashboard-block .dashboard-block-head {
+    background: linear-gradient(to bottom, hsl(0, 0%, 95%) 0%, hsl(0, 0%, 86%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
+    border-bottom: 1px solid hsl(0, 0%, 76%);
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 1px 0 hsl(0, 0%, 98%) inset, 0 0 3px hsl(0, 0%, 87%);
+    height: 40px;
+    position: relative;
+}
+.dashboard-block .dashboard-block-head h5 {
+    font-size: 12px;
+    margin: 0;
+    padding-left: 10px;
+    padding-top: 11px;
+    text-transform: uppercase;
+}
+.dashboard-block .dashboard-block-content {
+    background: none repeat scroll 0 0 hsl(0, 0%, 93%);
+    border-radius: 0 0 3px 3px;
+}
+.dashboard-block .dashboard-block-box {
+    background: none repeat scroll 0 0 hsl(0, 0%, 100%);
+    border-top: 1px solid hsl(0, 0%, 82%);
+    box-shadow: 0 0 5px hsl(0, 0%, 87%) inset;
+}
+.dashboard-block .dashboard-block-content .dashboard-block-box {
+    margin-top: 0 !important;
+}
+.dashboard-block .dashboard-block-content .dashboard-block-box .dashboard-block-table {
+    margin-bottom: 0 !important;
+}
+.dashboard-block-table {
+    background-color: hsla(0, 0%, 0%, 0);
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    max-width: 100%;
+    width: 100%;
+}
+.dashboard-block-table th, .dashboard-block-table td {
+    border-top: 1px solid hsl(0, 0%, 87%);
+    line-height: 20px;
+    padding: 5px;
+    text-align: left;
+    vertical-align: middle;
+}
+.dashboard-badge {
+    background-color: hsl(0, 0%, 60%);
+    border-radius: 9px;
+    color: hsl(0, 0%, 100%);
+    font-size: 11.844px;
+    font-weight: bold;
+    line-height: 14px;
+    padding: 1px 9px 2px;
+    text-shadow: 0 -1px 0 hsla(0, 0%, 0%, 0.25);
+    vertical-align: baseline;
+    white-space: nowrap;
+}

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.2" method="upgrade">
+	<name>COM_SERMONDISTRIBUTOR</name>
+	<creationDate>22nd October, 2015</creationDate>
+	<author>Llewellyn van der Merwe</author>
+	<authorEmail>llewellyn@vdm.io</authorEmail>
+	<authorUrl>https://www.vdm.io/</authorUrl>
+	<copyright>Copyright (C) 2015. All Rights Reserved</copyright>
+	<license>GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html</license>
+	<version>1.2.9</version>
+	<description><![CDATA[
+		<h1>Sermon Distributor (v.1.2.9)</h1>
+		<div style="clear: both;"></div>
+		<p>Distributor is a highly advanced sermon distributor that runs on the [Joomla] (http://www.joomla.org) framework. You can link a shared folder from Dropbox to the component and use Dropbox as your file host, not to mention the advanced auto builder that gives you the ability to simply load sermons to your website by only adding them to Dropbox.
+
+The best way to see all your options is to install this component on you Joomla website and test all features yourself. Here is a [direct download link] (https://github.com/SermonDistributor/Joomla-3-Component/archive/master.zip)
+
+### Example Website, That Has Over 6000 Audio Files
+
+[LoudVoice.org] (http://www.loudvoice.org)
+
+### Some Video Demonstrations
+
++ [Setup overview] (https://youtu.be/yMPp1Cp3W_0?t=20m)
++ [Setup Dropbox] (https://youtu.be/btpKFDk0-dI)
++ [Component Build] (https://youtu.be/yMPp1Cp3W_0)</p>
+		<p>Created by <a href="https://www.vdm.io/" target="_blank">Llewellyn van der Merwe</a>
+	]]></description>
+
+	<!-- Runs on install; New in Joomla 1.5 -->
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+
+	<!-- Runs on uninstall; New in Joomla 1.5 -->
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+
+	<!-- Runs on install/uninstall/update; New in Joomla 2.5 -->
+	<scriptfile>script.php</scriptfile>
+
+	<media destination="com_sermondistributor" folder="media">
+		<filename>index.html</filename>
+		<folder>js</folder>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>soundmanager</folder>
+		<folder>uikit</folder>
+		<folder>footable</folder>
+	</media>
+
+	<!-- Update Schema; New in Joomla 2.5 -->
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql/</schemapath>
+		</schemas>
+	</update>
+
+	<files folder="site">
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<filename>router.php</filename>
+		<filename>sermondistributor.php</filename>
+		<folder>assets</folder>
+		<folder>helpers</folder>
+		<folder>controllers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+		<folder>layouts</folder>
+	</files>
+
+	<languages folder="site">
+		<language tag="en-GB">language/en-GB/en-GB.com_sermondistributor.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.com_sermondistributor.sys.ini</language>
+	</languages>
+
+	<administration>
+		<menu>COM_SERMONDISTRIBUTOR_MENU</menu>
+		<submenu>
+			<!-- Instead of link you can specify individual link attributes -->
+			<menu option="com_sermondistributor" view="preachers">COM_SERMONDISTRIBUTOR_MENU_PREACHERS</menu>
+			<menu option="com_sermondistributor" view="sermons">COM_SERMONDISTRIBUTOR_MENU_SERMONS</menu>
+			<menu option="com_sermondistributor" view="series_list">COM_SERMONDISTRIBUTOR_MENU_SERIES_LIST</menu>
+		</submenu>
+		<files folder="admin">
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>index.html</filename>
+			<filename>sermondistributor.php</filename>
+			<folder>assets</folder>
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>models</folder>
+			<folder>sql</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<folder>layouts</folder>
+		</files>
+
+		<languages folder="admin">
+			<language tag="en-GB">language/en-GB/en-GB.com_sermondistributor.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_sermondistributor.sys.ini</language>
+		</languages>
+
+	</administration>
+</extension>

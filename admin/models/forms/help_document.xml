@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addrulepath="/administrator/components/com_sermondistributor/models/rules"
+	addfieldpath="/administrator/components/com_sermondistributor/models/fields"
+>
+	<fieldset name="details">
+		<!-- [10985] Default Fields. -->
+		<!-- [10986] Id Field. Type: Text (joomla) -->
+		<field
+			name="id"
+			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+			readonly="true"
+		/>
+		<!-- [10993] Date Created Field. Type: Calendar (joomla) -->
+		<field
+			name="created"
+			type="calendar"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_CREATED_DATE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_CREATED_DATE_DESC"
+			size="22"
+			format="%Y-%m-%d %H:%M:%S"
+			filter="user_utc"
+		/>
+		<!-- [11004] User Created Field. Type: User (joomla) -->
+		<field
+			name="created_by"
+			type="user"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_CREATED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_CREATED_BY_DESC"
+		/>
+		<!-- [11012] Published Field. Type: List (joomla) -->
+		<field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
+			filter="intval" size="1" default="1" >
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="2">
+				JARCHIVED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<!-- [11027] Date Modified Field. Type: Calendar (joomla) -->
+		<field name="modified" type="calendar" class="readonly"
+			label="JGLOBAL_FIELD_MODIFIED_LABEL" description="COM_CONTENT_FIELD_MODIFIED_DESC"
+			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
+		<!-- [11031] User Modified Field. Type: User (joomla) -->
+		<field name="modified_by" type="user"
+			label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
+			class="readonly"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- [11041] Access Field. Type: Accesslevel (joomla) -->
+		<field name="access"
+			type="accesslevel"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+			default="1"
+			required="false"
+		/>
+		<!-- [11051] Ordering Field. Type: Numbers (joomla) -->
+		<field
+			name="ordering"
+			type="number"
+			class="inputbox validate-ordering"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ORDERING_LABEL"
+			description=""
+			default="0"
+			size="6"
+			required="false"
+		/>
+		<!-- [11063] Version Field. Type: Text (joomla) -->
+		<field
+			name="version"
+			type="text"
+			class="readonly"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_VERSION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_VERSION_DESC"
+			size="6"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- [11077] Metakey Field. Type: Textarea (joomla) -->
+		<field
+			name="metakey"
+			type="textarea"
+			label="JFIELD_META_KEYWORDS_LABEL"
+			description="JFIELD_META_KEYWORDS_DESC"
+			rows="3"
+			cols="30"
+		/>
+		<!-- [11086] Metadesc Field. Type: Textarea (joomla) -->
+		<field
+			name="metadesc"
+			type="textarea"
+			label="JFIELD_META_DESCRIPTION_LABEL"
+			description="JFIELD_META_DESCRIPTION_DESC"
+			rows="3"
+			cols="30"
+		/>
+		<!-- [11096] Dynamic Fields. -->
+		<!-- [11332] Title Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="title"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TITLE_LABEL"
+			size="40"
+			maxlength="150"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TITLE_DESCRIPTION"
+			class="text_area"
+			readonly="false"
+			disabled="false"
+			required="true"
+			filter="STRING"
+			message="Error! Please add title here."
+			hint="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TITLE_HINT"
+		/>
+		<!-- [11246] Type Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="type"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			required="true">
+			<!-- [11318] Option Set. -->
+			<option value="">
+				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SELECT_AN_OPTION</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_JOOMLA_ARTICLE</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TEXT</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL</option>
+		</field>
+		<!-- [11332] Groups Field. Type: Usergroup. (joomla) -->
+		<field
+			type="usergroup"
+			name="groups"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_GROUPS_LABEL"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_GROUPS_DESCRIPTION"
+			required="true"
+			multiple="true"
+		/>
+		<!-- [11246] Location Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="location"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_DESCRIPTION"
+			class="btn-group"
+			required="true">
+			<!-- [11318] Option Set. -->
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE</option>
+		</field>
+		<!-- [11332] Admin_view Field. Type: Folderlist. (joomla) -->
+		<field
+			type="folderlist"
+			name="admin_view"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL"
+			directory="/administrator/components/com_sermondistributor/views"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_DESCRIPTION"
+			hide_none="true"
+			hide_default="true"
+		/>
+		<!-- [11332] Site_view Field. Type: Folderlist. (joomla) -->
+		<field
+			type="folderlist"
+			name="site_view"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL"
+			directory="/components/com_sermondistributor/views"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_DESCRIPTION"
+			hide_none="true"
+			hide_default="true"
+		/>
+		<!-- [11246] Target Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="target"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TARGET_LABEL"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TARGET_DESCRIPTION"
+			class="btn-group"
+			required="true">
+			<!-- [11318] Option Set. -->
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SOME</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ALL</option>
+		</field>
+		<!-- [11332] Content Field. Type: Editor. (joomla) -->
+		<field
+			type="editor"
+			name="content"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_CONTENT_LABEL"
+			width="100%"
+			height="300 px"
+			buttons="false"
+			filter="safehtml"
+			required="true"
+		/>
+		<!-- [11332] Alias Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="alias"
+			label="JFIELD_ALIAS_LABEL"
+			description="JFIELD_ALIAS_DESC"
+			filter="STRING"
+			hint="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ALIAS_HINT"
+		/>
+		<!-- [11453] Article Field. Type: Articles. (custom) -->
+		<field
+			type="articles"
+			name="article"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ARTICLE_LABEL"
+			class="list_class"
+			multiple="false"
+			default="0"
+			required="true"
+		/>
+		<!-- [11332] Url Field. Type: Url. (joomla) -->
+		<field
+			type="url"
+			name="url"
+			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_LABEL"
+			size="60"
+			maxlength="150"
+			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_DESCRIPTION"
+			class="text_area"
+			required="true"
+			filter="url"
+			validated="url"
+			message="Error! Please add url here."
+			hint="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_HINT"
+		/>
+		<!-- [11332] Not_required Field. Type: Hidden. (joomla) -->
+		<field
+			type="hidden"
+			name="not_required"
+			default="[]"
+		/>
+	</fieldset>
+
+	<!-- [11115] Metadata Fields. -->
+	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+		<fieldset name="vdmmetadata"
+			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+			<!-- [11119] Robots Field. Type: List (joomla) -->
+			<field name="robots"
+				type="list"
+				label="JFIELD_METADATA_ROBOTS_LABEL"
+				description="JFIELD_METADATA_ROBOTS_DESC" >
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
+				<option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
+				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
+				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+			</field>
+			<!-- [11130] Author Field. Type: Text (joomla) -->
+			<field name="author"
+				type="text"
+				label="JAUTHOR" description="JFIELD_METADATA_AUTHOR_DESC"
+				size="20"
+			/>
+			<!-- [11136] Rights Field. Type: Textarea (joomla) -->
+			<field name="rights" type="textarea" label="JFIELD_META_RIGHTS_LABEL"
+				description="JFIELD_META_RIGHTS_DESC" required="false" filter="string"
+				cols="30" rows="2"
+			/>
+		</fieldset>
+	</fields>
+	
+	<!-- [10019] Access Control Fields. -->
+	<fieldset name="accesscontrol">
+		<!-- [10021] Asset Id Field. Type: Hidden (joomla) -->
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+		<!-- [10027] Rules Field. Type: Rules (joomla) -->
+		<field
+			name="rules"
+			type="rules"
+			label="Permissions in relation to this help_document"
+			translate_label="false"
+			filter="rules"
+			validate="rules"
+			class="inputbox"
+			component="com_sermondistributor"
+			section="help_document"
+		/>
+	</fieldset>
+</form>
