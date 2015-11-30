@@ -38,11 +38,11 @@ class SermondistributorViewPreachers extends JViewLegacy
 		$this->menu = $this->app->getMenu()->getActive();
 		// get the user object
 		$this->user = JFactory::getUser();
-		// [3032] Initialise variables.
+		// [3035] Initialise variables.
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 
-		// [3050] Check for errors.
+		// [3053] Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseWarning(500, implode("\n", $errors));
@@ -71,10 +71,10 @@ class SermondistributorViewPreachers extends JViewLegacy
 			$this->fooTableStyle = 2;
 		}
 
-		// [3067] Set the toolbar
+		// [3070] Set the toolbar
 		$this->addToolBar();
 
-		// [3069] set the document
+		// [3072] set the document
 		$this->_prepareDocument();
 
 		parent::display($tpl);
@@ -86,40 +86,40 @@ class SermondistributorViewPreachers extends JViewLegacy
 	protected function _prepareDocument()
 	{
 
-		// [3419] always make sure jquery is loaded.
+		// [3422] always make sure jquery is loaded.
 		JHtml::_('jquery.framework');
-		// [3421] Load the header checker class.
+		// [3424] Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
-		// [3423] Initialize the header checker.
+		// [3426] Initialize the header checker.
 		$HeaderCheck = new HeaderCheck;
 
-		// [3428] Load uikit options.
+		// [3431] Load uikit options.
 		$uikit = $this->params->get('uikit_load');
-		// [3430] Set script size.
+		// [3433] Set script size.
 		$size = $this->params->get('uikit_min');
-		// [3432] Set css style.
+		// [3435] Set css style.
 		$style = $this->params->get('uikit_style');
 
-		// [3435] The uikit css.
+		// [3438] The uikit css.
 		if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit'.$style.$size.'.css');
 		}
-		// [3440] The uikit js.
+		// [3443] The uikit js.
 		if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit'.$size.'.js');
 		}
 
-		// [3449] Load the script to find all uikit components needed.
+		// [3452] Load the script to find all uikit components needed.
 		if ($uikit != 2)
 		{
-			// [3452] Set the default uikit components in this view.
+			// [3455] Set the default uikit components in this view.
 			$uikitComp = array();
 			$uikitComp[] = 'data-uk-tooltip';
 			$uikitComp[] = 'data-uk-grid';
 
-			// [3461] Get field uikit components needed in this view.
+			// [3464] Get field uikit components needed in this view.
 			$uikitFieldComp = $this->get('UikitComp');
 			if (isset($uikitFieldComp) && SermondistributorHelper::checkArray($uikitFieldComp))
 			{
@@ -135,62 +135,62 @@ class SermondistributorViewPreachers extends JViewLegacy
 			}
 		}
 
-		// [3477] Load the needed uikit components in this view.
+		// [3480] Load the needed uikit components in this view.
 		if ($uikit != 2 && isset($uikitComp) && SermondistributorHelper::checkArray($uikitComp))
 		{
-			// [3480] load just in case.
+			// [3483] load just in case.
 			jimport('joomla.filesystem.file');
-			// [3482] loading...
+			// [3485] loading...
 			foreach ($uikitComp as $class)
 			{
 				foreach (SermondistributorHelper::$uk_components[$class] as $name)
 				{
-					// [3487] check if the CSS file exists.
+					// [3490] check if the CSS file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css'))
 					{
-						// [3490] load the css.
+						// [3493] load the css.
 						$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css');
 					}
-					// [3493] check if the JavaScript file exists.
+					// [3496] check if the JavaScript file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js'))
 					{
-						// [3496] load the js.
+						// [3499] load the js.
 						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js');
 					}
 				}
 			}
 		}  
 
-		// [6480] Add the CSS for Footable.
+		// [6506] Add the CSS for Footable.
 		$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');
 
-		// [6482] Use the Metro Style
+		// [6508] Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.metro.min.css');
 		}
-		// [6487] Use the Legacy Style.
+		// [6513] Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.standalone.min.css');
 		}
 
-		// [6492] Add the JavaScript for Footable
+		// [6518] Add the JavaScript for Footable
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.sort.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.filter.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.paginate.js'); 
-		// [3377] load the meta description
+		// [3380] load the meta description
 		if ($this->params->get('menu-meta_description'))
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
 		}
-		// [3382] load the key words if set
+		// [3385] load the key words if set
 		if ($this->params->get('menu-meta_keywords'))
 		{
 			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
 		}
-		// [3387] check the robot params
+		// [3390] check the robot params
 		if ($this->params->get('robots'))
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));

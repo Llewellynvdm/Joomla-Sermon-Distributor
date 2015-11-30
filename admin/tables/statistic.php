@@ -48,7 +48,7 @@ class SermondistributorTableStatistic extends JTable
 	{
 		parent::__construct('#__sermondistributor_statistic', 'id', $db);
 
-		// [4184] Adding History Options
+		// [4187] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.statistic')); 
 	}	
  

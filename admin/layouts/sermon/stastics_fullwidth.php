@@ -23,7 +23,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 // set the defaults
-$items	= $displayData->uaqstastics;
+$items	= $displayData->bagstastics;
 $user	= JFactory::getUser();
 $id	= $displayData->item->id;
 $edit	= "index.php?option=com_sermondistributor&view=statistics&task=statistic.edit";

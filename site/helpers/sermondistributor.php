@@ -556,23 +556,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [1380] if user not in those target groups then remove the item
+							// [1383] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [1385] set the return type
+					// [1388] set the return type
 					switch ($help->type)
 					{
-						// [1388] set joomla article
+						// [1391] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [1392] set help text
+						// [1395] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [1396] set Link
+						// [1399] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -812,7 +812,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [2594] reset
+			// [2597] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -821,15 +821,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [2603] make sure uikit is loaded to config
+			// [2606] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [2608] sorter
+			// [2611] sorter
 			if (self::checkArray($temp))
 			{
-				// [2611] merger
+				// [2614] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);

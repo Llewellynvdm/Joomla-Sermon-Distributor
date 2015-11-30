@@ -60,13 +60,13 @@ class SermondistributorModelCategories extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [2897] Get a db connection.
+		// [2900] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2906] Create a new query object.
+		// [2909] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [1788] Get from #__categories as a
+		// [1791] Get from #__categories as a
 		$query->select($db->quoteName(
 			array('a.id','a.title','a.alias','a.description','a.hits','a.language'),
 			array('id','name','alias','description','hits','language')));
@@ -76,7 +76,7 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('a.extension = "com_sermondistributor.sermons"');
 		$query->order('a.title ASC');
 
-		// [2919] return the query object
+		// [2922] return the query object
 		return $query;
 	}
 
@@ -102,12 +102,12 @@ class SermondistributorModelCategories extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [2934] Convert the parameter fields into objects.
+		// [2937] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [2937] Always create a slug for sef URL's
+			// [2940] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// [2038] set idCatidSermonB to the $item object.
+			// [2041] set idCatidSermonB to the $item object.
 			$item->idCatidSermonB = $this->getIdCatidSermonBced_B($item->id);
 		} 
 
@@ -123,13 +123,13 @@ class SermondistributorModelCategories extends JModelList
 	*/
 	public function getIdCatidSermonBced_B($id)
 	{
-		// [2699] Get a db connection.
+		// [2702] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2701] Create a new query object.
+		// [2704] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [2703] Get from #__sermondistributor_sermon as b
+		// [2706] Get from #__sermondistributor_sermon as b
 		$query->select($db->quoteName(
 			array('b.id'),
 			array('id')));
@@ -138,11 +138,11 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
 		$query->where('b.published = 1');
 
-		// [2757] Reset the query using our newly populated query object.
+		// [2760] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [2760] check if there was data returned
+		// [2763] check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();

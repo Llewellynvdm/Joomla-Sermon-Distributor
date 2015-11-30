@@ -34,14 +34,14 @@ due to [Automated Component Builder] (https://www.vdm.io/joomla-component-builde
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **45139**
++ *Line count*: **45149**
 + *File count*: **347**
 + *Folder count*: **79**
 
 **83 Hours** or **10 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
-> **debugging @31hours** = codingtime / 4;
+> **debugging @32hours** = codingtime / 4;
 > **planning @18hours** = codingtime / 7;
 > **mapping @13hours** = codingtime / 10;
 > **office @21hours** = codingtime / 6;)
