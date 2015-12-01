@@ -4,7 +4,7 @@
 /-------------------------------------------------------------------------------------------------------/
 
 	@version		1.2.9
-	@build			30th November, 2015
+	@build			1st December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachersrow.php

@@ -4,7 +4,7 @@
 /-------------------------------------------------------------------------------------------------------/
 
 	@version		1.2.9
-	@build			30th November, 2015
+	@build			1st December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -40,7 +40,7 @@ class SermondistributorModelSermondistributor extends JModelList
 		$viewGroups = array(
 			'main' => array('png.preacher.add', 'png.preachers', 'png.sermon.add', 'png.sermons', 'png.sermons.catid', 'png.series.add', 'png.series_list', 'png.statistics', 'png.help_documents')
 		);
-		// [12174] view access array
+		// [12176] view access array
 		$viewAccess = array(
 			'preacher.create' => 'preacher.create',
 			'preachers.access' => 'preacher.access',

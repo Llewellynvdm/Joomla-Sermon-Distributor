@@ -4,7 +4,7 @@
 /-------------------------------------------------------------------------------------------------------/
 
 	@version		1.2.9
-	@build			30th November, 2015
+	@build			1st December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -203,21 +203,21 @@ class SermondistributorViewPreacher extends JViewLegacy
 			}
 		}  
 
-		// [6506] Add the CSS for Footable.
+		// [6508] Add the CSS for Footable.
 		$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');
 
-		// [6508] Use the Metro Style
+		// [6510] Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.metro.min.css');
 		}
-		// [6513] Use the Legacy Style.
+		// [6515] Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.standalone.min.css');
 		}
 
-		// [6518] Add the JavaScript for Footable
+		// [6520] Add the JavaScript for Footable
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.sort.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.filter.js');

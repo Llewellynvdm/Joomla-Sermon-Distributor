@@ -4,7 +4,7 @@
 /-------------------------------------------------------------------------------------------------------/
 
 	@version		1.2.9
-	@build			30th November, 2015
+	@build			1st December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
@@ -111,7 +111,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
-	{		// [9558] Get the form.
+	{		// [9560] Get the form.
 		$form = $this->loadForm('com_sermondistributor.statistic', 'statistic', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
@@ -121,12 +121,12 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 		$jinput = JFactory::getApplication()->input;
 
-		// [9643] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		// [9645] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0, 'INT');
 		}
-		// [9648] The back end uses id so we use that the rest of the time and set it to 0 by default.
+		// [9650] The back end uses id so we use that the rest of the time and set it to 0 by default.
 		else
 		{
 			$id = $jinput->get('id', 0, 'INT');
@@ -134,36 +134,36 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 		$user = JFactory::getUser();
 
-		// [9654] Check for existing item.
-		// [9655] Modify the form based on Edit State access controls.
+		// [9656] Check for existing item.
+		// [9657] Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('statistic.edit.state', 'com_sermondistributor.statistic.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('statistic.edit.state', 'com_sermondistributor')))
 		{
-			// [9668] Disable fields for display.
+			// [9670] Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('published', 'disabled', 'true');
-			// [9671] Disable fields while saving.
+			// [9673] Disable fields while saving.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [9676] Modify the form based on Edit Creaded By access controls.
+		// [9678] Modify the form based on Edit Creaded By access controls.
 		if ($id != 0 && (!$user->authorise('statistic.edit.created_by', 'com_sermondistributor.statistic.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('statistic.edit.created_by', 'com_sermondistributor')))
 		{
-			// [9688] Disable fields for display.
-			$form->setFieldAttribute('created_by', 'disabled', 'true');
 			// [9690] Disable fields for display.
+			$form->setFieldAttribute('created_by', 'disabled', 'true');
+			// [9692] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'readonly', 'true');
-			// [9692] Disable fields while saving.
+			// [9694] Disable fields while saving.
 			$form->setFieldAttribute('created_by', 'filter', 'unset');
 		}
-		// [9695] Modify the form based on Edit Creaded Date access controls.
+		// [9697] Modify the form based on Edit Creaded Date access controls.
 		if ($id != 0 && (!$user->authorise('statistic.edit.created', 'com_sermondistributor.statistic.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('statistic.edit.created', 'com_sermondistributor')))
 		{
-			// [9707] Disable fields for display.
+			// [9709] Disable fields for display.
 			$form->setFieldAttribute('created', 'disabled', 'true');
-			// [9709] Disable fields while saving.
+			// [9711] Disable fields while saving.
 			$form->setFieldAttribute('created', 'filter', 'unset');
 		}
 
@@ -199,7 +199,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 			}
 
 			$user = JFactory::getUser();
-			// [9859] The record has been set. Check the record permissions.
+			// [9861] The record has been set. Check the record permissions.
 			return $user->authorise('statistic.delete', 'com_sermondistributor.statistic.' . (int) $record->id);
 		}
 		return false;
@@ -221,14 +221,14 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 		if ($recordId)
 		{
-			// [9946] The record has been set. Check the record permissions.
+			// [9948] The record has been set. Check the record permissions.
 			$permission = $user->authorise('statistic.edit.state', 'com_sermondistributor.statistic.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				return false;
 			}
 		}
-		// [9963] In the absense of better information, revert to the component permissions.
+		// [9965] In the absense of better information, revert to the component permissions.
 		return $user->authorise('statistic.edit.state', 'com_sermondistributor');
 	}
     
@@ -243,7 +243,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [9771] Check specific edit permission then general edit permission.
+		// [9773] Check specific edit permission then general edit permission.
 		$user = JFactory::getUser();
 
 		return $user->authorise('statistic.edit', 'com_sermondistributor.statistic.'. ((int) isset($data[$key]) ? $data[$key] : 0)) or $user->authorise('statistic.edit',  'com_sermondistributor');
@@ -450,7 +450,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	{
 		if (empty($this->batchSet))
 		{
-			// [4924] Set some needed variables.
+			// [4926] Set some needed variables.
 			$this->user 		= JFactory::getUser();
 			$this->table 		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
@@ -464,12 +464,12 @@ class SermondistributorModelStatistic extends JModelAdmin
 			return false;
 		}
 
-		// [4944] get list of uniqe fields
+		// [4946] get list of uniqe fields
 		$uniqeFields = $this->getUniqeFields();
-		// [4946] remove move_copy from array
+		// [4948] remove move_copy from array
 		unset($values['move_copy']);
 
-		// [4949] make sure published is set
+		// [4951] make sure published is set
 		if (!isset($values['published']))
 		{
 			$values['published'] = 0;
@@ -481,21 +481,21 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 		$newIds = array();
 
-		// [4986] Parent exists so let's proceed
+		// [4988] Parent exists so let's proceed
 		while (!empty($pks))
 		{
-			// [4989] Pop the first ID off the stack
+			// [4991] Pop the first ID off the stack
 			$pk = array_shift($pks);
 
 			$this->table->reset();
 
-			// [4994] only allow copy if user may edit this item.
+			// [4996] only allow copy if user may edit this item.
 
 			if (!$this->user->authorise('statistic.edit', $contexts[$pk]))
 
 			{
 
-				// [5004] Not fatal error
+				// [5006] Not fatal error
 
 				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 
@@ -503,19 +503,19 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 			}
 
-			// [5009] Check that the row actually exists
+			// [5011] Check that the row actually exists
 			if (!$this->table->load($pk))
 			{
 				if ($error = $this->table->getError())
 				{
-					// [5014] Fatal error
+					// [5016] Fatal error
 					$this->setError($error);
 
 					return false;
 				}
 				else
 				{
-					// [5021] Not fatal error
+					// [5023] Not fatal error
 					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
@@ -523,7 +523,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 			$this->table->filename = $this->generateUniqe('filename',$this->table->filename);
 
-			// [5057] insert all set values
+			// [5059] insert all set values
 			if (SermondistributorHelper::checkArray($values))
 			{
 				foreach ($values as $key => $value)
@@ -535,7 +535,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 				}
 			}
 
-			// [5069] update all uniqe fields
+			// [5071] update all uniqe fields
 			if (SermondistributorHelper::checkArray($uniqeFields))
 			{
 				foreach ($uniqeFields as $uniqeField)
@@ -544,13 +544,13 @@ class SermondistributorModelStatistic extends JModelAdmin
 				}
 			}
 
-			// [5078] Reset the ID because we are making a copy
+			// [5080] Reset the ID because we are making a copy
 			$this->table->id = 0;
 
-			// [5081] TODO: Deal with ordering?
-			// [5082] $this->table->ordering	= 1;
+			// [5083] TODO: Deal with ordering?
+			// [5084] $this->table->ordering	= 1;
 
-			// [5084] Check the row.
+			// [5086] Check the row.
 			if (!$this->table->check())
 			{
 				$this->setError($this->table->getError());
@@ -563,7 +563,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 				$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
 			}
 
-			// [5097] Store the row.
+			// [5099] Store the row.
 			if (!$this->table->store())
 			{
 				$this->setError($this->table->getError());
@@ -571,14 +571,14 @@ class SermondistributorModelStatistic extends JModelAdmin
 				return false;
 			}
 
-			// [5105] Get the new item ID
+			// [5107] Get the new item ID
 			$newId = $this->table->get('id');
 
-			// [5108] Add the new ID to the array
+			// [5110] Add the new ID to the array
 			$newIds[$pk] = $newId;
 		}
 
-		// [5112] Clean the cache
+		// [5114] Clean the cache
 		$this->cleanCache();
 
 		return $newIds;
@@ -599,7 +599,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	{
 		if (empty($this->batchSet))
 		{
-			// [4726] Set some needed variables.
+			// [4728] Set some needed variables.
 			$this->user		= JFactory::getUser();
 			$this->table		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
@@ -614,15 +614,15 @@ class SermondistributorModelStatistic extends JModelAdmin
 			return false;
 		}
 
-		// [4748] make sure published only updates if user has the permission.
+		// [4750] make sure published only updates if user has the permission.
 		if (isset($values['published']) && !$this->canDo->get('statistic.edit.state'))
 		{
 			unset($values['published']);
 		}
-		// [4761] remove move_copy from array
+		// [4763] remove move_copy from array
 		unset($values['move_copy']);
 
-		// [4782] Parent exists so we proceed
+		// [4784] Parent exists so we proceed
 		foreach ($pks as $pk)
 		{
 			if (!$this->user->authorise('statistic.edit', $contexts[$pk]))
@@ -632,30 +632,30 @@ class SermondistributorModelStatistic extends JModelAdmin
 				return false;
 			}
 
-			// [4799] Check that the row actually exists
+			// [4801] Check that the row actually exists
 			if (!$this->table->load($pk))
 			{
 				if ($error = $this->table->getError())
 				{
-					// [4804] Fatal error
+					// [4806] Fatal error
 					$this->setError($error);
 
 					return false;
 				}
 				else
 				{
-					// [4811] Not fatal error
+					// [4813] Not fatal error
 					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
 			}
 
-			// [4817] insert all set values.
+			// [4819] insert all set values.
 			if (SermondistributorHelper::checkArray($values))
 			{
 				foreach ($values as $key => $value)
 				{
-					// [4822] Do special action for access.
+					// [4824] Do special action for access.
 					if ('access' == $key && strlen($value) > 0)
 					{
 						$this->table->$key = $value;
@@ -668,7 +668,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 			}
 
 
-			// [4834] Check the row.
+			// [4836] Check the row.
 			if (!$this->table->check())
 			{
 				$this->setError($this->table->getError());
@@ -681,7 +681,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 				$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
 			}
 
-			// [4847] Store the row.
+			// [4849] Store the row.
 			if (!$this->table->store())
 			{
 				$this->setError($this->table->getError());
@@ -690,7 +690,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 			}
 		}
 
-		// [4856] Clean the cache
+		// [4858] Clean the cache
 		$this->cleanCache();
 
 		return true;
@@ -728,10 +728,10 @@ class SermondistributorModelStatistic extends JModelAdmin
 			$data['params'] = (string) $params;
 		}
 
-		// [5204] Alter the uniqe field for save as copy
+		// [5206] Alter the uniqe field for save as copy
 		if ($input->get('task') == 'save2copy')
 		{
-			// [5207] Automatic handling of other uniqe fields
+			// [5209] Automatic handling of other uniqe fields
 			$uniqeFields = $this->getUniqeFields();
 			if (SermondistributorHelper::checkArray($uniqeFields))
 			{
@@ -784,7 +784,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	protected function _generateNewTitle($title)
 	{
 
-		// [5262] Alter the title
+		// [5264] Alter the title
 		$table = $this->getTable();
 
 		while ($table->load(array('title' => $title)))

@@ -4,7 +4,7 @@
 /-------------------------------------------------------------------------------------------------------/
 
 	@version		1.2.9
-	@build			30th November, 2015
+	@build			1st December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
@@ -732,16 +732,18 @@ class com_sermondistributorInstallerScript
 			$query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
 			$db->setQuery($query);
 			$allDone = $db->execute();
-		echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
-			<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
-			</a>';
+			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
+				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
+				</a>';
 		}
 		// do any updates needed
 		if ($type == 'update')
 		{
-		echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
-			<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
-			</a>';
+			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
+				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
+				</a>
+				<h3>Upgrade to Version (1.2.9) Was Successful!</h3>
+				<p>';
 		}
 	}
 }

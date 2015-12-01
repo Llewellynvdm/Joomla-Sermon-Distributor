@@ -4,7 +4,7 @@
 /-------------------------------------------------------------------------------------------------------/
 
 	@version		1.2.9
-	@build			30th November, 2015
+	@build			1st December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
@@ -45,36 +45,36 @@ class JFormFieldPreachers extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [7683] see if we should add buttons
+		// [7685] see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [7685] get html
+		// [7687] get html
 		$html = parent::getInput();
-		// [7687] if true set button
+		// [7689] if true set button
 		if ($setButton === 'true')
 		{
 			$user = JFactory::getUser();
-			// [7691] only add if user allowed to create preacher
+			// [7693] only add if user allowed to create preacher
 			if ($user->authorise('preacher.create', 'com_sermondistributor'))
 			{
-				// [7709] get the input from url
+				// [7711] get the input from url
 				$jinput = JFactory::getApplication()->input;
-				// [7711] get the view name & id
+				// [7713] get the view name & id
 				$values = $jinput->getArray(array(
 					'id' => 'int',
 					'view' => 'word'
 				));
-				// [7716] check if new item
+				// [7718] check if new item
 				$ref = '';
 				if (!is_null($values['id']) && strlen($values['view']))
 				{
-					// [7720] only load referal if not new item.
+					// [7722] only load referal if not new item.
 					$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				}
-				// [7723] build the button
+				// [7725] build the button
 				$button = '<a class="btn btn-small btn-success"
 					href="index.php?option=com_sermondistributor&amp;view=preacher&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span>' . JText::_('COM_SERMONDISTRIBUTOR_NEW') . '</a>';
-				// [7727] return the button attached to input field
+				// [7729] return the button attached to input field
 				return $html . $button;
 			}
 		}

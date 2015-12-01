@@ -4,7 +4,7 @@
 /-------------------------------------------------------------------------------------------------------/
 
 	@version		1.2.9
-	@build			30th November, 2015
+	@build			1st December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -65,8 +65,8 @@ class SermondistributorViewPreacher extends JViewLegacy
                         $this->referral = '&ref='.(string)$this->ref;
                 }
 
-		// [6471] Get Linked view data
-		$this->xhfsermons		= $this->get('Xhfsermons');
+		// [6473] Get Linked view data
+		$this->wcisermons		= $this->get('Wcisermons');
 
 		// Set the toolbar
 		$this->addToolBar();
@@ -90,27 +90,27 @@ class SermondistributorViewPreacher extends JViewLegacy
 		$isNew = $this->item->id == 0;
 
 		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_PREACHER_NEW' : 'COM_SERMONDISTRIBUTOR_PREACHER_EDIT'), 'pencil-2 article-add');
-		// [10261] Built the actions for new and existing records.
+		// [10263] Built the actions for new and existing records.
 		if ($this->refid || $this->ref)
 		{
 			if ($this->canDo->get('preacher.create') && $isNew)
 			{
-				// [10273] We can create the record.
+				// [10275] We can create the record.
 				JToolBarHelper::save('preacher.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('preacher.edit'))
 			{
-				// [10285] We can save the record.
+				// [10287] We can save the record.
 				JToolBarHelper::save('preacher.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
-				// [10290] Do not creat but cancel.
+				// [10292] Do not creat but cancel.
 				JToolBarHelper::cancel('preacher.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
-				// [10295] We can close it.
+				// [10297] We can close it.
 				JToolBarHelper::cancel('preacher.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -118,7 +118,7 @@ class SermondistributorViewPreacher extends JViewLegacy
 		{
 			if ($isNew)
 			{
-				// [10303] For new records, check the create permission.
+				// [10305] For new records, check the create permission.
 				if ($this->canDo->get('preacher.create'))
 				{
 					JToolBarHelper::apply('preacher.apply', 'JTOOLBAR_APPLY');
@@ -131,11 +131,11 @@ class SermondistributorViewPreacher extends JViewLegacy
 			{
 				if ($this->canDo->get('preacher.edit'))
 				{
-					// [10330] We can save the new record
+					// [10332] We can save the new record
 					JToolBarHelper::apply('preacher.apply', 'JTOOLBAR_APPLY');
 					JToolBarHelper::save('preacher.save', 'JTOOLBAR_SAVE');
-					// [10333] We can save this record, but check the create permission to see
-					// [10334] if we can return to make a new one.
+					// [10335] We can save this record, but check the create permission to see
+					// [10336] if we can return to make a new one.
 					if ($this->canDo->get('preacher.create'))
 					{
 						JToolBarHelper::custom('preacher.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
@@ -154,7 +154,7 @@ class SermondistributorViewPreacher extends JViewLegacy
 			}
 		}
 		JToolbarHelper::divider();
-		// [10370] set help url for this view if found
+		// [10372] set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('preacher');
 		if (SermondistributorHelper::checkString($help_url))
 		{
@@ -192,21 +192,21 @@ class SermondistributorViewPreacher extends JViewLegacy
 		$document->setTitle(JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_PREACHER_NEW' : 'COM_SERMONDISTRIBUTOR_PREACHER_EDIT'));
 		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/preacher.css"); 
 
-		// [6506] Add the CSS for Footable.
+		// [6508] Add the CSS for Footable.
 		$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');
 
-		// [6508] Use the Metro Style
+		// [6510] Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
 			$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.metro.min.css');
 		}
-		// [6513] Use the Legacy Style.
+		// [6515] Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
 			$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.standalone.min.css');
 		}
 
-		// [6518] Add the JavaScript for Footable
+		// [6520] Add the JavaScript for Footable
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.js');
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.sort.js');
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.filter.js');
