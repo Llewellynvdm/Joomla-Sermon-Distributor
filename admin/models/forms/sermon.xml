@@ -4,15 +4,15 @@
 	addfieldpath="/administrator/components/com_sermondistributor/models/fields"
 >
 	<fieldset name="details">
-		<!-- [11013] Default Fields. -->
-		<!-- [11014] Id Field. Type: Text (joomla) -->
+		<!-- [11012] Default Fields. -->
+		<!-- [11013] Id Field. Type: Text (joomla) -->
 		<field
 			name="id"
 			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
 			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
 			readonly="true"
 		/>
-		<!-- [11021] Date Created Field. Type: Calendar (joomla) -->
+		<!-- [11020] Date Created Field. Type: Calendar (joomla) -->
 		<field
 			name="created"
 			type="calendar"
@@ -22,14 +22,14 @@
 			format="%Y-%m-%d %H:%M:%S"
 			filter="user_utc"
 		/>
-		<!-- [11032] User Created Field. Type: User (joomla) -->
+		<!-- [11031] User Created Field. Type: User (joomla) -->
 		<field
 			name="created_by"
 			type="user"
 			label="COM_SERMONDISTRIBUTOR_SERMON_CREATED_BY_LABEL"
 			description="COM_SERMONDISTRIBUTOR_SERMON_CREATED_BY_DESC"
 		/>
-		<!-- [11040] Published Field. Type: List (joomla) -->
+		<!-- [11039] Published Field. Type: List (joomla) -->
 		<field name="published" type="list" label="JSTATUS"
 			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
 			filter="intval" size="1" default="1" >
@@ -42,18 +42,18 @@
 			<option value="-2">
 				JTRASHED</option>
 		</field>
-		<!-- [11055] Date Modified Field. Type: Calendar (joomla) -->
+		<!-- [11054] Date Modified Field. Type: Calendar (joomla) -->
 		<field name="modified" type="calendar" class="readonly"
 			label="JGLOBAL_FIELD_MODIFIED_LABEL" description="COM_CONTENT_FIELD_MODIFIED_DESC"
 			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
-		<!-- [11059] User Modified Field. Type: User (joomla) -->
+		<!-- [11058] User Modified Field. Type: User (joomla) -->
 		<field name="modified_by" type="user"
 			label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
 			class="readonly"
 			readonly="true"
 			filter="unset"
 		/>
-		<!-- [11069] Access Field. Type: Accesslevel (joomla) -->
+		<!-- [11068] Access Field. Type: Accesslevel (joomla) -->
 		<field name="access"
 			type="accesslevel"
 			label="JFIELD_ACCESS_LABEL"
@@ -61,7 +61,7 @@
 			default="1"
 			required="false"
 		/>
-		<!-- [11079] Ordering Field. Type: Numbers (joomla) -->
+		<!-- [11078] Ordering Field. Type: Numbers (joomla) -->
 		<field
 			name="ordering"
 			type="number"
@@ -72,7 +72,7 @@
 			size="6"
 			required="false"
 		/>
-		<!-- [11091] Version Field. Type: Text (joomla) -->
+		<!-- [11090] Version Field. Type: Text (joomla) -->
 		<field
 			name="version"
 			type="text"
@@ -83,7 +83,7 @@
 			readonly="true"
 			filter="unset"
 		/>
-		<!-- [11105] Metakey Field. Type: Textarea (joomla) -->
+		<!-- [11104] Metakey Field. Type: Textarea (joomla) -->
 		<field
 			name="metakey"
 			type="textarea"
@@ -92,7 +92,7 @@
 			rows="3"
 			cols="30"
 		/>
-		<!-- [11114] Metadesc Field. Type: Textarea (joomla) -->
+		<!-- [11113] Metadesc Field. Type: Textarea (joomla) -->
 		<field
 			name="metadesc"
 			type="textarea"
@@ -101,8 +101,8 @@
 			rows="3"
 			cols="30"
 		/>
-		<!-- [11124] Dynamic Fields. -->
-		<!-- [11360] Name Field. Type: Text. (joomla) -->
+		<!-- [11123] Dynamic Fields. -->
+		<!-- [11359] Name Field. Type: Text. (joomla) -->
 		<field
 			type="text"
 			name="name"
@@ -118,7 +118,7 @@
 			message="Error! Please add name here."
 			hint="COM_SERMONDISTRIBUTOR_SERMON_NAME_HINT"
 		/>
-		<!-- [11481] Preacher Field. Type: Preachers. (custom) -->
+		<!-- [11480] Preacher Field. Type: Preachers. (custom) -->
 		<field
 			type="preachers"
 			name="preacher"
@@ -129,7 +129,7 @@
 			default="0"
 			button="true"
 		/>
-		<!-- [11481] Series Field. Type: Series. (custom) -->
+		<!-- [11480] Series Field. Type: Series. (custom) -->
 		<field
 			type="series"
 			name="series"
@@ -140,7 +140,7 @@
 			default="0"
 			button="true"
 		/>
-		<!-- [11360] Short_description Field. Type: Text. (joomla) -->
+		<!-- [11359] Short_description Field. Type: Text. (joomla) -->
 		<field
 			type="text"
 			name="short_description"
@@ -154,7 +154,7 @@
 			message="Error! Please add some short description here."
 			hint="COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_HINT"
 		/>
-		<!-- [11360] Catid Field. Type: Category. (joomla) -->
+		<!-- [11359] Catid Field. Type: Category. (joomla) -->
 		<field
 			type="category"
 			name="catid"
@@ -164,7 +164,7 @@
 			description="COM_SERMONDISTRIBUTOR_SERMON_CATID_DESCRIPTION"
 			class="inputbox"
 		/>
-		<!-- [11274] Link_type Field. Type: Radio. (joomla) -->
+		<!-- [11273] Link_type Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="link_type"
@@ -173,13 +173,13 @@
 			class="btn-group btn-group-yesno"
 			default="1"
 			required="true">
-			<!-- [11346] Option Set. -->
+			<!-- [11345] Option Set. -->
 			<option value="1">
 				COM_SERMONDISTRIBUTOR_SERMON_ENCRYPTED</option>
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_SERMON_DIRECT</option>
 		</field>
-		<!-- [11274] Source Field. Type: List. (joomla) -->
+		<!-- [11273] Source Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="source"
@@ -189,7 +189,7 @@
 			multiple="false"
 			filter="INT"
 			required="true">
-			<!-- [11346] Option Set. -->
+			<!-- [11345] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_SERMON_SELECT_SOURCE</option>
 			<option value="1">
@@ -199,7 +199,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_SERMON_URL</option>
 		</field>
-		<!-- [11360] Icon Field. Type: Media. (joomla) -->
+		<!-- [11359] Icon Field. Type: Media. (joomla) -->
 		<field
 			type="media"
 			name="icon"
@@ -207,7 +207,7 @@
 			description="COM_SERMONDISTRIBUTOR_SERMON_ICON_DESCRIPTION"
 			directory=""
 		/>
-		<!-- [11360] Tags Field. Type: Tag. (joomla) -->
+		<!-- [11359] Tags Field. Type: Tag. (joomla) -->
 		<field
 			type="tag"
 			name="tags"
@@ -218,7 +218,7 @@
 			published="true"
 			multiple="true"
 		/>
-		<!-- [11481] Local_files Field. Type: Localfiles. (custom) -->
+		<!-- [11480] Local_files Field. Type: Localfiles. (custom) -->
 		<field
 			type="localfiles"
 			name="local_files"
@@ -230,7 +230,7 @@
 			required="true"
 			button="false"
 		/>
-		<!-- [11360] Description Field. Type: Editor. (joomla) -->
+		<!-- [11359] Description Field. Type: Editor. (joomla) -->
 		<field
 			type="editor"
 			name="description"
@@ -242,9 +242,9 @@
 			buttons="false"
 			filter="safehtml"
 		/>
-		<!-- [11374] Note_auto_dropbox Field. Type: Note. A None Database Field. (joomla) -->
+		<!-- [11373] Note_auto_dropbox Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="note_auto_dropbox" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_DROPBOX_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_DROPBOX_DESCRIPTION" heading="h4" class="alert alert-info note_auto_dropbox" />
-		<!-- [11360] Alias Field. Type: Text. (joomla) -->
+		<!-- [11359] Alias Field. Type: Text. (joomla) -->
 		<field
 			type="text"
 			name="alias"
@@ -253,19 +253,19 @@
 			filter="STRING"
 			hint="COM_SERMONDISTRIBUTOR_SERMON_ALIAS_HINT"
 		/>
-		<!-- [11360] Not_required Field. Type: Hidden. (joomla) -->
+		<!-- [11359] Not_required Field. Type: Hidden. (joomla) -->
 		<field
 			type="hidden"
 			name="not_required"
 			default="[]"
 		/>
-		<!-- [11374] Note_link_directed Field. Type: Note. A None Database Field. (joomla) -->
+		<!-- [11373] Note_link_directed Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="note_link_directed" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_directed" close="true" />
-		<!-- [11374] Note_manual_dropbox Field. Type: Note. A None Database Field. (joomla) -->
+		<!-- [11373] Note_manual_dropbox Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="note_manual_dropbox" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_DROPBOX_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_DROPBOX_DESCRIPTION" heading="h4" class="alert alert-info note_manual_dropbox" />
-		<!-- [11374] Note_link_encrypted Field. Type: Note. A None Database Field. (joomla) -->
+		<!-- [11373] Note_link_encrypted Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="note_link_encrypted" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_encrypted" close="true" />
-		<!-- [11481] Manual_files Field. Type: Dropboxfiles. (custom) -->
+		<!-- [11480] Manual_files Field. Type: Dropboxfiles. (custom) -->
 		<field
 			type="dropboxfiles"
 			name="manual_files"
@@ -277,7 +277,7 @@
 			required="true"
 			button="false"
 		/>
-		<!-- [11360] Scripture Field. Type: Text. (joomla) -->
+		<!-- [11359] Scripture Field. Type: Text. (joomla) -->
 		<field
 			type="text"
 			name="scripture"
@@ -293,7 +293,7 @@
 			message="Error! Please add some scripture reference here."
 			hint="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_HINT"
 		/>
-		<!-- [11360] Url Field. Type: Url. (joomla) -->
+		<!-- [11359] Url Field. Type: Url. (joomla) -->
 		<field
 			type="url"
 			name="url"
@@ -308,7 +308,7 @@
 			message="Error! Please add sermon url here."
 			hint="COM_SERMONDISTRIBUTOR_SERMON_URL_HINT"
 		/>
-		<!-- [11274] Build Field. Type: Radio. (joomla) -->
+		<!-- [11273] Build Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="build"
@@ -317,13 +317,13 @@
 			class="btn-group btn-group-yesno"
 			default="1"
 			required="true">
-			<!-- [11346] Option Set. -->
+			<!-- [11345] Option Set. -->
 			<option value="1">
 				COM_SERMONDISTRIBUTOR_SERMON_MANUAL</option>
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_SERMON_AUTOMATIC</option>
 		</field>
-		<!-- [11360] Auto_sermons Field. Type: Hidden. (joomla) -->
+		<!-- [11359] Auto_sermons Field. Type: Hidden. (joomla) -->
 		<field
 			type="hidden"
 			name="auto_sermons"
@@ -331,11 +331,11 @@
 		/>
 	</fieldset>
 
-	<!-- [11143] Metadata Fields. -->
+	<!-- [11142] Metadata Fields. -->
 	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 		<fieldset name="vdmmetadata"
 			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-			<!-- [11147] Robots Field. Type: List (joomla) -->
+			<!-- [11146] Robots Field. Type: List (joomla) -->
 			<field name="robots"
 				type="list"
 				label="JFIELD_METADATA_ROBOTS_LABEL"
@@ -346,13 +346,13 @@
 				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
 				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
 			</field>
-			<!-- [11158] Author Field. Type: Text (joomla) -->
+			<!-- [11157] Author Field. Type: Text (joomla) -->
 			<field name="author"
 				type="text"
 				label="JAUTHOR" description="JFIELD_METADATA_AUTHOR_DESC"
 				size="20"
 			/>
-			<!-- [11164] Rights Field. Type: Textarea (joomla) -->
+			<!-- [11163] Rights Field. Type: Textarea (joomla) -->
 			<field name="rights" type="textarea" label="JFIELD_META_RIGHTS_LABEL"
 				description="JFIELD_META_RIGHTS_DESC" required="false" filter="string"
 				cols="30" rows="2"
@@ -360,15 +360,15 @@
 		</fieldset>
 	</fields>
 	
-	<!-- [10047] Access Control Fields. -->
+	<!-- [10046] Access Control Fields. -->
 	<fieldset name="accesscontrol">
-		<!-- [10049] Asset Id Field. Type: Hidden (joomla) -->
+		<!-- [10048] Asset Id Field. Type: Hidden (joomla) -->
 		<field
 			name="asset_id"
 			type="hidden"
 			filter="unset"
 		/>
-		<!-- [10055] Rules Field. Type: Rules (joomla) -->
+		<!-- [10054] Rules Field. Type: Rules (joomla) -->
 		<field
 			name="rules"
 			type="rules"

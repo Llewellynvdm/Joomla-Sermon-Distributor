@@ -45,36 +45,36 @@ class JFormFieldSeries extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [7685] see if we should add buttons
+		// [7684] see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [7687] get html
+		// [7686] get html
 		$html = parent::getInput();
-		// [7689] if true set button
+		// [7688] if true set button
 		if ($setButton === 'true')
 		{
 			$user = JFactory::getUser();
-			// [7693] only add if user allowed to create series
+			// [7692] only add if user allowed to create series
 			if ($user->authorise('series.create', 'com_sermondistributor'))
 			{
-				// [7711] get the input from url
+				// [7710] get the input from url
 				$jinput = JFactory::getApplication()->input;
-				// [7713] get the view name & id
+				// [7712] get the view name & id
 				$values = $jinput->getArray(array(
 					'id' => 'int',
 					'view' => 'word'
 				));
-				// [7718] check if new item
+				// [7717] check if new item
 				$ref = '';
 				if (!is_null($values['id']) && strlen($values['view']))
 				{
-					// [7722] only load referal if not new item.
+					// [7721] only load referal if not new item.
 					$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				}
-				// [7725] build the button
+				// [7724] build the button
 				$button = '<a class="btn btn-small btn-success"
 					href="index.php?option=com_sermondistributor&amp;view=series&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span>' . JText::_('COM_SERMONDISTRIBUTOR_NEW') . '</a>';
-				// [7729] return the button attached to input field
+				// [7728] return the button attached to input field
 				return $html . $button;
 			}
 		}

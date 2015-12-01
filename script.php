@@ -742,8 +742,7 @@ class com_sermondistributorInstallerScript
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
 				</a>
-				<h3>Upgrade to Version (1.2.9) Was Successful!</h3>
-				<p>';
+				<h3>Upgrade to Version (1.2.9) Was Successful!</h3>';
 		}
 	}
 }

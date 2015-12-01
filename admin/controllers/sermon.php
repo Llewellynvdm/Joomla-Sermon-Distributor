@@ -55,10 +55,10 @@ class SermondistributorControllerSermon extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [9268] get the user object
+		// [9267] get the user object
 		$user = JFactory::getUser();
 
-		// [9273] Access check.
+		// [9272] Access check.
 		$access = $user->authorise('sermon.access', 'com_sermondistributor');
 		if (!$access)
 		{
@@ -69,13 +69,13 @@ class SermondistributorControllerSermon extends JControllerForm
 
 		if ($categoryId)
 		{
-			// [9284] If the category has been passed in the URL check it.
+			// [9283] If the category has been passed in the URL check it.
 			$allow = $user->authorise('core.create', $this->option . '.sermons.category.' . $categoryId);
 		}
 
 		if ($allow === null)
 		{
-			// [9293] In the absense of better information, revert to the component permissions.
+			// [9292] In the absense of better information, revert to the component permissions.
 			return $user->authorise('sermon.create', $this->option);
 		}
 		else
@@ -95,13 +95,13 @@ class SermondistributorControllerSermon extends JControllerForm
 	 * @since   1.6
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
-	{		// [9371] get user object.
+	{		// [9370] get user object.
 		$user		= JFactory::getUser();
-		// [9373] get record id.
+		// [9372] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [9380] Access check.
+		// [9379] Access check.
 		$access = ($user->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $recordId) && $user->authorise('sermon.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -110,17 +110,17 @@ class SermondistributorControllerSermon extends JControllerForm
 
 		if ($recordId)
 		{
-			// [9389] The record has been set. Check the record permissions.
+			// [9388] The record has been set. Check the record permissions.
 			$permission = $user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('sermon.edit.own', 'com_sermondistributor.sermon.' . $recordId))
 				{
-					// [9411] Fallback on edit.own. Now test the owner is the user.
+					// [9410] Fallback on edit.own. Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [9415] Need to do a lookup from the model.
+						// [9414] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -130,7 +130,7 @@ class SermondistributorControllerSermon extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [9423] If the owner matches 'me' then do the test.
+					// [9422] If the owner matches 'me' then do the test.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('sermon.edit.own', 'com_sermondistributor'))
@@ -146,7 +146,7 @@ class SermondistributorControllerSermon extends JControllerForm
 
 			if ($categoryId)
 			{
-				// [9445] The category has been set. Check the category permissions.
+				// [9444] The category has been set. Check the category permissions.
 				$catpermission = $user->authorise('core.edit', $this->option . '.sermons.category.' . $categoryId);
 				if (!$catpermission && !is_null($catpermission))
 				{
@@ -154,7 +154,7 @@ class SermondistributorControllerSermon extends JControllerForm
 				}
 			}
 		}
-		// [9455] Since there is no permission, revert to the component permissions.
+		// [9454] Since there is no permission, revert to the component permissions.
 		return $user->authorise('sermon.edit', $this->option);
 	}
 

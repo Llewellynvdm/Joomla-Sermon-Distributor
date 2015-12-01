@@ -161,21 +161,21 @@ class SermondistributorViewPreachers extends JViewLegacy
 			}
 		}  
 
-		// [6508] Add the CSS for Footable.
+		// [6507] Add the CSS for Footable.
 		$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');
 
-		// [6510] Use the Metro Style
+		// [6509] Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.metro.min.css');
 		}
-		// [6515] Use the Legacy Style.
+		// [6514] Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.standalone.min.css');
 		}
 
-		// [6520] Add the JavaScript for Footable
+		// [6519] Add the JavaScript for Footable
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.sort.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.filter.js');

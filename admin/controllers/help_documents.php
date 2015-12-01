@@ -43,29 +43,29 @@ class SermondistributorControllerHelp_documents extends JControllerAdmin
 
 	public function exportData()
 	{
-		// [7263] Check for request forgeries
+		// [7262] Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-		// [7265] check if export is allowed for this user.
+		// [7264] check if export is allowed for this user.
 		$user = JFactory::getUser();
 		if ($user->authorise('help_document.export', 'com_sermondistributor') && $user->authorise('core.export', 'com_sermondistributor'))
 		{
-			// [7269] Get the input
+			// [7268] Get the input
 			$input = JFactory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
-			// [7272] Sanitize the input
+			// [7271] Sanitize the input
 			JArrayHelper::toInteger($pks);
-			// [7274] Get the model
+			// [7273] Get the model
 			$model = $this->getModel('Help_documents');
-			// [7276] get the data to export
+			// [7275] get the data to export
 			$data = $model->getExportData($pks);
 			if (SermondistributorHelper::checkArray($data))
 			{
-				// [7280] now set the data to the spreadsheet
+				// [7279] now set the data to the spreadsheet
 				$date = JFactory::getDate();
 				SermondistributorHelper::xls($data,'Help_documents_'.$date->format('jS_F_Y'),'Help documents exported ('.$date->format('jS F, Y').')','help documents');
 			}
 		}
-		// [7285] Redirect to the list screen with error.
+		// [7284] Redirect to the list screen with error.
 		$message = JText::_('COM_SERMONDISTRIBUTOR_EXPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=help_documents', false), $message, 'error');
 		return;
@@ -74,31 +74,31 @@ class SermondistributorControllerHelp_documents extends JControllerAdmin
 
 	public function importData()
 	{
-		// [7294] Check for request forgeries
+		// [7293] Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-		// [7296] check if import is allowed for this user.
+		// [7295] check if import is allowed for this user.
 		$user = JFactory::getUser();
 		if ($user->authorise('help_document.import', 'com_sermondistributor') && $user->authorise('core.import', 'com_sermondistributor'))
 		{
-			// [7300] Get the import model
+			// [7299] Get the import model
 			$model = $this->getModel('Help_documents');
-			// [7302] get the headers to import
+			// [7301] get the headers to import
 			$headers = $model->getExImPortHeaders();
 			if (SermondistributorHelper::checkObject($headers))
 			{
-				// [7306] Load headers to session.
+				// [7305] Load headers to session.
 				$session = JFactory::getSession();
 				$headers = json_encode($headers);
 				$session->set('help_document_VDM_IMPORTHEADERS', $headers);
 				$session->set('backto_VDM_IMPORT', 'help_documents');
 				$session->set('dataType_VDM_IMPORTINTO', 'help_document');
-				// [7312] Redirect to import view.
+				// [7311] Redirect to import view.
 				$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_SELECT_FILE_FOR_HELP_DOCUMENTS');
 				$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=import', false), $message);
 				return;
 			}
 		}
-		// [7324] Redirect to the list screen with error.
+		// [7323] Redirect to the list screen with error.
 		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=help_documents', false), $message, 'error');
 		return;
