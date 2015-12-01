@@ -45,36 +45,36 @@ class JFormFieldDropboxfiles extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [7684] see if we should add buttons
+		// [7691] see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [7686] get html
+		// [7693] get html
 		$html = parent::getInput();
-		// [7688] if true set button
+		// [7695] if true set button
 		if ($setButton === 'true')
 		{
 			$user = JFactory::getUser();
-			// [7692] only add if user allowed to create 
+			// [7699] only add if user allowed to create 
 			if ($user->authorise('core.create', 'com_sermondistributor'))
 			{
-				// [7710] get the input from url
+				// [7717] get the input from url
 				$jinput = JFactory::getApplication()->input;
-				// [7712] get the view name & id
+				// [7719] get the view name & id
 				$values = $jinput->getArray(array(
 					'id' => 'int',
 					'view' => 'word'
 				));
-				// [7717] check if new item
+				// [7724] check if new item
 				$ref = '';
 				if (!is_null($values['id']) && strlen($values['view']))
 				{
-					// [7721] only load referal if not new item.
+					// [7728] only load referal if not new item.
 					$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				}
-				// [7724] build the button
+				// [7731] build the button
 				$button = '<a class="btn btn-small btn-success"
 					href="index.php?option=com_sermondistributor&amp;view=&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span>' . JText::_('COM_SERMONDISTRIBUTOR_NEW') . '</a>';
-				// [7728] return the button attached to input field
+				// [7735] return the button attached to input field
 				return $html . $button;
 			}
 		}

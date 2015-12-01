@@ -65,8 +65,8 @@ class SermondistributorViewSeries extends JViewLegacy
                         $this->referral = '&ref='.(string)$this->ref;
                 }
 
-		// [6472] Get Linked view data
-		$this->mzrsermons		= $this->get('Mzrsermons');
+		// [6479] Get Linked view data
+		$this->wxrsermons		= $this->get('Wxrsermons');
 
 		// Set the toolbar
 		$this->addToolBar();
@@ -90,27 +90,27 @@ class SermondistributorViewSeries extends JViewLegacy
 		$isNew = $this->item->id == 0;
 
 		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERIES_NEW' : 'COM_SERMONDISTRIBUTOR_SERIES_EDIT'), 'pencil-2 article-add');
-		// [10262] Built the actions for new and existing records.
+		// [10269] Built the actions for new and existing records.
 		if ($this->refid || $this->ref)
 		{
 			if ($this->canDo->get('series.create') && $isNew)
 			{
-				// [10274] We can create the record.
+				// [10281] We can create the record.
 				JToolBarHelper::save('series.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('series.edit'))
 			{
-				// [10286] We can save the record.
+				// [10293] We can save the record.
 				JToolBarHelper::save('series.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
-				// [10291] Do not creat but cancel.
+				// [10298] Do not creat but cancel.
 				JToolBarHelper::cancel('series.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
-				// [10296] We can close it.
+				// [10303] We can close it.
 				JToolBarHelper::cancel('series.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -118,7 +118,7 @@ class SermondistributorViewSeries extends JViewLegacy
 		{
 			if ($isNew)
 			{
-				// [10304] For new records, check the create permission.
+				// [10311] For new records, check the create permission.
 				if ($this->canDo->get('series.create'))
 				{
 					JToolBarHelper::apply('series.apply', 'JTOOLBAR_APPLY');
@@ -131,11 +131,11 @@ class SermondistributorViewSeries extends JViewLegacy
 			{
 				if ($this->canDo->get('series.edit'))
 				{
-					// [10331] We can save the new record
+					// [10338] We can save the new record
 					JToolBarHelper::apply('series.apply', 'JTOOLBAR_APPLY');
 					JToolBarHelper::save('series.save', 'JTOOLBAR_SAVE');
-					// [10334] We can save this record, but check the create permission to see
-					// [10335] if we can return to make a new one.
+					// [10341] We can save this record, but check the create permission to see
+					// [10342] if we can return to make a new one.
 					if ($this->canDo->get('series.create'))
 					{
 						JToolBarHelper::custom('series.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
@@ -154,7 +154,7 @@ class SermondistributorViewSeries extends JViewLegacy
 			}
 		}
 		JToolbarHelper::divider();
-		// [10371] set help url for this view if found
+		// [10378] set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('series');
 		if (SermondistributorHelper::checkString($help_url))
 		{
@@ -192,21 +192,21 @@ class SermondistributorViewSeries extends JViewLegacy
 		$document->setTitle(JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERIES_NEW' : 'COM_SERMONDISTRIBUTOR_SERIES_EDIT'));
 		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/series.css"); 
 
-		// [6507] Add the CSS for Footable.
+		// [6514] Add the CSS for Footable.
 		$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');
 
-		// [6509] Use the Metro Style
+		// [6516] Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
 			$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.metro.min.css');
 		}
-		// [6514] Use the Legacy Style.
+		// [6521] Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
 			$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.standalone.min.css');
 		}
 
-		// [6519] Add the JavaScript for Footable
+		// [6526] Add the JavaScript for Footable
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.js');
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.sort.js');
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.filter.js');

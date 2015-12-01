@@ -202,21 +202,21 @@ class SermondistributorViewSeries extends JViewLegacy
 			}
 		}  
 
-		// [6507] Add the CSS for Footable.
+		// [6514] Add the CSS for Footable.
 		$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');
 
-		// [6509] Use the Metro Style
+		// [6516] Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.metro.min.css');
 		}
-		// [6514] Use the Legacy Style.
+		// [6521] Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.standalone.min.css');
 		}
 
-		// [6519] Add the JavaScript for Footable
+		// [6526] Add the JavaScript for Footable
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.sort.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.filter.js');

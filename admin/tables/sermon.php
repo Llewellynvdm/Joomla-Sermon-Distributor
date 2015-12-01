@@ -48,10 +48,10 @@ class SermondistributorTableSermon extends JTable
 	{
 		parent::__construct('#__sermondistributor_sermon', 'id', $db);
 
-		// [4181] Adding Tag Options
+		// [4188] Adding Tag Options
 		JTableObserverTags::createObserver($this, array('typeAlias' => 'com_sermondistributor.sermon'));
 
-		// [4187] Adding History Options
+		// [4194] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.sermon')); 
 	}	
  

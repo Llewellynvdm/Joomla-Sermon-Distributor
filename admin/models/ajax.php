@@ -38,7 +38,7 @@ class SermondistributorModelAjax extends JModelList
 		
 	}
 
-	// [8909] Used in sermon
+	// [8916] Used in sermon
 	/**
 	* 	Check and Set Dropbox local listing
 	**/

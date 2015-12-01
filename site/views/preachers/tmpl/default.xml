@@ -8,7 +8,7 @@
 	<!-- [1732] Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
-		<!-- [11273] Preachers_display Field. Type: Radio. (joomla) -->
+		<!-- [11280] Preachers_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preachers_display"
@@ -16,7 +16,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -26,7 +26,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_LIST</option>
 		</field>			
-		<!-- [11273] Preachers_list_style Field. Type: List. (joomla) -->
+		<!-- [11280] Preachers_list_style Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="preachers_list_style"
@@ -36,7 +36,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -48,7 +48,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
 		</field>			
-		<!-- [11273] Preachers_table_color Field. Type: List. (joomla) -->
+		<!-- [11280] Preachers_table_color Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="preachers_table_color"
@@ -58,7 +58,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -80,7 +80,7 @@
 			<option value="8">
 				COM_SERMONDISTRIBUTOR_CONFIG_NONE</option>
 		</field>			
-		<!-- [11273] Preachers_icon Field. Type: Radio. (joomla) -->
+		<!-- [11280] Preachers_icon Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preachers_icon"
@@ -88,7 +88,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -96,7 +96,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11273] Preachers_desc Field. Type: Radio. (joomla) -->
+		<!-- [11280] Preachers_desc Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preachers_desc"
@@ -104,7 +104,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -112,7 +112,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11273] Preachers_sermon_count Field. Type: Radio. (joomla) -->
+		<!-- [11280] Preachers_sermon_count Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preachers_sermon_count"
@@ -120,7 +120,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_SERMON_COUNT_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -128,7 +128,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11273] Preachers_hits Field. Type: Radio. (joomla) -->
+		<!-- [11280] Preachers_hits Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preachers_hits"
@@ -136,7 +136,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -144,7 +144,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11273] Preachers_website Field. Type: Radio. (joomla) -->
+		<!-- [11280] Preachers_website Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preachers_website"
@@ -152,7 +152,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_WEBSITE_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -160,7 +160,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11273] Preachers_email Field. Type: Radio. (joomla) -->
+		<!-- [11280] Preachers_email Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preachers_email"
@@ -168,7 +168,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_EMAIL_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11345]  [1755] Global & Option Set. -->
+			<!-- [11352]  [1755] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
