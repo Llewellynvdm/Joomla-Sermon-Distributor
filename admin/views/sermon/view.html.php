@@ -66,7 +66,7 @@ class SermondistributorViewSermon extends JViewLegacy
                 }
 
 		// [6472] Get Linked view data
-		$this->njdstastics		= $this->get('Njdstastics');
+		$this->scistastics		= $this->get('Scistastics');
 
 		// Set the toolbar
 		$this->addToolBar();

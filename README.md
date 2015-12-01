@@ -1,6 +1,6 @@
 # Sermon Distributor (1.2.9)
 
- ![Sermon Distributor image] (https://raw.githubusercontent.com/SermonDistributor/Joomla-3-Component/master/admin/assets/images/component-300.jpg "The Sermon Distributor") (https://github.com/SermonDistributor/Joomla-3-Component)
+ ![Sermon Distributor image] (https://raw.githubusercontent.com/SermonDistributor/Joomla-3-Component/master/admin/assets/images/component-300.jpg "The Sermon Distributor")
 
 Distributor is a highly advanced sermon distributor that runs on the [Joomla 3.x] (http://www.joomla.org) framework. You can link a shared folder from Dropbox to the component and use Dropbox as your file host, not to mention the advanced auto builder that gives you the ability to simply load sermons to your website by only adding them to Dropbox.
 
