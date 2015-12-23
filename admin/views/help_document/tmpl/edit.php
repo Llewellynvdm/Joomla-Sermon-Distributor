@@ -1,22 +1,27 @@
 <?php
-/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
-				Vast Development Method 
-/-------------------------------------------------------------------------------------------------------/
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.2.9
-	@build			1st December, 2015
+	@version		1.3.0
+	@build			23rd December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
-  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
- (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
-.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
-\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
-
-/------------------------------------------------------------------------------------------------------*/
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	A sermon distributor that links to Dropbox. 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -95,93 +100,93 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 
 <script type="text/javascript">
 
-// #jform_location listeners for location_TUtVLEk function
+// #jform_location listeners for location_pLIjTGg function
 jQuery('#jform_location').on('keyup',function()
 {
-	var location_TUtVLEk = jQuery("#jform_location input[type='radio']:checked").val();
-	TUtVLEk(location_TUtVLEk);
+	var location_pLIjTGg = jQuery("#jform_location input[type='radio']:checked").val();
+	pLIjTGg(location_pLIjTGg);
 
 });
 jQuery('#adminForm').on('change', '#jform_location',function (e)
 {
 	e.preventDefault();
-	var location_TUtVLEk = jQuery("#jform_location input[type='radio']:checked").val();
-	TUtVLEk(location_TUtVLEk);
+	var location_pLIjTGg = jQuery("#jform_location input[type='radio']:checked").val();
+	pLIjTGg(location_pLIjTGg);
 
 });
 
-// #jform_location listeners for location_gUAUNQj function
+// #jform_location listeners for location_Ajshqyg function
 jQuery('#jform_location').on('keyup',function()
 {
-	var location_gUAUNQj = jQuery("#jform_location input[type='radio']:checked").val();
-	gUAUNQj(location_gUAUNQj);
+	var location_Ajshqyg = jQuery("#jform_location input[type='radio']:checked").val();
+	Ajshqyg(location_Ajshqyg);
 
 });
 jQuery('#adminForm').on('change', '#jform_location',function (e)
 {
 	e.preventDefault();
-	var location_gUAUNQj = jQuery("#jform_location input[type='radio']:checked").val();
-	gUAUNQj(location_gUAUNQj);
+	var location_Ajshqyg = jQuery("#jform_location input[type='radio']:checked").val();
+	Ajshqyg(location_Ajshqyg);
 
 });
 
-// #jform_type listeners for type_RCpdpBj function
+// #jform_type listeners for type_PDcWyEn function
 jQuery('#jform_type').on('keyup',function()
 {
-	var type_RCpdpBj = jQuery("#jform_type").val();
-	RCpdpBj(type_RCpdpBj);
+	var type_PDcWyEn = jQuery("#jform_type").val();
+	PDcWyEn(type_PDcWyEn);
 
 });
 jQuery('#adminForm').on('change', '#jform_type',function (e)
 {
 	e.preventDefault();
-	var type_RCpdpBj = jQuery("#jform_type").val();
-	RCpdpBj(type_RCpdpBj);
+	var type_PDcWyEn = jQuery("#jform_type").val();
+	PDcWyEn(type_PDcWyEn);
 
 });
 
-// #jform_type listeners for type_tzmdvkq function
+// #jform_type listeners for type_oNdbymx function
 jQuery('#jform_type').on('keyup',function()
 {
-	var type_tzmdvkq = jQuery("#jform_type").val();
-	tzmdvkq(type_tzmdvkq);
+	var type_oNdbymx = jQuery("#jform_type").val();
+	oNdbymx(type_oNdbymx);
 
 });
 jQuery('#adminForm').on('change', '#jform_type',function (e)
 {
 	e.preventDefault();
-	var type_tzmdvkq = jQuery("#jform_type").val();
-	tzmdvkq(type_tzmdvkq);
+	var type_oNdbymx = jQuery("#jform_type").val();
+	oNdbymx(type_oNdbymx);
 
 });
 
-// #jform_type listeners for type_tOoDUnW function
+// #jform_type listeners for type_QQNYqXl function
 jQuery('#jform_type').on('keyup',function()
 {
-	var type_tOoDUnW = jQuery("#jform_type").val();
-	tOoDUnW(type_tOoDUnW);
+	var type_QQNYqXl = jQuery("#jform_type").val();
+	QQNYqXl(type_QQNYqXl);
 
 });
 jQuery('#adminForm').on('change', '#jform_type',function (e)
 {
 	e.preventDefault();
-	var type_tOoDUnW = jQuery("#jform_type").val();
-	tOoDUnW(type_tOoDUnW);
+	var type_QQNYqXl = jQuery("#jform_type").val();
+	QQNYqXl(type_QQNYqXl);
 
 });
 
-// #jform_target listeners for target_ZRloSvL function
+// #jform_target listeners for target_xgjGfFe function
 jQuery('#jform_target').on('keyup',function()
 {
-	var target_ZRloSvL = jQuery("#jform_target input[type='radio']:checked").val();
-	ZRloSvL(target_ZRloSvL);
+	var target_xgjGfFe = jQuery("#jform_target input[type='radio']:checked").val();
+	xgjGfFe(target_xgjGfFe);
 
 });
 jQuery('#adminForm').on('change', '#jform_target',function (e)
 {
 	e.preventDefault();
-	var target_ZRloSvL = jQuery("#jform_target input[type='radio']:checked").val();
-	ZRloSvL(target_ZRloSvL);
+	var target_xgjGfFe = jQuery("#jform_target input[type='radio']:checked").val();
+	xgjGfFe(target_xgjGfFe);
 
 });
 

@@ -1,22 +1,27 @@
 <?php
-/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
-				Vast Development Method 
-/-------------------------------------------------------------------------------------------------------/
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.2.9
-	@build			1st December, 2015
+	@version		1.3.0
+	@build			23rd December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
-  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
- (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
-.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
-\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
-
-/------------------------------------------------------------------------------------------------------*/
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	A sermon distributor that links to Dropbox. 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -55,10 +60,10 @@ class SermondistributorControllerSermon extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [9274] get the user object
+		// [9514] get the user object
 		$user = JFactory::getUser();
 
-		// [9279] Access check.
+		// [9519] Access check.
 		$access = $user->authorise('sermon.access', 'com_sermondistributor');
 		if (!$access)
 		{
@@ -69,13 +74,13 @@ class SermondistributorControllerSermon extends JControllerForm
 
 		if ($categoryId)
 		{
-			// [9290] If the category has been passed in the URL check it.
+			// [9530] If the category has been passed in the URL check it.
 			$allow = $user->authorise('core.create', $this->option . '.sermons.category.' . $categoryId);
 		}
 
 		if ($allow === null)
 		{
-			// [9299] In the absense of better information, revert to the component permissions.
+			// [9539] In the absense of better information, revert to the component permissions.
 			return $user->authorise('sermon.create', $this->option);
 		}
 		else
@@ -95,13 +100,13 @@ class SermondistributorControllerSermon extends JControllerForm
 	 * @since   1.6
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
-	{		// [9377] get user object.
+	{		// [9617] get user object.
 		$user		= JFactory::getUser();
-		// [9379] get record id.
+		// [9619] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [9386] Access check.
+		// [9626] Access check.
 		$access = ($user->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $recordId) && $user->authorise('sermon.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -110,17 +115,17 @@ class SermondistributorControllerSermon extends JControllerForm
 
 		if ($recordId)
 		{
-			// [9395] The record has been set. Check the record permissions.
+			// [9635] The record has been set. Check the record permissions.
 			$permission = $user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('sermon.edit.own', 'com_sermondistributor.sermon.' . $recordId))
 				{
-					// [9417] Fallback on edit.own. Now test the owner is the user.
+					// [9657] Fallback on edit.own. Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [9421] Need to do a lookup from the model.
+						// [9661] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -130,7 +135,7 @@ class SermondistributorControllerSermon extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [9429] If the owner matches 'me' then do the test.
+					// [9669] If the owner matches 'me' then do the test.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('sermon.edit.own', 'com_sermondistributor'))
@@ -146,7 +151,7 @@ class SermondistributorControllerSermon extends JControllerForm
 
 			if ($categoryId)
 			{
-				// [9451] The category has been set. Check the category permissions.
+				// [9691] The category has been set. Check the category permissions.
 				$catpermission = $user->authorise('core.edit', $this->option . '.sermons.category.' . $categoryId);
 				if (!$catpermission && !is_null($catpermission))
 				{
@@ -154,7 +159,7 @@ class SermondistributorControllerSermon extends JControllerForm
 				}
 			}
 		}
-		// [9461] Since there is no permission, revert to the component permissions.
+		// [9701] Since there is no permission, revert to the component permissions.
 		return $user->authorise('sermon.edit', $this->option);
 	}
 

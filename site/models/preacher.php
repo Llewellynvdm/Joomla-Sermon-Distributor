@@ -1,22 +1,27 @@
 <?php
-/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
-				Vast Development Method 
-/-------------------------------------------------------------------------------------------------------/
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.2.9
-	@build			1st December, 2015
+	@version		1.3.0
+	@build			23rd December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preacher.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
-  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
- (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
-.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
-\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
-
-/------------------------------------------------------------------------------------------------------*/
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	A sermon distributor that links to Dropbox. 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -60,36 +65,36 @@ class SermondistributorModelPreacher extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [2900] Get a db connection.
+		// [3017] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2909] Create a new query object.
+		// [3026] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [1791] Get from #__sermondistributor_sermon as a
+		// [1889] Get from #__sermondistributor_sermon as a
 		$query->select($db->quoteName(
 			array('a.id','a.asset_id','a.name','a.alias','a.link_type','a.short_description','a.icon','a.preacher','a.series','a.catid','a.description','a.source','a.build','a.manual_files','a.local_files','a.url','a.auto_sermons','a.published','a.created_by','a.modified_by','a.created','a.modified','a.version','a.hits','a.ordering'),
 			array('id','asset_id','name','alias','link_type','short_description','icon','preacher','series','catid','description','source','build','manual_files','local_files','url','auto_sermons','published','created_by','modified_by','created','modified','version','hits','ordering')));
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
 
-		// [1791] Get from #__sermondistributor_series as c
+		// [1889] Get from #__sermondistributor_series as c
 		$query->select($db->quoteName(
 			array('c.name','c.alias'),
 			array('series_name','series_alias')));
 		$query->join('LEFT', ($db->quoteName('#__sermondistributor_series', 'c')) . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('c.id') . ')');
 
-		// [1791] Get from #__sermondistributor_preacher as d
+		// [1889] Get from #__sermondistributor_preacher as d
 		$query->select($db->quoteName(
 			array('d.name','d.alias'),
 			array('preacher_name','preacher_alias')));
 		$query->join('LEFT', ($db->quoteName('#__sermondistributor_preacher', 'd')) . ' ON (' . $db->quoteName('a.preacher') . ' = ' . $db->quoteName('d.id') . ')');
 
-		// [1791] Get from #__categories as b
+		// [1889] Get from #__categories as b
 		$query->select($db->quoteName(
 			array('b.title','b.alias'),
 			array('category','category_alias')));
 		$query->join('LEFT', ($db->quoteName('#__categories', 'b')) . ' ON (' . $db->quoteName('a.catid') . ' = ' . $db->quoteName('b.id') . ')');
-		// [2133] Check if JRequest::getInt('id') is a string or numeric value.
+		// [2234] Check if JRequest::getInt('id') is a string or numeric value.
 		$checkValue = JRequest::getInt('id');
 		if (isset($checkValue) && SermondistributorHelper::checkString($checkValue))
 		{
@@ -107,7 +112,7 @@ class SermondistributorModelPreacher extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [2922] return the query object
+		// [3039] return the query object
 		return $query;
 	}
 
@@ -133,26 +138,26 @@ class SermondistributorModelPreacher extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [2937] Convert the parameter fields into objects.
+		// [3054] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [2940] Always create a slug for sef URL's
+			// [3057] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
 			if (SermondistributorHelper::checkString($item->local_files))
 			{
-				// [1993] Decode local_files
+				// [2091] Decode local_files
 				$item->local_files = json_decode($item->local_files, true);
 			}
 			if (SermondistributorHelper::checkString($item->manual_files))
 			{
-				// [1993] Decode manual_files
+				// [2091] Decode manual_files
 				$item->manual_files = json_decode($item->manual_files, true);
 			}
-			// [2008] Make sure the content prepare plugins fire on description.
+			// [2106] Make sure the content prepare plugins fire on description.
 			$item->description = JHtml::_('content.prepare',$item->description);
-			// [2010] Checking if description has uikit components that must be loaded.
+			// [2108] Checking if description has uikit components that must be loaded.
 			$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
-			// [2041] set idSermonStatisticE to the $item object.
+			// [2139] set idSermonStatisticE to the $item object.
 			$item->idSermonStatisticE = $this->getIdSermonStatisticFcff_E($item->id);
 		} 
 
@@ -205,24 +210,24 @@ class SermondistributorModelPreacher extends JModelList
 	*/
 	public function getIdSermonStatisticFcff_E($id)
 	{
-		// [2702] Get a db connection.
+		// [2819] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2704] Create a new query object.
+		// [2821] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [2706] Get from #__sermondistributor_statistic as e
+		// [2823] Get from #__sermondistributor_statistic as e
 		$query->select($db->quoteName(
 			array('e.filename','e.sermon','e.preacher','e.series','e.counter'),
 			array('filename','sermon','preacher','series','counter')));
 		$query->from($db->quoteName('#__sermondistributor_statistic', 'e'));
 		$query->where('e.sermon = ' . $db->quote($id));
 
-		// [2760] Reset the query using our newly populated query object.
+		// [2877] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [2763] check if there was data returned
+		// [2880] check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();
@@ -250,19 +255,19 @@ class SermondistributorModelPreacher extends JModelList
 			$this->levels		= $this->user->getAuthorisedViewLevels();
 			$this->initSet		= true;
 		}
-		// [2332] Get a db connection.
+		// [2439] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2334] Create a new query object.
+		// [2441] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [1791] Get from #__sermondistributor_preacher as a
+		// [1889] Get from #__sermondistributor_preacher as a
 		$query->select($db->quoteName(
 			array('a.id','a.asset_id','a.name','a.alias','a.icon','a.email','a.website','a.description','a.published','a.created_by','a.modified_by','a.created','a.modified','a.version','a.hits','a.ordering','a.metadesc','a.metakey','a.metadata'),
 			array('id','asset_id','name','alias','icon','email','website','description','published','created_by','modified_by','created','modified','version','hits','ordering','metadesc','metakey','metadata')));
 		$query->from($db->quoteName('#__sermondistributor_preacher', 'a'));
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
-		// [2133] Check if JRequest::getInt('id') is a string or numeric value.
+		// [2234] Check if JRequest::getInt('id') is a string or numeric value.
 		$checkValue = JRequest::getInt('id');
 		if (isset($checkValue) && SermondistributorHelper::checkString($checkValue))
 		{
@@ -279,21 +284,21 @@ class SermondistributorModelPreacher extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [2345] Reset the query using our newly populated query object.
+		// [2452] Reset the query using our newly populated query object.
 		$db->setQuery($query);
-		// [2347] Load the results as a stdClass object.
+		// [2454] Load the results as a stdClass object.
 		$data = $db->loadObject();
 
 		if (empty($data))
 		{
 			return false;
 		}
-		// [2008] Make sure the content prepare plugins fire on description.
+		// [2106] Make sure the content prepare plugins fire on description.
 		$data->description = JHtml::_('content.prepare',$data->description);
-		// [2010] Checking if description has uikit components that must be loaded.
+		// [2108] Checking if description has uikit components that must be loaded.
 		$this->uikitComp = SermondistributorHelper::getUikitComp($data->description,$this->uikitComp);
 
-		// [2446] return data object.
+		// [2553] return data object.
 		return $data;
 	}
 
@@ -318,20 +323,20 @@ class SermondistributorModelPreacher extends JModelList
 			$this->initSet		= true;
 		}
 
-		// [2502] Get the global params
+		// [2609] Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
-		// [2900] Get a db connection.
+		// [3017] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2909] Create a new query object.
+		// [3026] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [1791] Get from #__sermondistributor_statistic as a
+		// [1889] Get from #__sermondistributor_statistic as a
 		$query->select($db->quoteName(
 			array('a.id','a.counter'),
 			array('id','counter')));
 		$query->from($db->quoteName('#__sermondistributor_statistic', 'a'));
-		// [2133] Check if JRequest::getInt('id') is a string or numeric value.
+		// [2234] Check if JRequest::getInt('id') is a string or numeric value.
 		$checkValue = JRequest::getInt('id');
 		if (isset($checkValue) && SermondistributorHelper::checkString($checkValue))
 		{
@@ -348,7 +353,7 @@ class SermondistributorModelPreacher extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [2507] Reset the query using our newly populated query object.
+		// [2614] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$items = $db->loadObjectList();
 
@@ -357,13 +362,13 @@ class SermondistributorModelPreacher extends JModelList
 			return false;
 		}
 
-		// [2937] Convert the parameter fields into objects.
+		// [3054] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [2940] Always create a slug for sef URL's
+			// [3057] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
 		}
-		// [2516] return items
+		// [2623] return items
 		return $items;
 	}
 
@@ -388,20 +393,20 @@ class SermondistributorModelPreacher extends JModelList
 			$this->initSet		= true;
 		}
 
-		// [2502] Get the global params
+		// [2609] Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
-		// [2900] Get a db connection.
+		// [3017] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2909] Create a new query object.
+		// [3026] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [1791] Get from #__sermondistributor_sermon as a
+		// [1889] Get from #__sermondistributor_sermon as a
 		$query->select($db->quoteName(
 			array('a.id','a.alias','a.preacher'),
 			array('id','alias','preacher')));
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
-		// [2133] Check if JRequest::getInt('id') is a string or numeric value.
+		// [2234] Check if JRequest::getInt('id') is a string or numeric value.
 		$checkValue = JRequest::getInt('id');
 		if (isset($checkValue) && SermondistributorHelper::checkString($checkValue))
 		{
@@ -419,7 +424,7 @@ class SermondistributorModelPreacher extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [2507] Reset the query using our newly populated query object.
+		// [2614] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$items = $db->loadObjectList();
 
@@ -428,13 +433,13 @@ class SermondistributorModelPreacher extends JModelList
 			return false;
 		}
 
-		// [2937] Convert the parameter fields into objects.
+		// [3054] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [2940] Always create a slug for sef URL's
+			// [3057] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
 		}
-		// [2516] return items
+		// [2623] return items
 		return $items;
 	}
 

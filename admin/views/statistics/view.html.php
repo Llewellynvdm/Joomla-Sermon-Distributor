@@ -1,22 +1,27 @@
 <?php
-/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
-				Vast Development Method 
-/-------------------------------------------------------------------------------------------------------/
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.2.9
-	@build			1st December, 2015
+	@version		1.3.0
+	@build			23rd December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
-  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
- (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
-.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
-\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
-
-/------------------------------------------------------------------------------------------------------*/
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	A sermon distributor that links to Dropbox. 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -197,11 +202,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			);
                 }  
 
-		// [9107] Set Sermon Name Selection
+		// [9347] Set Sermon Name Selection
 		$this->sermonNameOptions = JFormHelper::loadFieldType('Sermon')->getOptions();
 		if ($this->sermonNameOptions)
 		{
-			// [9111] Sermon Name Filter
+			// [9351] Sermon Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL').' -',
 				'filter_sermon',
@@ -210,7 +215,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [9120] Sermon Name Batch Selection
+				// [9360] Sermon Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL').' -',
 					'batch[sermon]',
@@ -219,11 +224,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			}
 		}
 
-		// [9107] Set Preacher Name Selection
+		// [9347] Set Preacher Name Selection
 		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->getOptions();
 		if ($this->preacherNameOptions)
 		{
-			// [9111] Preacher Name Filter
+			// [9351] Preacher Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL').' -',
 				'filter_preacher',
@@ -232,7 +237,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [9120] Preacher Name Batch Selection
+				// [9360] Preacher Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL').' -',
 					'batch[preacher]',
@@ -241,11 +246,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			}
 		}
 
-		// [9107] Set Series Name Selection
+		// [9347] Set Series Name Selection
 		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->getOptions();
 		if ($this->seriesNameOptions)
 		{
-			// [9111] Series Name Filter
+			// [9351] Series Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL').' -',
 				'filter_series',
@@ -254,7 +259,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [9120] Series Name Batch Selection
+				// [9360] Series Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL').' -',
 					'batch[series]',

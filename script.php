@@ -1,22 +1,27 @@
 <?php
-/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
-				Vast Development Method 
-/-------------------------------------------------------------------------------------------------------/
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.2.9
-	@build			1st December, 2015
+	@version		1.3.0
+	@build			23rd December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
-  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
- (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
-.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
-\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
-
-/------------------------------------------------------------------------------------------------------*/
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	A sermon distributor that links to Dropbox. 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -48,536 +53,536 @@ class com_sermondistributorInstallerScript
 	 */
 	function uninstall($parent)
 	{
-		// [4219] Get Application object
+		// [4454] Get Application object
 		$app = JFactory::getApplication();
 
-		// [4221] Get The Database object
+		// [4456] Get The Database object
 		$db = JFactory::getDbo();
 
-		// [4230] Create a new query object.
+		// [4465] Create a new query object.
 		$query = $db->getQuery(true);
-		// [4232] Select id from content type table
+		// [4467] Select id from content type table
 		$query->select($db->quoteName('type_id'));
 		$query->from($db->quoteName('#__content_types'));
-		// [4235] Where Preacher alias is found
+		// [4470] Where Preacher alias is found
 		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.preacher') );
 		$db->setQuery($query);
-		// [4238] Execute query to see if alias is found
+		// [4473] Execute query to see if alias is found
 		$db->execute();
 		$preacher_found = $db->getNumRows();
-		// [4241] Now check if there were any rows
+		// [4476] Now check if there were any rows
 		if ($preacher_found)
 		{
-			// [4244] Since there are load the needed  preacher type ids
+			// [4479] Since there are load the needed  preacher type ids
 			$preacher_ids = $db->loadColumn();
-			// [4248] Remove Preacher from the content type table
+			// [4483] Remove Preacher from the content type table
 			$preacher_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.preacher') );
-			// [4250] Create a new query object.
+			// [4485] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__content_types'));
 			$query->where($preacher_condition);
 			$db->setQuery($query);
-			// [4255] Execute the query to remove Preacher items
+			// [4490] Execute the query to remove Preacher items
 			$preacher_done = $db->execute();
 			if ($preacher_done);
 			{
-				// [4259] If succesfully remove Preacher add queued success message.
+				// [4494] If succesfully remove Preacher add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
-			// [4265] Remove Preacher items from the contentitem tag map table
+			// [4500] Remove Preacher items from the contentitem tag map table
 			$preacher_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.preacher') );
-			// [4267] Create a new query object.
+			// [4502] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__contentitem_tag_map'));
 			$query->where($preacher_condition);
 			$db->setQuery($query);
-			// [4272] Execute the query to remove Preacher items
+			// [4507] Execute the query to remove Preacher items
 			$preacher_done = $db->execute();
 			if ($preacher_done);
 			{
-				// [4276] If succesfully remove Preacher add queued success message.
+				// [4511] If succesfully remove Preacher add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
-			// [4282] Remove Preacher items from the ucm content table
+			// [4517] Remove Preacher items from the ucm content table
 			$preacher_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.preacher') );
-			// [4284] Create a new query object.
+			// [4519] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__ucm_content'));
 			$query->where($preacher_condition);
 			$db->setQuery($query);
-			// [4289] Execute the query to remove Preacher items
+			// [4524] Execute the query to remove Preacher items
 			$preacher_done = $db->execute();
 			if ($preacher_done);
 			{
-				// [4293] If succesfully remove Preacher add queued success message.
+				// [4528] If succesfully remove Preacher add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
-			// [4299] Make sure that all the Preacher items are cleared from DB
+			// [4534] Make sure that all the Preacher items are cleared from DB
 			foreach ($preacher_ids as $preacher_id)
 			{
-				// [4304] Remove Preacher items from the ucm base table
+				// [4539] Remove Preacher items from the ucm base table
 				$preacher_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $preacher_id);
-				// [4306] Create a new query object.
+				// [4541] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_base'));
 				$query->where($preacher_condition);
 				$db->setQuery($query);
-				// [4311] Execute the query to remove Preacher items
+				// [4546] Execute the query to remove Preacher items
 				$db->execute();
 
-				// [4315] Remove Preacher items from the ucm history table
+				// [4550] Remove Preacher items from the ucm history table
 				$preacher_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $preacher_id);
-				// [4317] Create a new query object.
+				// [4552] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_history'));
 				$query->where($preacher_condition);
 				$db->setQuery($query);
-				// [4322] Execute the query to remove Preacher items
+				// [4557] Execute the query to remove Preacher items
 				$db->execute();
 			}
 		}
 
-		// [4230] Create a new query object.
+		// [4465] Create a new query object.
 		$query = $db->getQuery(true);
-		// [4232] Select id from content type table
+		// [4467] Select id from content type table
 		$query->select($db->quoteName('type_id'));
 		$query->from($db->quoteName('#__content_types'));
-		// [4235] Where Sermon alias is found
+		// [4470] Where Sermon alias is found
 		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermon') );
 		$db->setQuery($query);
-		// [4238] Execute query to see if alias is found
+		// [4473] Execute query to see if alias is found
 		$db->execute();
 		$sermon_found = $db->getNumRows();
-		// [4241] Now check if there were any rows
+		// [4476] Now check if there were any rows
 		if ($sermon_found)
 		{
-			// [4244] Since there are load the needed  sermon type ids
+			// [4479] Since there are load the needed  sermon type ids
 			$sermon_ids = $db->loadColumn();
-			// [4248] Remove Sermon from the content type table
+			// [4483] Remove Sermon from the content type table
 			$sermon_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermon') );
-			// [4250] Create a new query object.
+			// [4485] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__content_types'));
 			$query->where($sermon_condition);
 			$db->setQuery($query);
-			// [4255] Execute the query to remove Sermon items
+			// [4490] Execute the query to remove Sermon items
 			$sermon_done = $db->execute();
 			if ($sermon_done);
 			{
-				// [4259] If succesfully remove Sermon add queued success message.
+				// [4494] If succesfully remove Sermon add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
-			// [4265] Remove Sermon items from the contentitem tag map table
+			// [4500] Remove Sermon items from the contentitem tag map table
 			$sermon_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermon') );
-			// [4267] Create a new query object.
+			// [4502] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__contentitem_tag_map'));
 			$query->where($sermon_condition);
 			$db->setQuery($query);
-			// [4272] Execute the query to remove Sermon items
+			// [4507] Execute the query to remove Sermon items
 			$sermon_done = $db->execute();
 			if ($sermon_done);
 			{
-				// [4276] If succesfully remove Sermon add queued success message.
+				// [4511] If succesfully remove Sermon add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
-			// [4282] Remove Sermon items from the ucm content table
+			// [4517] Remove Sermon items from the ucm content table
 			$sermon_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.sermon') );
-			// [4284] Create a new query object.
+			// [4519] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__ucm_content'));
 			$query->where($sermon_condition);
 			$db->setQuery($query);
-			// [4289] Execute the query to remove Sermon items
+			// [4524] Execute the query to remove Sermon items
 			$sermon_done = $db->execute();
 			if ($sermon_done);
 			{
-				// [4293] If succesfully remove Sermon add queued success message.
+				// [4528] If succesfully remove Sermon add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
-			// [4299] Make sure that all the Sermon items are cleared from DB
+			// [4534] Make sure that all the Sermon items are cleared from DB
 			foreach ($sermon_ids as $sermon_id)
 			{
-				// [4304] Remove Sermon items from the ucm base table
+				// [4539] Remove Sermon items from the ucm base table
 				$sermon_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $sermon_id);
-				// [4306] Create a new query object.
+				// [4541] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_base'));
 				$query->where($sermon_condition);
 				$db->setQuery($query);
-				// [4311] Execute the query to remove Sermon items
+				// [4546] Execute the query to remove Sermon items
 				$db->execute();
 
-				// [4315] Remove Sermon items from the ucm history table
+				// [4550] Remove Sermon items from the ucm history table
 				$sermon_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $sermon_id);
-				// [4317] Create a new query object.
+				// [4552] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_history'));
 				$query->where($sermon_condition);
 				$db->setQuery($query);
-				// [4322] Execute the query to remove Sermon items
+				// [4557] Execute the query to remove Sermon items
 				$db->execute();
 			}
 		}
 
-		// [4230] Create a new query object.
+		// [4465] Create a new query object.
 		$query = $db->getQuery(true);
-		// [4232] Select id from content type table
+		// [4467] Select id from content type table
 		$query->select($db->quoteName('type_id'));
 		$query->from($db->quoteName('#__content_types'));
-		// [4235] Where Sermon catid alias is found
+		// [4470] Where Sermon catid alias is found
 		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermons.category') );
 		$db->setQuery($query);
-		// [4238] Execute query to see if alias is found
+		// [4473] Execute query to see if alias is found
 		$db->execute();
 		$sermon_catid_found = $db->getNumRows();
-		// [4241] Now check if there were any rows
+		// [4476] Now check if there were any rows
 		if ($sermon_catid_found)
 		{
-			// [4244] Since there are load the needed  sermon_catid type ids
+			// [4479] Since there are load the needed  sermon_catid type ids
 			$sermon_catid_ids = $db->loadColumn();
-			// [4248] Remove Sermon catid from the content type table
+			// [4483] Remove Sermon catid from the content type table
 			$sermon_catid_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermons.category') );
-			// [4250] Create a new query object.
+			// [4485] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__content_types'));
 			$query->where($sermon_catid_condition);
 			$db->setQuery($query);
-			// [4255] Execute the query to remove Sermon catid items
+			// [4490] Execute the query to remove Sermon catid items
 			$sermon_catid_done = $db->execute();
 			if ($sermon_catid_done);
 			{
-				// [4259] If succesfully remove Sermon catid add queued success message.
+				// [4494] If succesfully remove Sermon catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
-			// [4265] Remove Sermon catid items from the contentitem tag map table
+			// [4500] Remove Sermon catid items from the contentitem tag map table
 			$sermon_catid_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermons.category') );
-			// [4267] Create a new query object.
+			// [4502] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__contentitem_tag_map'));
 			$query->where($sermon_catid_condition);
 			$db->setQuery($query);
-			// [4272] Execute the query to remove Sermon catid items
+			// [4507] Execute the query to remove Sermon catid items
 			$sermon_catid_done = $db->execute();
 			if ($sermon_catid_done);
 			{
-				// [4276] If succesfully remove Sermon catid add queued success message.
+				// [4511] If succesfully remove Sermon catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
-			// [4282] Remove Sermon catid items from the ucm content table
+			// [4517] Remove Sermon catid items from the ucm content table
 			$sermon_catid_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.sermons.category') );
-			// [4284] Create a new query object.
+			// [4519] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__ucm_content'));
 			$query->where($sermon_catid_condition);
 			$db->setQuery($query);
-			// [4289] Execute the query to remove Sermon catid items
+			// [4524] Execute the query to remove Sermon catid items
 			$sermon_catid_done = $db->execute();
 			if ($sermon_catid_done);
 			{
-				// [4293] If succesfully remove Sermon catid add queued success message.
+				// [4528] If succesfully remove Sermon catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
-			// [4299] Make sure that all the Sermon catid items are cleared from DB
+			// [4534] Make sure that all the Sermon catid items are cleared from DB
 			foreach ($sermon_catid_ids as $sermon_catid_id)
 			{
-				// [4304] Remove Sermon catid items from the ucm base table
+				// [4539] Remove Sermon catid items from the ucm base table
 				$sermon_catid_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $sermon_catid_id);
-				// [4306] Create a new query object.
+				// [4541] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_base'));
 				$query->where($sermon_catid_condition);
 				$db->setQuery($query);
-				// [4311] Execute the query to remove Sermon catid items
+				// [4546] Execute the query to remove Sermon catid items
 				$db->execute();
 
-				// [4315] Remove Sermon catid items from the ucm history table
+				// [4550] Remove Sermon catid items from the ucm history table
 				$sermon_catid_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $sermon_catid_id);
-				// [4317] Create a new query object.
+				// [4552] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_history'));
 				$query->where($sermon_catid_condition);
 				$db->setQuery($query);
-				// [4322] Execute the query to remove Sermon catid items
+				// [4557] Execute the query to remove Sermon catid items
 				$db->execute();
 			}
 		}
 
-		// [4230] Create a new query object.
+		// [4465] Create a new query object.
 		$query = $db->getQuery(true);
-		// [4232] Select id from content type table
+		// [4467] Select id from content type table
 		$query->select($db->quoteName('type_id'));
 		$query->from($db->quoteName('#__content_types'));
-		// [4235] Where Series alias is found
+		// [4470] Where Series alias is found
 		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.series') );
 		$db->setQuery($query);
-		// [4238] Execute query to see if alias is found
+		// [4473] Execute query to see if alias is found
 		$db->execute();
 		$series_found = $db->getNumRows();
-		// [4241] Now check if there were any rows
+		// [4476] Now check if there were any rows
 		if ($series_found)
 		{
-			// [4244] Since there are load the needed  series type ids
+			// [4479] Since there are load the needed  series type ids
 			$series_ids = $db->loadColumn();
-			// [4248] Remove Series from the content type table
+			// [4483] Remove Series from the content type table
 			$series_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.series') );
-			// [4250] Create a new query object.
+			// [4485] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__content_types'));
 			$query->where($series_condition);
 			$db->setQuery($query);
-			// [4255] Execute the query to remove Series items
+			// [4490] Execute the query to remove Series items
 			$series_done = $db->execute();
 			if ($series_done);
 			{
-				// [4259] If succesfully remove Series add queued success message.
+				// [4494] If succesfully remove Series add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
-			// [4265] Remove Series items from the contentitem tag map table
+			// [4500] Remove Series items from the contentitem tag map table
 			$series_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.series') );
-			// [4267] Create a new query object.
+			// [4502] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__contentitem_tag_map'));
 			$query->where($series_condition);
 			$db->setQuery($query);
-			// [4272] Execute the query to remove Series items
+			// [4507] Execute the query to remove Series items
 			$series_done = $db->execute();
 			if ($series_done);
 			{
-				// [4276] If succesfully remove Series add queued success message.
+				// [4511] If succesfully remove Series add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
-			// [4282] Remove Series items from the ucm content table
+			// [4517] Remove Series items from the ucm content table
 			$series_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.series') );
-			// [4284] Create a new query object.
+			// [4519] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__ucm_content'));
 			$query->where($series_condition);
 			$db->setQuery($query);
-			// [4289] Execute the query to remove Series items
+			// [4524] Execute the query to remove Series items
 			$series_done = $db->execute();
 			if ($series_done);
 			{
-				// [4293] If succesfully remove Series add queued success message.
+				// [4528] If succesfully remove Series add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
-			// [4299] Make sure that all the Series items are cleared from DB
+			// [4534] Make sure that all the Series items are cleared from DB
 			foreach ($series_ids as $series_id)
 			{
-				// [4304] Remove Series items from the ucm base table
+				// [4539] Remove Series items from the ucm base table
 				$series_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $series_id);
-				// [4306] Create a new query object.
+				// [4541] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_base'));
 				$query->where($series_condition);
 				$db->setQuery($query);
-				// [4311] Execute the query to remove Series items
+				// [4546] Execute the query to remove Series items
 				$db->execute();
 
-				// [4315] Remove Series items from the ucm history table
+				// [4550] Remove Series items from the ucm history table
 				$series_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $series_id);
-				// [4317] Create a new query object.
+				// [4552] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_history'));
 				$query->where($series_condition);
 				$db->setQuery($query);
-				// [4322] Execute the query to remove Series items
+				// [4557] Execute the query to remove Series items
 				$db->execute();
 			}
 		}
 
-		// [4230] Create a new query object.
+		// [4465] Create a new query object.
 		$query = $db->getQuery(true);
-		// [4232] Select id from content type table
+		// [4467] Select id from content type table
 		$query->select($db->quoteName('type_id'));
 		$query->from($db->quoteName('#__content_types'));
-		// [4235] Where Statistic alias is found
+		// [4470] Where Statistic alias is found
 		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.statistic') );
 		$db->setQuery($query);
-		// [4238] Execute query to see if alias is found
+		// [4473] Execute query to see if alias is found
 		$db->execute();
 		$statistic_found = $db->getNumRows();
-		// [4241] Now check if there were any rows
+		// [4476] Now check if there were any rows
 		if ($statistic_found)
 		{
-			// [4244] Since there are load the needed  statistic type ids
+			// [4479] Since there are load the needed  statistic type ids
 			$statistic_ids = $db->loadColumn();
-			// [4248] Remove Statistic from the content type table
+			// [4483] Remove Statistic from the content type table
 			$statistic_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.statistic') );
-			// [4250] Create a new query object.
+			// [4485] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__content_types'));
 			$query->where($statistic_condition);
 			$db->setQuery($query);
-			// [4255] Execute the query to remove Statistic items
+			// [4490] Execute the query to remove Statistic items
 			$statistic_done = $db->execute();
 			if ($statistic_done);
 			{
-				// [4259] If succesfully remove Statistic add queued success message.
+				// [4494] If succesfully remove Statistic add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
-			// [4265] Remove Statistic items from the contentitem tag map table
+			// [4500] Remove Statistic items from the contentitem tag map table
 			$statistic_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.statistic') );
-			// [4267] Create a new query object.
+			// [4502] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__contentitem_tag_map'));
 			$query->where($statistic_condition);
 			$db->setQuery($query);
-			// [4272] Execute the query to remove Statistic items
+			// [4507] Execute the query to remove Statistic items
 			$statistic_done = $db->execute();
 			if ($statistic_done);
 			{
-				// [4276] If succesfully remove Statistic add queued success message.
+				// [4511] If succesfully remove Statistic add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
-			// [4282] Remove Statistic items from the ucm content table
+			// [4517] Remove Statistic items from the ucm content table
 			$statistic_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.statistic') );
-			// [4284] Create a new query object.
+			// [4519] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__ucm_content'));
 			$query->where($statistic_condition);
 			$db->setQuery($query);
-			// [4289] Execute the query to remove Statistic items
+			// [4524] Execute the query to remove Statistic items
 			$statistic_done = $db->execute();
 			if ($statistic_done);
 			{
-				// [4293] If succesfully remove Statistic add queued success message.
+				// [4528] If succesfully remove Statistic add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
-			// [4299] Make sure that all the Statistic items are cleared from DB
+			// [4534] Make sure that all the Statistic items are cleared from DB
 			foreach ($statistic_ids as $statistic_id)
 			{
-				// [4304] Remove Statistic items from the ucm base table
+				// [4539] Remove Statistic items from the ucm base table
 				$statistic_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $statistic_id);
-				// [4306] Create a new query object.
+				// [4541] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_base'));
 				$query->where($statistic_condition);
 				$db->setQuery($query);
-				// [4311] Execute the query to remove Statistic items
+				// [4546] Execute the query to remove Statistic items
 				$db->execute();
 
-				// [4315] Remove Statistic items from the ucm history table
+				// [4550] Remove Statistic items from the ucm history table
 				$statistic_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $statistic_id);
-				// [4317] Create a new query object.
+				// [4552] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_history'));
 				$query->where($statistic_condition);
 				$db->setQuery($query);
-				// [4322] Execute the query to remove Statistic items
+				// [4557] Execute the query to remove Statistic items
 				$db->execute();
 			}
 		}
 
-		// [4230] Create a new query object.
+		// [4465] Create a new query object.
 		$query = $db->getQuery(true);
-		// [4232] Select id from content type table
+		// [4467] Select id from content type table
 		$query->select($db->quoteName('type_id'));
 		$query->from($db->quoteName('#__content_types'));
-		// [4235] Where Help_document alias is found
+		// [4470] Where Help_document alias is found
 		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.help_document') );
 		$db->setQuery($query);
-		// [4238] Execute query to see if alias is found
+		// [4473] Execute query to see if alias is found
 		$db->execute();
 		$help_document_found = $db->getNumRows();
-		// [4241] Now check if there were any rows
+		// [4476] Now check if there were any rows
 		if ($help_document_found)
 		{
-			// [4244] Since there are load the needed  help_document type ids
+			// [4479] Since there are load the needed  help_document type ids
 			$help_document_ids = $db->loadColumn();
-			// [4248] Remove Help_document from the content type table
+			// [4483] Remove Help_document from the content type table
 			$help_document_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.help_document') );
-			// [4250] Create a new query object.
+			// [4485] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__content_types'));
 			$query->where($help_document_condition);
 			$db->setQuery($query);
-			// [4255] Execute the query to remove Help_document items
+			// [4490] Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
 			if ($help_document_done);
 			{
-				// [4259] If succesfully remove Help_document add queued success message.
+				// [4494] If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
-			// [4265] Remove Help_document items from the contentitem tag map table
+			// [4500] Remove Help_document items from the contentitem tag map table
 			$help_document_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.help_document') );
-			// [4267] Create a new query object.
+			// [4502] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__contentitem_tag_map'));
 			$query->where($help_document_condition);
 			$db->setQuery($query);
-			// [4272] Execute the query to remove Help_document items
+			// [4507] Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
 			if ($help_document_done);
 			{
-				// [4276] If succesfully remove Help_document add queued success message.
+				// [4511] If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
-			// [4282] Remove Help_document items from the ucm content table
+			// [4517] Remove Help_document items from the ucm content table
 			$help_document_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.help_document') );
-			// [4284] Create a new query object.
+			// [4519] Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__ucm_content'));
 			$query->where($help_document_condition);
 			$db->setQuery($query);
-			// [4289] Execute the query to remove Help_document items
+			// [4524] Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
 			if ($help_document_done);
 			{
-				// [4293] If succesfully remove Help_document add queued success message.
+				// [4528] If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
-			// [4299] Make sure that all the Help_document items are cleared from DB
+			// [4534] Make sure that all the Help_document items are cleared from DB
 			foreach ($help_document_ids as $help_document_id)
 			{
-				// [4304] Remove Help_document items from the ucm base table
+				// [4539] Remove Help_document items from the ucm base table
 				$help_document_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $help_document_id);
-				// [4306] Create a new query object.
+				// [4541] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_base'));
 				$query->where($help_document_condition);
 				$db->setQuery($query);
-				// [4311] Execute the query to remove Help_document items
+				// [4546] Execute the query to remove Help_document items
 				$db->execute();
 
-				// [4315] Remove Help_document items from the ucm history table
+				// [4550] Remove Help_document items from the ucm history table
 				$help_document_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $help_document_id);
-				// [4317] Create a new query object.
+				// [4552] Create a new query object.
 				$query = $db->getQuery(true);
 				$query->delete($db->quoteName('#__ucm_history'));
 				$query->where($help_document_condition);
 				$db->setQuery($query);
-				// [4322] Execute the query to remove Help_document items
+				// [4557] Execute the query to remove Help_document items
 				$db->execute();
 			}
 		}
 
-		// [4330] If All related items was removed queued success message.
+		// [4565] If All related items was removed queued success message.
 		$app->enqueueMessage(JText::_('All related items was removed from the <b>#__ucm_base</b> table'));
 		$app->enqueueMessage(JText::_('All related items was removed from the <b>#__ucm_history</b> table'));
 
-		// [4335] Remove sermondistributor assets from the assets table
+		// [4570] Remove sermondistributor assets from the assets table
 		$sermondistributor_condition = array( $db->quoteName('name') . ' LIKE ' . $db->quote('com_sermondistributor%') );
 
-		// [4337] Create a new query object.
+		// [4572] Create a new query object.
 		$query = $db->getQuery(true);
 		$query->delete($db->quoteName('#__assets'));
 		$query->where($sermondistributor_condition);
@@ -585,7 +590,7 @@ class com_sermondistributorInstallerScript
 		$help_document_done = $db->execute();
 		if ($help_document_done);
 		{
-			// [4345] If succesfully remove sermondistributor add queued success message.
+			// [4580] If succesfully remove sermondistributor add queued success message.
 			$app->enqueueMessage(JText::_('All related items was removed from the <b>#__assets</b> table'));
 		}
 
@@ -639,11 +644,11 @@ class com_sermondistributorInstallerScript
 		if ($type == 'install')
 		{
 
-			// [4391] Get The Database object
+			// [4626] Get The Database object
 
 			$db = JFactory::getDbo();
 
-			// [4398] Create the preacher content type object.
+			// [4633] Create the preacher content type object.
 			$preacher = new stdClass();
 			$preacher->type_title = 'Sermondistributor Preacher';
 			$preacher->type_alias = 'com_sermondistributor.preacher';
@@ -652,10 +657,10 @@ class com_sermondistributorInstallerScript
 			$preacher->router = 'SermondistributorHelperRoute::getPreacherRoute';
 			$preacher->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
-			// [4404] Insert the object into the content types table.
+			// [4639] Insert the object into the content types table.
 			$preacherInserted = $db->insertObject('#__content_types', $preacher);
 
-			// [4398] Create the sermon content type object.
+			// [4633] Create the sermon content type object.
 			$sermon = new stdClass();
 			$sermon->type_title = 'Sermondistributor Sermon';
 			$sermon->type_alias = 'com_sermondistributor.sermon';
@@ -664,10 +669,10 @@ class com_sermondistributorInstallerScript
 			$sermon->router = 'SermondistributorHelperRoute::getSermonRoute';
 			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","not_required","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "local_files","targetTable": "","targetColumn": "","displayColumn": ""},{"sourceColumn": "manual_files","targetTable": "","targetColumn": "","displayColumn": ""}]}';
 
-			// [4404] Insert the object into the content types table.
+			// [4639] Insert the object into the content types table.
 			$sermonInserted = $db->insertObject('#__content_types', $sermon);
 
-			// [4398] Create the sermon catagory content type object.
+			// [4633] Create the sermon catagory content type object.
 			$sermon_catagory = new stdClass();
 			$sermon_catagory->type_title = 'Sermondistributor Sermon Catid';
 			$sermon_catagory->type_alias = 'com_sermondistributor.sermons.category';
@@ -676,10 +681,10 @@ class com_sermondistributorInstallerScript
 			$sermon_catagory->router = 'SermondistributorHelperRoute::getCategoryRoute';
 			$sermon_catagory->content_history_options = '{"formFile":"administrator\/components\/com_categories\/models\/forms\/category.xml", "hideFields":["asset_id","checked_out","checked_out_time","version","lft","rgt","level","path","extension"], "ignoreChanges":["modified_user_id", "modified_time", "checked_out", "checked_out_time", "version", "hits", "path"],"convertToInt":["publish_up", "publish_down"], "displayLookup":[{"sourceColumn":"created_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"access","targetTable":"#__viewlevels","targetColumn":"id","displayColumn":"title"},{"sourceColumn":"modified_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"parent_id","targetTable":"#__categories","targetColumn":"id","displayColumn":"title"}]}';
 
-			// [4404] Insert the object into the content types table.
+			// [4639] Insert the object into the content types table.
 			$sermon_catagoryInserted = $db->insertObject('#__content_types', $sermon_catagory);
 
-			// [4398] Create the series content type object.
+			// [4633] Create the series content type object.
 			$series = new stdClass();
 			$series->type_title = 'Sermondistributor Series';
 			$series->type_alias = 'com_sermondistributor.series';
@@ -688,10 +693,10 @@ class com_sermondistributorInstallerScript
 			$series->router = 'SermondistributorHelperRoute::getSeriesRoute';
 			$series->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/series.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
-			// [4404] Insert the object into the content types table.
+			// [4639] Insert the object into the content types table.
 			$seriesInserted = $db->insertObject('#__content_types', $series);
 
-			// [4398] Create the statistic content type object.
+			// [4633] Create the statistic content type object.
 			$statistic = new stdClass();
 			$statistic->type_title = 'Sermondistributor Statistic';
 			$statistic->type_alias = 'com_sermondistributor.statistic';
@@ -700,10 +705,10 @@ class com_sermondistributorInstallerScript
 			$statistic->router = 'SermondistributorHelperRoute::getStatisticRoute';
 			$statistic->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/statistic.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","sermon","preacher","series","counter"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
-			// [4404] Insert the object into the content types table.
+			// [4639] Insert the object into the content types table.
 			$statisticInserted = $db->insertObject('#__content_types', $statistic);
 
-			// [4398] Create the help_document content type object.
+			// [4633] Create the help_document content type object.
 			$help_document = new stdClass();
 			$help_document->type_title = 'Sermondistributor Help_document';
 			$help_document->type_alias = 'com_sermondistributor.help_document';
@@ -712,19 +717,19 @@ class com_sermondistributorInstallerScript
 			$help_document->router = 'SermondistributorHelperRoute::getHelp_documentRoute';
 			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","target","article","not_required"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
 
-			// [4404] Insert the object into the content types table.
+			// [4639] Insert the object into the content types table.
 			$help_documentInserted = $db->insertObject('#__content_types', $help_document);
 
 
-			// [4416] Install the global extenstion params.
+			// [4651] Install the global extenstion params.
 			$query = $db->getQuery(true);
 
-			// [4424] Field to update.
+			// [4659] Field to update.
 			$fields = array(
 				$db->quoteName('params') . ' = ' . $db->quote('{"autorName":"Llewellyn van der Merwe","autorEmail":"llewellyn@vdm.io","add_to_dropbox":"0","dropbox_filetypes":"zero","manual_link_update_method":"1","manual_dropbox_timer":"60","auto_link_update_method":"1","auto_dropbox_timer":"60","preacher_state":"1","series_state":"1","sermon_state":"1","auto_link_type":"1","link_encryption":")$KCGiB3BEfDf6kzEWrFnHex5uTJxlQG","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"zero","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"zero","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"one","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","check_in":"-1 day","save_history":"1","history_limit":"10","uikit_load":"1","uikit_min":"","uikit_style":""}'),
 			);
 
-			// [4428] Condition.
+			// [4663] Condition.
 			$conditions = array(
 				$db->quoteName('element') . ' = ' . $db->quote('com_sermondistributor')
 			);
@@ -742,7 +747,7 @@ class com_sermondistributorInstallerScript
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
 				</a>
-				<h3>Upgrade to Version (1.2.9) Was Successful!</h3>';
+				<h3>Upgrade to Version 1.3.0 Was Successful! Let us know if anything is not working as expected.</h3>';
 		}
 	}
 }

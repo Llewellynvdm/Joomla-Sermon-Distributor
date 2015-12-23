@@ -5,10 +5,10 @@
 			<![CDATA[COM_SERMONDISTRIBUTOR_MENU_SERIESLIST_DESC]]>
 		</message>
 	</layout>
-	<!-- [1732] Adding page parameters -->
+	<!-- [1830] Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
-		<!-- [11280] List_series_display Field. Type: Radio. (joomla) -->
+		<!-- [11524] List_series_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="list_series_display"
@@ -16,7 +16,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11352]  [1755] Global & Option Set. -->
+			<!-- [11596]  [1853] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -26,7 +26,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_LIST</option>
 		</field>			
-		<!-- [11280] List_series_list_style Field. Type: List. (joomla) -->
+		<!-- [11524] List_series_list_style Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="list_series_list_style"
@@ -36,7 +36,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [11352]  [1755] Global & Option Set. -->
+			<!-- [11596]  [1853] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -48,7 +48,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
 		</field>			
-		<!-- [11280] List_series_table_color Field. Type: List. (joomla) -->
+		<!-- [11524] List_series_table_color Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="list_series_table_color"
@@ -58,7 +58,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [11352]  [1755] Global & Option Set. -->
+			<!-- [11596]  [1853] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -80,7 +80,7 @@
 			<option value="8">
 				COM_SERMONDISTRIBUTOR_CONFIG_NONE</option>
 		</field>			
-		<!-- [11280] List_series_icon Field. Type: Radio. (joomla) -->
+		<!-- [11524] List_series_icon Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="list_series_icon"
@@ -88,7 +88,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11352]  [1755] Global & Option Set. -->
+			<!-- [11596]  [1853] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -96,7 +96,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11280] List_series_desc Field. Type: Radio. (joomla) -->
+		<!-- [11524] List_series_desc Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="list_series_desc"
@@ -104,7 +104,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11352]  [1755] Global & Option Set. -->
+			<!-- [11596]  [1853] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -112,7 +112,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11280] List_series_sermon_count Field. Type: Radio. (joomla) -->
+		<!-- [11524] List_series_sermon_count Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="list_series_sermon_count"
@@ -120,7 +120,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_SERMON_COUNT_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11352]  [1755] Global & Option Set. -->
+			<!-- [11596]  [1853] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -128,7 +128,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11280] List_series_hits Field. Type: Radio. (joomla) -->
+		<!-- [11524] List_series_hits Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="list_series_hits"
@@ -136,7 +136,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [11352]  [1755] Global & Option Set. -->
+			<!-- [11596]  [1853] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">

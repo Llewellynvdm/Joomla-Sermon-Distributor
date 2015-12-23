@@ -1,22 +1,27 @@
 <?php
-/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
-				Vast Development Method 
-/-------------------------------------------------------------------------------------------------------/
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.2.9
-	@build			1st December, 2015
+	@version		1.3.0
+	@build			23rd December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
-  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
- (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
-.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
-\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
-
-/------------------------------------------------------------------------------------------------------*/
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	A sermon distributor that links to Dropbox. 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -55,13 +60,13 @@ class SermondistributorControllerStatistic extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [9319] Access check.
+		// [9559] Access check.
 		$access = JFactory::getUser()->authorise('statistic.access', 'com_sermondistributor');
 		if (!$access)
 		{
 			return false;
 		}
-		// [9330] In the absense of better information, revert to the component permissions.
+		// [9570] In the absense of better information, revert to the component permissions.
 		return JFactory::getUser()->authorise('statistic.create', $this->option);
 	}
 
@@ -77,13 +82,13 @@ class SermondistributorControllerStatistic extends JControllerForm
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [9473] get user object.
+		// [9713] get user object.
 		$user		= JFactory::getUser();
-		// [9475] get record id.
+		// [9715] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [9482] Access check.
+		// [9722] Access check.
 		$access = ($user->authorise('statistic.access', 'com_sermondistributor.statistic.' . (int) $recordId) &&  $user->authorise('statistic.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -92,17 +97,17 @@ class SermondistributorControllerStatistic extends JControllerForm
 
 		if ($recordId)
 		{
-			// [9491] The record has been set. Check the record permissions.
+			// [9731] The record has been set. Check the record permissions.
 			$permission = $user->authorise('statistic.edit', 'com_sermondistributor.statistic.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('statistic.edit.own', 'com_sermondistributor.statistic.' . $recordId))
 				{
-					// [9513] Now test the owner is the user.
+					// [9753] Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [9517] Need to do a lookup from the model.
+						// [9757] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -112,7 +117,7 @@ class SermondistributorControllerStatistic extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [9525] If the owner matches 'me' then allow.
+					// [9765] If the owner matches 'me' then allow.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('statistic.edit.own', 'com_sermondistributor'))
@@ -124,7 +129,7 @@ class SermondistributorControllerStatistic extends JControllerForm
 				return false;
 			}
 		}
-		// [9547] Since there is no permission, revert to the component permissions.
+		// [9787] Since there is no permission, revert to the component permissions.
 		return $user->authorise('statistic.edit', $this->option);
 	}
 

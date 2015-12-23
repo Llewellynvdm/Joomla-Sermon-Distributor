@@ -1,22 +1,27 @@
 <?php
-/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
-				Vast Development Method 
-/-------------------------------------------------------------------------------------------------------/
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.2.9
-	@build			1st December, 2015
+	@version		1.3.0
+	@build			23rd December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
-  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
- (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
-.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
-\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
-
-/------------------------------------------------------------------------------------------------------*/
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	A sermon distributor that links to Dropbox. 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -87,27 +92,27 @@ class SermondistributorViewHelp_document extends JViewLegacy
 		$isNew = $this->item->id == 0;
 
 		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_NEW' : 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_EDIT'), 'pencil-2 article-add');
-		// [10269] Built the actions for new and existing records.
+		// [10513] Built the actions for new and existing records.
 		if ($this->refid || $this->ref)
 		{
 			if ($this->canDo->get('help_document.create') && $isNew)
 			{
-				// [10281] We can create the record.
+				// [10525] We can create the record.
 				JToolBarHelper::save('help_document.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('help_document.edit'))
 			{
-				// [10293] We can save the record.
+				// [10537] We can save the record.
 				JToolBarHelper::save('help_document.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
-				// [10298] Do not creat but cancel.
+				// [10542] Do not creat but cancel.
 				JToolBarHelper::cancel('help_document.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
-				// [10303] We can close it.
+				// [10547] We can close it.
 				JToolBarHelper::cancel('help_document.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -115,7 +120,7 @@ class SermondistributorViewHelp_document extends JViewLegacy
 		{
 			if ($isNew)
 			{
-				// [10311] For new records, check the create permission.
+				// [10555] For new records, check the create permission.
 				if ($this->canDo->get('help_document.create'))
 				{
 					JToolBarHelper::apply('help_document.apply', 'JTOOLBAR_APPLY');
@@ -128,11 +133,11 @@ class SermondistributorViewHelp_document extends JViewLegacy
 			{
 				if ($this->canDo->get('help_document.edit'))
 				{
-					// [10338] We can save the new record
+					// [10582] We can save the new record
 					JToolBarHelper::apply('help_document.apply', 'JTOOLBAR_APPLY');
 					JToolBarHelper::save('help_document.save', 'JTOOLBAR_SAVE');
-					// [10341] We can save this record, but check the create permission to see
-					// [10342] if we can return to make a new one.
+					// [10585] We can save this record, but check the create permission to see
+					// [10586] if we can return to make a new one.
 					if ($this->canDo->get('help_document.create'))
 					{
 						JToolBarHelper::custom('help_document.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
@@ -151,7 +156,7 @@ class SermondistributorViewHelp_document extends JViewLegacy
 			}
 		}
 		JToolbarHelper::divider();
-		// [10378] set help url for this view if found
+		// [10622] set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('help_document');
 		if (SermondistributorHelper::checkString($help_url))
 		{

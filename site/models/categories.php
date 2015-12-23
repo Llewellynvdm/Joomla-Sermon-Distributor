@@ -1,22 +1,27 @@
 <?php
-/*----------------------------------------------------------------------------------|  www.vdm.io  |----/
-				Vast Development Method 
-/-------------------------------------------------------------------------------------------------------/
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.2.9
-	@build			1st December, 2015
+	@version		1.3.0
+	@build			23rd December, 2015
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categories.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
-  ____  _____  _____  __  __  __      __       ___  _____  __  __  ____  _____  _  _  ____  _  _  ____ 
- (_  _)(  _  )(  _  )(  \/  )(  )    /__\     / __)(  _  )(  \/  )(  _ \(  _  )( \( )( ___)( \( )(_  _)
-.-_)(   )(_)(  )(_)(  )    (  )(__  /(__)\   ( (__  )(_)(  )    (  )___/ )(_)(  )  (  )__)  )  (   )(  
-\____) (_____)(_____)(_/\/\_)(____)(__)(__)   \___)(_____)(_/\/\_)(__)  (_____)(_)\_)(____)(_)\_) (__) 
-
-/------------------------------------------------------------------------------------------------------*/
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	A sermon distributor that links to Dropbox. 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -60,13 +65,13 @@ class SermondistributorModelCategories extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [2900] Get a db connection.
+		// [3017] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2909] Create a new query object.
+		// [3026] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [1791] Get from #__categories as a
+		// [1889] Get from #__categories as a
 		$query->select($db->quoteName(
 			array('a.id','a.title','a.alias','a.description','a.hits','a.language'),
 			array('id','name','alias','description','hits','language')));
@@ -76,7 +81,7 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('a.extension = "com_sermondistributor.sermons"');
 		$query->order('a.title ASC');
 
-		// [2922] return the query object
+		// [3039] return the query object
 		return $query;
 	}
 
@@ -102,12 +107,12 @@ class SermondistributorModelCategories extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [2937] Convert the parameter fields into objects.
+		// [3054] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [2940] Always create a slug for sef URL's
+			// [3057] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// [2041] set idCatidSermonB to the $item object.
+			// [2139] set idCatidSermonB to the $item object.
 			$item->idCatidSermonB = $this->getIdCatidSermonBced_B($item->id);
 		} 
 
@@ -123,13 +128,13 @@ class SermondistributorModelCategories extends JModelList
 	*/
 	public function getIdCatidSermonBced_B($id)
 	{
-		// [2702] Get a db connection.
+		// [2819] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2704] Create a new query object.
+		// [2821] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [2706] Get from #__sermondistributor_sermon as b
+		// [2823] Get from #__sermondistributor_sermon as b
 		$query->select($db->quoteName(
 			array('b.id'),
 			array('id')));
@@ -138,11 +143,11 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
 		$query->where('b.published = 1');
 
-		// [2760] Reset the query using our newly populated query object.
+		// [2877] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [2763] check if there was data returned
+		// [2880] check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();
