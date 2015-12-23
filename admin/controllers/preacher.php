@@ -60,13 +60,13 @@ class SermondistributorControllerPreacher extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [9559] Access check.
+		// [9571] Access check.
 		$access = JFactory::getUser()->authorise('preacher.access', 'com_sermondistributor');
 		if (!$access)
 		{
 			return false;
 		}
-		// [9570] In the absense of better information, revert to the component permissions.
+		// [9582] In the absense of better information, revert to the component permissions.
 		return JFactory::getUser()->authorise('preacher.create', $this->option);
 	}
 
@@ -82,13 +82,13 @@ class SermondistributorControllerPreacher extends JControllerForm
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [9713] get user object.
+		// [9725] get user object.
 		$user		= JFactory::getUser();
-		// [9715] get record id.
+		// [9727] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [9722] Access check.
+		// [9734] Access check.
 		$access = ($user->authorise('preacher.access', 'com_sermondistributor.preacher.' . (int) $recordId) &&  $user->authorise('preacher.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -97,17 +97,17 @@ class SermondistributorControllerPreacher extends JControllerForm
 
 		if ($recordId)
 		{
-			// [9731] The record has been set. Check the record permissions.
+			// [9743] The record has been set. Check the record permissions.
 			$permission = $user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('preacher.edit.own', 'com_sermondistributor.preacher.' . $recordId))
 				{
-					// [9753] Now test the owner is the user.
+					// [9765] Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [9757] Need to do a lookup from the model.
+						// [9769] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -117,7 +117,7 @@ class SermondistributorControllerPreacher extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [9765] If the owner matches 'me' then allow.
+					// [9777] If the owner matches 'me' then allow.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('preacher.edit.own', 'com_sermondistributor'))
@@ -129,7 +129,7 @@ class SermondistributorControllerPreacher extends JControllerForm
 				return false;
 			}
 		}
-		// [9787] Since there is no permission, revert to the component permissions.
+		// [9799] Since there is no permission, revert to the component permissions.
 		return $user->authorise('preacher.edit', $this->option);
 	}
 

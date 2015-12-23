@@ -50,36 +50,36 @@ class JFormFieldPreachers extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [7931] see if we should add buttons
+		// [7943] see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [7933] get html
+		// [7945] get html
 		$html = parent::getInput();
-		// [7935] if true set button
+		// [7947] if true set button
 		if ($setButton === 'true')
 		{
 			$user = JFactory::getUser();
-			// [7939] only add if user allowed to create preacher
+			// [7951] only add if user allowed to create preacher
 			if ($user->authorise('preacher.create', 'com_sermondistributor'))
 			{
-				// [7957] get the input from url
+				// [7969] get the input from url
 				$jinput = JFactory::getApplication()->input;
-				// [7959] get the view name & id
+				// [7971] get the view name & id
 				$values = $jinput->getArray(array(
 					'id' => 'int',
 					'view' => 'word'
 				));
-				// [7964] check if new item
+				// [7976] check if new item
 				$ref = '';
 				if (!is_null($values['id']) && strlen($values['view']))
 				{
-					// [7968] only load referal if not new item.
+					// [7980] only load referal if not new item.
 					$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				}
-				// [7971] build the button
+				// [7983] build the button
 				$button = '<a class="btn btn-small btn-success"
 					href="index.php?option=com_sermondistributor&amp;view=preacher&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span>' . JText::_('COM_SERMONDISTRIBUTOR_NEW') . '</a>';
-				// [7975] return the button attached to input field
+				// [7987] return the button attached to input field
 				return $html . $button;
 			}
 		}

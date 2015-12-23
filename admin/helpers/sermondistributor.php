@@ -553,23 +553,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [1470] if user not in those target groups then remove the item
+							// [1482] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [1475] set the return type
+					// [1487] set the return type
 					switch ($help->type)
 					{
-						// [1478] set joomla article
+						// [1490] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [1482] set help text
+						// [1494] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [1486] set Link
+						// [1498] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -698,7 +698,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [2714] reset
+			// [2726] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -707,15 +707,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [2723] make sure uikit is loaded to config
+			// [2735] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [2728] sorter
+			// [2740] sorter
 			if (self::checkArray($temp))
 			{
-				// [2731] merger
+				// [2743] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -736,37 +736,37 @@ abstract class SermondistributorHelper
 	 */
 	public static function xls($rows,$fileName = null,$title = null,$subjectTab = null,$creator = 'Vast Development Method',$description = null,$category = null,$keywords = null,$modified = null)
 	{
-		// [1525] set the user
+		// [1537] set the user
 		$user = JFactory::getUser();
 		
-		// [1528] set fieldname if not set
+		// [1540] set fieldname if not set
 		if (!$fileName)
 		{
 			$fileName = 'exported_'.JFactory::getDate()->format('jS_F_Y');
 		}
-		// [1533] set modiefied if not set
+		// [1545] set modiefied if not set
 		if (!$modified)
 		{
 			$modified = $user->name;
 		}
-		// [1538] set title if not set
+		// [1550] set title if not set
 		if (!$title)
 		{
 			$title = 'Book1';
 		}
-		// [1543] set tab name if not set
+		// [1555] set tab name if not set
 		if (!$subjectTab)
 		{
 			$subjectTab = 'Sheet1';
 		}
 		
-		// [1549] make sure the file is loaded		
+		// [1561] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		
-		// [1552] Create new PHPExcel object
+		// [1564] Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
 		
-		// [1555] Set document properties
+		// [1567] Set document properties
 		$objPHPExcel->getProperties()->setCreator($creator)
 									 ->setCompany('Vast Development Method')
 									 ->setLastModifiedBy($modified)
@@ -785,7 +785,7 @@ abstract class SermondistributorHelper
 			$objPHPExcel->getProperties()->setCategory($category);
 		}
 		
-		// [1574] Some styles
+		// [1586] Some styles
 		$headerStyles = array(
 			'font'  => array(
 				'bold'  => true,
@@ -807,7 +807,7 @@ abstract class SermondistributorHelper
 				'name'  => 'Verdana'
 		));
 		
-		// [1596] Add some data
+		// [1608] Add some data
 		if (self::checkArray($rows))
 		{
 			$i = 1;
@@ -834,20 +834,20 @@ abstract class SermondistributorHelper
 			return false;
 		}
 		
-		// [1623] Rename worksheet
+		// [1635] Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($subjectTab);
 		
-		// [1626] Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		// [1638] Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
 		
-		// [1629] Redirect output to a client's web browser (Excel5)
+		// [1641] Redirect output to a client's web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'.$fileName.'.xls"');
 		header('Cache-Control: max-age=0');
-		// [1633] If you're serving to IE 9, then the following may be needed
+		// [1645] If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
 		
-		// [1636] If you're serving to IE over SSL, then the following may be needed
+		// [1648] If you're serving to IE over SSL, then the following may be needed
 		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
 		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
@@ -863,13 +863,13 @@ abstract class SermondistributorHelper
 	*/
 	public static function getFileHeaders($dataType)
 	{		
-		// [1652] make sure the file is loaded		
+		// [1664] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
-		// [1654] get session object
+		// [1666] get session object
 		$session 	= JFactory::getSession();
 		$package	= $session->get('package', null);
 		$package	= json_decode($package, true);
-		// [1658] set the headers
+		// [1670] set the headers
 		if(isset($package['dir']))
 		{
 			$inputFileType = PHPExcel_IOFactory::identify($package['dir']);

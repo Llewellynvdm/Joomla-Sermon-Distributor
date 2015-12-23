@@ -65,13 +65,13 @@ class SermondistributorModelPreachers extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [3017] Get a db connection.
+		// [3029] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [3026] Create a new query object.
+		// [3038] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [1889] Get from #__sermondistributor_preacher as a
+		// [1901] Get from #__sermondistributor_preacher as a
 		$query->select($db->quoteName(
 			array('a.id','a.asset_id','a.name','a.alias','a.icon','a.email','a.website','a.description','a.hits','a.ordering'),
 			array('id','asset_id','name','alias','icon','email','website','description','hits','ordering')));
@@ -80,7 +80,7 @@ class SermondistributorModelPreachers extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [3039] return the query object
+		// [3051] return the query object
 		return $query;
 	}
 
@@ -106,16 +106,16 @@ class SermondistributorModelPreachers extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [3054] Convert the parameter fields into objects.
+		// [3066] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [3057] Always create a slug for sef URL's
+			// [3069] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// [2106] Make sure the content prepare plugins fire on description.
+			// [2118] Make sure the content prepare plugins fire on description.
 			$item->description = JHtml::_('content.prepare',$item->description);
-			// [2108] Checking if description has uikit components that must be loaded.
+			// [2120] Checking if description has uikit components that must be loaded.
 			$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
-			// [2139] set idPreacherSermonB to the $item object.
+			// [2151] set idPreacherSermonB to the $item object.
 			$item->idPreacherSermonB = $this->getIdPreacherSermonDcaa_B($item->id);
 		} 
 
@@ -131,13 +131,13 @@ class SermondistributorModelPreachers extends JModelList
 	*/
 	public function getIdPreacherSermonDcaa_B($id)
 	{
-		// [2819] Get a db connection.
+		// [2831] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2821] Create a new query object.
+		// [2833] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [2823] Get from #__sermondistributor_sermon as b
+		// [2835] Get from #__sermondistributor_sermon as b
 		$query->select($db->quoteName(
 			array('b.id'),
 			array('id')));
@@ -146,11 +146,11 @@ class SermondistributorModelPreachers extends JModelList
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
 		$query->where('b.published = 1');
 
-		// [2877] Reset the query using our newly populated query object.
+		// [2889] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [2880] check if there was data returned
+		// [2892] check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();

@@ -53,7 +53,7 @@ class SermondistributorTableHelp_document extends JTable
 	{
 		parent::__construct('#__sermondistributor_help_document', 'id', $db);
 
-		// [4429] Adding History Options
+		// [4441] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.help_document')); 
 	}	
  

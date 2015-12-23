@@ -53,7 +53,7 @@ class SermondistributorTableSeries extends JTable
 	{
 		parent::__construct('#__sermondistributor_series', 'id', $db);
 
-		// [4429] Adding History Options
+		// [4441] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.series')); 
 	}	
  

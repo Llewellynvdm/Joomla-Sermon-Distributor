@@ -202,11 +202,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			);
                 }  
 
-		// [9347] Set Sermon Name Selection
+		// [9359] Set Sermon Name Selection
 		$this->sermonNameOptions = JFormHelper::loadFieldType('Sermon')->getOptions();
 		if ($this->sermonNameOptions)
 		{
-			// [9351] Sermon Name Filter
+			// [9363] Sermon Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL').' -',
 				'filter_sermon',
@@ -215,7 +215,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [9360] Sermon Name Batch Selection
+				// [9372] Sermon Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL').' -',
 					'batch[sermon]',
@@ -224,11 +224,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			}
 		}
 
-		// [9347] Set Preacher Name Selection
+		// [9359] Set Preacher Name Selection
 		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->getOptions();
 		if ($this->preacherNameOptions)
 		{
-			// [9351] Preacher Name Filter
+			// [9363] Preacher Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL').' -',
 				'filter_preacher',
@@ -237,7 +237,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [9360] Preacher Name Batch Selection
+				// [9372] Preacher Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL').' -',
 					'batch[preacher]',
@@ -246,11 +246,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			}
 		}
 
-		// [9347] Set Series Name Selection
+		// [9359] Set Series Name Selection
 		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->getOptions();
 		if ($this->seriesNameOptions)
 		{
-			// [9351] Series Name Filter
+			// [9363] Series Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL').' -',
 				'filter_series',
@@ -259,7 +259,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [9360] Series Name Batch Selection
+				// [9372] Series Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL').' -',
 					'batch[series]',

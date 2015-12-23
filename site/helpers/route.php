@@ -44,18 +44,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [4813] Initialize the needel array.
+			// [4825] Initialize the needel array.
 			$needles = array(
 				'sermon'  => array((int) $id)
 			);
-			// [4817] Create the link
+			// [4829] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=sermon&id='. $id;
 		}
 		else
 		{
-			// [4822] Initialize the needel array.
+			// [4834] Initialize the needel array.
 			$needles = array();
-			// [4824]Create the link but don't add the id.
+			// [4836]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=sermon';
 		}
 		if ($catid > 1)
@@ -85,18 +85,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [4813] Initialize the needel array.
+			// [4825] Initialize the needel array.
 			$needles = array(
 				'preachers'  => array((int) $id)
 			);
-			// [4817] Create the link
+			// [4829] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=preachers&id='. $id;
 		}
 		else
 		{
-			// [4822] Initialize the needel array.
+			// [4834] Initialize the needel array.
 			$needles = array();
-			// [4824]Create the link but don't add the id.
+			// [4836]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=preachers';
 		}
 		if ($catid > 1)
@@ -126,18 +126,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [4813] Initialize the needel array.
+			// [4825] Initialize the needel array.
 			$needles = array(
 				'preacher'  => array((int) $id)
 			);
-			// [4817] Create the link
+			// [4829] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=preacher&id='. $id;
 		}
 		else
 		{
-			// [4822] Initialize the needel array.
+			// [4834] Initialize the needel array.
 			$needles = array();
-			// [4824]Create the link but don't add the id.
+			// [4836]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=preacher';
 		}
 		if ($catid > 1)
@@ -167,18 +167,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [4813] Initialize the needel array.
+			// [4825] Initialize the needel array.
 			$needles = array(
 				'categories'  => array((int) $id)
 			);
-			// [4817] Create the link
+			// [4829] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=categories&id='. $id;
 		}
 		else
 		{
-			// [4822] Initialize the needel array.
+			// [4834] Initialize the needel array.
 			$needles = array();
-			// [4824]Create the link but don't add the id.
+			// [4836]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=categories';
 		}
 
@@ -197,18 +197,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [4813] Initialize the needel array.
+			// [4825] Initialize the needel array.
 			$needles = array(
 				'category'  => array((int) $id)
 			);
-			// [4817] Create the link
+			// [4829] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=category&id='. $id;
 		}
 		else
 		{
-			// [4822] Initialize the needel array.
+			// [4834] Initialize the needel array.
 			$needles = array();
-			// [4824]Create the link but don't add the id.
+			// [4836]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=category';
 		}
 
@@ -227,18 +227,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [4813] Initialize the needel array.
+			// [4825] Initialize the needel array.
 			$needles = array(
 				'serieslist'  => array((int) $id)
 			);
-			// [4817] Create the link
+			// [4829] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=serieslist&id='. $id;
 		}
 		else
 		{
-			// [4822] Initialize the needel array.
+			// [4834] Initialize the needel array.
 			$needles = array();
-			// [4824]Create the link but don't add the id.
+			// [4836]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=serieslist';
 		}
 		if ($catid > 1)
@@ -268,18 +268,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [4813] Initialize the needel array.
+			// [4825] Initialize the needel array.
 			$needles = array(
 				'series'  => array((int) $id)
 			);
-			// [4817] Create the link
+			// [4829] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=series&id='. $id;
 		}
 		else
 		{
-			// [4822] Initialize the needel array.
+			// [4834] Initialize the needel array.
 			$needles = array();
-			// [4824]Create the link but don't add the id.
+			// [4836]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=series';
 		}
 		if ($catid > 1)

@@ -45,7 +45,7 @@ class SermondistributorModelSermondistributor extends JModelList
 		$viewGroups = array(
 			'main' => array('png.preacher.add', 'png.preachers', 'png.sermon.add', 'png.sermons', 'png.sermons.catid', 'png.series.add', 'png.series_list', 'png.statistics', 'png.help_documents')
 		);
-		// [12426] view access array
+		// [12438] view access array
 		$viewAccess = array(
 			'preacher.create' => 'preacher.create',
 			'preachers.access' => 'preacher.access',

@@ -43,10 +43,10 @@ class SermondistributorViewSermon extends JViewLegacy
 		$this->menu = $this->app->getMenu()->getActive();
 		// get the user object
 		$this->user = JFactory::getUser();
-		// [3146] Initialise variables.
+		// [3158] Initialise variables.
 		$this->item	= $this->get('Item');
 
-		// [3181] Check for errors.
+		// [3193] Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseWarning(500, implode("\n", $errors));
@@ -60,10 +60,10 @@ class SermondistributorViewSermon extends JViewLegacy
 		// set view key
 		$this->item->viewKey = 'sermon';
 
-		// [3198] Set the toolbar
+		// [3210] Set the toolbar
 		$this->addToolBar();
 
-		// [3200] set the document
+		// [3212] set the document
 		$this->_prepareDocument();
 
 		parent::display($tpl);
@@ -107,40 +107,40 @@ class SermondistributorViewSermon extends JViewLegacy
 	protected function _prepareDocument()
 	{
 
-		// [3554] always make sure jquery is loaded.
+		// [3566] always make sure jquery is loaded.
 		JHtml::_('jquery.framework');
-		// [3556] Load the header checker class.
+		// [3568] Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
-		// [3558] Initialize the header checker.
+		// [3570] Initialize the header checker.
 		$HeaderCheck = new HeaderCheck;
 
-		// [3563] Load uikit options.
+		// [3575] Load uikit options.
 		$uikit = $this->params->get('uikit_load');
-		// [3565] Set script size.
+		// [3577] Set script size.
 		$size = $this->params->get('uikit_min');
-		// [3567] Set css style.
+		// [3579] Set css style.
 		$style = $this->params->get('uikit_style');
 
-		// [3570] The uikit css.
+		// [3582] The uikit css.
 		if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit'.$style.$size.'.css');
 		}
-		// [3575] The uikit js.
+		// [3587] The uikit js.
 		if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit'.$size.'.js');
 		}
 
-		// [3584] Load the script to find all uikit components needed.
+		// [3596] Load the script to find all uikit components needed.
 		if ($uikit != 2)
 		{
-			// [3587] Set the default uikit components in this view.
+			// [3599] Set the default uikit components in this view.
 			$uikitComp = array();
 			$uikitComp[] = 'data-uk-tooltip';
 			$uikitComp[] = 'data-uk-grid';
 
-			// [3596] Get field uikit components needed in this view.
+			// [3608] Get field uikit components needed in this view.
 			$uikitFieldComp = $this->get('UikitComp');
 			if (isset($uikitFieldComp) && SermondistributorHelper::checkArray($uikitFieldComp))
 			{
@@ -156,32 +156,32 @@ class SermondistributorViewSermon extends JViewLegacy
 			}
 		}
 
-		// [3612] Load the needed uikit components in this view.
+		// [3624] Load the needed uikit components in this view.
 		if ($uikit != 2 && isset($uikitComp) && SermondistributorHelper::checkArray($uikitComp))
 		{
-			// [3615] load just in case.
+			// [3627] load just in case.
 			jimport('joomla.filesystem.file');
-			// [3617] loading...
+			// [3629] loading...
 			foreach ($uikitComp as $class)
 			{
 				foreach (SermondistributorHelper::$uk_components[$class] as $name)
 				{
-					// [3622] check if the CSS file exists.
+					// [3634] check if the CSS file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css'))
 					{
-						// [3625] load the css.
+						// [3637] load the css.
 						$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css');
 					}
-					// [3628] check if the JavaScript file exists.
+					// [3640] check if the JavaScript file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js'))
 					{
-						// [3631] load the js.
+						// [3643] load the js.
 						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js');
 					}
 				}
 			}
 		}   
-		// [3461] load the meta description
+		// [3473] load the meta description
 		if (isset($this->item->metadesc) && $this->item->metadesc)
 		{
 			$this->document->setDescription($this->item->metadesc);
@@ -190,7 +190,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
 		}
-		// [3470] load the key words if set
+		// [3482] load the key words if set
 		if (isset($this->item->metakey) && $this->item->metakey)
 		{
 			$this->document->setMetadata('keywords', $this->item->metakey);
@@ -199,7 +199,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
 		}
-		// [3479] check the robot params
+		// [3491] check the robot params
 		if (isset($this->item->robots) && $this->item->robots)
 		{
 			$this->document->setMetadata('robots', $this->item->robots);
@@ -208,12 +208,12 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-		// [3488] check if autor is to be set
+		// [3500] check if autor is to be set
 		if (isset($this->item->created_by) && $this->params->get('MetaAuthor') == '1')
 		{
 			$this->document->setMetaData('author', $this->item->created_by);
 		}
-		// [3493] check if metadata is available
+		// [3505] check if metadata is available
 		if (isset($this->item->metadata) && $this->item->metadata)
 		{
 			$mdata = json_decode($this->item->metadata,true);

@@ -101,16 +101,16 @@ class SermondistributorModelPreachers extends JModelList
 	 */
 	public function getItems()
 	{ 
-		// [10780] check in items
+		// [10792] check in items
 		$this->checkInNow();
 
 		// load parent items
 		$items = parent::getItems();
 
-		// [10855] set values to display correctly.
+		// [10867] set values to display correctly.
 		if (SermondistributorHelper::checkArray($items))
 		{
-			// [10858] get user object.
+			// [10870] get user object.
 			$user = JFactory::getUser();
 			foreach ($items as $nr => &$item)
 			{
@@ -135,19 +135,19 @@ class SermondistributorModelPreachers extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		// [7637] Get the user object.
+		// [7649] Get the user object.
 		$user = JFactory::getUser();
-		// [7639] Create a new query object.
+		// [7651] Create a new query object.
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 
-		// [7642] Select some fields
+		// [7654] Select some fields
 		$query->select('a.*');
 
-		// [7649] From the sermondistributor_item table
+		// [7661] From the sermondistributor_item table
 		$query->from($db->quoteName('#__sermondistributor_preacher', 'a'));
 
-		// [7663] Filter by published state
+		// [7675] Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published))
 		{
@@ -158,21 +158,21 @@ class SermondistributorModelPreachers extends JModelList
 			$query->where('(a.published = 0 OR a.published = 1)');
 		}
 
-		// [7675] Join over the asset groups.
+		// [7687] Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-		// [7678] Filter by access level.
+		// [7690] Filter by access level.
 		if ($access = $this->getState('filter.access'))
 		{
 			$query->where('a.access = ' . (int) $access);
 		}
-		// [7683] Implement View Level Access
+		// [7695] Implement View Level Access
 		if (!$user->authorise('core.options', 'com_sermondistributor'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('a.access IN (' . $groups . ')');
 		}
-		// [7760] Filter by search.
+		// [7772] Filter by search.
 		$search = $this->getState('filter.search');
 		if (!empty($search))
 		{
@@ -188,7 +188,7 @@ class SermondistributorModelPreachers extends JModelList
 		}
 
 
-		// [7719] Add the list ordering clause.
+		// [7731] Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
 		$orderDirn = $this->state->get('list.direction', 'asc');	
 		if ($orderCol != '')
@@ -206,42 +206,42 @@ class SermondistributorModelPreachers extends JModelList
 	*/
 	public function getExportData($pks)
 	{
-		// [7427] setup the query
+		// [7439] setup the query
 		if (SermondistributorHelper::checkArray($pks))
 		{
-			// [7430] Get the user object.
+			// [7442] Get the user object.
 			$user = JFactory::getUser();
-			// [7432] Create a new query object.
+			// [7444] Create a new query object.
 			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
 
-			// [7435] Select some fields
+			// [7447] Select some fields
 			$query->select('a.*');
 
-			// [7437] From the sermondistributor_preacher table
+			// [7449] From the sermondistributor_preacher table
 			$query->from($db->quoteName('#__sermondistributor_preacher', 'a'));
 			$query->where('a.id IN (' . implode(',',$pks) . ')');
-			// [7447] Implement View Level Access
+			// [7459] Implement View Level Access
 			if (!$user->authorise('core.options', 'com_sermondistributor'))
 			{
 				$groups = implode(',', $user->getAuthorisedViewLevels());
 				$query->where('a.access IN (' . $groups . ')');
 			}
 
-			// [7454] Order the results by ordering
+			// [7466] Order the results by ordering
 			$query->order('a.ordering  ASC');
 
-			// [7456] Load the items
+			// [7468] Load the items
 			$db->setQuery($query);
 			$db->execute();
 			if ($db->getNumRows())
 			{
 				$items = $db->loadObjectList();
 
-				// [10855] set values to display correctly.
+				// [10867] set values to display correctly.
 				if (SermondistributorHelper::checkArray($items))
 				{
-					// [10858] get user object.
+					// [10870] get user object.
 					$user = JFactory::getUser();
 					foreach ($items as $nr => &$item)
 					{
@@ -252,13 +252,13 @@ class SermondistributorModelPreachers extends JModelList
 							continue;
 						}
 
-						// [11068] unset the values we don't want exported.
+						// [11080] unset the values we don't want exported.
 						unset($item->asset_id);
 						unset($item->checked_out);
 						unset($item->checked_out_time);
 					}
 				}
-				// [11077] Add headers to items array.
+				// [11089] Add headers to items array.
 				$headers = $this->getExImPortHeaders();
 				if (SermondistributorHelper::checkObject($headers))
 				{
@@ -277,13 +277,13 @@ class SermondistributorModelPreachers extends JModelList
 	*/
 	public function getExImPortHeaders()
 	{
-		// [7476] Get a db connection.
+		// [7488] Get a db connection.
 		$db = JFactory::getDbo();
-		// [7478] get the columns
+		// [7490] get the columns
 		$columns = $db->getTableColumns("#__sermondistributor_preacher");
 		if (SermondistributorHelper::checkArray($columns))
 		{
-			// [7482] remove the headers you don't import/export.
+			// [7494] remove the headers you don't import/export.
 			unset($columns['asset_id']);
 			unset($columns['checked_out']);
 			unset($columns['checked_out_time']);
@@ -305,7 +305,7 @@ class SermondistributorModelPreachers extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-		// [10403] Compile the store id.
+		// [10415] Compile the store id.
 		$id .= ':' . $this->getState('filter.id');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
@@ -326,15 +326,15 @@ class SermondistributorModelPreachers extends JModelList
 	*/
 	protected function checkInNow()
 	{
-		// [10796] Get set check in time
+		// [10808] Get set check in time
 		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');
 		
 		if ($time)
 		{
 
-			// [10801] Get a db connection.
+			// [10813] Get a db connection.
 			$db = JFactory::getDbo();
-			// [10803] reset query
+			// [10815] reset query
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->quoteName('#__sermondistributor_preacher'));
@@ -342,24 +342,24 @@ class SermondistributorModelPreachers extends JModelList
 			$db->execute();
 			if ($db->getNumRows())
 			{
-				// [10811] Get Yesterdays date
+				// [10823] Get Yesterdays date
 				$date = JFactory::getDate()->modify($time)->toSql();
-				// [10813] reset query
+				// [10825] reset query
 				$query = $db->getQuery(true);
 
-				// [10815] Fields to update.
+				// [10827] Fields to update.
 				$fields = array(
 					$db->quoteName('checked_out_time') . '=\'0000-00-00 00:00:00\'',
 					$db->quoteName('checked_out') . '=0'
 				);
 
-				// [10820] Conditions for which records should be updated.
+				// [10832] Conditions for which records should be updated.
 				$conditions = array(
 					$db->quoteName('checked_out') . '!=0', 
 					$db->quoteName('checked_out_time') . '<\''.$date.'\''
 				);
 
-				// [10825] Check table
+				// [10837] Check table
 				$query->update($db->quoteName('#__sermondistributor_preacher'))->set($fields)->where($conditions); 
 
 				$db->setQuery($query);
