@@ -12,9 +12,8 @@ The best way to see all your options is to install this component on you Joomla 
 
 ### Some Video Demonstrations
 
-+ [Setup overview] (https://youtu.be/yMPp1Cp3W_0?t=20m)
++ [Setup overview] (https://youtu.be/yMPp1Cp3W_0?t=20m8s)
 + [Setup Dropbox] (https://youtu.be/btpKFDk0-dI)
-+ [Component Build] (https://youtu.be/yMPp1Cp3W_0)
 
 # Build Details
 
@@ -22,7 +21,7 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe] (mailto:llewellyn@vdm.io)
 + *Name*: [Sermon Distributor] (https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 23rd December, 2015
++ *Last Build*: 5th January, 2016
 + *Version*: 1.3.0
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
@@ -35,8 +34,8 @@ due to [Automated Component Builder] (https://www.vdm.io/joomla-component-builde
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **46561**
-+ *File count*: **350**
++ *Line count*: **46546**
++ *File count*: **349**
 + *Folder count*: **79**
 
 **86 Hours** or **11 Eight Hour Days** (the actual time the author spent)

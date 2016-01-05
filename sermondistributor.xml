@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.2" method="upgrade">
 	<name>COM_SERMONDISTRIBUTOR</name>
-	<creationDate>23rd December, 2015</creationDate>
+	<creationDate>5th January, 2016</creationDate>
 	<author>Llewellyn van der Merwe</author>
 	<authorEmail>llewellyn@vdm.io</authorEmail>
 	<authorUrl>https://www.vdm.io/</authorUrl>
@@ -79,7 +79,6 @@
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
-			<filename>vdm.php</filename>
 			<filename>index.html</filename>
 			<filename>sermondistributor.php</filename>
 			<folder>assets</folder>
