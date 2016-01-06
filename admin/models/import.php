@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			5th January, 2016
+	@build			6th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		import.php
@@ -196,10 +196,13 @@ class SermondistributorModelImport extends JModelLegacy
 	 * @return spreadsheet definition or false on failure
 	 */
 	protected function _getPackageFromUpload()
-	{
+	{		
 		// Get the uploaded file information
-		$userfile = JRequest::getVar('import_package', null, 'files', 'array');
+		$input    = JFactory::getApplication()->input;
 
+		// Do not change the filter type 'raw'. We need this to let files containing PHP code to upload. See JInputFiles::get.
+		$userfile = $input->files->get('import_package', null, 'raw');
+		
 		// Make sure that file uploads are enabled in php
 		if (!(bool) ini_get('file_uploads'))
 		{

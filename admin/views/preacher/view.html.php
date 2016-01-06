@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			5th January, 2016
+	@build			6th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -71,7 +71,7 @@ class SermondistributorViewPreacher extends JViewLegacy
                 }
 
 		// [6740] Get Linked view data
-		$this->nassermons		= $this->get('Nassermons');
+		$this->fyusermons		= $this->get('Fyusermons');
 
 		// Set the toolbar
 		$this->addToolBar();

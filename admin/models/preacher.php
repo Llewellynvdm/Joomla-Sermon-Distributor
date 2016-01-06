@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			5th January, 2016
+	@build			6th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preacher.php
@@ -101,7 +101,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.preacher');
 			}
 		}
-		$this->preachereool = $item->id;
+		$this->preachertzre = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getNassermons()
+	public function getFyusermons()
 	{
 		// [7206] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelPreacher extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7234] Filter by preachereool global.
-		$preachereool = $this->preachereool;
-		if (is_numeric($preachereool ))
+		// [7234] Filter by preachertzre global.
+		$preachertzre = $this->preachertzre;
+		if (is_numeric($preachertzre ))
 		{
-			$query->where('a.preacher = ' . (int) $preachereool );
+			$query->where('a.preacher = ' . (int) $preachertzre );
 		}
-		elseif (is_string($preachereool))
+		elseif (is_string($preachertzre))
 		{
-			$query->where('a.preacher = ' . $db->quote($preachereool));
+			$query->where('a.preacher = ' . $db->quote($preachertzre));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelPreacher extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [11149] convert link_type
-					$item->link_type = $this->selectionTranslationNassermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationFyusermons($item->link_type, 'link_type');
 					// [11149] convert source
-					$item->source = $this->selectionTranslationNassermons($item->source, 'source');
+					$item->source = $this->selectionTranslationFyusermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationNassermons($value,$name)
+	public function selectionTranslationFyusermons($value,$name)
 	{
 		// [11175] Array of link_type language strings
 		if ($name == 'link_type')

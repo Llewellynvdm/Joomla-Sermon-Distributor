@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			5th January, 2016
+	@build			6th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -74,7 +74,7 @@ class SermondistributorModelSermon extends JModelItem
 		$this->app	= JFactory::getApplication();
 		$this->input 	= $this->app->input;
 		// Get the itme main id
-		$id = JRequest::getInt('id');
+		$id		= $this->input->getInt('id', null);
 		$this->setState('sermon.id', $id);
 
 		// Load the parameters.

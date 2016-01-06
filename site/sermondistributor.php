@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			5th January, 2016
+	@build			6th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -45,7 +45,8 @@ jimport('joomla.application.component.controller');
 $controller = JControllerLegacy::getInstance('Sermondistributor');
 
 // Perform the request task
-$controller->execute(JRequest::getCmd('task'));
+$jinput = JFactory::getApplication()->input;
+$controller->execute($jinput->get('task', null, 'CMD'));
 
 // Redirect if set by the controller
 $controller->redirect();

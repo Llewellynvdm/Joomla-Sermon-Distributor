@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			5th January, 2016
+	@build			6th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -101,7 +101,7 @@ class SermondistributorModelSeries extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.series');
 			}
 		}
-		$this->seriespmzw = $item->id;
+		$this->serieslsom = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getZswsermons()
+	public function getEtssermons()
 	{
 		// [7206] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelSeries extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7234] Filter by seriespmzw global.
-		$seriespmzw = $this->seriespmzw;
-		if (is_numeric($seriespmzw ))
+		// [7234] Filter by serieslsom global.
+		$serieslsom = $this->serieslsom;
+		if (is_numeric($serieslsom ))
 		{
-			$query->where('a.series = ' . (int) $seriespmzw );
+			$query->where('a.series = ' . (int) $serieslsom );
 		}
-		elseif (is_string($seriespmzw))
+		elseif (is_string($serieslsom))
 		{
-			$query->where('a.series = ' . $db->quote($seriespmzw));
+			$query->where('a.series = ' . $db->quote($serieslsom));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelSeries extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [11149] convert link_type
-					$item->link_type = $this->selectionTranslationZswsermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationEtssermons($item->link_type, 'link_type');
 					// [11149] convert source
-					$item->source = $this->selectionTranslationZswsermons($item->source, 'source');
+					$item->source = $this->selectionTranslationEtssermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationZswsermons($value,$name)
+	public function selectionTranslationEtssermons($value,$name)
 	{
 		// [11175] Array of link_type language strings
 		if ($name == 'link_type')
