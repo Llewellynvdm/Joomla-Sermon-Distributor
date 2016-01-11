@@ -101,7 +101,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.preacher');
 			}
 		}
-		$this->preacherkzna = $item->id;
+		$this->preachercqfb = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getBzfsermons()
+	public function getNnrsermons()
 	{
 		// [7244] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelPreacher extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7272] Filter by preacherkzna global.
-		$preacherkzna = $this->preacherkzna;
-		if (is_numeric($preacherkzna ))
+		// [7272] Filter by preachercqfb global.
+		$preachercqfb = $this->preachercqfb;
+		if (is_numeric($preachercqfb ))
 		{
-			$query->where('a.preacher = ' . (int) $preacherkzna );
+			$query->where('a.preacher = ' . (int) $preachercqfb );
 		}
-		elseif (is_string($preacherkzna))
+		elseif (is_string($preachercqfb))
 		{
-			$query->where('a.preacher = ' . $db->quote($preacherkzna));
+			$query->where('a.preacher = ' . $db->quote($preachercqfb));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelPreacher extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [11187] convert link_type
-					$item->link_type = $this->selectionTranslationBzfsermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationNnrsermons($item->link_type, 'link_type');
 					// [11187] convert source
-					$item->source = $this->selectionTranslationBzfsermons($item->source, 'source');
+					$item->source = $this->selectionTranslationNnrsermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationBzfsermons($value,$name)
+	public function selectionTranslationNnrsermons($value,$name)
 	{
 		// [11213] Array of link_type language strings
 		if ($name == 'link_type')

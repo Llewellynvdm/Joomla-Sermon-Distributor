@@ -101,7 +101,7 @@ class SermondistributorModelSeries extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.series');
 			}
 		}
-		$this->seriestwqr = $item->id;
+		$this->seriesxzcp = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getBxtsermons()
+	public function getRbksermons()
 	{
 		// [7244] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelSeries extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7272] Filter by seriestwqr global.
-		$seriestwqr = $this->seriestwqr;
-		if (is_numeric($seriestwqr ))
+		// [7272] Filter by seriesxzcp global.
+		$seriesxzcp = $this->seriesxzcp;
+		if (is_numeric($seriesxzcp ))
 		{
-			$query->where('a.series = ' . (int) $seriestwqr );
+			$query->where('a.series = ' . (int) $seriesxzcp );
 		}
-		elseif (is_string($seriestwqr))
+		elseif (is_string($seriesxzcp))
 		{
-			$query->where('a.series = ' . $db->quote($seriestwqr));
+			$query->where('a.series = ' . $db->quote($seriesxzcp));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelSeries extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [11187] convert link_type
-					$item->link_type = $this->selectionTranslationBxtsermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationRbksermons($item->link_type, 'link_type');
 					// [11187] convert source
-					$item->source = $this->selectionTranslationBxtsermons($item->source, 'source');
+					$item->source = $this->selectionTranslationRbksermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationBxtsermons($value,$name)
+	public function selectionTranslationRbksermons($value,$name)
 	{
 		// [11213] Array of link_type language strings
 		if ($name == 'link_type')

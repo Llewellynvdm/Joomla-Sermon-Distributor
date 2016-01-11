@@ -6,7 +6,7 @@ Distributor is a highly advanced sermon distributor that runs on the [Joomla 3.x
 
 The best way to see all your options is to install this component on you Joomla website and test all features yourself. Here is a [direct download link] (https://github.com/SermonDistributor/Joomla-3-Component/archive/master.zip)
 
-### If you like our component please rate it on the [Joomla Index] (http://extensions.joomla.org/extensions/extension/living/religion/sermon-distributor)
+ **If you like our component please rate it on the [Joomla Index] (http://extensions.joomla.org/extensions/extension/living/religion/sermon-distributor)**
 
 ### Example Website, That Has Over 6000 Audio Files
 
