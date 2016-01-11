@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			6th January, 2016
+	@build			11th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -97,13 +97,13 @@ class SermondistributorModelSermon extends JModelAdmin
 
 			if (!empty($item->local_files))
 			{
-				// [4232] JSON Decode local_files.
+				// [4270] JSON Decode local_files.
 				$item->local_files = json_decode($item->local_files);
 			}
 
 			if (!empty($item->manual_files))
 			{
-				// [4232] JSON Decode manual_files.
+				// [4270] JSON Decode manual_files.
 				$item->manual_files = json_decode($item->manual_files);
 			}
 			
@@ -113,7 +113,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.sermon');
 			}
 		}
-		$this->sermonshpc = $item->id;
+		$this->sermonvyei = $item->id;
 
 		return $item;
 	}
@@ -123,76 +123,76 @@ class SermondistributorModelSermon extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getUqbstastics()
+	public function getUhxstastics()
 	{
-		// [7206] Get the user object.
+		// [7244] Get the user object.
 		$user = JFactory::getUser();
-		// [7208] Create a new query object.
+		// [7246] Create a new query object.
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 
-		// [7211] Select some fields
+		// [7249] Select some fields
 		$query->select('a.*');
 
-		// [7218] From the sermondistributor_statistic table
+		// [7256] From the sermondistributor_statistic table
 		$query->from($db->quoteName('#__sermondistributor_statistic', 'a'));
 
-		// [7811] From the sermondistributor_sermon table.
+		// [7849] From the sermondistributor_sermon table.
 		$query->select($db->quoteName('g.name','sermon_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_sermon', 'g') . ' ON (' . $db->quoteName('a.sermon') . ' = ' . $db->quoteName('g.id') . ')');
 
-		// [7811] From the sermondistributor_preacher table.
+		// [7849] From the sermondistributor_preacher table.
 		$query->select($db->quoteName('h.name','preacher_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_preacher', 'h') . ' ON (' . $db->quoteName('a.preacher') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7811] From the sermondistributor_series table.
+		// [7849] From the sermondistributor_series table.
 		$query->select($db->quoteName('i.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'i') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('i.id') . ')');
 
-		// [7234] Filter by sermonshpc global.
-		$sermonshpc = $this->sermonshpc;
-		if (is_numeric($sermonshpc ))
+		// [7272] Filter by sermonvyei global.
+		$sermonvyei = $this->sermonvyei;
+		if (is_numeric($sermonvyei ))
 		{
-			$query->where('a.sermon = ' . (int) $sermonshpc );
+			$query->where('a.sermon = ' . (int) $sermonvyei );
 		}
-		elseif (is_string($sermonshpc))
+		elseif (is_string($sermonvyei))
 		{
-			$query->where('a.sermon = ' . $db->quote($sermonshpc));
+			$query->where('a.sermon = ' . $db->quote($sermonvyei));
 		}
 		else
 		{
 			$query->where('a.sermon = -5');
 		}
 
-		// [7251] Join over the asset groups.
+		// [7289] Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-		// [7254] Filter by access level.
+		// [7292] Filter by access level.
 		if ($access = $this->getState('filter.access'))
 		{
 			$query->where('a.access = ' . (int) $access);
 		}
-		// [7259] Implement View Level Access
+		// [7297] Implement View Level Access
 		if (!$user->authorise('core.options', 'com_sermondistributor'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('a.access IN (' . $groups . ')');
 		}
 
-		// [7266] Order the results by ordering
+		// [7304] Order the results by ordering
 		$query->order('a.ordering  ASC');
 
-		// [7268] Load the items
+		// [7306] Load the items
 		$db->setQuery($query);
 		$db->execute();
 		if ($db->getNumRows())
 		{
 			$items = $db->loadObjectList();
 
-			// [10876] set values to display correctly.
+			// [10914] set values to display correctly.
 			if (SermondistributorHelper::checkArray($items))
 			{
-				// [10879] get user object.
+				// [10917] get user object.
 				$user = JFactory::getUser();
 				foreach ($items as $nr => &$item)
 				{
@@ -221,7 +221,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
-	{		// [9827] Get the form.
+	{		// [9865] Get the form.
 		$form = $this->loadForm('com_sermondistributor.sermon', 'sermon', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
@@ -231,17 +231,17 @@ class SermondistributorModelSermon extends JModelAdmin
 
 		$jinput = JFactory::getApplication()->input;
 
-		// [9854] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		// [9892] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0, 'INT');
 		}
-		// [9859] The back end uses id so we use that the rest of the time and set it to 0 by default.
+		// [9897] The back end uses id so we use that the rest of the time and set it to 0 by default.
 		else
 		{
 			$id = $jinput->get('id', 0, 'INT');
 		}
-		// [9864] Determine correct permissions to check.
+		// [9902] Determine correct permissions to check.
 		if ($this->getState('sermon.id'))
 		{
 			$id = $this->getState('sermon.id');
@@ -249,56 +249,56 @@ class SermondistributorModelSermon extends JModelAdmin
 			$catid = 0;
 			if (isset($this->getItem($id)->catid))
 			{
-				// [9871] set catagory id
+				// [9909] set catagory id
 				$catid = $this->getItem($id)->catid;
 
-				// [9873] Existing record. Can only edit in selected categories.
+				// [9911] Existing record. Can only edit in selected categories.
 				$form->setFieldAttribute('catid', 'action', 'core.edit');
 
-				// [9875] Existing record. Can only edit own items in selected categories.
+				// [9913] Existing record. Can only edit own items in selected categories.
 				$form->setFieldAttribute('catid', 'action', 'core.edit.own');
 			}
 		}
 		else
 		{
-			// [9881] New record. Can only create in selected categories.
+			// [9919] New record. Can only create in selected categories.
 			$form->setFieldAttribute('catid', 'action', 'core.create');
 		}
 
 		$user = JFactory::getUser();
 
-		// [9885] Check for existing item.
-		// [9886] Modify the form based on Edit State access controls.
+		// [9923] Check for existing item.
+		// [9924] Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('sermon.edit.state', 'com_sermondistributor.sermon.' . (int) $id))
 			|| (isset($catid) && $catid != 0 && !$user->authorise('core.edit.state', 'com_sermondistributor.sermons.category.' . (int) $catid))
 			|| ($id == 0 && !$user->authorise('sermon.edit.state', 'com_sermondistributor')))
 		{
-			// [9901] Disable fields for display.
+			// [9939] Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('published', 'disabled', 'true');
 
-			// [9904] Disable fields while saving.
+			// [9942] Disable fields while saving.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [9945] Modify the form based on Edit Creaded By access controls.
+		// [9983] Modify the form based on Edit Creaded By access controls.
 		if ($id != 0 && (!$user->authorise('sermon.edit.created_by', 'com_sermondistributor.sermon.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('sermon.edit.created_by', 'com_sermondistributor')))
 		{
-			// [9957] Disable fields for display.
+			// [9995] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'disabled', 'true');
-			// [9959] Disable fields for display.
+			// [9997] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'readonly', 'true');
-			// [9961] Disable fields while saving.
+			// [9999] Disable fields while saving.
 			$form->setFieldAttribute('created_by', 'filter', 'unset');
 		}
-		// [9964] Modify the form based on Edit Creaded Date access controls.
+		// [10002] Modify the form based on Edit Creaded Date access controls.
 		if ($id != 0 && (!$user->authorise('sermon.edit.created', 'com_sermondistributor.sermon.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('sermon.edit.created', 'com_sermondistributor')))
 		{
-			// [9976] Disable fields for display.
+			// [10014] Disable fields for display.
 			$form->setFieldAttribute('created', 'disabled', 'true');
-			// [9978] Disable fields while saving.
+			// [10016] Disable fields while saving.
 			$form->setFieldAttribute('created', 'filter', 'unset');
 		}
 
@@ -338,7 +338,7 @@ class SermondistributorModelSermon extends JModelAdmin
 
 			if ($allow)
 			{
-				// [10099] The record has been set. Check the record permissions.
+				// [10137] The record has been set. Check the record permissions.
 				return $user->authorise('sermon.delete', 'com_sermondistributor.sermon.' . (int) $record->id);
 			}
 			return $allow;
@@ -362,14 +362,14 @@ class SermondistributorModelSermon extends JModelAdmin
 
 		if ($recordId)
 		{
-			// [10172] The record has been set. Check the record permissions.
+			// [10210] The record has been set. Check the record permissions.
 			$permission = $user->authorise('sermon.edit.state', 'com_sermondistributor.sermon.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				return false;
 			}
 		}
-		// [10188] Check against the category.
+		// [10226] Check against the category.
 		if (!empty($record->catid))
 		{
 			$catpermission = $user->authorise('core.edit.state', 'com_sermondistributor.sermons.category.' . (int) $record->catid);
@@ -378,7 +378,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				return false;
 			}
 		}
-		// [10199] In the absense of better information, revert to the component permissions.
+		// [10237] In the absense of better information, revert to the component permissions.
 		return $user->authorise('sermon.edit.state', 'com_sermondistributor');
 	}
     
@@ -393,7 +393,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [10040] Check specific edit permission then general edit permission.
+		// [10078] Check specific edit permission then general edit permission.
 		$user = JFactory::getUser();
 
 		return $user->authorise('sermon.edit', 'com_sermondistributor.sermon.'. ((int) isset($data[$key]) ? $data[$key] : 0)) or $user->authorise('sermon.edit',  'com_sermondistributor');
@@ -492,20 +492,20 @@ class SermondistributorModelSermon extends JModelAdmin
 	*/
 	public function validate($form, $data, $group = null)
 	{
-		// [9031] check if the not_required field is set
+		// [9069] check if the not_required field is set
 		if (SermondistributorHelper::checkString($data['not_required']))
 		{
 			$requiredFields = (array) explode(',',(string) $data['not_required']);
 			$requiredFields = array_unique($requiredFields);
-			// [9036] now change the required field attributes value
+			// [9074] now change the required field attributes value
 			foreach ($requiredFields as $requiredField)
 			{
-				// [9039] make sure there is a string value
+				// [9077] make sure there is a string value
 				if (SermondistributorHelper::checkString($requiredField))
 				{
-					// [9042] change to false
+					// [9080] change to false
 					$form->setFieldAttribute($requiredField, 'required', 'false');
-					// [9044] also clear the data set
+					// [9082] also clear the data set
 					$data[$requiredField] = '';
 				}
 			}
@@ -655,7 +655,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	{
 		if (empty($this->batchSet))
 		{
-			// [5188] Set some needed variables.
+			// [5226] Set some needed variables.
 			$this->user 		= JFactory::getUser();
 			$this->table 		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
@@ -669,12 +669,12 @@ class SermondistributorModelSermon extends JModelAdmin
 			return false;
 		}
 
-		// [5208] get list of uniqe fields
+		// [5246] get list of uniqe fields
 		$uniqeFields = $this->getUniqeFields();
-		// [5210] remove move_copy from array
+		// [5248] remove move_copy from array
 		unset($values['move_copy']);
 
-		// [5213] make sure published is set
+		// [5251] make sure published is set
 		if (!isset($values['published']))
 		{
 			$values['published'] = 0;
@@ -690,7 +690,7 @@ class SermondistributorModelSermon extends JModelAdmin
 		}
 		elseif (isset($values['category']) && (int) $values['category'] > 0)
 		{
-			// [5238] move the category value to correct field name
+			// [5276] move the category value to correct field name
 			$values['catid'] = $values['category'];
 			unset($values['category']);
 		}
@@ -701,21 +701,21 @@ class SermondistributorModelSermon extends JModelAdmin
 
 		$newIds = array();
 
-		// [5250] Parent exists so let's proceed
+		// [5288] Parent exists so let's proceed
 		while (!empty($pks))
 		{
-			// [5253] Pop the first ID off the stack
+			// [5291] Pop the first ID off the stack
 			$pk = array_shift($pks);
 
 			$this->table->reset();
 
-			// [5258] only allow copy if user may edit this item.
+			// [5296] only allow copy if user may edit this item.
 
 			if (!$this->user->authorise('sermon.edit', $contexts[$pk]))
 
 			{
 
-				// [5268] Not fatal error
+				// [5306] Not fatal error
 
 				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 
@@ -723,19 +723,19 @@ class SermondistributorModelSermon extends JModelAdmin
 
 			}
 
-			// [5273] Check that the row actually exists
+			// [5311] Check that the row actually exists
 			if (!$this->table->load($pk))
 			{
 				if ($error = $this->table->getError())
 				{
-					// [5278] Fatal error
+					// [5316] Fatal error
 					$this->setError($error);
 
 					return false;
 				}
 				else
 				{
-					// [5285] Not fatal error
+					// [5323] Not fatal error
 					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
@@ -750,7 +750,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				list($this->table->name, $this->table->alias) = $this->generateNewTitle($this->table->catid, $this->table->alias, $this->table->name);
 			}
 
-			// [5321] insert all set values
+			// [5359] insert all set values
 			if (SermondistributorHelper::checkArray($values))
 			{
 				foreach ($values as $key => $value)
@@ -762,7 +762,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				}
 			}
 
-			// [5333] update all uniqe fields
+			// [5371] update all uniqe fields
 			if (SermondistributorHelper::checkArray($uniqeFields))
 			{
 				foreach ($uniqeFields as $uniqeField)
@@ -771,13 +771,13 @@ class SermondistributorModelSermon extends JModelAdmin
 				}
 			}
 
-			// [5342] Reset the ID because we are making a copy
+			// [5380] Reset the ID because we are making a copy
 			$this->table->id = 0;
 
-			// [5345] TODO: Deal with ordering?
-			// [5346] $this->table->ordering	= 1;
+			// [5383] TODO: Deal with ordering?
+			// [5384] $this->table->ordering	= 1;
 
-			// [5348] Check the row.
+			// [5386] Check the row.
 			if (!$this->table->check())
 			{
 				$this->setError($this->table->getError());
@@ -790,7 +790,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
 			}
 
-			// [5361] Store the row.
+			// [5399] Store the row.
 			if (!$this->table->store())
 			{
 				$this->setError($this->table->getError());
@@ -798,14 +798,14 @@ class SermondistributorModelSermon extends JModelAdmin
 				return false;
 			}
 
-			// [5369] Get the new item ID
+			// [5407] Get the new item ID
 			$newId = $this->table->get('id');
 
-			// [5372] Add the new ID to the array
+			// [5410] Add the new ID to the array
 			$newIds[$pk] = $newId;
 		}
 
-		// [5376] Clean the cache
+		// [5414] Clean the cache
 		$this->cleanCache();
 
 		return $newIds;
@@ -826,7 +826,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	{
 		if (empty($this->batchSet))
 		{
-			// [4990] Set some needed variables.
+			// [5028] Set some needed variables.
 			$this->user		= JFactory::getUser();
 			$this->table		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
@@ -841,12 +841,12 @@ class SermondistributorModelSermon extends JModelAdmin
 			return false;
 		}
 
-		// [5012] make sure published only updates if user has the permission.
+		// [5050] make sure published only updates if user has the permission.
 		if (isset($values['published']) && !$this->canDo->get('sermon.edit.state'))
 		{
 			unset($values['published']);
 		}
-		// [5025] remove move_copy from array
+		// [5063] remove move_copy from array
 		unset($values['move_copy']);
 
 		if (isset($values['category']) && (int) $values['category'] > 0 && !static::checkCategoryId($values['category']))
@@ -855,7 +855,7 @@ class SermondistributorModelSermon extends JModelAdmin
 		}
 		elseif (isset($values['category']) && (int) $values['category'] > 0)
 		{
-			// [5036] move the category value to correct field name
+			// [5074] move the category value to correct field name
 			$values['catid'] = $values['category'];
 			unset($values['category']);
 		}
@@ -865,7 +865,7 @@ class SermondistributorModelSermon extends JModelAdmin
 		}
 
 
-		// [5046] Parent exists so we proceed
+		// [5084] Parent exists so we proceed
 		foreach ($pks as $pk)
 		{
 			if (!$this->user->authorise('sermon.edit', $contexts[$pk]))
@@ -875,30 +875,30 @@ class SermondistributorModelSermon extends JModelAdmin
 				return false;
 			}
 
-			// [5063] Check that the row actually exists
+			// [5101] Check that the row actually exists
 			if (!$this->table->load($pk))
 			{
 				if ($error = $this->table->getError())
 				{
-					// [5068] Fatal error
+					// [5106] Fatal error
 					$this->setError($error);
 
 					return false;
 				}
 				else
 				{
-					// [5075] Not fatal error
+					// [5113] Not fatal error
 					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
 			}
 
-			// [5081] insert all set values.
+			// [5119] insert all set values.
 			if (SermondistributorHelper::checkArray($values))
 			{
 				foreach ($values as $key => $value)
 				{
-					// [5086] Do special action for access.
+					// [5124] Do special action for access.
 					if ('access' == $key && strlen($value) > 0)
 					{
 						$this->table->$key = $value;
@@ -911,7 +911,7 @@ class SermondistributorModelSermon extends JModelAdmin
 			}
 
 
-			// [5098] Check the row.
+			// [5136] Check the row.
 			if (!$this->table->check())
 			{
 				$this->setError($this->table->getError());
@@ -924,7 +924,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
 			}
 
-			// [5111] Store the row.
+			// [5149] Store the row.
 			if (!$this->table->store())
 			{
 				$this->setError($this->table->getError());
@@ -933,7 +933,7 @@ class SermondistributorModelSermon extends JModelAdmin
 			}
 		}
 
-		// [5120] Clean the cache
+		// [5158] Clean the cache
 		$this->cleanCache();
 
 		return true;
@@ -963,13 +963,13 @@ class SermondistributorModelSermon extends JModelAdmin
 			$data['metadata'] = (string) $metadata;
 		} 
 
-		// [4342] Set the local_files string to JSON string.
+		// [4380] Set the local_files string to JSON string.
 		if (isset($data['local_files']))
 		{
 			$data['local_files'] = (string) json_encode($data['local_files']);
 		}
 
-		// [4342] Set the manual_files string to JSON string.
+		// [4380] Set the manual_files string to JSON string.
 		if (isset($data['manual_files']))
 		{
 			$data['manual_files'] = (string) json_encode($data['manual_files']);
@@ -983,7 +983,7 @@ class SermondistributorModelSermon extends JModelAdmin
 			$data['params'] = (string) $params;
 		}
 
-		// [5402] Alter the name for save as copy
+		// [5440] Alter the name for save as copy
 		if ($input->get('task') == 'save2copy')
 		{
 			$origTable = clone $this->getTable();
@@ -1006,7 +1006,7 @@ class SermondistributorModelSermon extends JModelAdmin
 			$data['published'] = 0;
 		}
 
-		// [5429] Automatic handling of alias for empty fields
+		// [5467] Automatic handling of alias for empty fields
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (int) $input->get('id') == 0)
 		{
 			if ($data['alias'] == null)
@@ -1037,10 +1037,10 @@ class SermondistributorModelSermon extends JModelAdmin
 			}
 		}
 
-		// [5468] Alter the uniqe field for save as copy
+		// [5506] Alter the uniqe field for save as copy
 		if ($input->get('task') == 'save2copy')
 		{
-			// [5471] Automatic handling of other uniqe fields
+			// [5509] Automatic handling of other uniqe fields
 			$uniqeFields = $this->getUniqeFields();
 			if (SermondistributorHelper::checkArray($uniqeFields))
 			{
@@ -1094,7 +1094,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	protected function _generateNewTitle($alias, $title)
 	{
 
-		// [5502] Alter the title & alias
+		// [5540] Alter the title & alias
 		$table = $this->getTable();
 
 		while ($table->load(array('alias' => $alias)))

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			6th January, 2016
+	@build			11th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -561,23 +561,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [1487] if user not in those target groups then remove the item
+							// [1497] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [1492] set the return type
+					// [1502] set the return type
 					switch ($help->type)
 					{
-						// [1495] set joomla article
+						// [1505] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [1499] set help text
+						// [1509] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [1503] set Link
+						// [1513] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -827,7 +827,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [2731] reset
+			// [2741] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -836,15 +836,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [2740] make sure uikit is loaded to config
+			// [2750] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [2745] sorter
+			// [2755] sorter
 			if (self::checkArray($temp))
 			{
-				// [2748] merger
+				// [2758] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);

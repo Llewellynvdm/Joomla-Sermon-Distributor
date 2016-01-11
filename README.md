@@ -6,6 +6,8 @@ Distributor is a highly advanced sermon distributor that runs on the [Joomla 3.x
 
 The best way to see all your options is to install this component on you Joomla website and test all features yourself. Here is a [direct download link] (https://github.com/SermonDistributor/Joomla-3-Component/archive/master.zip)
 
+### If you like our component please rate it on the [Joomla Index] (http://extensions.joomla.org/extensions/extension/living/religion/sermon-distributor)
+
 ### Example Website, That Has Over 6000 Audio Files
 
 [LoudVoice.org] (http://www.loudvoice.org)
@@ -21,7 +23,7 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe] (mailto:llewellyn@vdm.io)
 + *Name*: [Sermon Distributor] (https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 6th January, 2016
++ *Last Build*: 11th January, 2016
 + *Version*: 1.3.0
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +36,7 @@ due to [Automated Component Builder] (https://www.vdm.io/joomla-component-builde
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **46550**
++ *Line count*: **46552**
 + *File count*: **349**
 + *Folder count*: **79**
 

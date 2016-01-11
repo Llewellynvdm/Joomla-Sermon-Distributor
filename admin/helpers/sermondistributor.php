@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			6th January, 2016
+	@build			11th January, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -553,23 +553,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [1487] if user not in those target groups then remove the item
+							// [1497] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [1492] set the return type
+					// [1502] set the return type
 					switch ($help->type)
 					{
-						// [1495] set joomla article
+						// [1505] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [1499] set help text
+						// [1509] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [1503] set Link
+						// [1513] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -698,7 +698,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [2731] reset
+			// [2741] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -707,15 +707,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [2740] make sure uikit is loaded to config
+			// [2750] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [2745] sorter
+			// [2755] sorter
 			if (self::checkArray($temp))
 			{
-				// [2748] merger
+				// [2758] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -736,37 +736,37 @@ abstract class SermondistributorHelper
 	 */
 	public static function xls($rows,$fileName = null,$title = null,$subjectTab = null,$creator = 'Vast Development Method',$description = null,$category = null,$keywords = null,$modified = null)
 	{
-		// [1542] set the user
+		// [1552] set the user
 		$user = JFactory::getUser();
 		
-		// [1545] set fieldname if not set
+		// [1555] set fieldname if not set
 		if (!$fileName)
 		{
 			$fileName = 'exported_'.JFactory::getDate()->format('jS_F_Y');
 		}
-		// [1550] set modiefied if not set
+		// [1560] set modiefied if not set
 		if (!$modified)
 		{
 			$modified = $user->name;
 		}
-		// [1555] set title if not set
+		// [1565] set title if not set
 		if (!$title)
 		{
 			$title = 'Book1';
 		}
-		// [1560] set tab name if not set
+		// [1570] set tab name if not set
 		if (!$subjectTab)
 		{
 			$subjectTab = 'Sheet1';
 		}
 		
-		// [1566] make sure the file is loaded		
+		// [1576] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		
-		// [1569] Create new PHPExcel object
+		// [1579] Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
 		
-		// [1572] Set document properties
+		// [1582] Set document properties
 		$objPHPExcel->getProperties()->setCreator($creator)
 									 ->setCompany('Vast Development Method')
 									 ->setLastModifiedBy($modified)
@@ -785,7 +785,7 @@ abstract class SermondistributorHelper
 			$objPHPExcel->getProperties()->setCategory($category);
 		}
 		
-		// [1591] Some styles
+		// [1601] Some styles
 		$headerStyles = array(
 			'font'  => array(
 				'bold'  => true,
@@ -807,7 +807,7 @@ abstract class SermondistributorHelper
 				'name'  => 'Verdana'
 		));
 		
-		// [1613] Add some data
+		// [1623] Add some data
 		if (self::checkArray($rows))
 		{
 			$i = 1;
@@ -834,20 +834,20 @@ abstract class SermondistributorHelper
 			return false;
 		}
 		
-		// [1640] Rename worksheet
+		// [1650] Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($subjectTab);
 		
-		// [1643] Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		// [1653] Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
 		
-		// [1646] Redirect output to a client's web browser (Excel5)
+		// [1656] Redirect output to a client's web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'.$fileName.'.xls"');
 		header('Cache-Control: max-age=0');
-		// [1650] If you're serving to IE 9, then the following may be needed
+		// [1660] If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
 		
-		// [1653] If you're serving to IE over SSL, then the following may be needed
+		// [1663] If you're serving to IE over SSL, then the following may be needed
 		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
 		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
@@ -863,13 +863,13 @@ abstract class SermondistributorHelper
 	*/
 	public static function getFileHeaders($dataType)
 	{		
-		// [1669] make sure the file is loaded		
+		// [1679] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
-		// [1671] get session object
+		// [1681] get session object
 		$session 	= JFactory::getSession();
 		$package	= $session->get('package', null);
 		$package	= json_decode($package, true);
-		// [1675] set the headers
+		// [1685] set the headers
 		if(isset($package['dir']))
 		{
 			$inputFileType = PHPExcel_IOFactory::identify($package['dir']);
