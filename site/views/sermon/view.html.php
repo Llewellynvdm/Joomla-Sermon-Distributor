@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -43,10 +43,10 @@ class SermondistributorViewSermon extends JViewLegacy
 		$this->menu = $this->app->getMenu()->getActive();
 		// get the user object
 		$this->user = JFactory::getUser();
-		// [3173] Initialise variables.
+		// [3385] Initialise variables.
 		$this->item	= $this->get('Item');
 
-		// [3208] Check for errors.
+		// [3420] Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseWarning(500, implode("\n", $errors));
@@ -60,10 +60,10 @@ class SermondistributorViewSermon extends JViewLegacy
 		// set view key
 		$this->item->viewKey = 'sermon';
 
-		// [3225] Set the toolbar
+		// [3437] Set the toolbar
 		$this->addToolBar();
 
-		// [3227] set the document
+		// [3439] set the document
 		$this->_prepareDocument();
 
 		parent::display($tpl);
@@ -107,40 +107,40 @@ class SermondistributorViewSermon extends JViewLegacy
 	protected function _prepareDocument()
 	{
 
-		// [3585] always make sure jquery is loaded.
+		// [3874] always make sure jquery is loaded.
 		JHtml::_('jquery.framework');
-		// [3587] Load the header checker class.
+		// [3876] Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
-		// [3589] Initialize the header checker.
+		// [3878] Initialize the header checker.
 		$HeaderCheck = new HeaderCheck;
 
-		// [3594] Load uikit options.
+		// [3883] Load uikit options.
 		$uikit = $this->params->get('uikit_load');
-		// [3596] Set script size.
+		// [3885] Set script size.
 		$size = $this->params->get('uikit_min');
-		// [3598] Set css style.
+		// [3887] Set css style.
 		$style = $this->params->get('uikit_style');
 
-		// [3601] The uikit css.
+		// [3890] The uikit css.
 		if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit'.$style.$size.'.css');
 		}
-		// [3606] The uikit js.
+		// [3895] The uikit js.
 		if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit'.$size.'.js');
 		}
 
-		// [3615] Load the script to find all uikit components needed.
+		// [3904] Load the script to find all uikit components needed.
 		if ($uikit != 2)
 		{
-			// [3618] Set the default uikit components in this view.
+			// [3907] Set the default uikit components in this view.
 			$uikitComp = array();
 			$uikitComp[] = 'data-uk-tooltip';
 			$uikitComp[] = 'data-uk-grid';
 
-			// [3627] Get field uikit components needed in this view.
+			// [3916] Get field uikit components needed in this view.
 			$uikitFieldComp = $this->get('UikitComp');
 			if (isset($uikitFieldComp) && SermondistributorHelper::checkArray($uikitFieldComp))
 			{
@@ -156,32 +156,32 @@ class SermondistributorViewSermon extends JViewLegacy
 			}
 		}
 
-		// [3643] Load the needed uikit components in this view.
+		// [3932] Load the needed uikit components in this view.
 		if ($uikit != 2 && isset($uikitComp) && SermondistributorHelper::checkArray($uikitComp))
 		{
-			// [3646] load just in case.
+			// [3935] load just in case.
 			jimport('joomla.filesystem.file');
-			// [3648] loading...
+			// [3937] loading...
 			foreach ($uikitComp as $class)
 			{
 				foreach (SermondistributorHelper::$uk_components[$class] as $name)
 				{
-					// [3653] check if the CSS file exists.
+					// [3942] check if the CSS file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css'))
 					{
-						// [3656] load the css.
+						// [3945] load the css.
 						$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css');
 					}
-					// [3659] check if the JavaScript file exists.
+					// [3948] check if the JavaScript file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js'))
 					{
-						// [3662] load the js.
+						// [3951] load the js.
 						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js');
 					}
 				}
 			}
 		}   
-		// [3492] load the meta description
+		// [3781] load the meta description
 		if (isset($this->item->metadesc) && $this->item->metadesc)
 		{
 			$this->document->setDescription($this->item->metadesc);
@@ -190,7 +190,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
 		}
-		// [3501] load the key words if set
+		// [3790] load the key words if set
 		if (isset($this->item->metakey) && $this->item->metakey)
 		{
 			$this->document->setMetadata('keywords', $this->item->metakey);
@@ -199,7 +199,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
 		}
-		// [3510] check the robot params
+		// [3799] check the robot params
 		if (isset($this->item->robots) && $this->item->robots)
 		{
 			$this->document->setMetadata('robots', $this->item->robots);
@@ -208,12 +208,12 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-		// [3519] check if autor is to be set
+		// [3808] check if autor is to be set
 		if (isset($this->item->created_by) && $this->params->get('MetaAuthor') == '1')
 		{
 			$this->document->setMetaData('author', $this->item->created_by);
 		}
-		// [3524] check if metadata is available
+		// [3813] check if metadata is available
 		if (isset($this->item->metadata) && $this->item->metadata)
 		{
 			$mdata = json_decode($this->item->metadata,true);

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -561,23 +561,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [1497] if user not in those target groups then remove the item
+							// [1709] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [1502] set the return type
+					// [1714] set the return type
 					switch ($help->type)
 					{
-						// [1505] set joomla article
+						// [1717] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [1509] set help text
+						// [1721] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [1513] set Link
+						// [1725] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -827,7 +827,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [2741] reset
+			// [2953] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -836,15 +836,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [2750] make sure uikit is loaded to config
+			// [2962] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [2755] sorter
+			// [2967] sorter
 			if (self::checkArray($temp))
 			{
-				// [2758] merger
+				// [2970] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -952,7 +952,7 @@ abstract class SermondistributorHelper
 		foreach ($actions as $action)
                 {
 			// set to use component default
-			$allow = true;
+			$fallback = true;
 			if (self::checkObject($record) && isset($record->id) && $record->id > 0 && !in_array($action->name,$componentActions))
 			{
 				// The record has been set. Check the record permissions.
@@ -968,13 +968,13 @@ abstract class SermondistributorHelper
 							{
 								$result->set($action->name, true);
 								// set not to use component default
-								$allow = false;
+								$fallback = false;
 							}
 							else
 							{
 								$result->set($action->name, false);
 								// set not to use component default
-								$allow = false;
+								$fallback = false;
 							}
 						}
 						elseif ($user->authorise($view.'edit.own', 'com_sermondistributor.'.$view.'.' . (int) $record->id))
@@ -984,13 +984,13 @@ abstract class SermondistributorHelper
 							{
 								$result->set($action->name, true);
 								// set not to use component default
-								$allow = false;
+								$fallback = false;
 							}
 							else
 							{
 								$result->set($action->name, false);
 								// set not to use component default
-								$allow = false;
+								$fallback = false;
 							}
 						}
 						elseif ($user->authorise('core.edit.own', 'com_sermondistributor'))
@@ -1000,13 +1000,13 @@ abstract class SermondistributorHelper
 							{
 								$result->set($action->name, true);
 								// set not to use component default
-								$allow = false;
+								$fallback = false;
 							}
 							else
 							{
 								$result->set($action->name, false);
 								// set not to use component default
-								$allow = false;
+								$fallback = false;
 							}
 						}
 						elseif ($user->authorise($view.'edit.own', 'com_sermondistributor'))
@@ -1016,13 +1016,13 @@ abstract class SermondistributorHelper
 							{
 								$result->set($action->name, true);
 								// set not to use component default
-								$allow = false;
+								$fallback = false;
 							}
 							else
 							{
 								$result->set($action->name, false);
 								// set not to use component default
-								$allow = false;
+								$fallback = false;
 							}
 						}
 					}
@@ -1052,13 +1052,13 @@ abstract class SermondistributorHelper
 								{
 									$result->set($action->name, true);
 									// set not to use component default
-									$allow = false;
+									$fallback = false;
 								}
 								else
 								{
 									$result->set($action->name, false);
 									// set not to use component default
-									$allow = false;
+									$fallback = false;
 								}
 							}
 							elseif ($user->authorise($view.'edit.own', 'com_sermondistributor.'.$views.'.category.' . (int) $record->catid))
@@ -1068,13 +1068,13 @@ abstract class SermondistributorHelper
 								{
 									$result->set($action->name, true);
 									// set not to use component default
-									$allow = false;
+									$fallback = false;
 								}
 								else
 								{
 									$result->set($action->name, false);
 									// set not to use component default
-									$allow = false;
+									$fallback = false;
 								}
 							}
 							elseif ($user->authorise('core.edit.own', 'com_sermondistributor'))
@@ -1084,13 +1084,13 @@ abstract class SermondistributorHelper
 								{
 									$result->set($action->name, true);
 									// set not to use component default
-									$allow = false;
+									$fallback = false;
 								}
 								else
 								{
 									$result->set($action->name, false);
 									// set not to use component default
-									$allow = false;
+									$fallback = false;
 								}
 							}
 							elseif ($user->authorise($view.'edit.own', 'com_sermondistributor'))
@@ -1100,21 +1100,21 @@ abstract class SermondistributorHelper
 								{
 									$result->set($action->name, true);
 									// set not to use component default
-									$allow = false;
+									$fallback = false;
 								}
 								else
 								{
 									$result->set($action->name, false);
 									// set not to use component default
-									$allow = false;
+									$fallback = false;
 								}
 							}
 						}
 					}
 				}
 			}
-			// if allowed then fall back on component global settings
-			if ($allow)
+			// if allowed then fallback on component global settings
+			if ($fallback)
 			{
 				$result->set($action->name, $user->authorise($action->name, 'com_sermondistributor'));
 			}

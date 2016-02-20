@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -50,36 +50,36 @@ class JFormFieldSeries extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [7990] see if we should add buttons
+		// [8379] see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [7992] get html
+		// [8381] get html
 		$html = parent::getInput();
-		// [7994] if true set button
+		// [8383] if true set button
 		if ($setButton === 'true')
 		{
 			$user = JFactory::getUser();
-			// [7998] only add if user allowed to create series
+			// [8387] only add if user allowed to create series
 			if ($user->authorise('series.create', 'com_sermondistributor'))
 			{
-				// [8016] get the input from url
+				// [8405] get the input from url
 				$jinput = JFactory::getApplication()->input;
-				// [8018] get the view name & id
+				// [8407] get the view name & id
 				$values = $jinput->getArray(array(
 					'id' => 'int',
 					'view' => 'word'
 				));
-				// [8023] check if new item
+				// [8412] check if new item
 				$ref = '';
 				if (!is_null($values['id']) && strlen($values['view']))
 				{
-					// [8027] only load referal if not new item.
+					// [8416] only load referal if not new item.
 					$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				}
-				// [8030] build the button
+				// [8419] build the button
 				$button = '<a class="btn btn-small btn-success"
 					href="index.php?option=com_sermondistributor&amp;view=series&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span>' . JText::_('COM_SERMONDISTRIBUTOR_NEW') . '</a>';
-				// [8034] return the button attached to input field
+				// [8423] return the button attached to input field
 				return $html . $button;
 			}
 		}

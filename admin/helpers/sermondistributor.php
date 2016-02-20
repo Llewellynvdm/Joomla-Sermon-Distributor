@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -553,23 +553,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [1497] if user not in those target groups then remove the item
+							// [1709] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [1502] set the return type
+					// [1714] set the return type
 					switch ($help->type)
 					{
-						// [1505] set joomla article
+						// [1717] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [1509] set help text
+						// [1721] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [1513] set Link
+						// [1725] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -698,7 +698,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [2741] reset
+			// [2953] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -707,15 +707,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [2750] make sure uikit is loaded to config
+			// [2962] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [2755] sorter
+			// [2967] sorter
 			if (self::checkArray($temp))
 			{
-				// [2758] merger
+				// [2970] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -736,37 +736,37 @@ abstract class SermondistributorHelper
 	 */
 	public static function xls($rows,$fileName = null,$title = null,$subjectTab = null,$creator = 'Vast Development Method',$description = null,$category = null,$keywords = null,$modified = null)
 	{
-		// [1552] set the user
+		// [1764] set the user
 		$user = JFactory::getUser();
 		
-		// [1555] set fieldname if not set
+		// [1767] set fieldname if not set
 		if (!$fileName)
 		{
 			$fileName = 'exported_'.JFactory::getDate()->format('jS_F_Y');
 		}
-		// [1560] set modiefied if not set
+		// [1772] set modiefied if not set
 		if (!$modified)
 		{
 			$modified = $user->name;
 		}
-		// [1565] set title if not set
+		// [1777] set title if not set
 		if (!$title)
 		{
 			$title = 'Book1';
 		}
-		// [1570] set tab name if not set
+		// [1782] set tab name if not set
 		if (!$subjectTab)
 		{
 			$subjectTab = 'Sheet1';
 		}
 		
-		// [1576] make sure the file is loaded		
+		// [1788] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		
-		// [1579] Create new PHPExcel object
+		// [1791] Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
 		
-		// [1582] Set document properties
+		// [1794] Set document properties
 		$objPHPExcel->getProperties()->setCreator($creator)
 									 ->setCompany('Vast Development Method')
 									 ->setLastModifiedBy($modified)
@@ -785,7 +785,7 @@ abstract class SermondistributorHelper
 			$objPHPExcel->getProperties()->setCategory($category);
 		}
 		
-		// [1601] Some styles
+		// [1813] Some styles
 		$headerStyles = array(
 			'font'  => array(
 				'bold'  => true,
@@ -807,7 +807,7 @@ abstract class SermondistributorHelper
 				'name'  => 'Verdana'
 		));
 		
-		// [1623] Add some data
+		// [1835] Add some data
 		if (self::checkArray($rows))
 		{
 			$i = 1;
@@ -834,20 +834,20 @@ abstract class SermondistributorHelper
 			return false;
 		}
 		
-		// [1650] Rename worksheet
+		// [1862] Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($subjectTab);
 		
-		// [1653] Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		// [1865] Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
 		
-		// [1656] Redirect output to a client's web browser (Excel5)
+		// [1868] Redirect output to a client's web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'.$fileName.'.xls"');
 		header('Cache-Control: max-age=0');
-		// [1660] If you're serving to IE 9, then the following may be needed
+		// [1872] If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
 		
-		// [1663] If you're serving to IE over SSL, then the following may be needed
+		// [1875] If you're serving to IE over SSL, then the following may be needed
 		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
 		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
@@ -863,13 +863,13 @@ abstract class SermondistributorHelper
 	*/
 	public static function getFileHeaders($dataType)
 	{		
-		// [1679] make sure the file is loaded		
+		// [1891] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
-		// [1681] get session object
+		// [1893] get session object
 		$session 	= JFactory::getSession();
 		$package	= $session->get('package', null);
 		$package	= json_decode($package, true);
-		// [1685] set the headers
+		// [1897] set the headers
 		if(isset($package['dir']))
 		{
 			$inputFileType = PHPExcel_IOFactory::identify($package['dir']);
@@ -1060,7 +1060,7 @@ abstract class SermondistributorHelper
 		foreach ($actions as $action)
                 {
 			// set to use component default
-			$allow = true;
+			$fallback= true;
 			if (self::checkObject($record) && isset($record->id) && $record->id > 0 && !in_array($action->name,$componentActions))
 			{
 				// The record has been set. Check the record permissions.
@@ -1076,13 +1076,13 @@ abstract class SermondistributorHelper
 							{
 								$result->set($action->name, true);
 								// set not to use component default
-								$allow = false;
+								$fallback= false;
 							}
 							else
 							{
 								$result->set($action->name, false);
 								// set not to use component default
-								$allow = false;
+								$fallback= false;
 							}
 						}
 						elseif ($user->authorise($view.'edit.own', 'com_sermondistributor.'.$view.'.' . (int) $record->id))
@@ -1092,13 +1092,13 @@ abstract class SermondistributorHelper
 							{
 								$result->set($action->name, true);
 								// set not to use component default
-								$allow = false;
+								$fallback= false;
 							}
 							else
 							{
 								$result->set($action->name, false);
 								// set not to use component default
-								$allow = false;
+								$fallback= false;
 							}
 						}
 						elseif ($user->authorise('core.edit.own', 'com_sermondistributor'))
@@ -1108,13 +1108,13 @@ abstract class SermondistributorHelper
 							{
 								$result->set($action->name, true);
 								// set not to use component default
-								$allow = false;
+								$fallback= false;
 							}
 							else
 							{
 								$result->set($action->name, false);
 								// set not to use component default
-								$allow = false;
+								$fallback= false;
 							}
 						}
 						elseif ($user->authorise($view.'edit.own', 'com_sermondistributor'))
@@ -1124,13 +1124,13 @@ abstract class SermondistributorHelper
 							{
 								$result->set($action->name, true);
 								// set not to use component default
-								$allow = false;
+								$fallback= false;
 							}
 							else
 							{
 								$result->set($action->name, false);
 								// set not to use component default
-								$allow = false;
+								$fallback= false;
 							}
 						}
 					}
@@ -1160,13 +1160,13 @@ abstract class SermondistributorHelper
 								{
 									$result->set($action->name, true);
 									// set not to use component default
-									$allow = false;
+									$fallback= false;
 								}
 								else
 								{
 									$result->set($action->name, false);
 									// set not to use component default
-									$allow = false;
+									$fallback= false;
 								}
 							}
 							elseif ($user->authorise($view.'edit.own', 'com_sermondistributor.'.$views.'.category.' . (int) $record->catid))
@@ -1176,13 +1176,13 @@ abstract class SermondistributorHelper
 								{
 									$result->set($action->name, true);
 									// set not to use component default
-									$allow = false;
+									$fallback= false;
 								}
 								else
 								{
 									$result->set($action->name, false);
 									// set not to use component default
-									$allow = false;
+									$fallback= false;
 								}
 							}
 							elseif ($user->authorise('core.edit.own', 'com_sermondistributor'))
@@ -1192,13 +1192,13 @@ abstract class SermondistributorHelper
 								{
 									$result->set($action->name, true);
 									// set not to use component default
-									$allow = false;
+									$fallback= false;
 								}
 								else
 								{
 									$result->set($action->name, false);
 									// set not to use component default
-									$allow = false;
+									$fallback= false;
 								}
 							}
 							elseif ($user->authorise($view.'edit.own', 'com_sermondistributor'))
@@ -1208,21 +1208,21 @@ abstract class SermondistributorHelper
 								{
 									$result->set($action->name, true);
 									// set not to use component default
-									$allow = false;
+									$fallback= false;
 								}
 								else
 								{
 									$result->set($action->name, false);
 									// set not to use component default
-									$allow = false;
+									$fallback= false;
 								}
 							}
 						}
 					}
 				}
 			}
-			// if allowed then fall back on component global settings
-			if ($allow)
+			// if allowed then fallback on component global settings
+			if ($fallback)
 			{
 				$result->set($action->name, $user->authorise($action->name, 'com_sermondistributor'));
 			}

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categories.php
@@ -65,13 +65,13 @@ class SermondistributorModelCategories extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [3044] Get a db connection.
+		// [3256] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [3053] Create a new query object.
+		// [3265] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [1916] Get from #__categories as a
+		// [2128] Get from #__categories as a
 		$query->select($db->quoteName(
 			array('a.id','a.title','a.alias','a.description','a.hits','a.language'),
 			array('id','name','alias','description','hits','language')));
@@ -81,7 +81,7 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('a.extension = "com_sermondistributor.sermons"');
 		$query->order('a.title ASC');
 
-		// [3066] return the query object
+		// [3278] return the query object
 		return $query;
 	}
 
@@ -107,12 +107,12 @@ class SermondistributorModelCategories extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [3081] Convert the parameter fields into objects.
+		// [3293] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [3084] Always create a slug for sef URL's
+			// [3296] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// [2166] set idCatidSermonB to the $item object.
+			// [2378] set idCatidSermonB to the $item object.
 			$item->idCatidSermonB = $this->getIdCatidSermonBced_B($item->id);
 		} 
 
@@ -128,13 +128,13 @@ class SermondistributorModelCategories extends JModelList
 	*/
 	public function getIdCatidSermonBced_B($id)
 	{
-		// [2846] Get a db connection.
+		// [3058] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [2848] Create a new query object.
+		// [3060] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [2850] Get from #__sermondistributor_sermon as b
+		// [3062] Get from #__sermondistributor_sermon as b
 		$query->select($db->quoteName(
 			array('b.id'),
 			array('id')));
@@ -143,11 +143,11 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
 		$query->where('b.published = 1');
 
-		// [2904] Reset the query using our newly populated query object.
+		// [3116] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [2907] check if there was data returned
+		// [3119] check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
@@ -60,13 +60,13 @@ class SermondistributorControllerStatistic extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [9618] Access check.
+		// [10007] Access check.
 		$access = JFactory::getUser()->authorise('statistic.access', 'com_sermondistributor');
 		if (!$access)
 		{
 			return false;
 		}
-		// [9629] In the absense of better information, revert to the component permissions.
+		// [10018] In the absense of better information, revert to the component permissions.
 		return JFactory::getUser()->authorise('statistic.create', $this->option);
 	}
 
@@ -82,13 +82,13 @@ class SermondistributorControllerStatistic extends JControllerForm
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [9772] get user object.
+		// [10161] get user object.
 		$user		= JFactory::getUser();
-		// [9774] get record id.
+		// [10163] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [9781] Access check.
+		// [10170] Access check.
 		$access = ($user->authorise('statistic.access', 'com_sermondistributor.statistic.' . (int) $recordId) &&  $user->authorise('statistic.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -97,17 +97,17 @@ class SermondistributorControllerStatistic extends JControllerForm
 
 		if ($recordId)
 		{
-			// [9790] The record has been set. Check the record permissions.
+			// [10179] The record has been set. Check the record permissions.
 			$permission = $user->authorise('statistic.edit', 'com_sermondistributor.statistic.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('statistic.edit.own', 'com_sermondistributor.statistic.' . $recordId))
 				{
-					// [9812] Now test the owner is the user.
+					// [10201] Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [9816] Need to do a lookup from the model.
+						// [10205] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -117,7 +117,7 @@ class SermondistributorControllerStatistic extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [9824] If the owner matches 'me' then allow.
+					// [10213] If the owner matches 'me' then allow.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('statistic.edit.own', 'com_sermondistributor'))
@@ -129,7 +129,7 @@ class SermondistributorControllerStatistic extends JControllerForm
 				return false;
 			}
 		}
-		// [9846] Since there is no permission, revert to the component permissions.
+		// [10235] Since there is no permission, revert to the component permissions.
 		return $user->authorise('statistic.edit', $this->option);
 	}
 
@@ -318,7 +318,7 @@ class SermondistributorControllerStatistic extends JControllerForm
 	 *
 	 * @since   11.1
 	 */
-	protected function postSaveHook(JModelLegacy &$model, $validData = array())
+	protected function postSaveHook(JModelLegacy $model, $validData = array())
 	{
 		return;
 	}

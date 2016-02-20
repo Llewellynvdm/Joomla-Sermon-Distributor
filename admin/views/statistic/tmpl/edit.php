@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -51,6 +51,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
 
+	<?php if ($this->canDo->get('statistic.delete') || $this->canDo->get('statistic.edit.created_by') || $this->canDo->get('statistic.edit.state') || $this->canDo->get('statistic.edit.created')) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'statisticTab', 'publishing', JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PUBLISHING', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span6">
@@ -61,6 +62,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 			</div>
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
+	<?php endif; ?>
 
 	<?php if ($this->canDo->get('core.admin')) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'statisticTab', 'permissions', JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PERMISSION', true)); ?>

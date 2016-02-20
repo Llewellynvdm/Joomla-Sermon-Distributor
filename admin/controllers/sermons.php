@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons.php
@@ -48,29 +48,29 @@ class SermondistributorControllerSermons extends JControllerAdmin
 
 	public function exportData()
 	{
-		// [7568] Check for request forgeries
+		// [7957] Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-		// [7570] check if export is allowed for this user.
+		// [7959] check if export is allowed for this user.
 		$user = JFactory::getUser();
 		if ($user->authorise('sermon.export', 'com_sermondistributor') && $user->authorise('core.export', 'com_sermondistributor'))
 		{
-			// [7574] Get the input
+			// [7963] Get the input
 			$input = JFactory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
-			// [7577] Sanitize the input
+			// [7966] Sanitize the input
 			JArrayHelper::toInteger($pks);
-			// [7579] Get the model
+			// [7968] Get the model
 			$model = $this->getModel('Sermons');
-			// [7581] get the data to export
+			// [7970] get the data to export
 			$data = $model->getExportData($pks);
 			if (SermondistributorHelper::checkArray($data))
 			{
-				// [7585] now set the data to the spreadsheet
+				// [7974] now set the data to the spreadsheet
 				$date = JFactory::getDate();
 				SermondistributorHelper::xls($data,'Sermons_'.$date->format('jS_F_Y'),'Sermons exported ('.$date->format('jS F, Y').')','sermons');
 			}
 		}
-		// [7590] Redirect to the list screen with error.
+		// [7979] Redirect to the list screen with error.
 		$message = JText::_('COM_SERMONDISTRIBUTOR_EXPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=sermons', false), $message, 'error');
 		return;
@@ -79,31 +79,31 @@ class SermondistributorControllerSermons extends JControllerAdmin
 
 	public function importData()
 	{
-		// [7599] Check for request forgeries
+		// [7988] Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-		// [7601] check if import is allowed for this user.
+		// [7990] check if import is allowed for this user.
 		$user = JFactory::getUser();
 		if ($user->authorise('sermon.import', 'com_sermondistributor') && $user->authorise('core.import', 'com_sermondistributor'))
 		{
-			// [7605] Get the import model
+			// [7994] Get the import model
 			$model = $this->getModel('Sermons');
-			// [7607] get the headers to import
+			// [7996] get the headers to import
 			$headers = $model->getExImPortHeaders();
 			if (SermondistributorHelper::checkObject($headers))
 			{
-				// [7611] Load headers to session.
+				// [8000] Load headers to session.
 				$session = JFactory::getSession();
 				$headers = json_encode($headers);
 				$session->set('sermon_VDM_IMPORTHEADERS', $headers);
 				$session->set('backto_VDM_IMPORT', 'sermons');
 				$session->set('dataType_VDM_IMPORTINTO', 'sermon');
-				// [7617] Redirect to import view.
+				// [8006] Redirect to import view.
 				$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_SELECT_FILE_FOR_SERMONS');
 				$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=import', false), $message);
 				return;
 			}
 		}
-		// [7629] Redirect to the list screen with error.
+		// [8018] Redirect to the list screen with error.
 		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=sermons', false), $message, 'error');
 		return;

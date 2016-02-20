@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			11th January, 2016
+	@build			20th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -56,6 +56,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
 
+	<?php if ($this->canDo->get('sermon.access')) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'preacherTab', 'sermons', JText::_('COM_SERMONDISTRIBUTOR_PREACHER_SERMONS', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 		</div>
@@ -65,7 +66,9 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 			</div>
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
+	<?php endif; ?>
 
+	<?php if ($this->canDo->get('preacher.delete') || $this->canDo->get('preacher.edit.created_by') || $this->canDo->get('preacher.edit.state') || $this->canDo->get('preacher.edit.created')) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'preacherTab', 'publishing', JText::_('COM_SERMONDISTRIBUTOR_PREACHER_PUBLISHING', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span6">
@@ -76,6 +79,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 			</div>
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
+	<?php endif; ?>
 
 	<?php if ($this->canDo->get('core.admin')) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'preacherTab', 'permissions', JText::_('COM_SERMONDISTRIBUTOR_PREACHER_PERMISSION', true)); ?>
