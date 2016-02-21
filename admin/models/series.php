@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			20th February, 2016
+	@build			21st February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -101,7 +101,7 @@ class SermondistributorModelSeries extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.series');
 			}
 		}
-		$this->seriesrwnh = $item->id;
+		$this->seriesbfwx = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getVcvsermons()
+	public function getSoesermons()
 	{
 		// [7633] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelSeries extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7661] Filter by seriesrwnh global.
-		$seriesrwnh = $this->seriesrwnh;
-		if (is_numeric($seriesrwnh ))
+		// [7661] Filter by seriesbfwx global.
+		$seriesbfwx = $this->seriesbfwx;
+		if (is_numeric($seriesbfwx ))
 		{
-			$query->where('a.series = ' . (int) $seriesrwnh );
+			$query->where('a.series = ' . (int) $seriesbfwx );
 		}
-		elseif (is_string($seriesrwnh))
+		elseif (is_string($seriesbfwx))
 		{
-			$query->where('a.series = ' . $db->quote($seriesrwnh));
+			$query->where('a.series = ' . $db->quote($seriesbfwx));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelSeries extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [11596] convert link_type
-					$item->link_type = $this->selectionTranslationVcvsermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationSoesermons($item->link_type, 'link_type');
 					// [11596] convert source
-					$item->source = $this->selectionTranslationVcvsermons($item->source, 'source');
+					$item->source = $this->selectionTranslationSoesermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationVcvsermons($value,$name)
+	public function selectionTranslationSoesermons($value,$name)
 	{
 		// [11622] Array of link_type language strings
 		if ($name == 'link_type')

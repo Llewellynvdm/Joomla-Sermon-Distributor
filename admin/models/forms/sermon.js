@@ -10,7 +10,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			20th February, 2016
+	@build			21st February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.js
@@ -23,124 +23,124 @@
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // Some Global Values
-jform_IBFygJNuDM_required = false;
-jform_kcwFchXKIB_required = false;
-jform_nUoduMOIRJ_required = false;
-jform_FLgnCOUeKh_required = false;
-jform_NXjdDlkAaX_required = false;
+jform_faEnFllAiT_required = false;
+jform_DQWFhNVlPF_required = false;
+jform_uoNLWYHarm_required = false;
+jform_WZlRgqxKFH_required = false;
+jform_ZkxVREMNVv_required = false;
 
 // Initial Script
 jQuery(document).ready(function()
 {
-	var source_IBFygJN = jQuery("#jform_source").val();
-	IBFygJN(source_IBFygJN);
+	var source_faEnFll = jQuery("#jform_source").val();
+	faEnFll(source_faEnFll);
 
-	var source_rfSRRvE = jQuery("#jform_source").val();
-	var build_rfSRRvE = jQuery("#jform_build input[type='radio']:checked").val();
-	rfSRRvE(source_rfSRRvE,build_rfSRRvE);
+	var source_dmLWMYS = jQuery("#jform_source").val();
+	var build_dmLWMYS = jQuery("#jform_build input[type='radio']:checked").val();
+	dmLWMYS(source_dmLWMYS,build_dmLWMYS);
 
-	var source_kcwFchX = jQuery("#jform_source").val();
-	var build_kcwFchX = jQuery("#jform_build input[type='radio']:checked").val();
-	kcwFchX(source_kcwFchX,build_kcwFchX);
+	var source_DQWFhNV = jQuery("#jform_source").val();
+	var build_DQWFhNV = jQuery("#jform_build input[type='radio']:checked").val();
+	DQWFhNV(source_DQWFhNV,build_DQWFhNV);
 
-	var build_nUoduMO = jQuery("#jform_build input[type='radio']:checked").val();
-	var source_nUoduMO = jQuery("#jform_source").val();
-	nUoduMO(build_nUoduMO,source_nUoduMO);
+	var build_uoNLWYH = jQuery("#jform_build input[type='radio']:checked").val();
+	var source_uoNLWYH = jQuery("#jform_source").val();
+	uoNLWYH(build_uoNLWYH,source_uoNLWYH);
 
-	var source_FLgnCOU = jQuery("#jform_source").val();
-	FLgnCOU(source_FLgnCOU);
+	var source_WZlRgqx = jQuery("#jform_source").val();
+	WZlRgqx(source_WZlRgqx);
 
-	var source_NXjdDlk = jQuery("#jform_source").val();
-	NXjdDlk(source_NXjdDlk);
+	var source_ZkxVREM = jQuery("#jform_source").val();
+	ZkxVREM(source_ZkxVREM);
 
-	var link_type_ctPrsiZ = jQuery("#jform_link_type input[type='radio']:checked").val();
-	ctPrsiZ(link_type_ctPrsiZ);
+	var link_type_muRdbJc = jQuery("#jform_link_type input[type='radio']:checked").val();
+	muRdbJc(link_type_muRdbJc);
 
-	var link_type_jSSQzwW = jQuery("#jform_link_type input[type='radio']:checked").val();
-	jSSQzwW(link_type_jSSQzwW);
+	var link_type_CJtVLni = jQuery("#jform_link_type input[type='radio']:checked").val();
+	CJtVLni(link_type_CJtVLni);
 });
 
-// the IBFygJN function
-function IBFygJN(source_IBFygJN)
+// the faEnFll function
+function faEnFll(source_faEnFll)
 {
-	if (isSet(source_IBFygJN) && source_IBFygJN.constructor !== Array)
+	if (isSet(source_faEnFll) && source_faEnFll.constructor !== Array)
 	{
-		var temp_IBFygJN = source_IBFygJN;
-		var source_IBFygJN = [];
-		source_IBFygJN.push(temp_IBFygJN);
+		var temp_faEnFll = source_faEnFll;
+		var source_faEnFll = [];
+		source_faEnFll.push(temp_faEnFll);
 	}
-	else if (!isSet(source_IBFygJN))
+	else if (!isSet(source_faEnFll))
 	{
-		var source_IBFygJN = [];
+		var source_faEnFll = [];
 	}
-	var source = source_IBFygJN.some(source_IBFygJN_SomeFunc);
+	var source = source_faEnFll.some(source_faEnFll_SomeFunc);
 
 
 	// [8674] set this function logic
 	if (source)
 	{
 		jQuery('#jform_build').closest('.control-group').show();
-		if (jform_IBFygJNuDM_required)
+		if (jform_faEnFllAiT_required)
 		{
 			updateFieldRequired('build',0);
 			jQuery('#jform_build').prop('required','required');
 			jQuery('#jform_build').attr('aria-required',true);
 			jQuery('#jform_build').addClass('required');
-			jform_IBFygJNuDM_required = false;
+			jform_faEnFllAiT_required = false;
 		}
 
 	}
 	else
 	{
 		jQuery('#jform_build').closest('.control-group').hide();
-		if (!jform_IBFygJNuDM_required)
+		if (!jform_faEnFllAiT_required)
 		{
 			updateFieldRequired('build',1);
 			jQuery('#jform_build').removeAttr('required');
 			jQuery('#jform_build').removeAttr('aria-required');
 			jQuery('#jform_build').removeClass('required');
-			jform_IBFygJNuDM_required = true;
+			jform_faEnFllAiT_required = true;
 		}
 	}
 }
 
-// the IBFygJN Some function
-function source_IBFygJN_SomeFunc(source_IBFygJN)
+// the faEnFll Some function
+function source_faEnFll_SomeFunc(source_faEnFll)
 {
 	// [8661] set the function logic
-	if (source_IBFygJN == 2)
+	if (source_faEnFll == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the rfSRRvE function
-function rfSRRvE(source_rfSRRvE,build_rfSRRvE)
+// the dmLWMYS function
+function dmLWMYS(source_dmLWMYS,build_dmLWMYS)
 {
-	if (isSet(source_rfSRRvE) && source_rfSRRvE.constructor !== Array)
+	if (isSet(source_dmLWMYS) && source_dmLWMYS.constructor !== Array)
 	{
-		var temp_rfSRRvE = source_rfSRRvE;
-		var source_rfSRRvE = [];
-		source_rfSRRvE.push(temp_rfSRRvE);
+		var temp_dmLWMYS = source_dmLWMYS;
+		var source_dmLWMYS = [];
+		source_dmLWMYS.push(temp_dmLWMYS);
 	}
-	else if (!isSet(source_rfSRRvE))
+	else if (!isSet(source_dmLWMYS))
 	{
-		var source_rfSRRvE = [];
+		var source_dmLWMYS = [];
 	}
-	var source = source_rfSRRvE.some(source_rfSRRvE_SomeFunc);
+	var source = source_dmLWMYS.some(source_dmLWMYS_SomeFunc);
 
-	if (isSet(build_rfSRRvE) && build_rfSRRvE.constructor !== Array)
+	if (isSet(build_dmLWMYS) && build_dmLWMYS.constructor !== Array)
 	{
-		var temp_rfSRRvE = build_rfSRRvE;
-		var build_rfSRRvE = [];
-		build_rfSRRvE.push(temp_rfSRRvE);
+		var temp_dmLWMYS = build_dmLWMYS;
+		var build_dmLWMYS = [];
+		build_dmLWMYS.push(temp_dmLWMYS);
 	}
-	else if (!isSet(build_rfSRRvE))
+	else if (!isSet(build_dmLWMYS))
 	{
-		var build_rfSRRvE = [];
+		var build_dmLWMYS = [];
 	}
-	var build = build_rfSRRvE.some(build_rfSRRvE_SomeFunc);
+	var build = build_dmLWMYS.some(build_dmLWMYS_SomeFunc);
 
 
 	// [8674] set this function logic
@@ -154,67 +154,67 @@ function rfSRRvE(source_rfSRRvE,build_rfSRRvE)
 	}
 }
 
-// the rfSRRvE Some function
-function source_rfSRRvE_SomeFunc(source_rfSRRvE)
+// the dmLWMYS Some function
+function source_dmLWMYS_SomeFunc(source_dmLWMYS)
 {
 	// [8661] set the function logic
-	if (source_rfSRRvE == 2)
+	if (source_dmLWMYS == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the rfSRRvE Some function
-function build_rfSRRvE_SomeFunc(build_rfSRRvE)
+// the dmLWMYS Some function
+function build_dmLWMYS_SomeFunc(build_dmLWMYS)
 {
 	// [8661] set the function logic
-	if (build_rfSRRvE == 2)
+	if (build_dmLWMYS == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the kcwFchX function
-function kcwFchX(source_kcwFchX,build_kcwFchX)
+// the DQWFhNV function
+function DQWFhNV(source_DQWFhNV,build_DQWFhNV)
 {
-	if (isSet(source_kcwFchX) && source_kcwFchX.constructor !== Array)
+	if (isSet(source_DQWFhNV) && source_DQWFhNV.constructor !== Array)
 	{
-		var temp_kcwFchX = source_kcwFchX;
-		var source_kcwFchX = [];
-		source_kcwFchX.push(temp_kcwFchX);
+		var temp_DQWFhNV = source_DQWFhNV;
+		var source_DQWFhNV = [];
+		source_DQWFhNV.push(temp_DQWFhNV);
 	}
-	else if (!isSet(source_kcwFchX))
+	else if (!isSet(source_DQWFhNV))
 	{
-		var source_kcwFchX = [];
+		var source_DQWFhNV = [];
 	}
-	var source = source_kcwFchX.some(source_kcwFchX_SomeFunc);
+	var source = source_DQWFhNV.some(source_DQWFhNV_SomeFunc);
 
-	if (isSet(build_kcwFchX) && build_kcwFchX.constructor !== Array)
+	if (isSet(build_DQWFhNV) && build_DQWFhNV.constructor !== Array)
 	{
-		var temp_kcwFchX = build_kcwFchX;
-		var build_kcwFchX = [];
-		build_kcwFchX.push(temp_kcwFchX);
+		var temp_DQWFhNV = build_DQWFhNV;
+		var build_DQWFhNV = [];
+		build_DQWFhNV.push(temp_DQWFhNV);
 	}
-	else if (!isSet(build_kcwFchX))
+	else if (!isSet(build_DQWFhNV))
 	{
-		var build_kcwFchX = [];
+		var build_DQWFhNV = [];
 	}
-	var build = build_kcwFchX.some(build_kcwFchX_SomeFunc);
+	var build = build_DQWFhNV.some(build_DQWFhNV_SomeFunc);
 
 
 	// [8674] set this function logic
 	if (source && build)
 	{
 		jQuery('#jform_manual_files').closest('.control-group').show();
-		if (jform_kcwFchXKIB_required)
+		if (jform_DQWFhNVlPF_required)
 		{
 			updateFieldRequired('manual_files',0);
 			jQuery('#jform_manual_files').prop('required','required');
 			jQuery('#jform_manual_files').attr('aria-required',true);
 			jQuery('#jform_manual_files').addClass('required');
-			jform_kcwFchXKIB_required = false;
+			jform_DQWFhNVlPF_required = false;
 		}
 
 		jQuery('.note_manual_dropbox').closest('.control-group').show();
@@ -222,79 +222,79 @@ function kcwFchX(source_kcwFchX,build_kcwFchX)
 	else
 	{
 		jQuery('#jform_manual_files').closest('.control-group').hide();
-		if (!jform_kcwFchXKIB_required)
+		if (!jform_DQWFhNVlPF_required)
 		{
 			updateFieldRequired('manual_files',1);
 			jQuery('#jform_manual_files').removeAttr('required');
 			jQuery('#jform_manual_files').removeAttr('aria-required');
 			jQuery('#jform_manual_files').removeClass('required');
-			jform_kcwFchXKIB_required = true;
+			jform_DQWFhNVlPF_required = true;
 		}
 		jQuery('.note_manual_dropbox').closest('.control-group').hide();
 	}
 }
 
-// the kcwFchX Some function
-function source_kcwFchX_SomeFunc(source_kcwFchX)
+// the DQWFhNV Some function
+function source_DQWFhNV_SomeFunc(source_DQWFhNV)
 {
 	// [8661] set the function logic
-	if (source_kcwFchX == 2)
+	if (source_DQWFhNV == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the kcwFchX Some function
-function build_kcwFchX_SomeFunc(build_kcwFchX)
+// the DQWFhNV Some function
+function build_DQWFhNV_SomeFunc(build_DQWFhNV)
 {
 	// [8661] set the function logic
-	if (build_kcwFchX == 1)
+	if (build_DQWFhNV == 1)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the nUoduMO function
-function nUoduMO(build_nUoduMO,source_nUoduMO)
+// the uoNLWYH function
+function uoNLWYH(build_uoNLWYH,source_uoNLWYH)
 {
-	if (isSet(build_nUoduMO) && build_nUoduMO.constructor !== Array)
+	if (isSet(build_uoNLWYH) && build_uoNLWYH.constructor !== Array)
 	{
-		var temp_nUoduMO = build_nUoduMO;
-		var build_nUoduMO = [];
-		build_nUoduMO.push(temp_nUoduMO);
+		var temp_uoNLWYH = build_uoNLWYH;
+		var build_uoNLWYH = [];
+		build_uoNLWYH.push(temp_uoNLWYH);
 	}
-	else if (!isSet(build_nUoduMO))
+	else if (!isSet(build_uoNLWYH))
 	{
-		var build_nUoduMO = [];
+		var build_uoNLWYH = [];
 	}
-	var build = build_nUoduMO.some(build_nUoduMO_SomeFunc);
+	var build = build_uoNLWYH.some(build_uoNLWYH_SomeFunc);
 
-	if (isSet(source_nUoduMO) && source_nUoduMO.constructor !== Array)
+	if (isSet(source_uoNLWYH) && source_uoNLWYH.constructor !== Array)
 	{
-		var temp_nUoduMO = source_nUoduMO;
-		var source_nUoduMO = [];
-		source_nUoduMO.push(temp_nUoduMO);
+		var temp_uoNLWYH = source_uoNLWYH;
+		var source_uoNLWYH = [];
+		source_uoNLWYH.push(temp_uoNLWYH);
 	}
-	else if (!isSet(source_nUoduMO))
+	else if (!isSet(source_uoNLWYH))
 	{
-		var source_nUoduMO = [];
+		var source_uoNLWYH = [];
 	}
-	var source = source_nUoduMO.some(source_nUoduMO_SomeFunc);
+	var source = source_uoNLWYH.some(source_uoNLWYH_SomeFunc);
 
 
 	// [8674] set this function logic
 	if (build && source)
 	{
 		jQuery('#jform_manual_files').closest('.control-group').show();
-		if (jform_nUoduMOIRJ_required)
+		if (jform_uoNLWYHarm_required)
 		{
 			updateFieldRequired('manual_files',0);
 			jQuery('#jform_manual_files').prop('required','required');
 			jQuery('#jform_manual_files').attr('aria-required',true);
 			jQuery('#jform_manual_files').addClass('required');
-			jform_nUoduMOIRJ_required = false;
+			jform_uoNLWYHarm_required = false;
 		}
 
 		jQuery('.note_manual_dropbox').closest('.control-group').show();
@@ -302,155 +302,155 @@ function nUoduMO(build_nUoduMO,source_nUoduMO)
 	else
 	{
 		jQuery('#jform_manual_files').closest('.control-group').hide();
-		if (!jform_nUoduMOIRJ_required)
+		if (!jform_uoNLWYHarm_required)
 		{
 			updateFieldRequired('manual_files',1);
 			jQuery('#jform_manual_files').removeAttr('required');
 			jQuery('#jform_manual_files').removeAttr('aria-required');
 			jQuery('#jform_manual_files').removeClass('required');
-			jform_nUoduMOIRJ_required = true;
+			jform_uoNLWYHarm_required = true;
 		}
 		jQuery('.note_manual_dropbox').closest('.control-group').hide();
 	}
 }
 
-// the nUoduMO Some function
-function build_nUoduMO_SomeFunc(build_nUoduMO)
+// the uoNLWYH Some function
+function build_uoNLWYH_SomeFunc(build_uoNLWYH)
 {
 	// [8661] set the function logic
-	if (build_nUoduMO == 1)
+	if (build_uoNLWYH == 1)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the nUoduMO Some function
-function source_nUoduMO_SomeFunc(source_nUoduMO)
+// the uoNLWYH Some function
+function source_uoNLWYH_SomeFunc(source_uoNLWYH)
 {
 	// [8661] set the function logic
-	if (source_nUoduMO == 2)
+	if (source_uoNLWYH == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the FLgnCOU function
-function FLgnCOU(source_FLgnCOU)
+// the WZlRgqx function
+function WZlRgqx(source_WZlRgqx)
 {
-	if (isSet(source_FLgnCOU) && source_FLgnCOU.constructor !== Array)
+	if (isSet(source_WZlRgqx) && source_WZlRgqx.constructor !== Array)
 	{
-		var temp_FLgnCOU = source_FLgnCOU;
-		var source_FLgnCOU = [];
-		source_FLgnCOU.push(temp_FLgnCOU);
+		var temp_WZlRgqx = source_WZlRgqx;
+		var source_WZlRgqx = [];
+		source_WZlRgqx.push(temp_WZlRgqx);
 	}
-	else if (!isSet(source_FLgnCOU))
+	else if (!isSet(source_WZlRgqx))
 	{
-		var source_FLgnCOU = [];
+		var source_WZlRgqx = [];
 	}
-	var source = source_FLgnCOU.some(source_FLgnCOU_SomeFunc);
+	var source = source_WZlRgqx.some(source_WZlRgqx_SomeFunc);
 
 
 	// [8674] set this function logic
 	if (source)
 	{
 		jQuery('#jform_local_files').closest('.control-group').show();
-		if (jform_FLgnCOUeKh_required)
+		if (jform_WZlRgqxKFH_required)
 		{
 			updateFieldRequired('local_files',0);
 			jQuery('#jform_local_files').prop('required','required');
 			jQuery('#jform_local_files').attr('aria-required',true);
 			jQuery('#jform_local_files').addClass('required');
-			jform_FLgnCOUeKh_required = false;
+			jform_WZlRgqxKFH_required = false;
 		}
 
 	}
 	else
 	{
 		jQuery('#jform_local_files').closest('.control-group').hide();
-		if (!jform_FLgnCOUeKh_required)
+		if (!jform_WZlRgqxKFH_required)
 		{
 			updateFieldRequired('local_files',1);
 			jQuery('#jform_local_files').removeAttr('required');
 			jQuery('#jform_local_files').removeAttr('aria-required');
 			jQuery('#jform_local_files').removeClass('required');
-			jform_FLgnCOUeKh_required = true;
+			jform_WZlRgqxKFH_required = true;
 		}
 	}
 }
 
-// the FLgnCOU Some function
-function source_FLgnCOU_SomeFunc(source_FLgnCOU)
+// the WZlRgqx Some function
+function source_WZlRgqx_SomeFunc(source_WZlRgqx)
 {
 	// [8661] set the function logic
-	if (source_FLgnCOU == 1)
+	if (source_WZlRgqx == 1)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the NXjdDlk function
-function NXjdDlk(source_NXjdDlk)
+// the ZkxVREM function
+function ZkxVREM(source_ZkxVREM)
 {
-	if (isSet(source_NXjdDlk) && source_NXjdDlk.constructor !== Array)
+	if (isSet(source_ZkxVREM) && source_ZkxVREM.constructor !== Array)
 	{
-		var temp_NXjdDlk = source_NXjdDlk;
-		var source_NXjdDlk = [];
-		source_NXjdDlk.push(temp_NXjdDlk);
+		var temp_ZkxVREM = source_ZkxVREM;
+		var source_ZkxVREM = [];
+		source_ZkxVREM.push(temp_ZkxVREM);
 	}
-	else if (!isSet(source_NXjdDlk))
+	else if (!isSet(source_ZkxVREM))
 	{
-		var source_NXjdDlk = [];
+		var source_ZkxVREM = [];
 	}
-	var source = source_NXjdDlk.some(source_NXjdDlk_SomeFunc);
+	var source = source_ZkxVREM.some(source_ZkxVREM_SomeFunc);
 
 
 	// [8674] set this function logic
 	if (source)
 	{
 		jQuery('#jform_url').closest('.control-group').show();
-		if (jform_NXjdDlkAaX_required)
+		if (jform_ZkxVREMNVv_required)
 		{
 			updateFieldRequired('url',0);
 			jQuery('#jform_url').prop('required','required');
 			jQuery('#jform_url').attr('aria-required',true);
 			jQuery('#jform_url').addClass('required');
-			jform_NXjdDlkAaX_required = false;
+			jform_ZkxVREMNVv_required = false;
 		}
 
 	}
 	else
 	{
 		jQuery('#jform_url').closest('.control-group').hide();
-		if (!jform_NXjdDlkAaX_required)
+		if (!jform_ZkxVREMNVv_required)
 		{
 			updateFieldRequired('url',1);
 			jQuery('#jform_url').removeAttr('required');
 			jQuery('#jform_url').removeAttr('aria-required');
 			jQuery('#jform_url').removeClass('required');
-			jform_NXjdDlkAaX_required = true;
+			jform_ZkxVREMNVv_required = true;
 		}
 	}
 }
 
-// the NXjdDlk Some function
-function source_NXjdDlk_SomeFunc(source_NXjdDlk)
+// the ZkxVREM Some function
+function source_ZkxVREM_SomeFunc(source_ZkxVREM)
 {
 	// [8661] set the function logic
-	if (source_NXjdDlk == 3)
+	if (source_ZkxVREM == 3)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the ctPrsiZ function
-function ctPrsiZ(link_type_ctPrsiZ)
+// the muRdbJc function
+function muRdbJc(link_type_muRdbJc)
 {
 	// [8696] set the function logic
-	if (link_type_ctPrsiZ == 2)
+	if (link_type_muRdbJc == 2)
 	{
 		jQuery('.note_link_directed').closest('.control-group').show();
 	}
@@ -460,11 +460,11 @@ function ctPrsiZ(link_type_ctPrsiZ)
 	}
 }
 
-// the jSSQzwW function
-function jSSQzwW(link_type_jSSQzwW)
+// the CJtVLni function
+function CJtVLni(link_type_CJtVLni)
 {
 	// [8696] set the function logic
-	if (link_type_jSSQzwW == 1)
+	if (link_type_CJtVLni == 1)
 	{
 		jQuery('.note_link_encrypted').closest('.control-group').show();
 	}

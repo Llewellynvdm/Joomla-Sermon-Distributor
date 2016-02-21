@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			20th February, 2016
+	@build			21st February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preacher.php
@@ -101,7 +101,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.preacher');
 			}
 		}
-		$this->preachereitd = $item->id;
+		$this->preacherxpmi = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getAkssermons()
+	public function getRrksermons()
 	{
 		// [7633] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelPreacher extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7661] Filter by preachereitd global.
-		$preachereitd = $this->preachereitd;
-		if (is_numeric($preachereitd ))
+		// [7661] Filter by preacherxpmi global.
+		$preacherxpmi = $this->preacherxpmi;
+		if (is_numeric($preacherxpmi ))
 		{
-			$query->where('a.preacher = ' . (int) $preachereitd );
+			$query->where('a.preacher = ' . (int) $preacherxpmi );
 		}
-		elseif (is_string($preachereitd))
+		elseif (is_string($preacherxpmi))
 		{
-			$query->where('a.preacher = ' . $db->quote($preachereitd));
+			$query->where('a.preacher = ' . $db->quote($preacherxpmi));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelPreacher extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [11596] convert link_type
-					$item->link_type = $this->selectionTranslationAkssermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationRrksermons($item->link_type, 'link_type');
 					// [11596] convert source
-					$item->source = $this->selectionTranslationAkssermons($item->source, 'source');
+					$item->source = $this->selectionTranslationRrksermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationAkssermons($value,$name)
+	public function selectionTranslationRrksermons($value,$name)
 	{
 		// [11622] Array of link_type language strings
 		if ($name == 'link_type')

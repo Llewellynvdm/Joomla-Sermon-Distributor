@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			20th February, 2016
+	@build			21st February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -113,7 +113,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.sermon');
 			}
 		}
-		$this->sermonjlfo = $item->id;
+		$this->sermonvqmd = $item->id;
 
 		return $item;
 	}
@@ -123,7 +123,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getIzistastics()
+	public function getWczstastics()
 	{
 		// [7633] Get the user object.
 		$user = JFactory::getUser();
@@ -149,15 +149,15 @@ class SermondistributorModelSermon extends JModelAdmin
 		$query->select($db->quoteName('i.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'i') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('i.id') . ')');
 
-		// [7661] Filter by sermonjlfo global.
-		$sermonjlfo = $this->sermonjlfo;
-		if (is_numeric($sermonjlfo ))
+		// [7661] Filter by sermonvqmd global.
+		$sermonvqmd = $this->sermonvqmd;
+		if (is_numeric($sermonvqmd ))
 		{
-			$query->where('a.sermon = ' . (int) $sermonjlfo );
+			$query->where('a.sermon = ' . (int) $sermonvqmd );
 		}
-		elseif (is_string($sermonjlfo))
+		elseif (is_string($sermonvqmd))
 		{
-			$query->where('a.sermon = ' . $db->quote($sermonjlfo));
+			$query->where('a.sermon = ' . $db->quote($sermonvqmd));
 		}
 		else
 		{

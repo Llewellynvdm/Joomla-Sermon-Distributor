@@ -23,7 +23,7 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe] (mailto:llewellyn@vdm.io)
 + *Name*: [Sermon Distributor] (https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 20th February, 2016
++ *Last Build*: 21st February, 2016
 + *Version*: 1.3.0
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html

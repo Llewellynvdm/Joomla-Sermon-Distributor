@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			20th February, 2016
+	@build			21st February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categoriesrow.php
@@ -54,8 +54,8 @@ defined('JPATH_BASE') or die('Restricted access');
 </td>
 <?php endif ;?>
 <?php if ($displayData->params->get('categories_sermon_count')): ?>
-<td data-value="<?php echo count($displayData->idSeriesSermonB); ?>">
-		<?php $badge_class = (count($displayData->idSeriesSermonB) > 0) ? 'uk-badge-success':'uk-badge-warning'; ?>
-		<div class="uk-badge uk-badge <?php echo $badge_class; ?>"><?php echo count($displayData->idSeriesSermonB); ?></div>
+<td data-value="<?php echo count($displayData->idCatidSermonB); ?>">
+		<?php $badge_class = (count($displayData->idCatidSermonB) > 0) ? 'uk-badge-success':'uk-badge-warning'; ?>
+		<div class="uk-badge uk-badge <?php echo $badge_class; ?>"><?php echo count($displayData->idCatidSermonB); ?></div>
 </td>
 <?php endif; ?>
