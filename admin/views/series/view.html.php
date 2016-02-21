@@ -71,7 +71,7 @@ class SermondistributorViewSeries extends JViewLegacy
                 }
 
 		// [7167] Get Linked view data
-		$this->vmlsermons		= $this->get('Vmlsermons');
+		$this->vcvsermons		= $this->get('Vcvsermons');
 
 		// Set the toolbar
 		$this->addToolBar();

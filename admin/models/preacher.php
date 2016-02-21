@@ -101,7 +101,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.preacher');
 			}
 		}
-		$this->preacherhzzb = $item->id;
+		$this->preachereitd = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getJhasermons()
+	public function getAkssermons()
 	{
 		// [7633] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelPreacher extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7661] Filter by preacherhzzb global.
-		$preacherhzzb = $this->preacherhzzb;
-		if (is_numeric($preacherhzzb ))
+		// [7661] Filter by preachereitd global.
+		$preachereitd = $this->preachereitd;
+		if (is_numeric($preachereitd ))
 		{
-			$query->where('a.preacher = ' . (int) $preacherhzzb );
+			$query->where('a.preacher = ' . (int) $preachereitd );
 		}
-		elseif (is_string($preacherhzzb))
+		elseif (is_string($preachereitd))
 		{
-			$query->where('a.preacher = ' . $db->quote($preacherhzzb));
+			$query->where('a.preacher = ' . $db->quote($preachereitd));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelPreacher extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [11596] convert link_type
-					$item->link_type = $this->selectionTranslationJhasermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationAkssermons($item->link_type, 'link_type');
 					// [11596] convert source
-					$item->source = $this->selectionTranslationJhasermons($item->source, 'source');
+					$item->source = $this->selectionTranslationAkssermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationJhasermons($value,$name)
+	public function selectionTranslationAkssermons($value,$name)
 	{
 		// [11622] Array of link_type language strings
 		if ($name == 'link_type')
@@ -293,7 +293,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [10372] If this is a new item insure the greated by is set
+		// [10372] If this is a new item insure the greated by is set.
 		if (0 == $id)
 		{
 			// [10375] Set the created_by to this user
@@ -443,7 +443,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 		{
 			$table->created = $date->toSql();
 			// set the user
-			if ($table->created_by == 0)
+			if ($table->created_by == 0 || empty($table->created_by))
 			{
 				$table->created_by = $user->id;
 			}

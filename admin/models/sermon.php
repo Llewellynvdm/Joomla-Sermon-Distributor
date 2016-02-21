@@ -113,7 +113,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.sermon');
 			}
 		}
-		$this->sermonhlbv = $item->id;
+		$this->sermonjlfo = $item->id;
 
 		return $item;
 	}
@@ -123,7 +123,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getUxwstastics()
+	public function getIzistastics()
 	{
 		// [7633] Get the user object.
 		$user = JFactory::getUser();
@@ -149,15 +149,15 @@ class SermondistributorModelSermon extends JModelAdmin
 		$query->select($db->quoteName('i.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'i') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('i.id') . ')');
 
-		// [7661] Filter by sermonhlbv global.
-		$sermonhlbv = $this->sermonhlbv;
-		if (is_numeric($sermonhlbv ))
+		// [7661] Filter by sermonjlfo global.
+		$sermonjlfo = $this->sermonjlfo;
+		if (is_numeric($sermonjlfo ))
 		{
-			$query->where('a.sermon = ' . (int) $sermonhlbv );
+			$query->where('a.sermon = ' . (int) $sermonjlfo );
 		}
-		elseif (is_string($sermonhlbv))
+		elseif (is_string($sermonjlfo))
 		{
-			$query->where('a.sermon = ' . $db->quote($sermonhlbv));
+			$query->where('a.sermon = ' . $db->quote($sermonjlfo));
 		}
 		else
 		{
@@ -281,7 +281,7 @@ class SermondistributorModelSermon extends JModelAdmin
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [10372] If this is a new item insure the greated by is set
+		// [10372] If this is a new item insure the greated by is set.
 		if (0 == $id)
 		{
 			// [10375] Set the created_by to this user
@@ -446,7 +446,7 @@ class SermondistributorModelSermon extends JModelAdmin
 		{
 			$table->created = $date->toSql();
 			// set the user
-			if ($table->created_by == 0)
+			if ($table->created_by == 0 || empty($table->created_by))
 			{
 				$table->created_by = $user->id;
 			}

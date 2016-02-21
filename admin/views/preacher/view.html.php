@@ -71,7 +71,7 @@ class SermondistributorViewPreacher extends JViewLegacy
                 }
 
 		// [7167] Get Linked view data
-		$this->jhasermons		= $this->get('Jhasermons');
+		$this->akssermons		= $this->get('Akssermons');
 
 		// Set the toolbar
 		$this->addToolBar();

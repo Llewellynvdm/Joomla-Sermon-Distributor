@@ -151,7 +151,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [10372] If this is a new item insure the greated by is set
+		// [10372] If this is a new item insure the greated by is set.
 		if (0 == $id)
 		{
 			// [10375] Set the created_by to this user
@@ -301,7 +301,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 		{
 			$table->created = $date->toSql();
 			// set the user
-			if ($table->created_by == 0)
+			if ($table->created_by == 0 || empty($table->created_by))
 			{
 				$table->created_by = $user->id;
 			}

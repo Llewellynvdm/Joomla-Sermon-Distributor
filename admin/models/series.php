@@ -101,7 +101,7 @@ class SermondistributorModelSeries extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.series');
 			}
 		}
-		$this->seriesozxh = $item->id;
+		$this->seriesrwnh = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getVmlsermons()
+	public function getVcvsermons()
 	{
 		// [7633] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelSeries extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [7661] Filter by seriesozxh global.
-		$seriesozxh = $this->seriesozxh;
-		if (is_numeric($seriesozxh ))
+		// [7661] Filter by seriesrwnh global.
+		$seriesrwnh = $this->seriesrwnh;
+		if (is_numeric($seriesrwnh ))
 		{
-			$query->where('a.series = ' . (int) $seriesozxh );
+			$query->where('a.series = ' . (int) $seriesrwnh );
 		}
-		elseif (is_string($seriesozxh))
+		elseif (is_string($seriesrwnh))
 		{
-			$query->where('a.series = ' . $db->quote($seriesozxh));
+			$query->where('a.series = ' . $db->quote($seriesrwnh));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelSeries extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [11596] convert link_type
-					$item->link_type = $this->selectionTranslationVmlsermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationVcvsermons($item->link_type, 'link_type');
 					// [11596] convert source
-					$item->source = $this->selectionTranslationVmlsermons($item->source, 'source');
+					$item->source = $this->selectionTranslationVcvsermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationVmlsermons($value,$name)
+	public function selectionTranslationVcvsermons($value,$name)
 	{
 		// [11622] Array of link_type language strings
 		if ($name == 'link_type')
@@ -293,7 +293,7 @@ class SermondistributorModelSeries extends JModelAdmin
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [10372] If this is a new item insure the greated by is set
+		// [10372] If this is a new item insure the greated by is set.
 		if (0 == $id)
 		{
 			// [10375] Set the created_by to this user
@@ -443,7 +443,7 @@ class SermondistributorModelSeries extends JModelAdmin
 		{
 			$table->created = $date->toSql();
 			// set the user
-			if ($table->created_by == 0)
+			if ($table->created_by == 0 || empty($table->created_by))
 			{
 				$table->created_by = $user->id;
 			}
