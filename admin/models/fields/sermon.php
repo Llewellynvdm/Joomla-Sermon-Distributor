@@ -48,7 +48,7 @@ class JFormFieldSermon extends JFormFieldList
 	 *
 	 * @since   3.2
 	 */
-	public function getInput()
+	protected function getInput()
 	{
 		// [Interpretation 7009] see if we should add buttons
 		$setButton = $this->getAttribute('button');

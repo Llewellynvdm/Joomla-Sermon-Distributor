@@ -101,7 +101,7 @@ class SermondistributorModelSeries extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.series');
 			}
 		}
-		$this->serieskoaz = $item->id;
+		$this->seriesvmbk = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getHimsermons()
+	public function getCvusermons()
 	{
 		// [Interpretation 6263] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelSeries extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [Interpretation 6291] Filter by serieskoaz global.
-		$serieskoaz = $this->serieskoaz;
-		if (is_numeric($serieskoaz ))
+		// [Interpretation 6291] Filter by seriesvmbk global.
+		$seriesvmbk = $this->seriesvmbk;
+		if (is_numeric($seriesvmbk ))
 		{
-			$query->where('a.series = ' . (int) $serieskoaz );
+			$query->where('a.series = ' . (int) $seriesvmbk );
 		}
-		elseif (is_string($serieskoaz))
+		elseif (is_string($seriesvmbk))
 		{
-			$query->where('a.series = ' . $db->quote($serieskoaz));
+			$query->where('a.series = ' . $db->quote($seriesvmbk));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelSeries extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [Interpretation 10226] convert link_type
-					$item->link_type = $this->selectionTranslationHimsermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationCvusermons($item->link_type, 'link_type');
 					// [Interpretation 10226] convert source
-					$item->source = $this->selectionTranslationHimsermons($item->source, 'source');
+					$item->source = $this->selectionTranslationCvusermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslationHimsermons($value,$name)
+	protected function selectionTranslationCvusermons($value,$name)
 	{
 		// [Interpretation 10252] Array of link_type language strings
 		if ($name == 'link_type')
@@ -500,7 +500,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	 *
 	 * @since   3.0
 	 */
-	public function getUniqeFields()
+	protected function getUniqeFields()
 	{
 		return false;
 	}
@@ -631,7 +631,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	 *
 	 * @since	12.2
 	 */
-	public function batchCopy($values, $pks, $contexts)
+	protected function batchCopy($values, $pks, $contexts)
 	{
 		if (empty($this->batchSet))
 		{
@@ -780,7 +780,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	 *
 	 * @since	12.2
 	 */
-	public function batchMove($values, $pks, $contexts)
+	protected function batchMove($values, $pks, $contexts)
 	{
 		if (empty($this->batchSet))
 		{
@@ -1021,7 +1021,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	* @return	array  Contains the modified title and alias.
 	*
 	*/
-	public function _generateNewTitle($alias, $title)
+	protected function _generateNewTitle($alias, $title)
 	{
 
 		// [Interpretation 4496] Alter the title & alias

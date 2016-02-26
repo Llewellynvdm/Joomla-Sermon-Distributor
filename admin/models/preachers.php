@@ -324,7 +324,7 @@ class SermondistributorModelPreachers extends JModelList
 	* @return  a bool
 	*
 	*/
-	public function checkInNow()
+	protected function checkInNow()
 	{
 		// [Interpretation 9894] Get set check in time
 		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');

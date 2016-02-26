@@ -23,124 +23,124 @@
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // Some Global Values
-jform_LeYQWzTzQy_required = false;
-jform_nqLwYLVFNU_required = false;
-jform_vGBwfrOvWo_required = false;
-jform_sqkUWYdCaz_required = false;
-jform_htLRPCvMmp_required = false;
+jform_yiajFDoAlz_required = false;
+jform_BpsslKyQPr_required = false;
+jform_ZwSoQfKCIO_required = false;
+jform_gVxKSDylWj_required = false;
+jform_RyyiYEPpBI_required = false;
 
 // Initial Script
 jQuery(document).ready(function()
 {
-	var source_LeYQWzT = jQuery("#jform_source").val();
-	LeYQWzT(source_LeYQWzT);
+	var source_yiajFDo = jQuery("#jform_source").val();
+	yiajFDo(source_yiajFDo);
 
-	var source_qFuRtXH = jQuery("#jform_source").val();
-	var build_qFuRtXH = jQuery("#jform_build input[type='radio']:checked").val();
-	qFuRtXH(source_qFuRtXH,build_qFuRtXH);
+	var source_GHhCiBF = jQuery("#jform_source").val();
+	var build_GHhCiBF = jQuery("#jform_build input[type='radio']:checked").val();
+	GHhCiBF(source_GHhCiBF,build_GHhCiBF);
 
-	var source_nqLwYLV = jQuery("#jform_source").val();
-	var build_nqLwYLV = jQuery("#jform_build input[type='radio']:checked").val();
-	nqLwYLV(source_nqLwYLV,build_nqLwYLV);
+	var source_BpsslKy = jQuery("#jform_source").val();
+	var build_BpsslKy = jQuery("#jform_build input[type='radio']:checked").val();
+	BpsslKy(source_BpsslKy,build_BpsslKy);
 
-	var build_vGBwfrO = jQuery("#jform_build input[type='radio']:checked").val();
-	var source_vGBwfrO = jQuery("#jform_source").val();
-	vGBwfrO(build_vGBwfrO,source_vGBwfrO);
+	var build_ZwSoQfK = jQuery("#jform_build input[type='radio']:checked").val();
+	var source_ZwSoQfK = jQuery("#jform_source").val();
+	ZwSoQfK(build_ZwSoQfK,source_ZwSoQfK);
 
-	var source_sqkUWYd = jQuery("#jform_source").val();
-	sqkUWYd(source_sqkUWYd);
+	var source_gVxKSDy = jQuery("#jform_source").val();
+	gVxKSDy(source_gVxKSDy);
 
-	var source_htLRPCv = jQuery("#jform_source").val();
-	htLRPCv(source_htLRPCv);
+	var source_RyyiYEP = jQuery("#jform_source").val();
+	RyyiYEP(source_RyyiYEP);
 
-	var link_type_BPUcgat = jQuery("#jform_link_type input[type='radio']:checked").val();
-	BPUcgat(link_type_BPUcgat);
+	var link_type_NAXJLJJ = jQuery("#jform_link_type input[type='radio']:checked").val();
+	NAXJLJJ(link_type_NAXJLJJ);
 
-	var link_type_TvqhKCs = jQuery("#jform_link_type input[type='radio']:checked").val();
-	TvqhKCs(link_type_TvqhKCs);
+	var link_type_mouetwA = jQuery("#jform_link_type input[type='radio']:checked").val();
+	mouetwA(link_type_mouetwA);
 });
 
-// the LeYQWzT function
-function LeYQWzT(source_LeYQWzT)
+// the yiajFDo function
+function yiajFDo(source_yiajFDo)
 {
-	if (isSet(source_LeYQWzT) && source_LeYQWzT.constructor !== Array)
+	if (isSet(source_yiajFDo) && source_yiajFDo.constructor !== Array)
 	{
-		var temp_LeYQWzT = source_LeYQWzT;
-		var source_LeYQWzT = [];
-		source_LeYQWzT.push(temp_LeYQWzT);
+		var temp_yiajFDo = source_yiajFDo;
+		var source_yiajFDo = [];
+		source_yiajFDo.push(temp_yiajFDo);
 	}
-	else if (!isSet(source_LeYQWzT))
+	else if (!isSet(source_yiajFDo))
 	{
-		var source_LeYQWzT = [];
+		var source_yiajFDo = [];
 	}
-	var source = source_LeYQWzT.some(source_LeYQWzT_SomeFunc);
+	var source = source_yiajFDo.some(source_yiajFDo_SomeFunc);
 
 
 	// [Interpretation 7304] set this function logic
 	if (source)
 	{
 		jQuery('#jform_build').closest('.control-group').show();
-		if (jform_LeYQWzTzQy_required)
+		if (jform_yiajFDoAlz_required)
 		{
 			updateFieldRequired('build',0);
 			jQuery('#jform_build').prop('required','required');
 			jQuery('#jform_build').attr('aria-required',true);
 			jQuery('#jform_build').addClass('required');
-			jform_LeYQWzTzQy_required = false;
+			jform_yiajFDoAlz_required = false;
 		}
 
 	}
 	else
 	{
 		jQuery('#jform_build').closest('.control-group').hide();
-		if (!jform_LeYQWzTzQy_required)
+		if (!jform_yiajFDoAlz_required)
 		{
 			updateFieldRequired('build',1);
 			jQuery('#jform_build').removeAttr('required');
 			jQuery('#jform_build').removeAttr('aria-required');
 			jQuery('#jform_build').removeClass('required');
-			jform_LeYQWzTzQy_required = true;
+			jform_yiajFDoAlz_required = true;
 		}
 	}
 }
 
-// the LeYQWzT Some function
-function source_LeYQWzT_SomeFunc(source_LeYQWzT)
+// the yiajFDo Some function
+function source_yiajFDo_SomeFunc(source_yiajFDo)
 {
 	// [Interpretation 7291] set the function logic
-	if (source_LeYQWzT == 2)
+	if (source_yiajFDo == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the qFuRtXH function
-function qFuRtXH(source_qFuRtXH,build_qFuRtXH)
+// the GHhCiBF function
+function GHhCiBF(source_GHhCiBF,build_GHhCiBF)
 {
-	if (isSet(source_qFuRtXH) && source_qFuRtXH.constructor !== Array)
+	if (isSet(source_GHhCiBF) && source_GHhCiBF.constructor !== Array)
 	{
-		var temp_qFuRtXH = source_qFuRtXH;
-		var source_qFuRtXH = [];
-		source_qFuRtXH.push(temp_qFuRtXH);
+		var temp_GHhCiBF = source_GHhCiBF;
+		var source_GHhCiBF = [];
+		source_GHhCiBF.push(temp_GHhCiBF);
 	}
-	else if (!isSet(source_qFuRtXH))
+	else if (!isSet(source_GHhCiBF))
 	{
-		var source_qFuRtXH = [];
+		var source_GHhCiBF = [];
 	}
-	var source = source_qFuRtXH.some(source_qFuRtXH_SomeFunc);
+	var source = source_GHhCiBF.some(source_GHhCiBF_SomeFunc);
 
-	if (isSet(build_qFuRtXH) && build_qFuRtXH.constructor !== Array)
+	if (isSet(build_GHhCiBF) && build_GHhCiBF.constructor !== Array)
 	{
-		var temp_qFuRtXH = build_qFuRtXH;
-		var build_qFuRtXH = [];
-		build_qFuRtXH.push(temp_qFuRtXH);
+		var temp_GHhCiBF = build_GHhCiBF;
+		var build_GHhCiBF = [];
+		build_GHhCiBF.push(temp_GHhCiBF);
 	}
-	else if (!isSet(build_qFuRtXH))
+	else if (!isSet(build_GHhCiBF))
 	{
-		var build_qFuRtXH = [];
+		var build_GHhCiBF = [];
 	}
-	var build = build_qFuRtXH.some(build_qFuRtXH_SomeFunc);
+	var build = build_GHhCiBF.some(build_GHhCiBF_SomeFunc);
 
 
 	// [Interpretation 7304] set this function logic
@@ -154,67 +154,67 @@ function qFuRtXH(source_qFuRtXH,build_qFuRtXH)
 	}
 }
 
-// the qFuRtXH Some function
-function source_qFuRtXH_SomeFunc(source_qFuRtXH)
+// the GHhCiBF Some function
+function source_GHhCiBF_SomeFunc(source_GHhCiBF)
 {
 	// [Interpretation 7291] set the function logic
-	if (source_qFuRtXH == 2)
+	if (source_GHhCiBF == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the qFuRtXH Some function
-function build_qFuRtXH_SomeFunc(build_qFuRtXH)
+// the GHhCiBF Some function
+function build_GHhCiBF_SomeFunc(build_GHhCiBF)
 {
 	// [Interpretation 7291] set the function logic
-	if (build_qFuRtXH == 2)
+	if (build_GHhCiBF == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the nqLwYLV function
-function nqLwYLV(source_nqLwYLV,build_nqLwYLV)
+// the BpsslKy function
+function BpsslKy(source_BpsslKy,build_BpsslKy)
 {
-	if (isSet(source_nqLwYLV) && source_nqLwYLV.constructor !== Array)
+	if (isSet(source_BpsslKy) && source_BpsslKy.constructor !== Array)
 	{
-		var temp_nqLwYLV = source_nqLwYLV;
-		var source_nqLwYLV = [];
-		source_nqLwYLV.push(temp_nqLwYLV);
+		var temp_BpsslKy = source_BpsslKy;
+		var source_BpsslKy = [];
+		source_BpsslKy.push(temp_BpsslKy);
 	}
-	else if (!isSet(source_nqLwYLV))
+	else if (!isSet(source_BpsslKy))
 	{
-		var source_nqLwYLV = [];
+		var source_BpsslKy = [];
 	}
-	var source = source_nqLwYLV.some(source_nqLwYLV_SomeFunc);
+	var source = source_BpsslKy.some(source_BpsslKy_SomeFunc);
 
-	if (isSet(build_nqLwYLV) && build_nqLwYLV.constructor !== Array)
+	if (isSet(build_BpsslKy) && build_BpsslKy.constructor !== Array)
 	{
-		var temp_nqLwYLV = build_nqLwYLV;
-		var build_nqLwYLV = [];
-		build_nqLwYLV.push(temp_nqLwYLV);
+		var temp_BpsslKy = build_BpsslKy;
+		var build_BpsslKy = [];
+		build_BpsslKy.push(temp_BpsslKy);
 	}
-	else if (!isSet(build_nqLwYLV))
+	else if (!isSet(build_BpsslKy))
 	{
-		var build_nqLwYLV = [];
+		var build_BpsslKy = [];
 	}
-	var build = build_nqLwYLV.some(build_nqLwYLV_SomeFunc);
+	var build = build_BpsslKy.some(build_BpsslKy_SomeFunc);
 
 
 	// [Interpretation 7304] set this function logic
 	if (source && build)
 	{
 		jQuery('#jform_manual_files').closest('.control-group').show();
-		if (jform_nqLwYLVFNU_required)
+		if (jform_BpsslKyQPr_required)
 		{
 			updateFieldRequired('manual_files',0);
 			jQuery('#jform_manual_files').prop('required','required');
 			jQuery('#jform_manual_files').attr('aria-required',true);
 			jQuery('#jform_manual_files').addClass('required');
-			jform_nqLwYLVFNU_required = false;
+			jform_BpsslKyQPr_required = false;
 		}
 
 		jQuery('.note_manual_dropbox').closest('.control-group').show();
@@ -222,79 +222,79 @@ function nqLwYLV(source_nqLwYLV,build_nqLwYLV)
 	else
 	{
 		jQuery('#jform_manual_files').closest('.control-group').hide();
-		if (!jform_nqLwYLVFNU_required)
+		if (!jform_BpsslKyQPr_required)
 		{
 			updateFieldRequired('manual_files',1);
 			jQuery('#jform_manual_files').removeAttr('required');
 			jQuery('#jform_manual_files').removeAttr('aria-required');
 			jQuery('#jform_manual_files').removeClass('required');
-			jform_nqLwYLVFNU_required = true;
+			jform_BpsslKyQPr_required = true;
 		}
 		jQuery('.note_manual_dropbox').closest('.control-group').hide();
 	}
 }
 
-// the nqLwYLV Some function
-function source_nqLwYLV_SomeFunc(source_nqLwYLV)
+// the BpsslKy Some function
+function source_BpsslKy_SomeFunc(source_BpsslKy)
 {
 	// [Interpretation 7291] set the function logic
-	if (source_nqLwYLV == 2)
+	if (source_BpsslKy == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the nqLwYLV Some function
-function build_nqLwYLV_SomeFunc(build_nqLwYLV)
+// the BpsslKy Some function
+function build_BpsslKy_SomeFunc(build_BpsslKy)
 {
 	// [Interpretation 7291] set the function logic
-	if (build_nqLwYLV == 1)
+	if (build_BpsslKy == 1)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the vGBwfrO function
-function vGBwfrO(build_vGBwfrO,source_vGBwfrO)
+// the ZwSoQfK function
+function ZwSoQfK(build_ZwSoQfK,source_ZwSoQfK)
 {
-	if (isSet(build_vGBwfrO) && build_vGBwfrO.constructor !== Array)
+	if (isSet(build_ZwSoQfK) && build_ZwSoQfK.constructor !== Array)
 	{
-		var temp_vGBwfrO = build_vGBwfrO;
-		var build_vGBwfrO = [];
-		build_vGBwfrO.push(temp_vGBwfrO);
+		var temp_ZwSoQfK = build_ZwSoQfK;
+		var build_ZwSoQfK = [];
+		build_ZwSoQfK.push(temp_ZwSoQfK);
 	}
-	else if (!isSet(build_vGBwfrO))
+	else if (!isSet(build_ZwSoQfK))
 	{
-		var build_vGBwfrO = [];
+		var build_ZwSoQfK = [];
 	}
-	var build = build_vGBwfrO.some(build_vGBwfrO_SomeFunc);
+	var build = build_ZwSoQfK.some(build_ZwSoQfK_SomeFunc);
 
-	if (isSet(source_vGBwfrO) && source_vGBwfrO.constructor !== Array)
+	if (isSet(source_ZwSoQfK) && source_ZwSoQfK.constructor !== Array)
 	{
-		var temp_vGBwfrO = source_vGBwfrO;
-		var source_vGBwfrO = [];
-		source_vGBwfrO.push(temp_vGBwfrO);
+		var temp_ZwSoQfK = source_ZwSoQfK;
+		var source_ZwSoQfK = [];
+		source_ZwSoQfK.push(temp_ZwSoQfK);
 	}
-	else if (!isSet(source_vGBwfrO))
+	else if (!isSet(source_ZwSoQfK))
 	{
-		var source_vGBwfrO = [];
+		var source_ZwSoQfK = [];
 	}
-	var source = source_vGBwfrO.some(source_vGBwfrO_SomeFunc);
+	var source = source_ZwSoQfK.some(source_ZwSoQfK_SomeFunc);
 
 
 	// [Interpretation 7304] set this function logic
 	if (build && source)
 	{
 		jQuery('#jform_manual_files').closest('.control-group').show();
-		if (jform_vGBwfrOvWo_required)
+		if (jform_ZwSoQfKCIO_required)
 		{
 			updateFieldRequired('manual_files',0);
 			jQuery('#jform_manual_files').prop('required','required');
 			jQuery('#jform_manual_files').attr('aria-required',true);
 			jQuery('#jform_manual_files').addClass('required');
-			jform_vGBwfrOvWo_required = false;
+			jform_ZwSoQfKCIO_required = false;
 		}
 
 		jQuery('.note_manual_dropbox').closest('.control-group').show();
@@ -302,155 +302,155 @@ function vGBwfrO(build_vGBwfrO,source_vGBwfrO)
 	else
 	{
 		jQuery('#jform_manual_files').closest('.control-group').hide();
-		if (!jform_vGBwfrOvWo_required)
+		if (!jform_ZwSoQfKCIO_required)
 		{
 			updateFieldRequired('manual_files',1);
 			jQuery('#jform_manual_files').removeAttr('required');
 			jQuery('#jform_manual_files').removeAttr('aria-required');
 			jQuery('#jform_manual_files').removeClass('required');
-			jform_vGBwfrOvWo_required = true;
+			jform_ZwSoQfKCIO_required = true;
 		}
 		jQuery('.note_manual_dropbox').closest('.control-group').hide();
 	}
 }
 
-// the vGBwfrO Some function
-function build_vGBwfrO_SomeFunc(build_vGBwfrO)
+// the ZwSoQfK Some function
+function build_ZwSoQfK_SomeFunc(build_ZwSoQfK)
 {
 	// [Interpretation 7291] set the function logic
-	if (build_vGBwfrO == 1)
+	if (build_ZwSoQfK == 1)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the vGBwfrO Some function
-function source_vGBwfrO_SomeFunc(source_vGBwfrO)
+// the ZwSoQfK Some function
+function source_ZwSoQfK_SomeFunc(source_ZwSoQfK)
 {
 	// [Interpretation 7291] set the function logic
-	if (source_vGBwfrO == 2)
+	if (source_ZwSoQfK == 2)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the sqkUWYd function
-function sqkUWYd(source_sqkUWYd)
+// the gVxKSDy function
+function gVxKSDy(source_gVxKSDy)
 {
-	if (isSet(source_sqkUWYd) && source_sqkUWYd.constructor !== Array)
+	if (isSet(source_gVxKSDy) && source_gVxKSDy.constructor !== Array)
 	{
-		var temp_sqkUWYd = source_sqkUWYd;
-		var source_sqkUWYd = [];
-		source_sqkUWYd.push(temp_sqkUWYd);
+		var temp_gVxKSDy = source_gVxKSDy;
+		var source_gVxKSDy = [];
+		source_gVxKSDy.push(temp_gVxKSDy);
 	}
-	else if (!isSet(source_sqkUWYd))
+	else if (!isSet(source_gVxKSDy))
 	{
-		var source_sqkUWYd = [];
+		var source_gVxKSDy = [];
 	}
-	var source = source_sqkUWYd.some(source_sqkUWYd_SomeFunc);
+	var source = source_gVxKSDy.some(source_gVxKSDy_SomeFunc);
 
 
 	// [Interpretation 7304] set this function logic
 	if (source)
 	{
 		jQuery('#jform_local_files').closest('.control-group').show();
-		if (jform_sqkUWYdCaz_required)
+		if (jform_gVxKSDylWj_required)
 		{
 			updateFieldRequired('local_files',0);
 			jQuery('#jform_local_files').prop('required','required');
 			jQuery('#jform_local_files').attr('aria-required',true);
 			jQuery('#jform_local_files').addClass('required');
-			jform_sqkUWYdCaz_required = false;
+			jform_gVxKSDylWj_required = false;
 		}
 
 	}
 	else
 	{
 		jQuery('#jform_local_files').closest('.control-group').hide();
-		if (!jform_sqkUWYdCaz_required)
+		if (!jform_gVxKSDylWj_required)
 		{
 			updateFieldRequired('local_files',1);
 			jQuery('#jform_local_files').removeAttr('required');
 			jQuery('#jform_local_files').removeAttr('aria-required');
 			jQuery('#jform_local_files').removeClass('required');
-			jform_sqkUWYdCaz_required = true;
+			jform_gVxKSDylWj_required = true;
 		}
 	}
 }
 
-// the sqkUWYd Some function
-function source_sqkUWYd_SomeFunc(source_sqkUWYd)
+// the gVxKSDy Some function
+function source_gVxKSDy_SomeFunc(source_gVxKSDy)
 {
 	// [Interpretation 7291] set the function logic
-	if (source_sqkUWYd == 1)
+	if (source_gVxKSDy == 1)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the htLRPCv function
-function htLRPCv(source_htLRPCv)
+// the RyyiYEP function
+function RyyiYEP(source_RyyiYEP)
 {
-	if (isSet(source_htLRPCv) && source_htLRPCv.constructor !== Array)
+	if (isSet(source_RyyiYEP) && source_RyyiYEP.constructor !== Array)
 	{
-		var temp_htLRPCv = source_htLRPCv;
-		var source_htLRPCv = [];
-		source_htLRPCv.push(temp_htLRPCv);
+		var temp_RyyiYEP = source_RyyiYEP;
+		var source_RyyiYEP = [];
+		source_RyyiYEP.push(temp_RyyiYEP);
 	}
-	else if (!isSet(source_htLRPCv))
+	else if (!isSet(source_RyyiYEP))
 	{
-		var source_htLRPCv = [];
+		var source_RyyiYEP = [];
 	}
-	var source = source_htLRPCv.some(source_htLRPCv_SomeFunc);
+	var source = source_RyyiYEP.some(source_RyyiYEP_SomeFunc);
 
 
 	// [Interpretation 7304] set this function logic
 	if (source)
 	{
 		jQuery('#jform_url').closest('.control-group').show();
-		if (jform_htLRPCvMmp_required)
+		if (jform_RyyiYEPpBI_required)
 		{
 			updateFieldRequired('url',0);
 			jQuery('#jform_url').prop('required','required');
 			jQuery('#jform_url').attr('aria-required',true);
 			jQuery('#jform_url').addClass('required');
-			jform_htLRPCvMmp_required = false;
+			jform_RyyiYEPpBI_required = false;
 		}
 
 	}
 	else
 	{
 		jQuery('#jform_url').closest('.control-group').hide();
-		if (!jform_htLRPCvMmp_required)
+		if (!jform_RyyiYEPpBI_required)
 		{
 			updateFieldRequired('url',1);
 			jQuery('#jform_url').removeAttr('required');
 			jQuery('#jform_url').removeAttr('aria-required');
 			jQuery('#jform_url').removeClass('required');
-			jform_htLRPCvMmp_required = true;
+			jform_RyyiYEPpBI_required = true;
 		}
 	}
 }
 
-// the htLRPCv Some function
-function source_htLRPCv_SomeFunc(source_htLRPCv)
+// the RyyiYEP Some function
+function source_RyyiYEP_SomeFunc(source_RyyiYEP)
 {
 	// [Interpretation 7291] set the function logic
-	if (source_htLRPCv == 3)
+	if (source_RyyiYEP == 3)
 	{
 		return true;
 	}
 	return false;
 }
 
-// the BPUcgat function
-function BPUcgat(link_type_BPUcgat)
+// the NAXJLJJ function
+function NAXJLJJ(link_type_NAXJLJJ)
 {
 	// [Interpretation 7326] set the function logic
-	if (link_type_BPUcgat == 2)
+	if (link_type_NAXJLJJ == 2)
 	{
 		jQuery('.note_link_directed').closest('.control-group').show();
 	}
@@ -460,11 +460,11 @@ function BPUcgat(link_type_BPUcgat)
 	}
 }
 
-// the TvqhKCs function
-function TvqhKCs(link_type_TvqhKCs)
+// the mouetwA function
+function mouetwA(link_type_mouetwA)
 {
 	// [Interpretation 7326] set the function logic
-	if (link_type_TvqhKCs == 1)
+	if (link_type_mouetwA == 1)
 	{
 		jQuery('.note_link_encrypted').closest('.control-group').show();
 	}

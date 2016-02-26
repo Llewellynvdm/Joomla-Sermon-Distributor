@@ -174,7 +174,7 @@ class SermondistributorModelSermons extends JModelList
 	*
 	* @return translatable string
 	*/
-	public function selectionTranslation($value,$name)
+	protected function selectionTranslation($value,$name)
 	{
 		// [Interpretation 10252] Array of link_type language strings
 		if ($name == 'link_type')
@@ -462,7 +462,7 @@ class SermondistributorModelSermons extends JModelList
 	* @return  a bool
 	*
 	*/
-	public function checkInNow()
+	protected function checkInNow()
 	{
 		// [Interpretation 9894] Get set check in time
 		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');

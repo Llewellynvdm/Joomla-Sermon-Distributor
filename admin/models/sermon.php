@@ -113,7 +113,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.sermon');
 			}
 		}
-		$this->sermonrsop = $item->id;
+		$this->sermonxazn = $item->id;
 
 		return $item;
 	}
@@ -123,7 +123,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getKyqstastics()
+	public function getFpwstastics()
 	{
 		// [Interpretation 6263] Get the user object.
 		$user = JFactory::getUser();
@@ -149,15 +149,15 @@ class SermondistributorModelSermon extends JModelAdmin
 		$query->select($db->quoteName('i.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'i') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('i.id') . ')');
 
-		// [Interpretation 6291] Filter by sermonrsop global.
-		$sermonrsop = $this->sermonrsop;
-		if (is_numeric($sermonrsop ))
+		// [Interpretation 6291] Filter by sermonxazn global.
+		$sermonxazn = $this->sermonxazn;
+		if (is_numeric($sermonxazn ))
 		{
-			$query->where('a.sermon = ' . (int) $sermonrsop );
+			$query->where('a.sermon = ' . (int) $sermonxazn );
 		}
-		elseif (is_string($sermonrsop))
+		elseif (is_string($sermonxazn))
 		{
-			$query->where('a.sermon = ' . $db->quote($sermonrsop));
+			$query->where('a.sermon = ' . $db->quote($sermonxazn));
 		}
 		else
 		{
@@ -539,7 +539,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	 *
 	 * @since   3.0
 	 */
-	public function getUniqeFields()
+	protected function getUniqeFields()
 	{
 		return false;
 	}
@@ -670,7 +670,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	 *
 	 * @since	12.2
 	 */
-	public function batchCopy($values, $pks, $contexts)
+	protected function batchCopy($values, $pks, $contexts)
 	{
 		if (empty($this->batchSet))
 		{
@@ -841,7 +841,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	 *
 	 * @since	12.2
 	 */
-	public function batchMove($values, $pks, $contexts)
+	protected function batchMove($values, $pks, $contexts)
 	{
 		if (empty($this->batchSet))
 		{
@@ -1110,7 +1110,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	* @return	array  Contains the modified title and alias.
 	*
 	*/
-	public function _generateNewTitle($alias, $title)
+	protected function _generateNewTitle($alias, $title)
 	{
 
 		// [Interpretation 4496] Alter the title & alias
