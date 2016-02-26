@@ -178,7 +178,7 @@ class SermondistributorModelHelp_documents extends JModelList
 	*
 	* @return translatable string
 	*/
-	protected function selectionTranslation($value,$name)
+	public function selectionTranslation($value,$name)
 	{
 		// [Interpretation 10252] Array of type language strings
 		if ($name == 'type')

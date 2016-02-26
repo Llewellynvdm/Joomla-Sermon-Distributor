@@ -71,7 +71,7 @@ class SermondistributorViewSeries extends JViewLegacy
                 }
 
 		// [Interpretation 5797] Get Linked view data
-		$this->cvusermons		= $this->get('Cvusermons');
+		$this->vwcsermons		= $this->get('Vwcsermons');
 
 		// Set the toolbar
 		$this->addToolBar();

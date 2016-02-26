@@ -359,7 +359,7 @@ class SermondistributorViewSermons extends JViewLegacy
 		);
 	} 
 
-	public function getTheLink_typeSelections()
+	protected function getTheLink_typeSelections()
 	{
 		// [Interpretation 8335] Get a db connection.
 		$db = JFactory::getDbo();
@@ -395,7 +395,7 @@ class SermondistributorViewSermons extends JViewLegacy
 		return false;
 	}
 
-	public function getTheSourceSelections()
+	protected function getTheSourceSelections()
 	{
 		// [Interpretation 8335] Get a db connection.
 		$db = JFactory::getDbo();

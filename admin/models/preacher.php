@@ -101,7 +101,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.preacher');
 			}
 		}
-		$this->preachermzvi = $item->id;
+		$this->preachervvvv = $item->id;
 
 		return $item;
 	}
@@ -111,7 +111,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return mixed  An array of data items on success, false on failure.
 	*/
-	public function getBuysermons()
+	public function getVvvsermons()
 	{
 		// [Interpretation 6263] Get the user object.
 		$user = JFactory::getUser();
@@ -135,15 +135,15 @@ class SermondistributorModelPreacher extends JModelAdmin
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [Interpretation 6291] Filter by preachermzvi global.
-		$preachermzvi = $this->preachermzvi;
-		if (is_numeric($preachermzvi ))
+		// [Interpretation 6291] Filter by preachervvvv global.
+		$preachervvvv = $this->preachervvvv;
+		if (is_numeric($preachervvvv ))
 		{
-			$query->where('a.preacher = ' . (int) $preachermzvi );
+			$query->where('a.preacher = ' . (int) $preachervvvv );
 		}
-		elseif (is_string($preachermzvi))
+		elseif (is_string($preachervvvv))
 		{
-			$query->where('a.preacher = ' . $db->quote($preachermzvi));
+			$query->where('a.preacher = ' . $db->quote($preachervvvv));
 		}
 		else
 		{
@@ -198,9 +198,9 @@ class SermondistributorModelPreacher extends JModelAdmin
 				foreach ($items as $nr => &$item)
 				{
 					// [Interpretation 10226] convert link_type
-					$item->link_type = $this->selectionTranslationBuysermons($item->link_type, 'link_type');
+					$item->link_type = $this->selectionTranslationVvvsermons($item->link_type, 'link_type');
 					// [Interpretation 10226] convert source
-					$item->source = $this->selectionTranslationBuysermons($item->source, 'source');
+					$item->source = $this->selectionTranslationVvvsermons($item->source, 'source');
 				}
 			}
 
@@ -214,7 +214,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	*
 	* @return translatable string
 	*/
-	protected function selectionTranslationBuysermons($value,$name)
+	public function selectionTranslationVvvsermons($value,$name)
 	{
 		// [Interpretation 10252] Array of link_type language strings
 		if ($name == 'link_type')

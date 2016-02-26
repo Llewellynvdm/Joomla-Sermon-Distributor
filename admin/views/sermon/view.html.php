@@ -71,7 +71,7 @@ class SermondistributorViewSermon extends JViewLegacy
                 }
 
 		// [Interpretation 5797] Get Linked view data
-		$this->fpwstastics		= $this->get('Fpwstastics');
+		$this->vwbstastics		= $this->get('Vwbstastics');
 
 		// Set the toolbar
 		$this->addToolBar();
