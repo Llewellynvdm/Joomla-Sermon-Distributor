@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			21st February, 2016
+	@build			26th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -561,23 +561,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [1709] if user not in those target groups then remove the item
+							// [Interpretation 680] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [1714] set the return type
+					// [Interpretation 685] set the return type
 					switch ($help->type)
 					{
-						// [1717] set joomla article
+						// [Interpretation 688] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [1721] set help text
+						// [Interpretation 692] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [1725] set Link
+						// [Interpretation 696] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -827,7 +827,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [2953] reset
+			// [Interpretation 1924] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -836,15 +836,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [2962] make sure uikit is loaded to config
+			// [Interpretation 1933] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [2967] sorter
+			// [Interpretation 1938] sorter
 			if (self::checkArray($temp))
 			{
-				// [2970] merger
+				// [Interpretation 1941] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			21st February, 2016
+	@build			26th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -43,7 +43,7 @@ class SermondistributorModelAjax extends JModelList
 
 	}
 
-	// [9604] Used in sermon
+	// [Interpretation 8234] Used in sermon
 	/**
 	* 	Check and Set Dropbox local listing
 	**/

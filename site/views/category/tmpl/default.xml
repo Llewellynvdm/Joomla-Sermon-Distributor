@@ -5,12 +5,12 @@
 			<![CDATA[COM_SERMONDISTRIBUTOR_MENU_CATEGORY_DESC]]>
 		</message>
 	</layout>
-	<!-- [2054] Add fields to the request variables for the layout. -->
+	<!-- [Interpretation 1025] Add fields to the request variables for the layout. -->
 	<fields name="request">
 		<fieldset name="request"
 			addfieldpath="/administrator/components/com_sermondistributor/models/fields">
 			
-		<!-- [12078] Category_request_id Field. Type: Category. (joomla) -->
+		<!-- [Interpretation 10708] Category_request_id Field. Type: Category. (joomla) -->
 		<field
 			type="category"
 			name="id"
@@ -22,10 +22,10 @@
 		/>
 		</fieldset>
 	</fields>
-	<!-- [2069] Adding page parameters -->
+	<!-- [Interpretation 1040] Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
-		<!-- [11992] Category_display Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_display"
@@ -33,7 +33,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -43,7 +43,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_SMALL</option>
 		</field>			
-		<!-- [11992] Category_box_contrast Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_box_contrast Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_box_contrast"
@@ -51,7 +51,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_BOX_CONTRAST_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -59,7 +59,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_list_style Field. Type: List. (joomla) -->
+		<!-- [Interpretation 10622] Category_list_style Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="category_list_style"
@@ -69,7 +69,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -81,7 +81,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
 		</field>			
-		<!-- [11992] Category_icon Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_icon Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_icon"
@@ -89,7 +89,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -97,7 +97,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_desc Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_desc Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_desc"
@@ -105,7 +105,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -113,7 +113,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_sermon_count Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermon_count Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermon_count"
@@ -121,7 +121,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMON_COUNT_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -129,7 +129,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_hits Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_hits Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_hits"
@@ -137,7 +137,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -145,9 +145,9 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [12092] Spacer_hr_g Field. Type: Spacer. A None Database Field. (joomla) -->
+		<!-- [Interpretation 10722] Spacer_hr_g Field. Type: Spacer. A None Database Field. (joomla) -->
 		<field type="spacer" name="spacer_hr_g" hr="true" class="spacer_hr_g" />			
-		<!-- [11992] Category_sermons_display Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_display"
@@ -155,7 +155,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -165,7 +165,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_LIST</option>
 		</field>			
-		<!-- [11992] Category_sermons_list_style Field. Type: List. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_list_style Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="category_sermons_list_style"
@@ -175,7 +175,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -187,7 +187,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
 		</field>			
-		<!-- [11992] Category_sermons_table_color Field. Type: List. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_table_color Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="category_sermons_table_color"
@@ -197,7 +197,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -219,7 +219,7 @@
 			<option value="8">
 				COM_SERMONDISTRIBUTOR_CONFIG_NONE</option>
 		</field>			
-		<!-- [11992] Category_sermons_icon Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_icon Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_icon"
@@ -227,7 +227,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -235,7 +235,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_sermons_desc Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_desc Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_desc"
@@ -243,7 +243,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -251,7 +251,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_sermons_preacher Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_preacher Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_preacher"
@@ -259,7 +259,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_PREACHER_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -267,7 +267,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_sermons_series Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_series Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_series"
@@ -275,7 +275,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_SERIES_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -283,7 +283,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_sermons_download_counter Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_download_counter Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_download_counter"
@@ -291,7 +291,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_DOWNLOAD_COUNTER_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -299,7 +299,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_sermons_hits Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_hits Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_hits"
@@ -307,7 +307,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -315,7 +315,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_sermons_downloads Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_downloads Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_downloads"
@@ -323,7 +323,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_DOWNLOADS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -331,7 +331,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [11992] Category_sermons_open Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Category_sermons_open Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="category_sermons_open"
@@ -339,7 +339,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_OPEN_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [12064]  [2092] Global & Option Set. -->
+			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">

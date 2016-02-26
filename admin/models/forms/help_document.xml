@@ -4,15 +4,15 @@
 	addfieldpath="/administrator/components/com_sermondistributor/models/fields"
 >
 	<fieldset name="details">
-		<!-- [11731] Default Fields. -->
-		<!-- [11732] Id Field. Type: Text (joomla) -->
+		<!-- [Interpretation 10361] Default Fields. -->
+		<!-- [Interpretation 10362] Id Field. Type: Text (joomla) -->
 		<field
 			name="id"
 			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
 			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
 			readonly="true"
 		/>
-		<!-- [11739] Date Created Field. Type: Calendar (joomla) -->
+		<!-- [Interpretation 10369] Date Created Field. Type: Calendar (joomla) -->
 		<field
 			name="created"
 			type="calendar"
@@ -22,14 +22,14 @@
 			format="%Y-%m-%d %H:%M:%S"
 			filter="user_utc"
 		/>
-		<!-- [11750] User Created Field. Type: User (joomla) -->
+		<!-- [Interpretation 10380] User Created Field. Type: User (joomla) -->
 		<field
 			name="created_by"
 			type="user"
 			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_CREATED_BY_LABEL"
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_CREATED_BY_DESC"
 		/>
-		<!-- [11758] Published Field. Type: List (joomla) -->
+		<!-- [Interpretation 10388] Published Field. Type: List (joomla) -->
 		<field name="published" type="list" label="JSTATUS"
 			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
 			filter="intval" size="1" default="1" >
@@ -42,18 +42,18 @@
 			<option value="-2">
 				JTRASHED</option>
 		</field>
-		<!-- [11773] Date Modified Field. Type: Calendar (joomla) -->
+		<!-- [Interpretation 10403] Date Modified Field. Type: Calendar (joomla) -->
 		<field name="modified" type="calendar" class="readonly"
 			label="JGLOBAL_FIELD_MODIFIED_LABEL" description="COM_CONTENT_FIELD_MODIFIED_DESC"
 			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
-		<!-- [11777] User Modified Field. Type: User (joomla) -->
+		<!-- [Interpretation 10407] User Modified Field. Type: User (joomla) -->
 		<field name="modified_by" type="user"
 			label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
 			class="readonly"
 			readonly="true"
 			filter="unset"
 		/>
-		<!-- [11787] Access Field. Type: Accesslevel (joomla) -->
+		<!-- [Interpretation 10417] Access Field. Type: Accesslevel (joomla) -->
 		<field name="access"
 			type="accesslevel"
 			label="JFIELD_ACCESS_LABEL"
@@ -61,7 +61,7 @@
 			default="1"
 			required="false"
 		/>
-		<!-- [11797] Ordering Field. Type: Numbers (joomla) -->
+		<!-- [Interpretation 10427] Ordering Field. Type: Numbers (joomla) -->
 		<field
 			name="ordering"
 			type="number"
@@ -72,7 +72,7 @@
 			size="6"
 			required="false"
 		/>
-		<!-- [11809] Version Field. Type: Text (joomla) -->
+		<!-- [Interpretation 10439] Version Field. Type: Text (joomla) -->
 		<field
 			name="version"
 			type="text"
@@ -83,7 +83,7 @@
 			readonly="true"
 			filter="unset"
 		/>
-		<!-- [11823] Metakey Field. Type: Textarea (joomla) -->
+		<!-- [Interpretation 10453] Metakey Field. Type: Textarea (joomla) -->
 		<field
 			name="metakey"
 			type="textarea"
@@ -92,7 +92,7 @@
 			rows="3"
 			cols="30"
 		/>
-		<!-- [11832] Metadesc Field. Type: Textarea (joomla) -->
+		<!-- [Interpretation 10462] Metadesc Field. Type: Textarea (joomla) -->
 		<field
 			name="metadesc"
 			type="textarea"
@@ -101,8 +101,8 @@
 			rows="3"
 			cols="30"
 		/>
-		<!-- [11842] Dynamic Fields. -->
-		<!-- [12078] Title Field. Type: Text. (joomla) -->
+		<!-- [Interpretation 10472] Dynamic Fields. -->
+		<!-- [Interpretation 10708] Title Field. Type: Text. (joomla) -->
 		<field
 			type="text"
 			name="title"
@@ -118,7 +118,7 @@
 			message="Error! Please add title here."
 			hint="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TITLE_HINT"
 		/>
-		<!-- [11992] Type Field. Type: List. (joomla) -->
+		<!-- [Interpretation 10622] Type Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="type"
@@ -127,7 +127,7 @@
 			class="list_class"
 			multiple="false"
 			required="true">
-			<!-- [12064] Option Set. -->
+			<!-- [Interpretation 10694] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SELECT_AN_OPTION</option>
 			<option value="1">
@@ -137,7 +137,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL</option>
 		</field>
-		<!-- [12078] Groups Field. Type: Usergroup. (joomla) -->
+		<!-- [Interpretation 10708] Groups Field. Type: Usergroup. (joomla) -->
 		<field
 			type="usergroup"
 			name="groups"
@@ -146,7 +146,7 @@
 			required="true"
 			multiple="true"
 		/>
-		<!-- [11992] Location Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Location Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="location"
@@ -154,13 +154,13 @@
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_DESCRIPTION"
 			class="btn-group"
 			required="true">
-			<!-- [12064] Option Set. -->
+			<!-- [Interpretation 10694] Option Set. -->
 			<option value="1">
 				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN</option>
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE</option>
 		</field>
-		<!-- [12078] Admin_view Field. Type: Folderlist. (joomla) -->
+		<!-- [Interpretation 10708] Admin_view Field. Type: Folderlist. (joomla) -->
 		<field
 			type="folderlist"
 			name="admin_view"
@@ -170,7 +170,7 @@
 			hide_none="true"
 			hide_default="true"
 		/>
-		<!-- [12078] Site_view Field. Type: Folderlist. (joomla) -->
+		<!-- [Interpretation 10708] Site_view Field. Type: Folderlist. (joomla) -->
 		<field
 			type="folderlist"
 			name="site_view"
@@ -180,7 +180,7 @@
 			hide_none="true"
 			hide_default="true"
 		/>
-		<!-- [11992] Target Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 10622] Target Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="target"
@@ -188,13 +188,13 @@
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TARGET_DESCRIPTION"
 			class="btn-group"
 			required="true">
-			<!-- [12064] Option Set. -->
+			<!-- [Interpretation 10694] Option Set. -->
 			<option value="1">
 				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SOME</option>
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ALL</option>
 		</field>
-		<!-- [12078] Content Field. Type: Editor. (joomla) -->
+		<!-- [Interpretation 10708] Content Field. Type: Editor. (joomla) -->
 		<field
 			type="editor"
 			name="content"
@@ -205,7 +205,7 @@
 			filter="safehtml"
 			required="true"
 		/>
-		<!-- [12078] Alias Field. Type: Text. (joomla) -->
+		<!-- [Interpretation 10708] Alias Field. Type: Text. (joomla) -->
 		<field
 			type="text"
 			name="alias"
@@ -214,7 +214,7 @@
 			filter="STRING"
 			hint="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ALIAS_HINT"
 		/>
-		<!-- [12199] Article Field. Type: Articles. (custom) -->
+		<!-- [Interpretation 10829] Article Field. Type: Articles. (custom) -->
 		<field
 			type="articles"
 			name="article"
@@ -224,7 +224,7 @@
 			default="0"
 			required="true"
 		/>
-		<!-- [12078] Url Field. Type: Url. (joomla) -->
+		<!-- [Interpretation 10708] Url Field. Type: Url. (joomla) -->
 		<field
 			type="url"
 			name="url"
@@ -239,7 +239,7 @@
 			message="Error! Please add url here."
 			hint="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_HINT"
 		/>
-		<!-- [12078] Not_required Field. Type: Hidden. (joomla) -->
+		<!-- [Interpretation 10708] Not_required Field. Type: Hidden. (joomla) -->
 		<field
 			type="hidden"
 			name="not_required"
@@ -247,11 +247,11 @@
 		/>
 	</fieldset>
 
-	<!-- [11861] Metadata Fields. -->
+	<!-- [Interpretation 10491] Metadata Fields. -->
 	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 		<fieldset name="vdmmetadata"
 			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-			<!-- [11865] Robots Field. Type: List (joomla) -->
+			<!-- [Interpretation 10495] Robots Field. Type: List (joomla) -->
 			<field name="robots"
 				type="list"
 				label="JFIELD_METADATA_ROBOTS_LABEL"
@@ -262,13 +262,13 @@
 				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
 				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
 			</field>
-			<!-- [11876] Author Field. Type: Text (joomla) -->
+			<!-- [Interpretation 10506] Author Field. Type: Text (joomla) -->
 			<field name="author"
 				type="text"
 				label="JAUTHOR" description="JFIELD_METADATA_AUTHOR_DESC"
 				size="20"
 			/>
-			<!-- [11882] Rights Field. Type: Textarea (joomla) -->
+			<!-- [Interpretation 10512] Rights Field. Type: Textarea (joomla) -->
 			<field name="rights" type="textarea" label="JFIELD_META_RIGHTS_LABEL"
 				description="JFIELD_META_RIGHTS_DESC" required="false" filter="string"
 				cols="30" rows="2"
@@ -276,15 +276,15 @@
 		</fieldset>
 	</fields>
 	
-	<!-- [10764] Access Control Fields. -->
+	<!-- [Interpretation 9394] Access Control Fields. -->
 	<fieldset name="accesscontrol">
-		<!-- [10766] Asset Id Field. Type: Hidden (joomla) -->
+		<!-- [Interpretation 9396] Asset Id Field. Type: Hidden (joomla) -->
 		<field
 			name="asset_id"
 			type="hidden"
 			filter="unset"
 		/>
-		<!-- [10772] Rules Field. Type: Rules (joomla) -->
+		<!-- [Interpretation 9402] Rules Field. Type: Rules (joomla) -->
 		<field
 			name="rules"
 			type="rules"

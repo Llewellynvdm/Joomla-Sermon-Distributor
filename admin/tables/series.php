@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			21st February, 2016
+	@build			26th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -53,7 +53,7 @@ class SermondistributorTableSeries extends JTable
 	{
 		parent::__construct('#__sermondistributor_series', 'id', $db);
 
-		// [4777] Adding History Options
+		// [Interpretation 3407] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.series')); 
 	}	
  

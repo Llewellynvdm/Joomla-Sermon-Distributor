@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			21st February, 2016
+	@build			26th February, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -119,31 +119,31 @@ class SermondistributorModelSermon extends JModelItem
 		{
 			try
 			{
-				// [2678] Get a db connection.
+				// [Interpretation 1649] Get a db connection.
 				$db = JFactory::getDbo();
 
-				// [2680] Create a new query object.
+				// [Interpretation 1651] Create a new query object.
 				$query = $db->getQuery(true);
 
-				// [2128] Get from #__sermondistributor_sermon as a
+				// [Interpretation 1099] Get from #__sermondistributor_sermon as a
 				$query->select($db->quoteName(
 			array('a.id','a.asset_id','a.name','a.alias','a.preacher','a.short_description','a.icon','a.scripture','a.series','a.catid','a.description','a.link_type','a.source','a.build','a.manual_files','a.local_files','a.url','a.not_required','a.auto_sermons','a.published','a.created_by','a.modified_by','a.created','a.modified','a.version','a.hits','a.ordering','a.metadesc','a.metakey','a.metadata'),
 			array('id','asset_id','name','alias','preacher','short_description','icon','scripture','series','catid','description','link_type','source','build','manual_files','local_files','url','not_required','auto_sermons','published','created_by','modified_by','created','modified','version','hits','ordering','metadesc','metakey','metadata')));
 				$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
 
-				// [2128] Get from #__sermondistributor_series as b
+				// [Interpretation 1099] Get from #__sermondistributor_series as b
 				$query->select($db->quoteName(
 			array('b.name','b.alias'),
 			array('series_name','series_alias')));
 				$query->join('LEFT', ($db->quoteName('#__sermondistributor_series', 'b')) . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('b.id') . ')');
 
-				// [2128] Get from #__sermondistributor_preacher as c
+				// [Interpretation 1099] Get from #__sermondistributor_preacher as c
 				$query->select($db->quoteName(
 			array('c.name','c.alias'),
 			array('preacher_name','preacher_alias')));
 				$query->join('LEFT', ($db->quoteName('#__sermondistributor_preacher', 'c')) . ' ON (' . $db->quoteName('a.preacher') . ' = ' . $db->quoteName('c.id') . ')');
 
-				// [2128] Get from #__categories as e
+				// [Interpretation 1099] Get from #__categories as e
 				$query->select($db->quoteName(
 			array('e.alias','e.title'),
 			array('category_alias','category')));
@@ -153,38 +153,38 @@ class SermondistributorModelSermon extends JModelItem
 				$query->where('a.published = 1');
 				$query->order('a.ordering ASC');
 
-				// [2691] Reset the query using our newly populated query object.
+				// [Interpretation 1662] Reset the query using our newly populated query object.
 				$db->setQuery($query);
-				// [2693] Load the results as a stdClass object.
+				// [Interpretation 1664] Load the results as a stdClass object.
 				$data = $db->loadObject();
 
 				if (empty($data))
 				{
-					// [2704] If no data is found redirect to default page and show warning.
+					// [Interpretation 1675] If no data is found redirect to default page and show warning.
 					JError::raiseWarning(500, JText::_('COM_SERMONDISTRIBUTOR_NOT_FOUND_OR_ACCESS_DENIED'));
 					JFactory::getApplication()->redirect('index.php?option=com_sermondistributor&view=preachers');
 					return false;
 				}
 				if (SermondistributorHelper::checkString($data->local_files))
 				{
-					// [2330] Decode local_files
+					// [Interpretation 1301] Decode local_files
 					$data->local_files = json_decode($data->local_files, true);
 				}
 				if (SermondistributorHelper::checkString($data->manual_files))
 				{
-					// [2330] Decode manual_files
+					// [Interpretation 1301] Decode manual_files
 					$data->manual_files = json_decode($data->manual_files, true);
 				}
-				// [2345] Make sure the content prepare plugins fire on description.
+				// [Interpretation 1316] Make sure the content prepare plugins fire on description.
 				$data->description = JHtml::_('content.prepare',$data->description);
-				// [2347] Checking if description has uikit components that must be loaded.
+				// [Interpretation 1318] Checking if description has uikit components that must be loaded.
 				$this->uikitComp = SermondistributorHelper::getUikitComp($data->description,$this->uikitComp);
-				// [2650] set the global sermon value.
+				// [Interpretation 1621] set the global sermon value.
 				$this->a_sermon = $data->id;
-				// [2378] set idSermonStatisticD to the $data object.
+				// [Interpretation 1349] set idSermonStatisticD to the $data object.
 				$data->idSermonStatisticD = $this->getIdSermonStatisticEbbd_D($data->id);
 
-				// [2798] set data object to item.
+				// [Interpretation 1769] set data object to item.
 				$this->_item[$pk] = $data;
 			}
 			catch (Exception $e)
@@ -265,24 +265,24 @@ class SermondistributorModelSermon extends JModelItem
 	*/
 	public function getIdSermonStatisticEbbd_D($id)
 	{
-		// [3058] Get a db connection.
+		// [Interpretation 2029] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [3060] Create a new query object.
+		// [Interpretation 2031] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [3062] Get from #__sermondistributor_statistic as d
+		// [Interpretation 2033] Get from #__sermondistributor_statistic as d
 		$query->select($db->quoteName(
 			array('d.filename','d.counter'),
 			array('filename','counter')));
 		$query->from($db->quoteName('#__sermondistributor_statistic', 'd'));
 		$query->where('d.sermon = ' . $db->quote($id));
 
-		// [3116] Reset the query using our newly populated query object.
+		// [Interpretation 2087] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [3119] check if there was data returned
+		// [Interpretation 2090] check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();
