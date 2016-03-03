@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			26th February, 2016
+	@build			3rd March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -561,23 +561,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [Interpretation 680] if user not in those target groups then remove the item
+							// [Interpretation 646] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [Interpretation 685] set the return type
+					// [Interpretation 651] set the return type
 					switch ($help->type)
 					{
-						// [Interpretation 688] set joomla article
+						// [Interpretation 654] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [Interpretation 692] set help text
+						// [Interpretation 658] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [Interpretation 696] set Link
+						// [Interpretation 662] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -827,7 +827,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [Interpretation 1924] reset
+			// [Interpretation 1890] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -836,15 +836,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [Interpretation 1933] make sure uikit is loaded to config
+			// [Interpretation 1899] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [Interpretation 1938] sorter
+			// [Interpretation 1904] sorter
 			if (self::checkArray($temp))
 			{
-				// [Interpretation 1941] merger
+				// [Interpretation 1907] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);

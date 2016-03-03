@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			26th February, 2016
+	@build			3rd March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preacher.php
@@ -53,7 +53,7 @@ class SermondistributorTablePreacher extends JTable
 	{
 		parent::__construct('#__sermondistributor_preacher', 'id', $db);
 
-		// [Interpretation 3407] Adding History Options
+		// [Interpretation 3373] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.preacher')); 
 	}	
  

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			26th February, 2016
+	@build			3rd March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -553,23 +553,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [Interpretation 680] if user not in those target groups then remove the item
+							// [Interpretation 646] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [Interpretation 685] set the return type
+					// [Interpretation 651] set the return type
 					switch ($help->type)
 					{
-						// [Interpretation 688] set joomla article
+						// [Interpretation 654] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [Interpretation 692] set help text
+						// [Interpretation 658] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [Interpretation 696] set Link
+						// [Interpretation 662] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -698,7 +698,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [Interpretation 1924] reset
+			// [Interpretation 1890] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -707,15 +707,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [Interpretation 1933] make sure uikit is loaded to config
+			// [Interpretation 1899] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [Interpretation 1938] sorter
+			// [Interpretation 1904] sorter
 			if (self::checkArray($temp))
 			{
-				// [Interpretation 1941] merger
+				// [Interpretation 1907] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -736,37 +736,37 @@ abstract class SermondistributorHelper
 	 */
 	public static function xls($rows,$fileName = null,$title = null,$subjectTab = null,$creator = 'Vast Development Method',$description = null,$category = null,$keywords = null,$modified = null)
 	{
-		// [Interpretation 735] set the user
+		// [Interpretation 701] set the user
 		$user = JFactory::getUser();
 		
-		// [Interpretation 738] set fieldname if not set
+		// [Interpretation 704] set fieldname if not set
 		if (!$fileName)
 		{
 			$fileName = 'exported_'.JFactory::getDate()->format('jS_F_Y');
 		}
-		// [Interpretation 743] set modiefied if not set
+		// [Interpretation 709] set modiefied if not set
 		if (!$modified)
 		{
 			$modified = $user->name;
 		}
-		// [Interpretation 748] set title if not set
+		// [Interpretation 714] set title if not set
 		if (!$title)
 		{
 			$title = 'Book1';
 		}
-		// [Interpretation 753] set tab name if not set
+		// [Interpretation 719] set tab name if not set
 		if (!$subjectTab)
 		{
 			$subjectTab = 'Sheet1';
 		}
 		
-		// [Interpretation 759] make sure the file is loaded		
+		// [Interpretation 725] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		
-		// [Interpretation 762] Create new PHPExcel object
+		// [Interpretation 728] Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
 		
-		// [Interpretation 765] Set document properties
+		// [Interpretation 731] Set document properties
 		$objPHPExcel->getProperties()->setCreator($creator)
 									 ->setCompany('Vast Development Method')
 									 ->setLastModifiedBy($modified)
@@ -785,7 +785,7 @@ abstract class SermondistributorHelper
 			$objPHPExcel->getProperties()->setCategory($category);
 		}
 		
-		// [Interpretation 784] Some styles
+		// [Interpretation 750] Some styles
 		$headerStyles = array(
 			'font'  => array(
 				'bold'  => true,
@@ -807,7 +807,7 @@ abstract class SermondistributorHelper
 				'name'  => 'Verdana'
 		));
 		
-		// [Interpretation 806] Add some data
+		// [Interpretation 772] Add some data
 		if (self::checkArray($rows))
 		{
 			$i = 1;
@@ -834,20 +834,20 @@ abstract class SermondistributorHelper
 			return false;
 		}
 		
-		// [Interpretation 833] Rename worksheet
+		// [Interpretation 799] Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($subjectTab);
 		
-		// [Interpretation 836] Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		// [Interpretation 802] Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
 		
-		// [Interpretation 839] Redirect output to a client's web browser (Excel5)
+		// [Interpretation 805] Redirect output to a client's web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'.$fileName.'.xls"');
 		header('Cache-Control: max-age=0');
-		// [Interpretation 843] If you're serving to IE 9, then the following may be needed
+		// [Interpretation 809] If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
 		
-		// [Interpretation 846] If you're serving to IE over SSL, then the following may be needed
+		// [Interpretation 812] If you're serving to IE over SSL, then the following may be needed
 		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
 		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
@@ -863,13 +863,13 @@ abstract class SermondistributorHelper
 	*/
 	public static function getFileHeaders($dataType)
 	{		
-		// [Interpretation 862] make sure the file is loaded		
+		// [Interpretation 828] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
-		// [Interpretation 864] get session object
+		// [Interpretation 830] get session object
 		$session 	= JFactory::getSession();
 		$package	= $session->get('package', null);
 		$package	= json_decode($package, true);
-		// [Interpretation 868] set the headers
+		// [Interpretation 834] set the headers
 		if(isset($package['dir']))
 		{
 			$inputFileType = PHPExcel_IOFactory::identify($package['dir']);

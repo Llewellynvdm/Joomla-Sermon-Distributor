@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			26th February, 2016
+	@build			3rd March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		dropboxfiles.php
@@ -50,36 +50,36 @@ class JFormFieldDropboxfiles extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [Interpretation 7009] see if we should add buttons
+		// [Interpretation 6857] see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [Interpretation 7011] get html
+		// [Interpretation 6859] get html
 		$html = parent::getInput();
-		// [Interpretation 7013] if true set button
+		// [Interpretation 6861] if true set button
 		if ($setButton === 'true')
 		{
 			$user = JFactory::getUser();
-			// [Interpretation 7017] only add if user allowed to create 
+			// [Interpretation 6865] only add if user allowed to create 
 			if ($user->authorise('core.create', 'com_sermondistributor'))
 			{
-				// [Interpretation 7035] get the input from url
+				// [Interpretation 6883] get the input from url
 				$jinput = JFactory::getApplication()->input;
-				// [Interpretation 7037] get the view name & id
+				// [Interpretation 6885] get the view name & id
 				$values = $jinput->getArray(array(
 					'id' => 'int',
 					'view' => 'word'
 				));
-				// [Interpretation 7042] check if new item
+				// [Interpretation 6890] check if new item
 				$ref = '';
 				if (!is_null($values['id']) && strlen($values['view']))
 				{
-					// [Interpretation 7046] only load referal if not new item.
+					// [Interpretation 6894] only load referal if not new item.
 					$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				}
-				// [Interpretation 7049] build the button
+				// [Interpretation 6897] build the button
 				$button = '<a class="btn btn-small btn-success"
 					href="index.php?option=com_sermondistributor&amp;view=&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span>' . JText::_('COM_SERMONDISTRIBUTOR_NEW') . '</a>';
-				// [Interpretation 7053] return the button attached to input field
+				// [Interpretation 6901] return the button attached to input field
 				return $html . $button;
 			}
 		}

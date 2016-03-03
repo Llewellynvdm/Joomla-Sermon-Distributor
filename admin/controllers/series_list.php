@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			26th February, 2016
+	@build			3rd March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series_list.php
@@ -48,29 +48,29 @@ class SermondistributorControllerSeries_list extends JControllerAdmin
 
 	public function exportData()
 	{
-		// [Interpretation 6587] Check for request forgeries
+		// [Interpretation 6553] Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-		// [Interpretation 6589] check if export is allowed for this user.
+		// [Interpretation 6555] check if export is allowed for this user.
 		$user = JFactory::getUser();
 		if ($user->authorise('series.export', 'com_sermondistributor') && $user->authorise('core.export', 'com_sermondistributor'))
 		{
-			// [Interpretation 6593] Get the input
+			// [Interpretation 6559] Get the input
 			$input = JFactory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
-			// [Interpretation 6596] Sanitize the input
+			// [Interpretation 6562] Sanitize the input
 			JArrayHelper::toInteger($pks);
-			// [Interpretation 6598] Get the model
+			// [Interpretation 6564] Get the model
 			$model = $this->getModel('Series_list');
-			// [Interpretation 6600] get the data to export
+			// [Interpretation 6566] get the data to export
 			$data = $model->getExportData($pks);
 			if (SermondistributorHelper::checkArray($data))
 			{
-				// [Interpretation 6604] now set the data to the spreadsheet
+				// [Interpretation 6570] now set the data to the spreadsheet
 				$date = JFactory::getDate();
 				SermondistributorHelper::xls($data,'Series_list_'.$date->format('jS_F_Y'),'Series list exported ('.$date->format('jS F, Y').')','series list');
 			}
 		}
-		// [Interpretation 6609] Redirect to the list screen with error.
+		// [Interpretation 6575] Redirect to the list screen with error.
 		$message = JText::_('COM_SERMONDISTRIBUTOR_EXPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=series_list', false), $message, 'error');
 		return;
@@ -79,31 +79,31 @@ class SermondistributorControllerSeries_list extends JControllerAdmin
 
 	public function importData()
 	{
-		// [Interpretation 6618] Check for request forgeries
+		// [Interpretation 6584] Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-		// [Interpretation 6620] check if import is allowed for this user.
+		// [Interpretation 6586] check if import is allowed for this user.
 		$user = JFactory::getUser();
 		if ($user->authorise('series.import', 'com_sermondistributor') && $user->authorise('core.import', 'com_sermondistributor'))
 		{
-			// [Interpretation 6624] Get the import model
+			// [Interpretation 6590] Get the import model
 			$model = $this->getModel('Series_list');
-			// [Interpretation 6626] get the headers to import
+			// [Interpretation 6592] get the headers to import
 			$headers = $model->getExImPortHeaders();
 			if (SermondistributorHelper::checkObject($headers))
 			{
-				// [Interpretation 6630] Load headers to session.
+				// [Interpretation 6596] Load headers to session.
 				$session = JFactory::getSession();
 				$headers = json_encode($headers);
 				$session->set('series_VDM_IMPORTHEADERS', $headers);
 				$session->set('backto_VDM_IMPORT', 'series_list');
 				$session->set('dataType_VDM_IMPORTINTO', 'series');
-				// [Interpretation 6636] Redirect to import view.
+				// [Interpretation 6602] Redirect to import view.
 				$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_SELECT_FILE_FOR_SERIES_LIST');
 				$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=import', false), $message);
 				return;
 			}
 		}
-		// [Interpretation 6648] Redirect to the list screen with error.
+		// [Interpretation 6614] Redirect to the list screen with error.
 		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=series_list', false), $message, 'error');
 		return;

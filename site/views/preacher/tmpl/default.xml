@@ -5,12 +5,12 @@
 			<![CDATA[COM_SERMONDISTRIBUTOR_MENU_PREACHER_DESC]]>
 		</message>
 	</layout>
-	<!-- [Interpretation 1025] Add fields to the request variables for the layout. -->
+	<!-- [Interpretation 991] Add fields to the request variables for the layout. -->
 	<fields name="request">
 		<fieldset name="request"
 			addfieldpath="/administrator/components/com_sermondistributor/models/fields">
 			
-		<!-- [Interpretation 10829] Preacher_request_id Field. Type: Preachers. (custom) -->
+		<!-- [Interpretation 883] Preacher_request_id Field. Type: Preachers. (custom) -->
 		<field
 			type="preachers"
 			name="id"
@@ -24,10 +24,10 @@
 		/>
 		</fieldset>
 	</fields>
-	<!-- [Interpretation 1040] Adding page parameters -->
+	<!-- [Interpretation 1006] Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
-		<!-- [Interpretation 10622] Preacher_display Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_display"
@@ -35,7 +35,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -45,7 +45,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_SMALL</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_box_contrast Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_box_contrast Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_box_contrast"
@@ -53,7 +53,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_BOX_CONTRAST_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -61,7 +61,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_list_style Field. Type: List. (joomla) -->
+		<!-- [Interpretation 677] Preacher_list_style Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="preacher_list_style"
@@ -71,7 +71,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -83,7 +83,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_icon Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_icon Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_icon"
@@ -91,7 +91,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -99,7 +99,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_desc Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_desc Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_desc"
@@ -107,7 +107,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -115,7 +115,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermon_count Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermon_count Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermon_count"
@@ -123,7 +123,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMON_COUNT_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -131,7 +131,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_hits Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_hits Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_hits"
@@ -139,7 +139,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -147,7 +147,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_email Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_email Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_email"
@@ -155,7 +155,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_EMAIL_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -163,7 +163,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_website Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_website Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_website"
@@ -171,7 +171,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_WEBSITE_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -179,9 +179,9 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10722] Spacer_hr_f Field. Type: Spacer. A None Database Field. (joomla) -->
+		<!-- [Interpretation 776] Spacer_hr_f Field. Type: Spacer. A None Database Field. (joomla) -->
 		<field type="spacer" name="spacer_hr_f" hr="true" class="spacer_hr_f" />			
-		<!-- [Interpretation 10622] Preacher_sermons_display Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_display"
@@ -189,7 +189,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -199,7 +199,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_LIST</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_list_style Field. Type: List. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_list_style Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="preacher_sermons_list_style"
@@ -209,7 +209,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -221,7 +221,7 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_table_color Field. Type: List. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_table_color Field. Type: List. (joomla) -->
 		<field
 			type="list"
 			name="preacher_sermons_table_color"
@@ -231,7 +231,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -253,7 +253,7 @@
 			<option value="8">
 				COM_SERMONDISTRIBUTOR_CONFIG_NONE</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_icon Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_icon Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_icon"
@@ -261,7 +261,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -269,7 +269,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_desc Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_desc Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_desc"
@@ -277,7 +277,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -285,7 +285,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_series Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_series Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_series"
@@ -293,7 +293,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_SERIES_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -301,7 +301,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_category Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_category Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_category"
@@ -309,7 +309,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_CATEGORY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -317,7 +317,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_download_counter Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_download_counter Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_download_counter"
@@ -325,7 +325,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_DOWNLOAD_COUNTER_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -333,7 +333,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_hits Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_hits Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_hits"
@@ -341,7 +341,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -349,7 +349,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_downloads Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_downloads Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_downloads"
@@ -357,7 +357,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_DOWNLOADS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -365,7 +365,7 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- [Interpretation 10622] Preacher_sermons_open Field. Type: Radio. (joomla) -->
+		<!-- [Interpretation 677] Preacher_sermons_open Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
 			name="preacher_sermons_open"
@@ -373,7 +373,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_OPEN_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 10694]  [Interpretation 1063] Global & Option Set. -->
+			<!-- [Interpretation 748]  [Interpretation 1029] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
