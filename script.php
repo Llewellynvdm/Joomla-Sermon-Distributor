@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			3rd March, 2016
+	@build			7th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
@@ -720,24 +720,24 @@ class com_sermondistributorInstallerScript
 			$help_document_Inserted = $db->insertObject('#__content_types', $help_document);
 
 
-			// [Interpretation 3632] Install the global extenstion params.
+			// [Interpretation 3635] Install the global extenstion params.
 			$query = $db->getQuery(true);
 
-			// [Interpretation 3640] Field to update.
+			// [Interpretation 3643] Field to update.
 			$fields = array(
 				$db->quoteName('params') . ' = ' . $db->quote('{"autorName":"Llewellyn van der Merwe","autorEmail":"llewellyn@vdm.io","add_to_dropbox":"0","dropbox_filetypes":"zero","manual_link_update_method":"1","manual_dropbox_timer":"60","auto_link_update_method":"1","auto_dropbox_timer":"60","preacher_state":"1","series_state":"1","sermon_state":"1","auto_link_type":"1","link_encryption":")$KCGiB3BEfDf6kzEWrFnHex5uTJxlQG","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"zero","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"zero","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"one","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","check_in":"-1 day","save_history":"1","history_limit":"10","uikit_load":"1","uikit_min":"","uikit_style":""}'),
 			);
 
-			// [Interpretation 3644] Condition.
+			// [Interpretation 3647] Condition.
 			$conditions = array(
-				$db->quoteName('element') . ' = ' . $db->quote('com_')
+				$db->quoteName('element') . ' = ' . $db->quote('com_sermondistributor')
 			);
 
 			$query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
 			$db->setQuery($query);
 			$allDone = $db->execute();
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
-				<img src="components/com_/assets/images/component-300.jpg"/>
+				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
 				</a>';
 		}
 		// do any updates needed

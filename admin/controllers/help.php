@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			3rd March, 2016
+	@build			7th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help.php
@@ -114,10 +114,10 @@ class SermondistributorControllerHelp extends JControllerLegacy
 			$text[] = '<div class="uk-container uk-container-center uk-grid-collapse">';
 			$text[] = '<div class="uk-panel uk-width-1-1 uk-panel-box uk-panel-box-primary">';
 			// build the help text
-			$text[] = '<h3 class="uk-panel-title">'.$document->title."</h3>";
+			$text[] = '<h1 class="uk-panel-title">'.$document->title."</h1>";
 			$text[] = str_replace(array_keys($images),array_values($images),$document->content);
 			// end template
-			$text[] = '</div>';
+			$text[] = '</div><br /><br />';
 			$text[] = '</div>';
 			$text[] = "</body>";
 			$text[] = "</html>";

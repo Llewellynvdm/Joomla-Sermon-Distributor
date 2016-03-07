@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			3rd March, 2016
+	@build			7th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -202,11 +202,11 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			);
                 }  
 
-		// [Interpretation 8307] Set Type Selection
+		// [Interpretation 8310] Set Type Selection
 		$this->typeOptions = $this->getTheTypeSelections();
 		if ($this->typeOptions)
 		{
-			// [Interpretation 8311] Type Filter
+			// [Interpretation 8314] Type Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_LABEL').' -',
 				'filter_type',
@@ -215,7 +215,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8320] Type Batch Selection
+				// [Interpretation 8323] Type Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_LABEL').' -',
 					'batch[type]',
@@ -224,11 +224,11 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 8307] Set Location Selection
+		// [Interpretation 8310] Set Location Selection
 		$this->locationOptions = $this->getTheLocationSelections();
 		if ($this->locationOptions)
 		{
-			// [Interpretation 8311] Location Filter
+			// [Interpretation 8314] Location Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_LABEL').' -',
 				'filter_location',
@@ -237,7 +237,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8320] Location Batch Selection
+				// [Interpretation 8323] Location Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_LABEL').' -',
 					'batch[location]',
@@ -246,11 +246,11 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 8307] Set Admin View Selection
+		// [Interpretation 8310] Set Admin View Selection
 		$this->admin_viewOptions = $this->getTheAdmin_viewSelections();
 		if ($this->admin_viewOptions)
 		{
-			// [Interpretation 8311] Admin View Filter
+			// [Interpretation 8314] Admin View Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL').' -',
 				'filter_admin_view',
@@ -259,7 +259,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8320] Admin View Batch Selection
+				// [Interpretation 8323] Admin View Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL').' -',
 					'batch[admin_view]',
@@ -268,11 +268,11 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 8307] Set Site View Selection
+		// [Interpretation 8310] Set Site View Selection
 		$this->site_viewOptions = $this->getTheSite_viewSelections();
 		if ($this->site_viewOptions)
 		{
-			// [Interpretation 8311] Site View Filter
+			// [Interpretation 8314] Site View Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL').' -',
 				'filter_site_view',
@@ -281,7 +281,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8320] Site View Batch Selection
+				// [Interpretation 8323] Site View Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL').' -',
 					'batch[site_view]',
@@ -342,33 +342,33 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 	protected function getTheTypeSelections()
 	{
-		// [Interpretation 8183] Get a db connection.
+		// [Interpretation 8186] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 8185] Create a new query object.
+		// [Interpretation 8188] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 8187] Select the text.
+		// [Interpretation 8190] Select the text.
 		$query->select($db->quoteName('type'));
 		$query->from($db->quoteName('#__sermondistributor_help_document'));
 		$query->order($db->quoteName('type') . ' ASC');
 
-		// [Interpretation 8191] Reset the query using our newly populated query object.
+		// [Interpretation 8194] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
 
 		if ($results)
 		{
-			// [Interpretation 8199] get model
+			// [Interpretation 8202] get model
 			$model = $this->getModel();
 			$results = array_unique($results);
 			$filter = array();
 			foreach ($results as $type)
 			{
-				// [Interpretation 8210] Translate the type selection
+				// [Interpretation 8213] Translate the type selection
 				$text = $model->selectionTranslation($type,'type');
-				// [Interpretation 8212] Now add the type and its text to the options array
+				// [Interpretation 8215] Now add the type and its text to the options array
 				$filter[] = JHtml::_('select.option', $type, JText::_($text));
 			}
 			return $filter;
@@ -378,33 +378,33 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 	protected function getTheLocationSelections()
 	{
-		// [Interpretation 8183] Get a db connection.
+		// [Interpretation 8186] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 8185] Create a new query object.
+		// [Interpretation 8188] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 8187] Select the text.
+		// [Interpretation 8190] Select the text.
 		$query->select($db->quoteName('location'));
 		$query->from($db->quoteName('#__sermondistributor_help_document'));
 		$query->order($db->quoteName('location') . ' ASC');
 
-		// [Interpretation 8191] Reset the query using our newly populated query object.
+		// [Interpretation 8194] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
 
 		if ($results)
 		{
-			// [Interpretation 8199] get model
+			// [Interpretation 8202] get model
 			$model = $this->getModel();
 			$results = array_unique($results);
 			$filter = array();
 			foreach ($results as $location)
 			{
-				// [Interpretation 8210] Translate the location selection
+				// [Interpretation 8213] Translate the location selection
 				$text = $model->selectionTranslation($location,'location');
-				// [Interpretation 8212] Now add the location and its text to the options array
+				// [Interpretation 8215] Now add the location and its text to the options array
 				$filter[] = JHtml::_('select.option', $location, JText::_($text));
 			}
 			return $filter;
@@ -414,18 +414,18 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 	protected function getTheAdmin_viewSelections()
 	{
-		// [Interpretation 8183] Get a db connection.
+		// [Interpretation 8186] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 8185] Create a new query object.
+		// [Interpretation 8188] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 8187] Select the text.
+		// [Interpretation 8190] Select the text.
 		$query->select($db->quoteName('admin_view'));
 		$query->from($db->quoteName('#__sermondistributor_help_document'));
 		$query->order($db->quoteName('admin_view') . ' ASC');
 
-		// [Interpretation 8191] Reset the query using our newly populated query object.
+		// [Interpretation 8194] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
@@ -436,7 +436,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			$filter = array();
 			foreach ($results as $admin_view)
 			{
-				// [Interpretation 8217] Now add the admin_view and its text to the options array
+				// [Interpretation 8220] Now add the admin_view and its text to the options array
 				$filter[] = JHtml::_('select.option', $admin_view, $admin_view);
 			}
 			return $filter;
@@ -446,18 +446,18 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 	protected function getTheSite_viewSelections()
 	{
-		// [Interpretation 8183] Get a db connection.
+		// [Interpretation 8186] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 8185] Create a new query object.
+		// [Interpretation 8188] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 8187] Select the text.
+		// [Interpretation 8190] Select the text.
 		$query->select($db->quoteName('site_view'));
 		$query->from($db->quoteName('#__sermondistributor_help_document'));
 		$query->order($db->quoteName('site_view') . ' ASC');
 
-		// [Interpretation 8191] Reset the query using our newly populated query object.
+		// [Interpretation 8194] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
@@ -468,7 +468,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			$filter = array();
 			foreach ($results as $site_view)
 			{
-				// [Interpretation 8217] Now add the site_view and its text to the options array
+				// [Interpretation 8220] Now add the site_view and its text to the options array
 				$filter[] = JHtml::_('select.option', $site_view, $site_view);
 			}
 			return $filter;
