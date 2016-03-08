@@ -10,7 +10,7 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.0
+	@version		1.3.1
 	@build			8th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
@@ -526,10 +526,10 @@ class SermondistributorModelAjax extends JModelList
 	
 	protected function getCatogoryId($name,$db)
 	{
-		if (!isset($this->category[$name]))
+		// sanitize the name to an alias
+		$alias = $this->getAlias($name);
+		if (!isset($this->category[$alias]))
 		{
-			// sanitize the name to an alias
-			$alias = $this->getAlias($name);
 			// Create a new query object.
 			$query = $db->getQuery(true);
 			$query->select($db->quoteName(array('id')));
@@ -540,15 +540,15 @@ class SermondistributorModelAjax extends JModelList
 			$db->execute();
 			if ($db->getNumRows())
 			{
-				$this->category[$name] = $db->loadResult();
+				$this->category[$alias] = $db->loadResult();
 			}
 			else
 			{
 				// if still not set, then create category
-				$this->category[$name] = $this->createCategory($name,$alias);
+				$this->category[$alias] = $this->createCategory($name,$alias);
 			}
 		}
-		return $this->category[$name];
+		return $this->category[$alias];
 	}
 	
 	protected function createCategory($name,$alias)
