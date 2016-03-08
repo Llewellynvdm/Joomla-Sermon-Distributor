@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.0
-	@build			7th March, 2016
+	@build			8th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -522,23 +522,53 @@ class SermondistributorModelAjax extends JModelList
 		return 0;
 	}
 	
+	protected $category = array();
+	
 	protected function getCatogoryId($name,$db)
 	{
-		// sanitize the name to an alias
-		$alias = $this->getAlias($name);
-		// Create a new query object.
-		$query = $db->getQuery(true);
-		$query->select($db->quoteName(array('id')));
-		$query->from($db->quoteName('#__categories'));
-		$query->where($db->quoteName('alias') . ' = '. $db->quote($alias));
-		$query->where($db->quoteName('extension') . ' = '. $db->quote('com_sermondistributor.sermons'));
-		$db->setQuery($query);
-		$db->execute();
-		if ($db->getNumRows())
+		if (!isset($this->category[$name]))
 		{
-			return $db->loadResult();
+			// sanitize the name to an alias
+			$alias = $this->getAlias($name);
+			// Create a new query object.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__categories'));
+			$query->where($db->quoteName('alias') . ' = '. $db->quote($alias));
+			$query->where($db->quoteName('extension') . ' = '. $db->quote('com_sermondistributor.sermons'));
+			$db->setQuery($query);
+			$db->execute();
+			if ($db->getNumRows())
+			{
+				$this->category[$name] = $db->loadResult();
+			}
+			else
+			{
+				// if still not set, then create category
+				$this->category[$name] = $this->createCategory($name,$alias);
+			}
 		}
-		return 0; // TODO creat a category if not found
+		return $this->category[$name];
+	}
+	
+	protected function createCategory($name,$alias)
+	{
+		// load the category table
+		JTable::addIncludePath(JPATH_LIBRARIES . '/joomla/database/table');
+		$category = JTable::getInstance('Category');
+		$category->extension = 'com_sermondistributor.sermons';
+		$category->title = $name;
+		$category->alias = $alias;
+		$category->description = '';
+		$category->published = 1;
+		$category->access = 1;
+		$category->params = '{"category_layout":"","image":"","image_alt":""}';
+		$category->metadata = '{"author":"","robots":""}';
+		$category->language = '*';
+		$category->setLocation(1, 'last-child');
+		$category->store(true);
+		$category->rebuildPath($category->id);
+		return $category->id;
 	}
 	
 	/**
