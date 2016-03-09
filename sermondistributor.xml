@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.2" method="upgrade">
 	<name>COM_SERMONDISTRIBUTOR</name>
-	<creationDate>8th March, 2016</creationDate>
+	<creationDate>9th March, 2016</creationDate>
 	<author>Llewellyn van der Merwe</author>
 	<authorEmail>llewellyn@vdm.io</authorEmail>
 	<authorUrl>https://www.vdm.io/</authorUrl>
 	<copyright>Copyright (C) 2015. All Rights Reserved</copyright>
 	<license>GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html</license>
-	<version>1.3.1</version>
+	<version>1.3.2</version>
 	<description><![CDATA[
-		<h1>Sermon Distributor (v.1.3.1)</h1>
+		<h1>Sermon Distributor (v.1.3.2)</h1>
 		<div style="clear: both;"></div>
 		<p>Distributor is a highly advanced sermon distributor that runs on the [Joomla 3.x] (http://www.joomla.org) framework. You can link a shared folder from Dropbox to the component and use Dropbox as your file host, not to mention the advanced auto builder that gives you the ability to simply load sermons to your website by only adding them to Dropbox.</p>
 		<p>Created by <a href="https://www.vdm.io/" target="_blank">Llewellyn van der Merwe</a><br /><small>Development started 22nd October, 2015</small></p>

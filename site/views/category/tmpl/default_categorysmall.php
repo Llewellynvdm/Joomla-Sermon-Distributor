@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_categorysmall.php
@@ -35,7 +35,7 @@ defined('_JEXEC') or die('Restricted access');
 				<img class="uk-comment-avatar" src="<?php echo $this->category->icon; ?>" alt="<?php echo $this->category->name; ?>">
 			<?php endif; ?>
 		<?php endif; ?>
-		<h4 class="uk-comment-title"><?php echo $this->category->name; ?></h4>
+		<h1 class="uk-comment-title"><?php echo $this->category->name; ?></h1>
 		<?php if ($this->params->get('category_hits') || $this->params->get('category_sermon_count')): ?>
 		<div class="uk-comment-meta">
 			<?php if ($this->params->get('category_hits')): ?>

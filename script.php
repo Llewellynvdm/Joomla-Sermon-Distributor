@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
@@ -925,7 +925,7 @@ class com_sermondistributorInstallerScript
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
 				</a>
-				<h3>Upgrade to Version 1.3.1 Was Successful! Let us know if anything is not working as expected.</h3>';
+				<h3>Upgrade to Version 1.3.2 Was Successful! Let us know if anything is not working as expected.</h3>';
 		}
 	}
 }

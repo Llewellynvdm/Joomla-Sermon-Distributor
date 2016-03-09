@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_preacherpanel.php
@@ -81,7 +81,7 @@ elseif (!$this->params->get('preacher_icon'))
 			<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->preacher->hits; ?>
 		</div>
 	<?php endif ;?>
-	<h3 class="uk-panel-title"><?php echo $this->preacher->name; ?></h3>
+	<h1 class="uk-panel-title"><?php echo $this->preacher->name; ?></h1>
 	<?php if ($this->params->get('preacher_icon')): ?>
 		<?php $this->preacher->icon = ($this->preacher->icon) ? $this->preacher->icon : $this->params->get('preacher_default_icon'); ?>
 		<?php if ($this->preacher->icon): ?>

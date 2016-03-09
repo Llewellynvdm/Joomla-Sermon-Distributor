@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_preachersmall.php
@@ -35,7 +35,7 @@ defined('_JEXEC') or die('Restricted access');
 				<img class="uk-comment-avatar" src="<?php echo $this->preacher->icon; ?>" alt="<?php echo $this->preacher->name; ?>">
 			<?php endif; ?>
 		<?php endif; ?>
-		<h4 class="uk-comment-title"><?php echo $this->preacher->name; ?></h4>
+		<h1 class="uk-comment-title"><?php echo $this->preacher->name; ?></h1>
 		<?php if ($this->params->get('preacher_hits') 
 				|| ($this->params->get('preacher_website') && $this->preacher->website) 
 				|| ($this->params->get('preacher_email') && $this->preacher->email) 

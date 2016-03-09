@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -95,27 +95,27 @@ class SermondistributorViewSeries extends JViewLegacy
 		$isNew = $this->item->id == 0;
 
 		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERIES_NEW' : 'COM_SERMONDISTRIBUTOR_SERIES_EDIT'), 'pencil-2 article-add');
-		// [Interpretation 9462] Built the actions for new and existing records.
+		// [Interpretation 9493] Built the actions for new and existing records.
 		if ($this->refid || $this->ref)
 		{
 			if ($this->canDo->get('series.create') && $isNew)
 			{
-				// [Interpretation 9474] We can create the record.
+				// [Interpretation 9505] We can create the record.
 				JToolBarHelper::save('series.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('series.edit'))
 			{
-				// [Interpretation 9486] We can save the record.
+				// [Interpretation 9517] We can save the record.
 				JToolBarHelper::save('series.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
-				// [Interpretation 9491] Do not creat but cancel.
+				// [Interpretation 9522] Do not creat but cancel.
 				JToolBarHelper::cancel('series.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
-				// [Interpretation 9496] We can close it.
+				// [Interpretation 9527] We can close it.
 				JToolBarHelper::cancel('series.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -123,7 +123,7 @@ class SermondistributorViewSeries extends JViewLegacy
 		{
 			if ($isNew)
 			{
-				// [Interpretation 9504] For new records, check the create permission.
+				// [Interpretation 9535] For new records, check the create permission.
 				if ($this->canDo->get('series.create'))
 				{
 					JToolBarHelper::apply('series.apply', 'JTOOLBAR_APPLY');
@@ -136,11 +136,11 @@ class SermondistributorViewSeries extends JViewLegacy
 			{
 				if ($this->canDo->get('series.edit'))
 				{
-					// [Interpretation 9531] We can save the new record
+					// [Interpretation 9562] We can save the new record
 					JToolBarHelper::apply('series.apply', 'JTOOLBAR_APPLY');
 					JToolBarHelper::save('series.save', 'JTOOLBAR_SAVE');
-					// [Interpretation 9534] We can save this record, but check the create permission to see
-					// [Interpretation 9535] if we can return to make a new one.
+					// [Interpretation 9565] We can save this record, but check the create permission to see
+					// [Interpretation 9566] if we can return to make a new one.
 					if ($this->canDo->get('series.create'))
 					{
 						JToolBarHelper::custom('series.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
@@ -159,7 +159,7 @@ class SermondistributorViewSeries extends JViewLegacy
 			}
 		}
 		JToolbarHelper::divider();
-		// [Interpretation 9571] set help url for this view if found
+		// [Interpretation 9602] set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('series');
 		if (SermondistributorHelper::checkString($help_url))
 		{

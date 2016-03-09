@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -1379,6 +1379,16 @@ abstract class SermondistributorHelper
 
 		return $button->input;
 
+	}
+	
+	public static function checkJson($string)
+	{
+		if (self::checkString($string))
+		{
+			json_decode($string);
+			return (json_last_error() === JSON_ERROR_NONE);
+		}
+		return false;
 	}
 
 	public static function checkObject($object)

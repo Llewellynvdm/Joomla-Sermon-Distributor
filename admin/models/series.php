@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -127,11 +127,11 @@ class SermondistributorModelSeries extends JModelAdmin
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
 		$query->join('LEFT', $db->quoteName('#__categories', 'c') . ' ON (' . $db->quoteName('a.catid') . ' = ' . $db->quoteName('c.id') . ')');
 
-		// [Interpretation 6837] From the sermondistributor_preacher table.
+		// [Interpretation 6868] From the sermondistributor_preacher table.
 		$query->select($db->quoteName('g.name','preacher_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_preacher', 'g') . ' ON (' . $db->quoteName('a.preacher') . ' = ' . $db->quoteName('g.id') . ')');
 
-		// [Interpretation 6837] From the sermondistributor_series table.
+		// [Interpretation 6868] From the sermondistributor_series table.
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
@@ -175,10 +175,10 @@ class SermondistributorModelSeries extends JModelAdmin
 		{
 			$items = $db->loadObjectList();
 
-			// [Interpretation 9804] set values to display correctly.
+			// [Interpretation 9835] set values to display correctly.
 			if (SermondistributorHelper::checkArray($items))
 			{
-				// [Interpretation 9807] get user object.
+				// [Interpretation 9838] get user object.
 				$user = JFactory::getUser();
 				foreach ($items as $nr => &$item)
 				{
@@ -192,14 +192,14 @@ class SermondistributorModelSeries extends JModelAdmin
 				}
 			}
 
-			// [Interpretation 10070] set selection value to a translatable value
+			// [Interpretation 10101] set selection value to a translatable value
 			if (SermondistributorHelper::checkArray($items))
 			{
 				foreach ($items as $nr => &$item)
 				{
-					// [Interpretation 10077] convert link_type
+					// [Interpretation 10108] convert link_type
 					$item->link_type = $this->selectionTranslationVwcsermons($item->link_type, 'link_type');
-					// [Interpretation 10077] convert source
+					// [Interpretation 10108] convert source
 					$item->source = $this->selectionTranslationVwcsermons($item->source, 'source');
 				}
 			}
@@ -216,20 +216,20 @@ class SermondistributorModelSeries extends JModelAdmin
 	*/
 	public function selectionTranslationVwcsermons($value,$name)
 	{
-		// [Interpretation 10103] Array of link_type language strings
+		// [Interpretation 10134] Array of link_type language strings
 		if ($name == 'link_type')
 		{
 			$link_typeArray = array(
 				1 => 'COM_SERMONDISTRIBUTOR_SERMON_ENCRYPTED',
 				2 => 'COM_SERMONDISTRIBUTOR_SERMON_DIRECT'
 			);
-			// [Interpretation 10134] Now check if value is found in this array
+			// [Interpretation 10165] Now check if value is found in this array
 			if (isset($link_typeArray[$value]) && SermondistributorHelper::checkString($link_typeArray[$value]))
 			{
 				return $link_typeArray[$value];
 			}
 		}
-		// [Interpretation 10103] Array of source language strings
+		// [Interpretation 10134] Array of source language strings
 		if ($name == 'source')
 		{
 			$sourceArray = array(
@@ -238,7 +238,7 @@ class SermondistributorModelSeries extends JModelAdmin
 				2 => 'COM_SERMONDISTRIBUTOR_SERMON_DROPBOX',
 				3 => 'COM_SERMONDISTRIBUTOR_SERMON_URL'
 			);
-			// [Interpretation 10134] Now check if value is found in this array
+			// [Interpretation 10165] Now check if value is found in this array
 			if (isset($sourceArray[$value]) && SermondistributorHelper::checkString($sourceArray[$value]))
 			{
 				return $sourceArray[$value];
@@ -258,7 +258,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
-	{		// [Interpretation 8735] Get the form.
+	{		// [Interpretation 8766] Get the form.
 		$form = $this->loadForm('com_sermondistributor.series', 'series', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
@@ -268,12 +268,12 @@ class SermondistributorModelSeries extends JModelAdmin
 
 		$jinput = JFactory::getApplication()->input;
 
-		// [Interpretation 8820] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		// [Interpretation 8851] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0, 'INT');
 		}
-		// [Interpretation 8825] The back end uses id so we use that the rest of the time and set it to 0 by default.
+		// [Interpretation 8856] The back end uses id so we use that the rest of the time and set it to 0 by default.
 		else
 		{
 			$id = $jinput->get('id', 0, 'INT');
@@ -281,54 +281,54 @@ class SermondistributorModelSeries extends JModelAdmin
 
 		$user = JFactory::getUser();
 
-		// [Interpretation 8831] Check for existing item.
-		// [Interpretation 8832] Modify the form based on Edit State access controls.
+		// [Interpretation 8862] Check for existing item.
+		// [Interpretation 8863] Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('series.edit.state', 'com_sermondistributor.series.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('series.edit.state', 'com_sermondistributor')))
 		{
-			// [Interpretation 8845] Disable fields for display.
+			// [Interpretation 8876] Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('published', 'disabled', 'true');
-			// [Interpretation 8848] Disable fields while saving.
+			// [Interpretation 8879] Disable fields while saving.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [Interpretation 8853] If this is a new item insure the greated by is set.
+		// [Interpretation 8884] If this is a new item insure the greated by is set.
 		if (0 == $id)
 		{
-			// [Interpretation 8856] Set the created_by to this user
+			// [Interpretation 8887] Set the created_by to this user
 			$form->setValue('created_by', null, $user->id);
 		}
-		// [Interpretation 8859] Modify the form based on Edit Creaded By access controls.
+		// [Interpretation 8890] Modify the form based on Edit Creaded By access controls.
 		if ($id != 0 && (!$user->authorise('series.edit.created_by', 'com_sermondistributor.series.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('series.edit.created_by', 'com_sermondistributor')))
 		{
-			// [Interpretation 8871] Disable fields for display.
+			// [Interpretation 8902] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'disabled', 'true');
-			// [Interpretation 8873] Disable fields for display.
+			// [Interpretation 8904] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'readonly', 'true');
-			// [Interpretation 8875] Disable fields while saving.
+			// [Interpretation 8906] Disable fields while saving.
 			$form->setFieldAttribute('created_by', 'filter', 'unset');
 		}
-		// [Interpretation 8878] Modify the form based on Edit Creaded Date access controls.
+		// [Interpretation 8909] Modify the form based on Edit Creaded Date access controls.
 		if ($id != 0 && (!$user->authorise('series.edit.created', 'com_sermondistributor.series.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('series.edit.created', 'com_sermondistributor')))
 		{
-			// [Interpretation 8890] Disable fields for display.
+			// [Interpretation 8921] Disable fields for display.
 			$form->setFieldAttribute('created', 'disabled', 'true');
-			// [Interpretation 8892] Disable fields while saving.
+			// [Interpretation 8923] Disable fields while saving.
 			$form->setFieldAttribute('created', 'filter', 'unset');
 		}
-		// [Interpretation 8925] Only load these values if no id is found
+		// [Interpretation 8956] Only load these values if no id is found
 		if (0 == $id)
 		{
-			// [Interpretation 8928] Set redirected field name
+			// [Interpretation 8959] Set redirected field name
 			$redirectedField = $jinput->get('ref', null, 'STRING');
-			// [Interpretation 8930] Set redirected field value
+			// [Interpretation 8961] Set redirected field value
 			$redirectedValue = $jinput->get('refid', 0, 'INT');
 			if (0 != $redirectedValue && $redirectedField)
 			{
-				// [Interpretation 8934] Now set the local-redirected field default value
+				// [Interpretation 8965] Now set the local-redirected field default value
 				$form->setValue($redirectedField, null, $redirectedValue);
 			}
 		}
@@ -365,7 +365,7 @@ class SermondistributorModelSeries extends JModelAdmin
 			}
 
 			$user = JFactory::getUser();
-			// [Interpretation 9056] The record has been set. Check the record permissions.
+			// [Interpretation 9087] The record has been set. Check the record permissions.
 			return $user->authorise('series.delete', 'com_sermondistributor.series.' . (int) $record->id);
 		}
 		return false;
@@ -387,14 +387,14 @@ class SermondistributorModelSeries extends JModelAdmin
 
 		if ($recordId)
 		{
-			// [Interpretation 9143] The record has been set. Check the record permissions.
+			// [Interpretation 9174] The record has been set. Check the record permissions.
 			$permission = $user->authorise('series.edit.state', 'com_sermondistributor.series.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				return false;
 			}
 		}
-		// [Interpretation 9160] In the absense of better information, revert to the component permissions.
+		// [Interpretation 9191] In the absense of better information, revert to the component permissions.
 		return $user->authorise('series.edit.state', 'com_sermondistributor');
 	}
     
@@ -409,7 +409,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [Interpretation 8968] Check specific edit permission then general edit permission.
+		// [Interpretation 8999] Check specific edit permission then general edit permission.
 		$user = JFactory::getUser();
 
 		return $user->authorise('series.edit', 'com_sermondistributor.series.'. ((int) isset($data[$key]) ? $data[$key] : 0)) or $user->authorise('series.edit',  'com_sermondistributor');

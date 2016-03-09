@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_categorypanel.php
@@ -81,7 +81,7 @@ elseif (!$this->params->get('category_icon'))
 			<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->category->hits; ?>
 		</div>
 	<?php endif ;?>
-	<h3 class="uk-panel-title"><?php echo $this->category->name; ?></h3>
+	<h1 class="uk-panel-title"><?php echo $this->category->name; ?></h1>
 	<?php if ($this->params->get('category_icon')): ?>
 		<?php $this->category->icon = (isset($this->category->icon) && $this->category->icon) ? $this->category->icon : $this->params->get('category_default_icon'); ?>
 		<?php if ($this->category->icon): ?>

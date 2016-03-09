@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_seriespanel.php
@@ -81,7 +81,7 @@ elseif (!$this->params->get('series_icon'))
 			<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->series->hits; ?>
 		</div>
 	<?php endif ;?>
-	<h3 class="uk-panel-title"><?php echo $this->series->name; ?></h3>
+	<h1 class="uk-panel-title"><?php echo $this->series->name; ?></h1>
 	<?php if ($this->params->get('series_icon')): ?>
 		<?php $this->series->icon = ($this->series->icon) ? $this->series->icon : $this->params->get('series_default_icon'); ?>
 		<?php if ($this->series->icon): ?>

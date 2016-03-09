@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_document.php
@@ -122,7 +122,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
-	{		// [Interpretation 8735] Get the form.
+	{		// [Interpretation 8766] Get the form.
 		$form = $this->loadForm('com_sermondistributor.help_document', 'help_document', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
@@ -132,12 +132,12 @@ class SermondistributorModelHelp_document extends JModelAdmin
 
 		$jinput = JFactory::getApplication()->input;
 
-		// [Interpretation 8820] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		// [Interpretation 8851] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0, 'INT');
 		}
-		// [Interpretation 8825] The back end uses id so we use that the rest of the time and set it to 0 by default.
+		// [Interpretation 8856] The back end uses id so we use that the rest of the time and set it to 0 by default.
 		else
 		{
 			$id = $jinput->get('id', 0, 'INT');
@@ -145,52 +145,52 @@ class SermondistributorModelHelp_document extends JModelAdmin
 
 		$user = JFactory::getUser();
 
-		// [Interpretation 8831] Check for existing item.
-		// [Interpretation 8832] Modify the form based on Edit State access controls.
+		// [Interpretation 8862] Check for existing item.
+		// [Interpretation 8863] Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('help_document.edit.state', 'com_sermondistributor.help_document.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('help_document.edit.state', 'com_sermondistributor')))
 		{
-			// [Interpretation 8845] Disable fields for display.
+			// [Interpretation 8876] Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('published', 'disabled', 'true');
-			// [Interpretation 8848] Disable fields while saving.
+			// [Interpretation 8879] Disable fields while saving.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [Interpretation 8853] If this is a new item insure the greated by is set.
+		// [Interpretation 8884] If this is a new item insure the greated by is set.
 		if (0 == $id)
 		{
-			// [Interpretation 8856] Set the created_by to this user
+			// [Interpretation 8887] Set the created_by to this user
 			$form->setValue('created_by', null, $user->id);
 		}
-		// [Interpretation 8859] Modify the form based on Edit Creaded By access controls.
+		// [Interpretation 8890] Modify the form based on Edit Creaded By access controls.
 		if (!$user->authorise('core.edit.created_by', 'com_sermondistributor'))
 		{
-			// [Interpretation 8871] Disable fields for display.
+			// [Interpretation 8902] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'disabled', 'true');
-			// [Interpretation 8873] Disable fields for display.
+			// [Interpretation 8904] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'readonly', 'true');
-			// [Interpretation 8875] Disable fields while saving.
+			// [Interpretation 8906] Disable fields while saving.
 			$form->setFieldAttribute('created_by', 'filter', 'unset');
 		}
-		// [Interpretation 8878] Modify the form based on Edit Creaded Date access controls.
+		// [Interpretation 8909] Modify the form based on Edit Creaded Date access controls.
 		if (!$user->authorise('core.edit.created', 'com_sermondistributor'))
 		{
-			// [Interpretation 8890] Disable fields for display.
+			// [Interpretation 8921] Disable fields for display.
 			$form->setFieldAttribute('created', 'disabled', 'true');
-			// [Interpretation 8892] Disable fields while saving.
+			// [Interpretation 8923] Disable fields while saving.
 			$form->setFieldAttribute('created', 'filter', 'unset');
 		}
-		// [Interpretation 8925] Only load these values if no id is found
+		// [Interpretation 8956] Only load these values if no id is found
 		if (0 == $id)
 		{
-			// [Interpretation 8928] Set redirected field name
+			// [Interpretation 8959] Set redirected field name
 			$redirectedField = $jinput->get('ref', null, 'STRING');
-			// [Interpretation 8930] Set redirected field value
+			// [Interpretation 8961] Set redirected field value
 			$redirectedValue = $jinput->get('refid', 0, 'INT');
 			if (0 != $redirectedValue && $redirectedField)
 			{
-				// [Interpretation 8934] Now set the local-redirected field default value
+				// [Interpretation 8965] Now set the local-redirected field default value
 				$form->setValue($redirectedField, null, $redirectedValue);
 			}
 		}
@@ -227,7 +227,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 			}
 
 			$user = JFactory::getUser();
-			// [Interpretation 9056] The record has been set. Check the record permissions.
+			// [Interpretation 9087] The record has been set. Check the record permissions.
 			return $user->authorise('help_document.delete', 'com_sermondistributor.help_document.' . (int) $record->id);
 		}
 		return false;
@@ -249,14 +249,14 @@ class SermondistributorModelHelp_document extends JModelAdmin
 
 		if ($recordId)
 		{
-			// [Interpretation 9143] The record has been set. Check the record permissions.
+			// [Interpretation 9174] The record has been set. Check the record permissions.
 			$permission = $user->authorise('help_document.edit.state', 'com_sermondistributor.help_document.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				return false;
 			}
 		}
-		// [Interpretation 9160] In the absense of better information, revert to the component permissions.
+		// [Interpretation 9191] In the absense of better information, revert to the component permissions.
 		return $user->authorise('help_document.edit.state', 'com_sermondistributor');
 	}
     
@@ -271,7 +271,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [Interpretation 8968] Check specific edit permission then general edit permission.
+		// [Interpretation 8999] Check specific edit permission then general edit permission.
 		$user = JFactory::getUser();
 
 		return $user->authorise('help_document.edit', 'com_sermondistributor.help_document.'. ((int) isset($data[$key]) ? $data[$key] : 0)) or $user->authorise('help_document.edit',  'com_sermondistributor');
@@ -370,20 +370,20 @@ class SermondistributorModelHelp_document extends JModelAdmin
 	*/
 	public function validate($form, $data, $group = null)
 	{
-		// [Interpretation 7939] check if the not_required field is set
+		// [Interpretation 7970] check if the not_required field is set
 		if (SermondistributorHelper::checkString($data['not_required']))
 		{
 			$requiredFields = (array) explode(',',(string) $data['not_required']);
 			$requiredFields = array_unique($requiredFields);
-			// [Interpretation 7944] now change the required field attributes value
+			// [Interpretation 7975] now change the required field attributes value
 			foreach ($requiredFields as $requiredField)
 			{
-				// [Interpretation 7947] make sure there is a string value
+				// [Interpretation 7978] make sure there is a string value
 				if (SermondistributorHelper::checkString($requiredField))
 				{
-					// [Interpretation 7950] change to false
+					// [Interpretation 7981] change to false
 					$form->setFieldAttribute($requiredField, 'required', 'false');
-					// [Interpretation 7952] also clear the data set
+					// [Interpretation 7983] also clear the data set
 					$data[$requiredField] = '';
 				}
 			}

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.1
-	@build			8th March, 2016
+	@version		1.3.2
+	@build			9th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_sermonbox.php
@@ -80,7 +80,7 @@ $this->item->params = $this->params;
 ?>
 <div class="uk-block uk-block-primary">
 	<div class="uk-container">
-	<h3 class="<?php echo $contrastClass; ?>"><?php echo $this->item->name; ?></h3>
+	<h1 class="<?php echo $contrastClass; ?>"><?php echo $this->item->name; ?></h1>
 	<div class="uk-grid" data-uk-grid-margin="{target:'.uk-panel'}">
 	<div class="uk-width-medium-<?php echo $mediumMain; ?>">
 		<div class="uk-panel">
