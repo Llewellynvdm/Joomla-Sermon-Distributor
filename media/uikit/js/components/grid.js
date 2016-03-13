@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -38,7 +38,7 @@
                     var ele = UI.$(this);
 
                     if(!ele.data("grid")) {
-                        var plugin = UI.grid(ele, UI.Utils.options(ele.attr('data-uk-grid')));
+                        UI.grid(ele, UI.Utils.options(ele.attr('data-uk-grid')));
                     }
                 });
             });
@@ -131,14 +131,13 @@
 
             elements = elements || this.element.children(':visible');
 
-            var $this     = this,
-                children  = elements,
+            var children  = elements,
                 maxwidth  = this.element.width() + (2*this.gutterh) + 2,
                 left      = 0,
                 top       = 0,
                 positions = [],
 
-                item, width, height, pos, aX, aY, i, z, max, size;
+                item, width, height, pos, i, z, max, size;
 
             this.trigger('beforeupdate.uk.grid', [children]);
 
@@ -228,6 +227,10 @@
             this.currentfilter = filter;
 
             filter = filter || [];
+
+            if (typeof(filter) === 'number') {
+                filter = filter.toString();
+            }
 
             if (typeof(filter) === 'string') {
                 filter = filter.split(/,/).map(function(item){ return item.trim(); });

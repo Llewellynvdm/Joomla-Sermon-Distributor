@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -19,7 +19,8 @@
 
     var $win         = UI.$win,
         $doc         = UI.$doc,
-        sticked      = [];
+        sticked      = [],
+        direction    = 1;
 
     UI.component('sticky', {
 
@@ -29,7 +30,9 @@
             animation    : '',
             clsinit      : 'uk-sticky-init',
             clsactive    : 'uk-active',
+            clsinactive  : '',
             getWidthFrom : '',
+            showup      : false,
             boundary     : false,
             media        : false,
             target       : false,
@@ -39,14 +42,19 @@
         boot: function() {
 
             // should be more efficient than using $win.scroll(checkscrollposition):
-            UI.$doc.on('scrolling.uk.document', function() { checkscrollposition(); });
+            UI.$doc.on('scrolling.uk.document', function(e, data) {
+                if (!data || !data.dir) return;
+                direction = data.dir.y;
+                checkscrollposition();
+            });
+
             UI.$win.on('resize orientationchange', UI.Utils.debounce(function() {
 
                 if (!sticked.length) return;
 
                 for (var i = 0; i < sticked.length; i++) {
                     sticked[i].reset(true);
-                    sticked[i].self.computeWrapper();
+                    //sticked[i].self.computeWrapper();
                 }
 
                 checkscrollposition();
@@ -73,17 +81,17 @@
 
         init: function() {
 
-            var wrapper  = UI.$('<div class="uk-sticky-placeholder"></div>'), boundary = this.options.boundary, boundtoparent;
+            var boundary = this.options.boundary, boundtoparent;
 
-            this.wrapper = this.element.css('margin', 0).wrap(wrapper).parent();
-
+            this.wrapper = this.element.wrap('<div class="uk-sticky-placeholder"></div>').parent();
             this.computeWrapper();
+            this.element.css('margin', 0);
 
             if (boundary) {
 
-                if (boundary === true) {
+                if (boundary === true || boundary[0] === '!') {
 
-                    boundary      = this.wrapper.parent();
+                    boundary      = boundary === true ? this.wrapper.parent() : this.wrapper.closest(boundary.substr(1));
                     boundtoparent = true;
 
                 } else if (typeof boundary === "string") {
@@ -98,21 +106,51 @@
                 currentTop    : null,
                 wrapper       : this.wrapper,
                 init          : false,
-                getWidthFrom  : this.options.getWidthFrom || this.wrapper,
+                getWidthFrom  : UI.$(this.options.getWidthFrom || this.wrapper),
                 boundary      : boundary,
                 boundtoparent : boundtoparent,
-                reset         : function(force) {
+                top           : 0,
+                calcTop       : function() {
+
+                    var top = this.options.top;
+
+                    // dynamic top parameter
+                    if (this.options.top && typeof(this.options.top) == 'string') {
+
+                        // e.g. 50vh
+                        if (this.options.top.match(/^(-|)(\d+)vh$/)) {
+                            top = window.innerHeight * parseInt(this.options.top, 10)/100;
+                        // e.g. #elementId, or .class-1,class-2,.class-3 (first found is used)
+                        } else {
+
+                            var topElement = UI.$(this.options.top).first();
+
+                            if (topElement.length && topElement.is(':visible')) {
+                                top = -1 * ((topElement.offset().top + topElement.outerHeight()) - this.wrapper.offset().top);
+                            }
+                        }
+
+                    }
+
+                    this.top = top;
+                },
+
+                reset: function(force) {
+
+                    this.calcTop();
 
                     var finalize = function() {
                         this.element.css({"position":"", "top":"", "width":"", "left":"", "margin":"0"});
                         this.element.removeClass([this.options.animation, 'uk-animation-reverse', this.options.clsactive].join(' '));
+                        this.element.addClass(this.options.clsinactive);
+                        this.element.trigger('inactive.uk.sticky');
 
                         this.currentTop = null;
                         this.animate    = false;
                     }.bind(this);
 
 
-                    if (!force && this.options.animation && UI.support.animation) {
+                    if (!force && this.options.animation && UI.support.animation && !UI.Utils.isInView(this.wrapper)) {
 
                         this.animate = true;
 
@@ -153,11 +191,27 @@
                         dwh            = documentHeight - window.innerHeight,
                         extra          = (scrollTop > dwh) ? dwh - scrollTop : 0,
                         elementTop     = this.wrapper.offset().top,
-                        etse           = elementTop - this.options.top - extra;
+                        etse           = elementTop - this.top - extra,
+                        active         = (scrollTop  >= etse);
 
-                    return (scrollTop  >= etse);
+                    if (active && this.options.showup) {
+
+                        // set inactiv if scrolling down
+                        if (direction == 1) {
+                            active = false;
+                        }
+
+                        // set inactive when wrapper is still in view
+                        if (direction == -1 && !this.element.hasClass(this.options.clsactive) && UI.Utils.isInView(this.wrapper)) {
+                            active = false;
+                        }
+                    }
+
+                    return active;
                 }
             };
+
+            this.sticky.calcTop();
 
             sticked.push(this.sticky);
         },
@@ -179,14 +233,20 @@
         computeWrapper: function() {
 
             this.wrapper.css({
-                'height' : this.element.css('position') != 'absolute' ? this.element.outerHeight() : '',
-                'float'  : this.element.css("float") != "none" ? this.element.css("float") : '',
-                'margin' : this.element.css("margin")
+                'height' : ['absolute','fixed'].indexOf(this.element.css('position')) == -1 ? this.element.outerHeight() : '',
+                'float'  : this.element.css('float') != 'none' ? this.element.css('float') : '',
+                'margin' : this.element.css('margin')
             });
+
+            if (this.element.css('position') == 'fixed') {
+                this.element.css({
+                    width: this.sticky.getWidthFrom.length ? this.sticky.getWidthFrom.width() : this.element.width()
+                });
+            }
         }
     });
 
-    function checkscrollposition() {
+    function checkscrollposition(direction) {
 
         var stickies = arguments.length ? arguments : sticked;
 
@@ -215,17 +275,17 @@
 
             } else {
 
-                if (sticky.options.top < 0) {
+                if (sticky.top < 0) {
                     newTop = 0;
                 } else {
                     stickyHeight = sticky.element.outerHeight();
-                    newTop = documentHeight - stickyHeight - sticky.options.top - sticky.options.bottom - scrollTop - extra;
-                    newTop = newTop < 0 ? newTop + sticky.options.top : sticky.options.top;
+                    newTop = documentHeight - stickyHeight - sticky.top - sticky.options.bottom - scrollTop - extra;
+                    newTop = newTop < 0 ? newTop + sticky.top : sticky.top;
                 }
 
                 if (sticky.boundary && sticky.boundary.length) {
 
-                    var bTop = sticky.boundary.position().top;
+                    var bTop = sticky.boundary.offset().top;
 
                     if (sticky.boundtoparent) {
                         containerBottom = documentHeight - (bTop + sticky.boundary.outerHeight()) + parseInt(sticky.boundary.css('padding-bottom'));
@@ -233,17 +293,16 @@
                         containerBottom = documentHeight - bTop - parseInt(sticky.boundary.css('margin-top'));
                     }
 
-                    newTop = (scrollTop + stickyHeight) > (documentHeight - containerBottom - (sticky.options.top < 0 ? 0 : sticky.options.top)) ? (documentHeight - containerBottom) - (scrollTop + stickyHeight) : newTop;
+                    newTop = (scrollTop + stickyHeight) > (documentHeight - containerBottom - (sticky.top < 0 ? 0 : sticky.top)) ? (documentHeight - containerBottom) - (scrollTop + stickyHeight) : newTop;
                 }
 
 
                 if (sticky.currentTop != newTop) {
 
                     sticky.element.css({
-                        "position" : "fixed",
-                        "top"      : newTop,
-                        "width"    : (typeof sticky.getWidthFrom !== 'undefined') ? UI.$(sticky.getWidthFrom).width() : sticky.element.width(),
-                        "left"     : sticky.wrapper.offset().left
+                        position : "fixed",
+                        top      : newTop,
+                        width    : sticky.getWidthFrom.length ? sticky.getWidthFrom.width() : sticky.element.width()
                     });
 
                     if (!sticky.init) {
@@ -279,10 +338,11 @@
                         }
                     }
 
-                    sticky.element.addClass(sticky.options.clsactive);
+                    sticky.element.addClass(sticky.options.clsactive).removeClass(sticky.options.clsinactive);
+                    sticky.element.trigger('active.uk.sticky');
                     sticky.element.css('margin', '');
 
-                    if (sticky.options.animation && sticky.init) {
+                    if (sticky.options.animation && sticky.init && !UI.Utils.isInView(sticky.wrapper)) {
                         sticky.element.addClass(sticky.options.animation);
                     }
 

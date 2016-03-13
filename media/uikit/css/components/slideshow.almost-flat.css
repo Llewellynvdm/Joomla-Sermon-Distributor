@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 /* ========================================================================
    Component: Slideshow
  ========================================================================== */
@@ -76,6 +76,10 @@
 /*
  * Fade
  */
+.uk-slideshow-fade-in {
+  -webkit-animation: uk-fade 0.5s linear;
+  animation: uk-fade 0.5s linear;
+}
 .uk-slideshow-fade-out {
   -webkit-animation: uk-fade 0.5s linear reverse;
   animation: uk-fade 0.5s linear reverse;

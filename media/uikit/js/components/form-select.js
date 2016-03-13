@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -33,7 +33,7 @@
                     var ele = UI.$(this);
 
                     if (!ele.data("formSelect")) {
-                        var obj = UI.formSelect(ele, UI.Utils.options(ele.attr("data-uk-form-select")));
+                        UI.formSelect(ele, UI.Utils.options(ele.attr("data-uk-form-select")));
                     }
                 });
             });

@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 /* ========================================================================
    Component: Search
  ========================================================================== */
@@ -66,7 +66,6 @@
  */
 .uk-search-field {
   /* 1 */
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   /* 2 */
   margin: 0;

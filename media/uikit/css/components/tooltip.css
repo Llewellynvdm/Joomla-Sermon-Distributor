@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 /* ========================================================================
    Component: Tooltip
  ========================================================================== */
@@ -15,7 +15,6 @@
   position: absolute;
   z-index: 1030;
   /* 3 */
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   max-width: 200px;
   padding: 5px 8px;
@@ -24,7 +23,6 @@
   color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
   line-height: 18px;
-  text-align: center;
 }
 /* Triangle
  ========================================================================== */

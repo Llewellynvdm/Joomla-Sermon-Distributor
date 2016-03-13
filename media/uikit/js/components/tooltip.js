@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
     var component;
 
@@ -28,11 +28,10 @@
             "delay": 0, // in miliseconds
             "cls": "",
             "activeClass": "uk-active",
-            "src": function(ele, title) {
+            "src": function(ele) {
+                var title = ele.attr('title');
 
-                title = ele.attr('title');
-
-                if (title) {
+                if (title !== undefined) {
                     ele.data('cached-title', title).removeAttr('title');
                 }
 
@@ -49,7 +48,7 @@
                 var ele = UI.$(this);
 
                 if (!ele.data("tooltip")) {
-                    var obj = UI.tooltip(ele, UI.Utils.options(ele.attr("data-uk-tooltip")));
+                    UI.tooltip(ele, UI.Utils.options(ele.attr("data-uk-tooltip")));
                     ele.trigger("mouseenter");
                 }
             });
@@ -77,7 +76,8 @@
 
             if (tooltipdelay)     clearTimeout(tooltipdelay);
             if (checkdelay)       clearTimeout(checkdelay);
-            if (!this.tip.length) return;
+
+            if (typeof(this.tip) === 'string' ? !this.tip.length:true) return;
 
             $tooltip.stop().css({"top": -2000, "visibility": "hidden"}).removeClass(this.options.activeClass).show();
             $tooltip.html('<div class="uk-tooltip-inner">' + this.tip + '</div>');

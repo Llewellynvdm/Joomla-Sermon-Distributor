@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			10th March, 2016
+	@build			13th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -318,17 +318,17 @@ jQuery('.options-link').on('click',function (e)
 
 // load the auto sermons if set or notice if none is found
 var auto_sermons = jQuery('#jform_auto_sermons').val();
-var htmlDropNote = '<h1><?php echo JText::_('No Files Linked Yet'); ?></h1>';
-htmlDropNote += '<div class="alert alert-warning"><?php echo JText::_('Always better to add the files to Dropbox and let the system create the sermon for you. Please read instructions below carefully.'); ?></div>';
+var htmlDropNote = '<h1><?php echo JText::_('COM_SERMONDISTRIBUTOR_NO_FILES_LINKED_YET'); ?></h1>';
+htmlDropNote += '<div class="alert alert-warning"><?php echo JText::_('COM_SERMONDISTRIBUTOR_ALWAYS_BETTER_TO_ADD_THE_FILES_TO_DROPBOX_AND_LET_THE_SYSTEM_CREATE_THE_SERMON_FOR_YOU_PLEASE_READ_INSTRUCTIONS_BELOW_CAREFULLY'); ?></div>';
 if (auto_sermons != 1 && auto_sermons.length > 0)
 {
-	htmlDropNote = '<h1><?php echo JText::_('The Files Linked from Dropbox'); ?></h1>';
+	htmlDropNote = '<h1><?php echo JText::_('COM_SERMONDISTRIBUTOR_THE_FILES_LINKED_FROM_DROPBOX'); ?></h1>';
 	auto_sermons = jQuery.parseJSON(auto_sermons);
 	htmlDropNote += '<div class="alert alert-success"><ul>';
 	jQuery.each(auto_sermons, function(filename,fileKey) {
-		htmlDropNote += '<li><b><?php echo JText::_('Download Name'); ?>:</b> ';
+		htmlDropNote += '<li><b><?php echo JText::_('COM_SERMONDISTRIBUTOR_DOWNLOAD_NAME'); ?>:</b> ';
 		htmlDropNote += filename;
-		htmlDropNote += '<br /><b><?php echo JText::_('Dropbox Relation'); ?>:</b> ';
+		htmlDropNote += '<br /><b><?php echo JText::_('COM_SERMONDISTRIBUTOR_DROPBOX_RELATION'); ?>:</b> ';
 		htmlDropNote += fileKey.replace("VDM_pLeK_h0uEr/", "");
 		htmlDropNote += '</li>';
 	});

@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -44,8 +44,6 @@
         };
 
     var Message = function(options){
-
-        var $this = this;
 
         this.options = UI.$.extend({}, Message.defaults, options);
 

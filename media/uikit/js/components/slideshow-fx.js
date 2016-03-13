@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -131,8 +131,6 @@
                 bar;
 
             for (var i = 0; i < this.options.slices; i++) {
-
-                var width = (i == this.options.slices-1) ? (ghostWidth - (sliceWidth*i)) : sliceWidth;
 
                 bar = UI.$('<div class="uk-cover-background"></div>').css({
                     'position'           : 'absolute',
@@ -361,7 +359,7 @@
             if (!animations[this.fxIndex]) this.fxIndex = 0;
 
             return Animations[animations[this.fxIndex]].apply(this, arguments);
-        },
+        }
     });
 
 

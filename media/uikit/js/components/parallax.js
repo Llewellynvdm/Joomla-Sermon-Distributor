@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -25,11 +25,11 @@
 
             scrolltop = UI.$win.scrollTop();
 
-            window.requestAnimationFrame.apply(window, [function(){
+            window.requestAnimationFrame(function(){
                 for (var i=0; i < parallaxes.length; i++) {
                     parallaxes[i].process();
                 }
-            }]);
+            });
         };
 
 
@@ -85,7 +85,7 @@
                     var parallax = UI.$(this);
 
                     if (!parallax.data("parallax")) {
-                        var obj = UI.parallax(parallax, UI.Utils.options(parallax.attr("data-uk-parallax")));
+                        UI.parallax(parallax, UI.Utils.options(parallax.attr("data-uk-parallax")));
                     }
                 });
             });
@@ -185,7 +185,8 @@
 
         update: function(percent) {
 
-            var css        = {'transform':''},
+            var $this      = this,
+                css        = {'transform':''},
                 compercent = percent * (1 - (this.velocity - (this.velocity * percent))),
                 opts, val;
 
@@ -236,6 +237,12 @@
 
                     // bg image
                     case "bg":
+
+                        // don't move if image height is too small
+                        // if ($this.element.data('bgsize') && ($this.element.data('bgsize').h + val - window.innerHeight) < 0) {
+                        //     break;
+                        // }
+
                         css['background-position'] = '50% '+val+'px';
                         break;
                     case "bgp":
@@ -283,29 +290,40 @@
 
     function initBgImageParallax(obj, prop, opts) {
 
-        var img = new Image(), url, loaded, element, size, check, ratio, width, height;
+        var img = new Image(), url, element, size, check, ratio, width, height;
 
         element = obj.element.css({'background-size': 'cover',  'background-repeat': 'no-repeat'});
         url     = element.css('background-image').replace(/^url\(/g, '').replace(/\)$/g, '').replace(/("|')/g, '');
         check   = function() {
 
-            var w = element.width(), h = element.height(), extra = (prop=='bg') ? opts.diff : (opts.diff/100) * h;
+            var w = element.innerWidth(), h = element.innerHeight(), extra = (prop=='bg') ? opts.diff : (opts.diff/100) * h;
 
             h += extra;
             w += Math.ceil(extra * ratio);
 
+            if (w-extra < size.w && h < size.h) {
+                return obj.element.css({'background-size': 'auto'});
+            }
+
             // if element height < parent height (gap underneath)
             if ((w / ratio) < h) {
+
                 width  = Math.ceil(h * ratio);
                 height = h;
 
+                if (h > window.innerHeight) {
+                    width  = width * 1.2;
+                    height = height * 1.2;
+                }
+
             // element width < parent width (gap to right)
             } else {
+
                 width  = w;
                 height = Math.ceil(w / ratio);
             }
 
-            obj.element.css({'background-size': (width+'px '+height+'px')});
+            element.css({'background-size': (width+'px '+height+'px')}).data('bgsize', {w:width,h:height});
         };
 
         img.onerror = function(){
@@ -313,7 +331,7 @@
         };
 
         img.onload = function(){
-            size  = {w:img.width, height:img.height};
+            size  = {w:img.width, h:img.height};
             ratio = img.width / img.height;
 
             UI.$win.on("load resize orientationchange", UI.Utils.debounce(function(){

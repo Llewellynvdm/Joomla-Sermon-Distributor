@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 /*
  * Based on Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
  */
@@ -24,7 +24,7 @@
         html         = UI.$html,
         touchedlists = [],
         $win         = UI.$win,
-        draggingElement, dragSource;
+        draggingElement;
 
     var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
         eMove   = hasTouch ? 'touchmove'   : 'mousemove',
@@ -40,6 +40,8 @@
             listItemClass   : 'uk-nestable-item',
             dragClass       : 'uk-nestable-dragged',
             movingClass     : 'uk-nestable-moving',
+            noChildrenClass : 'uk-nestable-nochildren',
+            emptyClass      : 'uk-nestable-empty',
             handleClass     : '',
             collapsedClass  : 'uk-collapsed',
             placeholderClass: 'uk-nestable-placeholder',
@@ -47,7 +49,7 @@
             group           : false,
             maxDepth        : 10,
             threshold       : 20,
-            idlethreshold   : 10
+            idlethreshold   : 10,
         },
 
         boot: function() {
@@ -408,7 +410,7 @@
 
         dragStop: function(e) {
 
-            var el       = this.placeEl,
+            var el       = UI.$(this.placeEl),
                 root     = this.placeEl.parents(this.options._listBaseClass+':first');
 
             this.placeEl.removeClass(this.options.placeholderClass);
@@ -416,11 +418,11 @@
 
             if (this.element[0] !== root[0]) {
 
-                root.trigger('change.uk.nestable',[el, "added", root, root.data('nestable')]);
-                this.element.trigger('change.uk.nestable', [el, "removed", this.element, this]);
+                root.trigger('change.uk.nestable',[root.data('nestable'), el, 'added']);
+                this.element.trigger('change.uk.nestable', [this, el, 'removed']);
 
             } else {
-                this.element.trigger('change.uk.nestable',[el, "moved", this.element, this]);
+                this.element.trigger('change.uk.nestable',[this, el, "moved"]);
             }
 
             this.trigger('stop.uk.nestable', [this, el]);
@@ -490,8 +492,8 @@
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev('li');
 
-                // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                // increase horizontal level if previous sibling exists, is not collapsed, and does not have a 'no children' class
+                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass) && !prev.hasClass(opt.noChildrenClass)) {
 
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt._listClass).last();
@@ -514,15 +516,27 @@
                         }
                     }
                 }
+
                 // decrease horizontal level
                 if (mouse.distX < 0) {
-                    // we can't decrease a level if an item preceeds the current one
-                    next = this.placeEl.next('li');
+
+                    // we cannot decrease the level if an item precedes the current one
+                    next = this.placeEl.next(opt._listItemClass);
                     if (!next.length) {
-                        parent = this.placeEl.parent();
-                        this.placeEl.closest(opt._listItemClass).after(this.placeEl);
-                        if (!parent.children().length) {
-                            this.unsetParent(parent.parent());
+
+                        // get parent ul of the list item
+                        var parentUl = this.placeEl.closest([opt._listBaseClass, opt._listClass].join(','));
+                        // try to get the li surrounding the ul
+                        var surroundingLi = parentUl.closest(opt._listItemClass);
+
+                        // if the ul is inside of a li (meaning it is nested)
+                        if (surroundingLi.length) {
+                            // we can decrease the horizontal level
+                            surroundingLi.after(this.placeEl);
+                            // if the previous parent ul is now empty
+                            if (!parentUl.children().length) {
+                                this.unsetParent(surroundingLi);
+                            }
                         }
                     }
                 }
@@ -531,7 +545,7 @@
             var isEmpty = false;
 
             // find list item under cursor
-            var pointX = this.dragEl.offset().left - (window.pageXOffset || document.scrollLeft || 0),
+            var pointX = e.pageX - (window.pageXOffset || document.scrollLeft || 0),
                 pointY = e.pageY - (window.pageYOffset || document.documentElement.scrollTop);
             this.pointEl = UI.$(document.elementFromPoint(pointX, pointY));
 
@@ -562,7 +576,7 @@
             // find parent list of item under cursor
             var pointElRoot = this.element,
                 tmpRoot     = this.pointEl.closest(this.options._listBaseClass),
-                isNewRoot   = pointElRoot[0] !== this.pointEl.closest(this.options._listBaseClass)[0];
+                isNewRoot   = pointElRoot[0] != tmpRoot[0];
 
             /**
              * move vertical
@@ -614,8 +628,8 @@
 
             list  = list ? UI.$(list) : this.element;
 
-            if (!list.children().length) {
-                list.html('');
+            if (this.options.emptyClass) {
+                list[!list.children().length ? 'addClass':'removeClass'](this.options.emptyClass);
             }
         }
 

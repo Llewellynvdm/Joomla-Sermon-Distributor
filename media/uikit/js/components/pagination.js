@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 /*
  * Based on simplePagination - Copyright (c) 2012 Flavius Matis - http://flaviusmatis.github.com/simplePagination.js/ (MIT)
  */
@@ -26,9 +26,9 @@
             items          : 1,
             itemsOnPage    : 1,
             pages          : 0,
-            displayedPages : 3,
-            edges          : 3,
-            currentPage    : 1,
+            displayedPages : 7,
+            edges          : 1,
+            currentPage    : 0,
             lblPrev        : false,
             lblNext        : false,
             onSelectPage   : function() {}
@@ -43,7 +43,7 @@
                     var ele = UI.$(this);
 
                     if (!ele.data("pagination")) {
-                        var obj = UI.pagination(ele, UI.Utils.options(ele.attr("data-uk-pagination")));
+                        UI.pagination(ele, UI.Utils.options(ele.attr("data-uk-pagination")));
                     }
                 });
             });
@@ -54,7 +54,7 @@
             var $this = this;
 
             this.pages         = this.options.pages ?  this.options.pages : Math.ceil(this.options.items / this.options.itemsOnPage) ? Math.ceil(this.options.items / this.options.itemsOnPage) : 1;
-            this.currentPage   = this.options.currentPage - 1;
+            this.currentPage   = this.options.currentPage;
             this.halfDisplayed = this.options.displayedPages / 2;
 
             this.on("click", "a[data-page]", function(e){
@@ -93,7 +93,7 @@
             this.element.empty();
 
             // Generate Prev link
-            if (o.lblPrev) this._append(o.currentPage - 1, {text: o.lblPrev});
+            if (o.lblPrev) this._append(this.currentPage - 1, {text: o.lblPrev});
 
             // Generate start edges
             if (interval.start > 0 && o.edges > 0) {
@@ -127,18 +127,17 @@
             }
 
             // Generate Next link (unless option is set for at front)
-            if (o.lblNext) this._append(o.currentPage + 1, {text: o.lblNext});
+            if (o.lblNext) this._append(this.currentPage + 1, {text: o.lblNext});
         },
 
         _append: function(pageIndex, opts) {
 
-            var $this = this, item, link, options;
+            var item, options;
 
             pageIndex = pageIndex < 0 ? 0 : (pageIndex < this.pages ? pageIndex : this.pages - 1);
             options   = UI.$.extend({ text: pageIndex + 1 }, opts);
 
-            item = (pageIndex == this.currentPage) ? '<li class="uk-active"><span>' + (options.text) + '</span></li>'
-                                                   : '<li><a href="#page-'+(pageIndex+1)+'" data-page="'+pageIndex+'">'+options.text+'</a></li>';
+            item = (pageIndex == this.currentPage) ? '<li class="uk-active"><span>' + (options.text) + '</span></li>' : '<li><a href="#page-'+(pageIndex+1)+'" data-page="'+pageIndex+'">'+options.text+'</a></li>';
 
             this.element.append(item);
         }

@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.25.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 /*
   * Based on nativesortable - Copyright (c) Brian Grinstead - https://github.com/bgrins/nativesortable
   */
@@ -21,7 +21,7 @@
     "use strict";
 
     var supportsTouch       = ('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch),
-        draggingPlaceholder, currentlyDraggingElement, currentlyDraggingTarget, dragging, moving, clickedlink, delayIdle, touchedlists, moved;
+        draggingPlaceholder, currentlyDraggingElement, currentlyDraggingTarget, dragging, moving, clickedlink, delayIdle, touchedlists, moved, overElement;
 
     function closestSortable(ele) {
 
@@ -51,6 +51,7 @@
             dragMovingClass  : 'uk-sortable-moving',
             baseClass        : 'uk-sortable',
             noDragClass      : 'uk-sortable-nodrag',
+            emptyClass       : 'uk-sortable-empty',
             dragCustomClass  : '',
             handleClass      : false,
             group            : false,
@@ -70,7 +71,7 @@
                     var ele = UI.$(this);
 
                     if(!ele.data("sortable")) {
-                        var plugin = UI.sortable(ele, UI.Utils.options(ele.attr("data-uk-sortable")));
+                        UI.sortable(ele, UI.Utils.options(ele.attr("data-uk-sortable")));
                     }
                 });
             });
@@ -105,10 +106,15 @@
                     draggingPlaceholder.css({'left': left, 'top': top });
 
                     // adjust document scrolling
+
+                    if (top + (draggingPlaceholder.height()/3) > document.body.offsetHeight) {
+                        return;
+                    }
+
                     if (top < UI.$win.scrollTop()) {
-                        UI.$win.scrollTop(UI.$win.scrollTop() - Math.ceil(draggingPlaceholder.height()/2));
-                    } else if ( (top + draggingPlaceholder.height()) > (window.innerHeight + UI.$win.scrollTop()) ) {
-                        UI.$win.scrollTop(UI.$win.scrollTop() + Math.ceil(draggingPlaceholder.height()/2));
+                        UI.$win.scrollTop(UI.$win.scrollTop() - Math.ceil(draggingPlaceholder.height()/3));
+                    } else if ( (top + (draggingPlaceholder.height()/3)) > (window.innerHeight + UI.$win.scrollTop()) ) {
+                        UI.$win.scrollTop(UI.$win.scrollTop() + Math.ceil(draggingPlaceholder.height()/3));
                     }
                 }
             });
@@ -125,7 +131,7 @@
                 }
 
                 // inside or outside of sortable?
-                var sortable  = closestSortable(e.target),
+                var sortable  = closestSortable(currentlyDraggingElement),
                     component = draggingPlaceholder.$sortable,
                     ev        = { type: e.type };
 
@@ -139,27 +145,27 @@
         init: function() {
 
             var $this   = this,
-                element = this.element[0],
-                children;
+                element = this.element[0];
 
             touchedlists = [];
 
-            // make sure :empty selector works on empty lists
-            if (this.element.children().length === 0) {
-                this.element.html('');
-            }
+            this.checkEmptyList();
 
             this.element.data('sortable-group', this.options.group ? this.options.group : UI.Utils.uid('sortable-group'));
 
             var handleDragStart = delegate(function(e) {
 
+                if (e.data && e.data.sortable) {
+                    return;
+                }
+
                 var $target = UI.$(e.target),
                     $link   = $target.is('a[href]') ? $target:$target.parents('a[href]');
-                
+
                 if ($target.is(':input')) {
                     return;
                 }
-                
+
                 e.preventDefault();
 
                 if (!supportsTouch && $link.length) {
@@ -171,20 +177,11 @@
                     });
                 }
 
+                e.data = e.data || {};
+
+                e.data.sortable = element;
+
                 return $this.dragStart(e, this);
-            });
-
-            var handleDragOver = delegate(function(e) {
-
-                if (!currentlyDraggingElement) {
-                    return true;
-                }
-
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
-
-                return false;
             });
 
             var handleDragEnter = delegate(UI.Utils.debounce(function(e) {
@@ -269,6 +266,8 @@
                         if (supportsTouch && document.elementFromPoint) {
                             target = document.elementFromPoint(e.pageX - document.body.scrollLeft, e.pageY - document.body.scrollTop);
                         }
+
+                        overElement = UI.$(target);
                     }
 
                     if (UI.$(target).hasClass($this.options.childClass)) {
@@ -296,8 +295,7 @@
             dragging = false;
 
             var $this    = this,
-                target   = UI.$(e.target),
-                children = $this.element.children();
+                target   = UI.$(e.target);
 
             if (!supportsTouch && e.button==2) {
                 return;
@@ -313,7 +311,7 @@
                 }
             }
 
-            if (target.is('.'+$this.options.noDragClass) || target.closest('.'+$this.options._noDragClass).length) {
+            if (target.is('.'+$this.options.noDragClass) || target.closest('.'+$this.options.noDragClass).length) {
                 return;
             }
 
@@ -355,7 +353,12 @@
 
                     draggingPlaceholder.$current  = $current;
                     draggingPlaceholder.$sortable = $this;
-                    $current.data('sortable-group', $this.options.group);
+
+                    $current.data({
+                        'start-list': $current.parent(),
+                        'start-index': $current.index(),
+                        'sortable-group': $this.options.group
+                    });
 
                     $this.addDragHandlers();
 
@@ -369,8 +372,10 @@
         },
 
         dragMove: function(e, elem) {
-            var overEl       = UI.$(document.elementFromPoint(e.pageX - document.body.scrollLeft, e.pageY - (window.pageYOffset || document.documentElement.scrollTop))),
-                overRoot     = overEl.closest('.'+this.options.baseClass),
+
+            overElement = UI.$(document.elementFromPoint(e.pageX - (document.body.scrollLeft || document.scrollLeft || 0), e.pageY - (document.body.scrollTop || document.documentElement.scrollTop || 0)));
+
+            var overRoot     = overElement.closest('.'+this.options.baseClass),
                 groupOver    = overRoot.data("sortable-group"),
                 $current     = UI.$(currentlyDraggingElement),
                 currentRoot  = $current.parent(),
@@ -378,6 +383,7 @@
                 overChild;
 
             if (overRoot[0] !== currentRoot[0] && groupCurrent !== undefined && groupOver === groupCurrent) {
+
                 overRoot.data('sortable').addDragHandlers();
 
                 touchedlists.push(overRoot);
@@ -385,19 +391,23 @@
 
                 // swap root
                 if (overRoot.children().length > 0) {
-                    overChild = overEl.closest('.'+this.options.childClass);
-                    overChild.before($current);
-                } else { // empty list
-                    overEl.append($current);
-                }
+                    overChild = overElement.closest('.'+this.options.childClass);
 
-                // list empty? remove inner whitespace to make sure :empty selector works
-                if (currentRoot.children().length === 0) {
-                    currentRoot.html('');
+                    if (overChild.length) {
+                        overChild.before($current);
+                    } else {
+                        overRoot.append($current);
+                    }
+
+                } else { // empty list
+                    overElement.append($current);
                 }
 
                 UIkit.$doc.trigger('mouseover');
             }
+
+            this.checkEmptyList();
+            this.checkEmptyList(currentRoot);
         },
 
         dragEnter: function(e, elem) {
@@ -406,15 +416,27 @@
                 return true;
             }
 
-            // Prevent dragenter on a child from allowing a dragleave on the container
             var previousCounter = this.dragenterData(elem);
 
             this.dragenterData(elem, previousCounter + 1);
 
+            // Prevent dragenter on a child from allowing a dragleave on the container
             if (previousCounter === 0) {
 
-                UI.$(elem).addClass(this.options.overClass);
+                var currentlist = UI.$(elem).parent(),
+                    startlist   = UI.$(currentlyDraggingElement).data("start-list");
 
+                if (currentlist[0] !== startlist[0]) {
+
+                    var groupOver    = currentlist.data('sortable-group'),
+                        groupCurrent = UI.$(currentlyDraggingElement).data("sortable-group");
+
+                    if ((groupOver ||  groupCurrent) && (groupOver != groupCurrent)) {
+                        return false;
+                    }
+                }
+
+                UI.$(elem).addClass(this.options.overClass);
                 this.moveElementNextTo(currentlyDraggingElement, elem);
             }
 
@@ -483,17 +505,20 @@
             var $current = UI.$(currentlyDraggingElement),
                 oldRoot  = draggingPlaceholder.data("origin"),
                 newRoot  = $current.closest('.'+this.options.baseClass),
-                triggers = [];
+                triggers = [],
+                el       = UI.$(currentlyDraggingElement);
 
             // events depending on move inside lists or across lists
             if (oldRoot[0] === newRoot[0] && draggingPlaceholder.data('index') != $current.index() ) {
-                triggers.push({el: this, mode: 'moved'});
+                triggers.push({sortable: this, mode: 'moved'});
             } else if (oldRoot[0] != newRoot[0]) {
-                triggers.push({el: newRoot, mode: 'added'}, {el: oldRoot, mode: 'removed'});
+                triggers.push({sortable: UI.$(newRoot).data('sortable'), mode: 'added'}, {sortable: UI.$(oldRoot).data('sortable'), mode: 'removed'});
             }
 
             triggers.forEach(function (trigger, i) {
-                trigger.el.trigger('change.uk.sortable', [trigger.el, currentlyDraggingElement, trigger.mode]);
+                if (trigger.sortable) {
+                    trigger.sortable.element.trigger('change.uk.sortable', [trigger.sortable, el, trigger.mode]);
+                }
             });
         },
 
@@ -587,6 +612,15 @@
             });
 
             return data;
+        },
+
+        checkEmptyList: function(list) {
+
+            list  = list ? UI.$(list) : this.element;
+
+            if (this.options.emptyClass) {
+                list[!list.children().length ? 'addClass':'removeClass'](this.options.emptyClass);
+            }
         }
     });
 
