@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			13th March, 2016
+	@build			19th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons.php
@@ -129,16 +129,16 @@ class SermondistributorModelSermons extends JModelList
 	 */
 	public function getItems()
 	{ 
-		// [Interpretation 9760] check in items
+		// [Interpretation 9768] check in items
 		$this->checkInNow();
 
 		// load parent items
 		$items = parent::getItems();
 
-		// [Interpretation 9835] set values to display correctly.
+		// [Interpretation 9843] set values to display correctly.
 		if (SermondistributorHelper::checkArray($items))
 		{
-			// [Interpretation 9838] get user object.
+			// [Interpretation 9846] get user object.
 			$user = JFactory::getUser();
 			foreach ($items as $nr => &$item)
 			{
@@ -152,14 +152,14 @@ class SermondistributorModelSermons extends JModelList
 			}
 		} 
 
-		// [Interpretation 10101] set selection value to a translatable value
+		// [Interpretation 10109] set selection value to a translatable value
 		if (SermondistributorHelper::checkArray($items))
 		{
 			foreach ($items as $nr => &$item)
 			{
-				// [Interpretation 10108] convert link_type
+				// [Interpretation 10116] convert link_type
 				$item->link_type = $this->selectionTranslation($item->link_type, 'link_type');
-				// [Interpretation 10108] convert source
+				// [Interpretation 10116] convert source
 				$item->source = $this->selectionTranslation($item->source, 'source');
 			}
 		}
@@ -176,20 +176,20 @@ class SermondistributorModelSermons extends JModelList
 	*/
 	public function selectionTranslation($value,$name)
 	{
-		// [Interpretation 10134] Array of link_type language strings
+		// [Interpretation 10142] Array of link_type language strings
 		if ($name == 'link_type')
 		{
 			$link_typeArray = array(
 				1 => 'COM_SERMONDISTRIBUTOR_SERMON_ENCRYPTED',
 				2 => 'COM_SERMONDISTRIBUTOR_SERMON_DIRECT'
 			);
-			// [Interpretation 10165] Now check if value is found in this array
+			// [Interpretation 10173] Now check if value is found in this array
 			if (isset($link_typeArray[$value]) && SermondistributorHelper::checkString($link_typeArray[$value]))
 			{
 				return $link_typeArray[$value];
 			}
 		}
-		// [Interpretation 10134] Array of source language strings
+		// [Interpretation 10142] Array of source language strings
 		if ($name == 'source')
 		{
 			$sourceArray = array(
@@ -198,7 +198,7 @@ class SermondistributorModelSermons extends JModelList
 				2 => 'COM_SERMONDISTRIBUTOR_SERMON_DROPBOX',
 				3 => 'COM_SERMONDISTRIBUTOR_SERMON_URL'
 			);
-			// [Interpretation 10165] Now check if value is found in this array
+			// [Interpretation 10173] Now check if value is found in this array
 			if (isset($sourceArray[$value]) && SermondistributorHelper::checkString($sourceArray[$value]))
 			{
 				return $sourceArray[$value];
@@ -214,29 +214,29 @@ class SermondistributorModelSermons extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		// [Interpretation 6715] Get the user object.
+		// [Interpretation 6723] Get the user object.
 		$user = JFactory::getUser();
-		// [Interpretation 6717] Create a new query object.
+		// [Interpretation 6725] Create a new query object.
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 
-		// [Interpretation 6720] Select some fields
+		// [Interpretation 6728] Select some fields
 		$query->select('a.*');
 		$query->select($db->quoteName('c.title','category_title'));
 
-		// [Interpretation 6727] From the sermondistributor_item table
+		// [Interpretation 6735] From the sermondistributor_item table
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
 		$query->join('LEFT', $db->quoteName('#__categories', 'c') . ' ON (' . $db->quoteName('a.catid') . ' = ' . $db->quoteName('c.id') . ')');
 
-		// [Interpretation 6868] From the sermondistributor_preacher table.
+		// [Interpretation 6876] From the sermondistributor_preacher table.
 		$query->select($db->quoteName('g.name','preacher_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_preacher', 'g') . ' ON (' . $db->quoteName('a.preacher') . ' = ' . $db->quoteName('g.id') . ')');
 
-		// [Interpretation 6868] From the sermondistributor_series table.
+		// [Interpretation 6876] From the sermondistributor_series table.
 		$query->select($db->quoteName('h.name','series_name'));
 		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'h') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('h.id') . ')');
 
-		// [Interpretation 6741] Filter by published state
+		// [Interpretation 6749] Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published))
 		{
@@ -247,21 +247,21 @@ class SermondistributorModelSermons extends JModelList
 			$query->where('(a.published = 0 OR a.published = 1)');
 		}
 
-		// [Interpretation 6753] Join over the asset groups.
+		// [Interpretation 6761] Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-		// [Interpretation 6756] Filter by access level.
+		// [Interpretation 6764] Filter by access level.
 		if ($access = $this->getState('filter.access'))
 		{
 			$query->where('a.access = ' . (int) $access);
 		}
-		// [Interpretation 6761] Implement View Level Access
+		// [Interpretation 6769] Implement View Level Access
 		if (!$user->authorise('core.options', 'com_sermondistributor'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('a.access IN (' . $groups . ')');
 		}
-		// [Interpretation 6838] Filter by search.
+		// [Interpretation 6846] Filter by search.
 		$search = $this->getState('filter.search');
 		if (!empty($search))
 		{
@@ -276,28 +276,28 @@ class SermondistributorModelSermons extends JModelList
 			}
 		}
 
-		// [Interpretation 6954] Filter by preacher.
+		// [Interpretation 6962] Filter by preacher.
 		if ($preacher = $this->getState('filter.preacher'))
 		{
 			$query->where('a.preacher = ' . $db->quote($db->escape($preacher, true)));
 		}
-		// [Interpretation 6954] Filter by series.
+		// [Interpretation 6962] Filter by series.
 		if ($series = $this->getState('filter.series'))
 		{
 			$query->where('a.series = ' . $db->quote($db->escape($series, true)));
 		}
-		// [Interpretation 6963] Filter by Link_type.
+		// [Interpretation 6971] Filter by Link_type.
 		if ($link_type = $this->getState('filter.link_type'))
 		{
 			$query->where('a.link_type = ' . $db->quote($db->escape($link_type, true)));
 		}
-		// [Interpretation 6963] Filter by Source.
+		// [Interpretation 6971] Filter by Source.
 		if ($source = $this->getState('filter.source'))
 		{
 			$query->where('a.source = ' . $db->quote($db->escape($source, true)));
 		}
 
-		// [Interpretation 6775] Filter by a single or group of categories.
+		// [Interpretation 6783] Filter by a single or group of categories.
 		$baselevel = 1;
 		$categoryId = $this->getState('filter.category_id');
 
@@ -319,7 +319,7 @@ class SermondistributorModelSermons extends JModelList
 		}
 
 
-		// [Interpretation 6797] Add the list ordering clause.
+		// [Interpretation 6805] Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
 		$orderDirn = $this->state->get('list.direction', 'asc');	
 		if ($orderCol != '')
@@ -337,42 +337,42 @@ class SermondistributorModelSermons extends JModelList
 	*/
 	public function getExportData($pks)
 	{
-		// [Interpretation 6505] setup the query
+		// [Interpretation 6513] setup the query
 		if (SermondistributorHelper::checkArray($pks))
 		{
-			// [Interpretation 6508] Get the user object.
+			// [Interpretation 6516] Get the user object.
 			$user = JFactory::getUser();
-			// [Interpretation 6510] Create a new query object.
+			// [Interpretation 6518] Create a new query object.
 			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
 
-			// [Interpretation 6513] Select some fields
+			// [Interpretation 6521] Select some fields
 			$query->select('a.*');
 
-			// [Interpretation 6515] From the sermondistributor_sermon table
+			// [Interpretation 6523] From the sermondistributor_sermon table
 			$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
 			$query->where('a.id IN (' . implode(',',$pks) . ')');
-			// [Interpretation 6525] Implement View Level Access
+			// [Interpretation 6533] Implement View Level Access
 			if (!$user->authorise('core.options', 'com_sermondistributor'))
 			{
 				$groups = implode(',', $user->getAuthorisedViewLevels());
 				$query->where('a.access IN (' . $groups . ')');
 			}
 
-			// [Interpretation 6532] Order the results by ordering
+			// [Interpretation 6540] Order the results by ordering
 			$query->order('a.ordering  ASC');
 
-			// [Interpretation 6534] Load the items
+			// [Interpretation 6542] Load the items
 			$db->setQuery($query);
 			$db->execute();
 			if ($db->getNumRows())
 			{
 				$items = $db->loadObjectList();
 
-				// [Interpretation 9835] set values to display correctly.
+				// [Interpretation 9843] set values to display correctly.
 				if (SermondistributorHelper::checkArray($items))
 				{
-					// [Interpretation 9838] get user object.
+					// [Interpretation 9846] get user object.
 					$user = JFactory::getUser();
 					foreach ($items as $nr => &$item)
 					{
@@ -383,13 +383,13 @@ class SermondistributorModelSermons extends JModelList
 							continue;
 						}
 
-						// [Interpretation 10048] unset the values we don't want exported.
+						// [Interpretation 10056] unset the values we don't want exported.
 						unset($item->asset_id);
 						unset($item->checked_out);
 						unset($item->checked_out_time);
 					}
 				}
-				// [Interpretation 10057] Add headers to items array.
+				// [Interpretation 10065] Add headers to items array.
 				$headers = $this->getExImPortHeaders();
 				if (SermondistributorHelper::checkObject($headers))
 				{
@@ -408,13 +408,13 @@ class SermondistributorModelSermons extends JModelList
 	*/
 	public function getExImPortHeaders()
 	{
-		// [Interpretation 6554] Get a db connection.
+		// [Interpretation 6562] Get a db connection.
 		$db = JFactory::getDbo();
-		// [Interpretation 6556] get the columns
+		// [Interpretation 6564] get the columns
 		$columns = $db->getTableColumns("#__sermondistributor_sermon");
 		if (SermondistributorHelper::checkArray($columns))
 		{
-			// [Interpretation 6560] remove the headers you don't import/export.
+			// [Interpretation 6568] remove the headers you don't import/export.
 			unset($columns['asset_id']);
 			unset($columns['checked_out']);
 			unset($columns['checked_out_time']);
@@ -436,7 +436,7 @@ class SermondistributorModelSermons extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-		// [Interpretation 9383] Compile the store id.
+		// [Interpretation 9391] Compile the store id.
 		$id .= ':' . $this->getState('filter.id');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
@@ -464,15 +464,15 @@ class SermondistributorModelSermons extends JModelList
 	*/
 	protected function checkInNow()
 	{
-		// [Interpretation 9776] Get set check in time
+		// [Interpretation 9784] Get set check in time
 		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');
 		
 		if ($time)
 		{
 
-			// [Interpretation 9781] Get a db connection.
+			// [Interpretation 9789] Get a db connection.
 			$db = JFactory::getDbo();
-			// [Interpretation 9783] reset query
+			// [Interpretation 9791] reset query
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->quoteName('#__sermondistributor_sermon'));
@@ -480,24 +480,24 @@ class SermondistributorModelSermons extends JModelList
 			$db->execute();
 			if ($db->getNumRows())
 			{
-				// [Interpretation 9791] Get Yesterdays date
+				// [Interpretation 9799] Get Yesterdays date
 				$date = JFactory::getDate()->modify($time)->toSql();
-				// [Interpretation 9793] reset query
+				// [Interpretation 9801] reset query
 				$query = $db->getQuery(true);
 
-				// [Interpretation 9795] Fields to update.
+				// [Interpretation 9803] Fields to update.
 				$fields = array(
 					$db->quoteName('checked_out_time') . '=\'0000-00-00 00:00:00\'',
 					$db->quoteName('checked_out') . '=0'
 				);
 
-				// [Interpretation 9800] Conditions for which records should be updated.
+				// [Interpretation 9808] Conditions for which records should be updated.
 				$conditions = array(
 					$db->quoteName('checked_out') . '!=0', 
 					$db->quoteName('checked_out_time') . '<\''.$date.'\''
 				);
 
-				// [Interpretation 9805] Check table
+				// [Interpretation 9813] Check table
 				$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions); 
 
 				$db->setQuery($query);

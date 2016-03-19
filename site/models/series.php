@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			13th March, 2016
+	@build			19th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -112,7 +112,7 @@ class SermondistributorModelSeries extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [Interpretation 2215] return the query object
+		// [Interpretation 2223] return the query object
 		return $query;
 	}
 
@@ -138,10 +138,10 @@ class SermondistributorModelSeries extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [Interpretation 2230] Convert the parameter fields into objects.
+		// [Interpretation 2238] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [Interpretation 2233] Always create a slug for sef URL's
+			// [Interpretation 2241] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
 			if (SermondistributorHelper::checkString($item->local_files))
 			{
@@ -362,10 +362,10 @@ class SermondistributorModelSeries extends JModelList
 			return false;
 		}
 
-		// [Interpretation 2230] Convert the parameter fields into objects.
+		// [Interpretation 2238] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [Interpretation 2233] Always create a slug for sef URL's
+			// [Interpretation 2241] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
 		}
 		// [Interpretation 1799] return items
@@ -433,10 +433,10 @@ class SermondistributorModelSeries extends JModelList
 			return false;
 		}
 
-		// [Interpretation 2230] Convert the parameter fields into objects.
+		// [Interpretation 2238] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [Interpretation 2233] Always create a slug for sef URL's
+			// [Interpretation 2241] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
 		}
 		// [Interpretation 1799] return items

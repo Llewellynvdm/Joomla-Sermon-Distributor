@@ -10,7 +10,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			13th March, 2016
+	@build			19th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_document.js
@@ -53,7 +53,7 @@ jQuery(document).ready(function()
 // the vvvvvwe function
 function vvvvvwe(location_vvvvvwe)
 {
-	// [Interpretation 7208] set the function logic
+	// [Interpretation 7216] set the function logic
 	if (location_vvvvvwe == 1)
 	{
 		jQuery('#jform_admin_view').closest('.control-group').show();
@@ -67,7 +67,7 @@ function vvvvvwe(location_vvvvvwe)
 // the vvvvvwf function
 function vvvvvwf(location_vvvvvwf)
 {
-	// [Interpretation 7208] set the function logic
+	// [Interpretation 7216] set the function logic
 	if (location_vvvvvwf == 2)
 	{
 		jQuery('#jform_site_view').closest('.control-group').show();
@@ -94,7 +94,7 @@ function vvvvvwg(type_vvvvvwg)
 	var type = type_vvvvvwg.some(type_vvvvvwg_SomeFunc);
 
 
-	// [Interpretation 7186] set this function logic
+	// [Interpretation 7194] set this function logic
 	if (type)
 	{
 		jQuery('#jform_url').closest('.control-group').show();
@@ -125,7 +125,7 @@ function vvvvvwg(type_vvvvvwg)
 // the vvvvvwg Some function
 function type_vvvvvwg_SomeFunc(type_vvvvvwg)
 {
-	// [Interpretation 7173] set the function logic
+	// [Interpretation 7181] set the function logic
 	if (type_vvvvvwg == 3)
 	{
 		return true;
@@ -149,7 +149,7 @@ function vvvvvwh(type_vvvvvwh)
 	var type = type_vvvvvwh.some(type_vvvvvwh_SomeFunc);
 
 
-	// [Interpretation 7186] set this function logic
+	// [Interpretation 7194] set this function logic
 	if (type)
 	{
 		jQuery('#jform_article').closest('.control-group').show();
@@ -180,7 +180,7 @@ function vvvvvwh(type_vvvvvwh)
 // the vvvvvwh Some function
 function type_vvvvvwh_SomeFunc(type_vvvvvwh)
 {
-	// [Interpretation 7173] set the function logic
+	// [Interpretation 7181] set the function logic
 	if (type_vvvvvwh == 1)
 	{
 		return true;
@@ -204,7 +204,7 @@ function vvvvvwi(type_vvvvvwi)
 	var type = type_vvvvvwi.some(type_vvvvvwi_SomeFunc);
 
 
-	// [Interpretation 7186] set this function logic
+	// [Interpretation 7194] set this function logic
 	if (type)
 	{
 		jQuery('#jform_content-lbl').closest('.control-group').show();
@@ -235,7 +235,7 @@ function vvvvvwi(type_vvvvvwi)
 // the vvvvvwi Some function
 function type_vvvvvwi_SomeFunc(type_vvvvvwi)
 {
-	// [Interpretation 7173] set the function logic
+	// [Interpretation 7181] set the function logic
 	if (type_vvvvvwi == 2)
 	{
 		return true;
@@ -246,7 +246,7 @@ function type_vvvvvwi_SomeFunc(type_vvvvvwi)
 // the vvvvvwj function
 function vvvvvwj(target_vvvvvwj)
 {
-	// [Interpretation 7208] set the function logic
+	// [Interpretation 7216] set the function logic
 	if (target_vvvvvwj == 1)
 	{
 		jQuery('#jform_groups').closest('.control-group').show();

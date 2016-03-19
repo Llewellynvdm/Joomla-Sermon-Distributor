@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			13th March, 2016
+	@build			19th March, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -53,10 +53,10 @@ class SermondistributorTableSermon extends JTable
 	{
 		parent::__construct('#__sermondistributor_sermon', 'id', $db);
 
-		// [Interpretation 3367] Adding Tag Options
+		// [Interpretation 3375] Adding Tag Options
 		JTableObserverTags::createObserver($this, array('typeAlias' => 'com_sermondistributor.sermon'));
 
-		// [Interpretation 3373] Adding History Options
+		// [Interpretation 3381] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.sermon')); 
 	}	
  
