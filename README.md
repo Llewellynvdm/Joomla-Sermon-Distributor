@@ -30,17 +30,17 @@ The best way to see all your options is to install this component on you Joomla 
 
 ## Build Time :hourglass:
 
-**134 Hours** or **17 Eight Hour Days** (actual time the author saved -
+**135 Hours** or **17 Eight Hour Days** (actual time the author saved -
 due to [Automated Component Builder] (https://www.vdm.io/joomla-component-builder))
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **48173**
-+ *File count*: **351**
++ *Line count*: **48233**
++ *File count*: **352**
 + *Folder count*: **79**
 
-**89 Hours** or **11 Eight Hour Days** (the actual time the author spent)
+**88 Hours** or **11 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
 > **debugging @34hours** = codingtime / 4;

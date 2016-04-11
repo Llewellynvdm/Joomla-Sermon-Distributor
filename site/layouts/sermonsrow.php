@@ -36,6 +36,7 @@ defined('JPATH_BASE') or die('Restricted access');
 	<?php else: ?>
 		<?php echo $displayData->name; ?>
 	<?php endif; ?>
+	<?php echo JLayoutHelper::render('isnew', $displayData); ?>
 	<?php echo JLayoutHelper::render('addtodropboxicon', $displayData); ?>
 </td>
 <?php if ($displayData->params->get($displayData->viewKey.'_sermons_desc')): ?>

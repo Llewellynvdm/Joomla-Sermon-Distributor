@@ -62,6 +62,7 @@ switch ($style)
 			<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?>
 		</div>
 	<?php endif ;?>
+	<?php echo JLayoutHelper::render('isnew', $displayData); ?>
 	<h3 class="uk-panel-title"><?php echo $displayData->name; ?></h3>
 	<?php if ($displayData->params->get($displayData->viewKey.'_sermons_icon')): ?>
 		<?php $displayData->icon = ($displayData->icon) ? $displayData->icon : $displayData->params->get('sermon_default_icon'); ?>

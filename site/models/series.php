@@ -165,8 +165,16 @@ class SermondistributorModelSeries extends JModelList
 		// do a quick build of all the sermon links
 		if (isset($items) && $items)
 		{
+			$pastDate = strtotime('-1 week');
 			foreach ($items as $nr => &$item)
 			{
+				$item->isNew = false;
+				// check if sermon is new
+				$createdTime = strtotime($item->created);
+				if ($pastDate < $createdTime)
+				{
+					$item->isNew = true;
+				}
 				$item->statisticTotal = 0;
 				if (isset($item->auto_sermons) && SermondistributorHelper::checkString($item->auto_sermons))
 				{

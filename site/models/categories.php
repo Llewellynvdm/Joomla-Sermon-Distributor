@@ -121,7 +121,7 @@ class SermondistributorModelCategories extends JModelList
 		{
 			foreach ($items as $nr => &$item)
 			{
-				if (!$item->idCatidSermonB)
+				if (!SermondistributorHelper::checkArray($item->idCatidSermonB))
 				{
 					// remove empty category
 					unset($items[$nr]);

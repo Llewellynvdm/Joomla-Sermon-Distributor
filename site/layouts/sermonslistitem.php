@@ -30,7 +30,7 @@ defined('JPATH_BASE') or die('Restricted access');
 
 
 ?>
-<a <?php if ($displayData->params->get($displayData->viewKey.'_sermons_download_count')): ?> data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_DOWNLOAD_COUNT'); ?>: <?php echo 4; ?>" <?php endif; ?>href="<?php echo $displayData->link; ?>"><?php echo $displayData->name; ?></a>
+<?php echo JLayoutHelper::render('isnew', $displayData); ?> <a <?php if ($displayData->params->get($displayData->viewKey.'_sermons_download_count')): ?> data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_DOWNLOAD_COUNT'); ?>: <?php echo 4; ?>" <?php endif; ?>href="<?php echo $displayData->link; ?>"><?php echo $displayData->name; ?></a>
 <?php if (('preacher' == $displayData->viewKey || 'category' == $displayData->viewKey) && $displayData->params->get($displayData->viewKey.'_sermons_series')): ?>
 	<a href="<?php echo $displayData->series_link; ?>" data-uk-tooltip title="<?php echo $displayData->series_name; ?>"><?php echo $displayData->series_name; ?></a>
 <?php endif ;?>

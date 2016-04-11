@@ -124,7 +124,7 @@ class SermondistributorModelSerieslist extends JModelList
 		{
 			foreach ($items as $nr => &$item)
 			{
-				if (!$item->idSeriesSermonB)
+				if (!SermondistributorHelper::checkArray($item->idSeriesSermonB))
 				{
 					// remove empty series
 					unset($items[$nr]);

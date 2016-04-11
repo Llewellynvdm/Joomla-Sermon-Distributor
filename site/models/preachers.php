@@ -124,7 +124,7 @@ class SermondistributorModelPreachers extends JModelList
 		{
 			foreach ($items as $nr => &$item)
 			{
-				if (!$item->idPreacherSermonB)
+				if (!SermondistributorHelper::checkArray($item->idPreacherSermonB))
 				{
 					// remove empty preacher
 					unset($items[$nr]);
