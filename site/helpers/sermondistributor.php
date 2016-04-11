@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -50,10 +50,10 @@ abstract class SermondistributorHelper
 				checkDropboxListing(3);
 			});
 			
-			function checkDropboxListing(view){
-				var getUrl = '".JRoute::_('index.php?option=com_sermondistributor&task=ajax.checkDropboxListing&format=json')."';
-				if(view > 0){
-					var request = 'token=".JSession::getFormToken()."&view='+view;
+			function checkDropboxListing(fromview){
+				var getUrl = '".JURI::root()."index.php?option=com_sermondistributor&task=ajax.checkDropboxListing&format=json';
+				if(fromview > 0){
+					var request = 'token=".JSession::getFormToken()."&fromview='+fromview;
 				}
 				return jQuery.ajax({
 					type: 'GET',
@@ -561,23 +561,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [Interpretation 646] if user not in those target groups then remove the item
+							// [Interpretation 653] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [Interpretation 651] set the return type
+					// [Interpretation 658] set the return type
 					switch ($help->type)
 					{
-						// [Interpretation 654] set joomla article
+						// [Interpretation 661] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [Interpretation 658] set help text
+						// [Interpretation 665] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [Interpretation 662] set Link
+						// [Interpretation 669] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -827,7 +827,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [Interpretation 1890] reset
+			// [Interpretation 1909] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -836,15 +836,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [Interpretation 1899] make sure uikit is loaded to config
+			// [Interpretation 1918] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [Interpretation 1904] sorter
+			// [Interpretation 1923] sorter
 			if (self::checkArray($temp))
 			{
-				// [Interpretation 1907] merger
+				// [Interpretation 1926] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -929,6 +929,45 @@ abstract class SermondistributorHelper
 		}
 		return false;
 	} 
+
+	public static function isPublished($id,$type)
+	{
+		if ($type == 'raw')
+                {
+			$type = 'item';
+		}
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select(array('a.published'));
+		$query->from('#__sermondistributor_'.$type.' AS a');
+		$query->where('a.id = '. (int) $id);
+		$query->where('a.published = 1');
+		$db->setQuery($query);
+		$db->execute();
+		$found = $db->getNumRows();
+		if($found)
+                {
+			return true;
+		}
+		return false;
+	}
+
+	public static function getGroupName($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select(array('a.title'));
+		$query->from('#__usergroups AS a');
+		$query->where('a.id = '. (int) $id);
+		$db->setQuery($query);
+		$db->execute();
+		$found = $db->getNumRows();
+		if($found)
+                {
+			return $db->loadResult();
+		}
+		return $id;
+	}
 	
 	/**
 	*	Get the actions permissions

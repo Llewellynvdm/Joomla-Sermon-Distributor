@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -202,7 +202,7 @@ class SermondistributorViewSermons extends JViewLegacy
 			);
                 } 
 
-		// [Interpretation 8400] Category Filter.
+		// [Interpretation 8515] Category Filter.
 		JHtmlSidebar::addFilter(
 			JText::_('JOPTION_SELECT_CATEGORY'),
 			'filter_category_id',
@@ -211,7 +211,7 @@ class SermondistributorViewSermons extends JViewLegacy
 
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
-			// [Interpretation 8410] Category Batch selection.
+			// [Interpretation 8525] Category Batch selection.
 			JHtmlBatch_::addListSelection(
 				JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_CATEGORY'),
 				'batch[category]',
@@ -219,11 +219,11 @@ class SermondistributorViewSermons extends JViewLegacy
 			);
 		} 
 
-		// [Interpretation 8315] Set Preacher Name Selection
+		// [Interpretation 8430] Set Preacher Name Selection
 		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->getOptions();
 		if ($this->preacherNameOptions)
 		{
-			// [Interpretation 8319] Preacher Name Filter
+			// [Interpretation 8434] Preacher Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL').' -',
 				'filter_preacher',
@@ -232,7 +232,7 @@ class SermondistributorViewSermons extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8328] Preacher Name Batch Selection
+				// [Interpretation 8443] Preacher Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL').' -',
 					'batch[preacher]',
@@ -241,11 +241,11 @@ class SermondistributorViewSermons extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 8315] Set Series Name Selection
+		// [Interpretation 8430] Set Series Name Selection
 		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->getOptions();
 		if ($this->seriesNameOptions)
 		{
-			// [Interpretation 8319] Series Name Filter
+			// [Interpretation 8434] Series Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL').' -',
 				'filter_series',
@@ -254,7 +254,7 @@ class SermondistributorViewSermons extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8328] Series Name Batch Selection
+				// [Interpretation 8443] Series Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL').' -',
 					'batch[series]',
@@ -263,11 +263,11 @@ class SermondistributorViewSermons extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 8349] Set Link Type Selection
+		// [Interpretation 8464] Set Link Type Selection
 		$this->link_typeOptions = $this->getTheLink_typeSelections();
 		if ($this->link_typeOptions)
 		{
-			// [Interpretation 8353] Link Type Filter
+			// [Interpretation 8468] Link Type Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL').' -',
 				'filter_link_type',
@@ -276,7 +276,7 @@ class SermondistributorViewSermons extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8362] Link Type Batch Selection
+				// [Interpretation 8477] Link Type Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL').' -',
 					'batch[link_type]',
@@ -285,11 +285,11 @@ class SermondistributorViewSermons extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 8349] Set Source Selection
+		// [Interpretation 8464] Set Source Selection
 		$this->sourceOptions = $this->getTheSourceSelections();
 		if ($this->sourceOptions)
 		{
-			// [Interpretation 8353] Source Filter
+			// [Interpretation 8468] Source Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL').' -',
 				'filter_source',
@@ -298,7 +298,7 @@ class SermondistributorViewSermons extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8362] Source Batch Selection
+				// [Interpretation 8477] Source Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL').' -',
 					'batch[source]',
@@ -361,33 +361,33 @@ class SermondistributorViewSermons extends JViewLegacy
 
 	protected function getTheLink_typeSelections()
 	{
-		// [Interpretation 8225] Get a db connection.
+		// [Interpretation 8340] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 8227] Create a new query object.
+		// [Interpretation 8342] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 8229] Select the text.
+		// [Interpretation 8344] Select the text.
 		$query->select($db->quoteName('link_type'));
 		$query->from($db->quoteName('#__sermondistributor_sermon'));
 		$query->order($db->quoteName('link_type') . ' ASC');
 
-		// [Interpretation 8233] Reset the query using our newly populated query object.
+		// [Interpretation 8348] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
 
 		if ($results)
 		{
-			// [Interpretation 8241] get model
+			// [Interpretation 8356] get model
 			$model = $this->getModel();
 			$results = array_unique($results);
 			$filter = array();
 			foreach ($results as $link_type)
 			{
-				// [Interpretation 8252] Translate the link_type selection
+				// [Interpretation 8367] Translate the link_type selection
 				$text = $model->selectionTranslation($link_type,'link_type');
-				// [Interpretation 8254] Now add the link_type and its text to the options array
+				// [Interpretation 8369] Now add the link_type and its text to the options array
 				$filter[] = JHtml::_('select.option', $link_type, JText::_($text));
 			}
 			return $filter;
@@ -397,33 +397,33 @@ class SermondistributorViewSermons extends JViewLegacy
 
 	protected function getTheSourceSelections()
 	{
-		// [Interpretation 8225] Get a db connection.
+		// [Interpretation 8340] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 8227] Create a new query object.
+		// [Interpretation 8342] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 8229] Select the text.
+		// [Interpretation 8344] Select the text.
 		$query->select($db->quoteName('source'));
 		$query->from($db->quoteName('#__sermondistributor_sermon'));
 		$query->order($db->quoteName('source') . ' ASC');
 
-		// [Interpretation 8233] Reset the query using our newly populated query object.
+		// [Interpretation 8348] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
 
 		if ($results)
 		{
-			// [Interpretation 8241] get model
+			// [Interpretation 8356] get model
 			$model = $this->getModel();
 			$results = array_unique($results);
 			$filter = array();
 			foreach ($results as $source)
 			{
-				// [Interpretation 8252] Translate the source selection
+				// [Interpretation 8367] Translate the source selection
 				$text = $model->selectionTranslation($source,'source');
-				// [Interpretation 8254] Now add the source and its text to the options array
+				// [Interpretation 8369] Now add the source and its text to the options array
 				$filter[] = JHtml::_('select.option', $source, JText::_($text));
 			}
 			return $filter;

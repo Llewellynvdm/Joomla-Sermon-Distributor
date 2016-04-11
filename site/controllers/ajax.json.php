@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -61,10 +61,11 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'checkDropboxListing':
 					try
 					{
-						$viewValue = $jinput->get('view', NULL, 'INT');
-						if($viewValue)
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$fromviewValue = $jinput->get('fromview', NULL, 'INT');
+						if($fromviewValue)
 						{
-							$result = $this->getModel('ajax')->dropbox($viewValue);
+							$result = $this->getModel('ajax')->dropbox($fromviewValue);
 						}
 						else
 						{
@@ -73,6 +74,10 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						if(array_key_exists('callback',$_GET))
 						{
 							echo $_GET['callback'] . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
 						}
 						else
 						{
@@ -94,6 +99,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'countDownload':
 					try
 					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$keyValue = $jinput->get('key', NULL, 'BASE64');
 						$filenameValue = $jinput->get('filename', NULL, 'CMD');
 						if($keyValue && $filenameValue)
@@ -107,6 +113,10 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						if(array_key_exists('callback',$_GET))
 						{
 							echo $_GET['callback'] . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
 						}
 						else
 						{

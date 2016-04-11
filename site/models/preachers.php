@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
@@ -65,13 +65,13 @@ class SermondistributorModelPreachers extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [Interpretation 2193] Get a db connection.
+		// [Interpretation 2212] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2202] Create a new query object.
+		// [Interpretation 2221] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 1065] Get from #__sermondistributor_preacher as a
+		// [Interpretation 1072] Get from #__sermondistributor_preacher as a
 		$query->select($db->quoteName(
 			array('a.id','a.asset_id','a.name','a.alias','a.icon','a.email','a.website','a.description','a.hits','a.ordering'),
 			array('id','asset_id','name','alias','icon','email','website','description','hits','ordering')));
@@ -80,7 +80,7 @@ class SermondistributorModelPreachers extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [Interpretation 2223] return the query object
+		// [Interpretation 2242] return the query object
 		return $query;
 	}
 
@@ -106,18 +106,31 @@ class SermondistributorModelPreachers extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [Interpretation 2238] Convert the parameter fields into objects.
+		// [Interpretation 2262] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [Interpretation 2241] Always create a slug for sef URL's
+			// [Interpretation 2265] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// [Interpretation 1282] Make sure the content prepare plugins fire on description.
+			// [Interpretation 1289] Make sure the content prepare plugins fire on description.
 			$item->description = JHtml::_('content.prepare',$item->description);
-			// [Interpretation 1284] Checking if description has uikit components that must be loaded.
+			// [Interpretation 1291] Checking if description has uikit components that must be loaded.
 			$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
-			// [Interpretation 1315] set idPreacherSermonB to the $item object.
+			// [Interpretation 1322] set idPreacherSermonB to the $item object.
 			$item->idPreacherSermonB = $this->getIdPreacherSermonDcaa_B($item->id);
 		} 
+
+
+		if (SermondistributorHelper::checkArray($items))
+		{
+			foreach ($items as $nr => &$item)
+			{
+				if (!$item->idPreacherSermonB)
+				{
+					// remove empty preacher
+					unset($items[$nr]);
+				}
+			}
+		}
 
 		// return items
 		return $items;
@@ -131,13 +144,13 @@ class SermondistributorModelPreachers extends JModelList
 	*/
 	public function getIdPreacherSermonDcaa_B($id)
 	{
-		// [Interpretation 1995] Get a db connection.
+		// [Interpretation 2014] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 1997] Create a new query object.
+		// [Interpretation 2016] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 1999] Get from #__sermondistributor_sermon as b
+		// [Interpretation 2018] Get from #__sermondistributor_sermon as b
 		$query->select($db->quoteName(
 			array('b.id'),
 			array('id')));
@@ -146,11 +159,11 @@ class SermondistributorModelPreachers extends JModelList
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
 		$query->where('b.published = 1');
 
-		// [Interpretation 2053] Reset the query using our newly populated query object.
+		// [Interpretation 2072] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [Interpretation 2056] check if there was data returned
+		// [Interpretation 2075] check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();

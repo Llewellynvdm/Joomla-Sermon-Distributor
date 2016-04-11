@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<fieldset
+		addrulepath="/administrator/components/com_sermondistributor/models/rules"
+		addfieldpath="/administrator/components/com_sermondistributor/models/fields"
 		name="global_config"
 		label="COM_SERMONDISTRIBUTOR_CONFIG_GLOBAL_LABEL"
 		description="COM_SERMONDISTRIBUTOR_CONFIG_GLOBAL_DESC">
@@ -355,7 +357,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_LOAD_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 11424] Option Set. -->
+			<!-- [Interpretation 11581] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_AUTO_LOAD</option>"
 			<option value="1">
@@ -371,7 +373,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_MIN_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 11449] Option Set. -->
+			<!-- [Interpretation 11606] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>"
 			<option value=".min">
@@ -383,7 +385,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_STYLE_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 11470] Option Set. -->
+			<!-- [Interpretation 11627] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_FLAT_LOAD</option>"
 			<option value=".almost-flat">

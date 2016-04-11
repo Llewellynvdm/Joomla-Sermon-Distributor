@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -92,27 +92,27 @@ class SermondistributorViewStatistic extends JViewLegacy
 		$isNew = $this->item->id == 0;
 
 		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_STATISTIC_NEW' : 'COM_SERMONDISTRIBUTOR_STATISTIC_EDIT'), 'pencil-2 article-add');
-		// [Interpretation 9501] Built the actions for new and existing records.
+		// [Interpretation 9616] Built the actions for new and existing records.
 		if ($this->refid || $this->ref)
 		{
 			if ($this->canDo->get('statistic.create') && $isNew)
 			{
-				// [Interpretation 9513] We can create the record.
+				// [Interpretation 9628] We can create the record.
 				JToolBarHelper::save('statistic.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('statistic.edit'))
 			{
-				// [Interpretation 9525] We can save the record.
+				// [Interpretation 9640] We can save the record.
 				JToolBarHelper::save('statistic.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
-				// [Interpretation 9530] Do not creat but cancel.
+				// [Interpretation 9645] Do not creat but cancel.
 				JToolBarHelper::cancel('statistic.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
-				// [Interpretation 9535] We can close it.
+				// [Interpretation 9650] We can close it.
 				JToolBarHelper::cancel('statistic.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -120,7 +120,7 @@ class SermondistributorViewStatistic extends JViewLegacy
 		{
 			if ($isNew)
 			{
-				// [Interpretation 9543] For new records, check the create permission.
+				// [Interpretation 9658] For new records, check the create permission.
 				if ($this->canDo->get('statistic.create'))
 				{
 					JToolBarHelper::apply('statistic.apply', 'JTOOLBAR_APPLY');
@@ -133,11 +133,11 @@ class SermondistributorViewStatistic extends JViewLegacy
 			{
 				if ($this->canDo->get('statistic.edit'))
 				{
-					// [Interpretation 9570] We can save the new record
+					// [Interpretation 9685] We can save the new record
 					JToolBarHelper::apply('statistic.apply', 'JTOOLBAR_APPLY');
 					JToolBarHelper::save('statistic.save', 'JTOOLBAR_SAVE');
-					// [Interpretation 9573] We can save this record, but check the create permission to see
-					// [Interpretation 9574] if we can return to make a new one.
+					// [Interpretation 9688] We can save this record, but check the create permission to see
+					// [Interpretation 9689] if we can return to make a new one.
 					if ($this->canDo->get('statistic.create'))
 					{
 						JToolBarHelper::custom('statistic.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
@@ -156,7 +156,7 @@ class SermondistributorViewStatistic extends JViewLegacy
 			}
 		}
 		JToolbarHelper::divider();
-		// [Interpretation 9610] set help url for this view if found
+		// [Interpretation 9725] set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('statistic');
 		if (SermondistributorHelper::checkString($help_url))
 		{

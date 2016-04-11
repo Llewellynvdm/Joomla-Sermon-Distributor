@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -62,10 +62,11 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'checkDropboxListing':
 					try
 					{
-						$viewValue = $jinput->get('view', NULL, 'INT');
-						if($viewValue && $user->id != 0)
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$fromviewValue = $jinput->get('fromview', NULL, 'INT');
+						if($fromviewValue && $user->id != 0)
 						{
-							$result = $this->getModel('ajax')->dropbox($viewValue);
+							$result = $this->getModel('ajax')->dropbox($fromviewValue);
 						}
 						else
 						{
@@ -74,6 +75,10 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						if(array_key_exists('callback',$_GET))
 						{
 							echo $_GET['callback'] . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
 						}
 						else
 						{
@@ -95,6 +100,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'updateDropboxListing':
 					try
 					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$typeValue = $jinput->get('type', NULL, 'INT');
 						if($typeValue && $user->id != 0)
 						{
@@ -107,6 +113,10 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						if(array_key_exists('callback',$_GET))
 						{
 							echo $_GET['callback'] . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
 						}
 						else
 						{
@@ -128,6 +138,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'getUpdateProgress':
 					try
 					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$typeValue = $jinput->get('type', NULL, 'INT');
 						if($typeValue && $user->id != 0)
 						{
@@ -140,6 +151,10 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						if(array_key_exists('callback',$_GET))
 						{
 							echo $_GET['callback'] . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
 						}
 						else
 						{

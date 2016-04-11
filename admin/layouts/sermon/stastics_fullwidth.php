@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		stastics_fullwidth.php
@@ -36,7 +36,7 @@ $edit	= "index.php?option=com_sermondistributor&view=statistics&task=statistic.e
 ?>
 <div class="form-vertical">
 <?php if (SermondistributorHelper::checkArray($items)): ?>
-<table class="footable table data statistics metro-blue" data-filter="#filter_statistics" data-page-size="20">
+<table class="footable table data statistics metro-blue" data-page-size="20" data-filter="#filter_statistics">
 <thead>
 	<tr>
 		<th data-toggle="true">

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons_fullwidth.php
@@ -42,7 +42,7 @@ $can	= SermondistributorHelper::getActions('sermon');
 	<a class="btn btn-small btn-success" href="<?php echo $new; ?>"><span class="icon-new icon-white"></span> <?php echo JText::_('COM_SERMONDISTRIBUTOR_NEW'); ?></a><br /><br />
 <?php endif; ?>
 <?php if (SermondistributorHelper::checkArray($items)): ?>
-<table class="footable table data sermons metro-blue" data-filter="#filter_sermons" data-page-size="20">
+<table class="footable table data sermons metro-blue" data-page-size="20" data-filter="#filter_sermons">
 <thead>
 	<tr>
 		<th data-toggle="true">

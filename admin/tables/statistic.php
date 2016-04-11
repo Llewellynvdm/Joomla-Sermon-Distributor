@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			19th March, 2016
+	@build			11th April, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
@@ -53,7 +53,7 @@ class SermondistributorTableStatistic extends JTable
 	{
 		parent::__construct('#__sermondistributor_statistic', 'id', $db);
 
-		// [Interpretation 3381] Adding History Options
+		// [Interpretation 3405] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.statistic')); 
 	}	
  
