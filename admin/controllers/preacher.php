@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			11th April, 2016
+	@build			26th May, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preacher.php
@@ -60,13 +60,13 @@ class SermondistributorControllerPreacher extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [Interpretation 8642] Access check.
+		// [Interpretation 8855] Access check.
 		$access = JFactory::getUser()->authorise('preacher.access', 'com_sermondistributor');
 		if (!$access)
 		{
 			return false;
 		}
-		// [Interpretation 8653] In the absense of better information, revert to the component permissions.
+		// [Interpretation 8866] In the absense of better information, revert to the component permissions.
 		return JFactory::getUser()->authorise('preacher.create', $this->option);
 	}
 
@@ -82,13 +82,13 @@ class SermondistributorControllerPreacher extends JControllerForm
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [Interpretation 8796] get user object.
+		// [Interpretation 9009] get user object.
 		$user		= JFactory::getUser();
-		// [Interpretation 8798] get record id.
+		// [Interpretation 9011] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [Interpretation 8805] Access check.
+		// [Interpretation 9018] Access check.
 		$access = ($user->authorise('preacher.access', 'com_sermondistributor.preacher.' . (int) $recordId) &&  $user->authorise('preacher.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -97,17 +97,17 @@ class SermondistributorControllerPreacher extends JControllerForm
 
 		if ($recordId)
 		{
-			// [Interpretation 8814] The record has been set. Check the record permissions.
+			// [Interpretation 9027] The record has been set. Check the record permissions.
 			$permission = $user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('preacher.edit.own', 'com_sermondistributor.preacher.' . $recordId))
 				{
-					// [Interpretation 8836] Now test the owner is the user.
+					// [Interpretation 9049] Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [Interpretation 8840] Need to do a lookup from the model.
+						// [Interpretation 9053] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -117,7 +117,7 @@ class SermondistributorControllerPreacher extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [Interpretation 8848] If the owner matches 'me' then allow.
+					// [Interpretation 9061] If the owner matches 'me' then allow.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('preacher.edit.own', 'com_sermondistributor'))
@@ -129,7 +129,7 @@ class SermondistributorControllerPreacher extends JControllerForm
 				return false;
 			}
 		}
-		// [Interpretation 8870] Since there is no permission, revert to the component permissions.
+		// [Interpretation 9083] Since there is no permission, revert to the component permissions.
 		return $user->authorise('preacher.edit', $this->option);
 	}
 

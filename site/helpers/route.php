@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			11th April, 2016
+	@build			26th May, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		route.php
@@ -44,18 +44,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [Interpretation 3829] Initialize the needel array.
+			// [Interpretation 3909] Initialize the needel array.
 			$needles = array(
 				'sermon'  => array((int) $id)
 			);
-			// [Interpretation 3833] Create the link
+			// [Interpretation 3913] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=sermon&id='. $id;
 		}
 		else
 		{
-			// [Interpretation 3838] Initialize the needel array.
+			// [Interpretation 3918] Initialize the needel array.
 			$needles = array();
-			// [Interpretation 3840]Create the link but don't add the id.
+			// [Interpretation 3920]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=sermon';
 		}
 		if ($catid > 1)
@@ -85,18 +85,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [Interpretation 3829] Initialize the needel array.
+			// [Interpretation 3909] Initialize the needel array.
 			$needles = array(
 				'preachers'  => array((int) $id)
 			);
-			// [Interpretation 3833] Create the link
+			// [Interpretation 3913] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=preachers&id='. $id;
 		}
 		else
 		{
-			// [Interpretation 3838] Initialize the needel array.
+			// [Interpretation 3918] Initialize the needel array.
 			$needles = array();
-			// [Interpretation 3840]Create the link but don't add the id.
+			// [Interpretation 3920]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=preachers';
 		}
 		if ($catid > 1)
@@ -126,18 +126,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [Interpretation 3829] Initialize the needel array.
+			// [Interpretation 3909] Initialize the needel array.
 			$needles = array(
 				'preacher'  => array((int) $id)
 			);
-			// [Interpretation 3833] Create the link
+			// [Interpretation 3913] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=preacher&id='. $id;
 		}
 		else
 		{
-			// [Interpretation 3838] Initialize the needel array.
+			// [Interpretation 3918] Initialize the needel array.
 			$needles = array();
-			// [Interpretation 3840]Create the link but don't add the id.
+			// [Interpretation 3920]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=preacher';
 		}
 		if ($catid > 1)
@@ -167,18 +167,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [Interpretation 3829] Initialize the needel array.
+			// [Interpretation 3909] Initialize the needel array.
 			$needles = array(
 				'categories'  => array((int) $id)
 			);
-			// [Interpretation 3833] Create the link
+			// [Interpretation 3913] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=categories&id='. $id;
 		}
 		else
 		{
-			// [Interpretation 3838] Initialize the needel array.
+			// [Interpretation 3918] Initialize the needel array.
 			$needles = array();
-			// [Interpretation 3840]Create the link but don't add the id.
+			// [Interpretation 3920]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=categories';
 		}
 
@@ -197,18 +197,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [Interpretation 3829] Initialize the needel array.
+			// [Interpretation 3909] Initialize the needel array.
 			$needles = array(
 				'category'  => array((int) $id)
 			);
-			// [Interpretation 3833] Create the link
+			// [Interpretation 3913] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=category&id='. $id;
 		}
 		else
 		{
-			// [Interpretation 3838] Initialize the needel array.
+			// [Interpretation 3918] Initialize the needel array.
 			$needles = array();
-			// [Interpretation 3840]Create the link but don't add the id.
+			// [Interpretation 3920]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=category';
 		}
 
@@ -227,18 +227,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [Interpretation 3829] Initialize the needel array.
+			// [Interpretation 3909] Initialize the needel array.
 			$needles = array(
 				'serieslist'  => array((int) $id)
 			);
-			// [Interpretation 3833] Create the link
+			// [Interpretation 3913] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=serieslist&id='. $id;
 		}
 		else
 		{
-			// [Interpretation 3838] Initialize the needel array.
+			// [Interpretation 3918] Initialize the needel array.
 			$needles = array();
-			// [Interpretation 3840]Create the link but don't add the id.
+			// [Interpretation 3920]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=serieslist';
 		}
 		if ($catid > 1)
@@ -268,18 +268,18 @@ abstract class SermondistributorHelperRoute
 	{
 		if ($id > 0)
 		{
-			// [Interpretation 3829] Initialize the needel array.
+			// [Interpretation 3909] Initialize the needel array.
 			$needles = array(
 				'series'  => array((int) $id)
 			);
-			// [Interpretation 3833] Create the link
+			// [Interpretation 3913] Create the link
 			$link = 'index.php?option=com_sermondistributor&view=series&id='. $id;
 		}
 		else
 		{
-			// [Interpretation 3838] Initialize the needel array.
+			// [Interpretation 3918] Initialize the needel array.
 			$needles = array();
-			// [Interpretation 3840]Create the link but don't add the id.
+			// [Interpretation 3920]Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=series';
 		}
 		if ($catid > 1)

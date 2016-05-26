@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			11th April, 2016
+	@build			26th May, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categories.php
@@ -65,13 +65,13 @@ class SermondistributorModelCategories extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [Interpretation 2212] Get a db connection.
+		// [Interpretation 2292] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2221] Create a new query object.
+		// [Interpretation 2301] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 1072] Get from #__categories as a
+		// [Interpretation 1152] Get from #__categories as a
 		$query->select($db->quoteName(
 			array('a.id','a.title','a.alias','a.description','a.hits','a.language'),
 			array('id','name','alias','description','hits','language')));
@@ -81,7 +81,7 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('a.extension = "com_sermondistributor.sermons"');
 		$query->order('a.title ASC');
 
-		// [Interpretation 2242] return the query object
+		// [Interpretation 2322] return the query object
 		return $query;
 	}
 
@@ -107,12 +107,12 @@ class SermondistributorModelCategories extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [Interpretation 2262] Convert the parameter fields into objects.
+		// [Interpretation 2342] Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [Interpretation 2265] Always create a slug for sef URL's
+			// [Interpretation 2345] Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// [Interpretation 1322] set idCatidSermonB to the $item object.
+			// [Interpretation 1402] set idCatidSermonB to the $item object.
 			$item->idCatidSermonB = $this->getIdCatidSermonBced_B($item->id);
 		} 
 
@@ -141,13 +141,13 @@ class SermondistributorModelCategories extends JModelList
 	*/
 	public function getIdCatidSermonBced_B($id)
 	{
-		// [Interpretation 2014] Get a db connection.
+		// [Interpretation 2094] Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2016] Create a new query object.
+		// [Interpretation 2096] Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 2018] Get from #__sermondistributor_sermon as b
+		// [Interpretation 2098] Get from #__sermondistributor_sermon as b
 		$query->select($db->quoteName(
 			array('b.id'),
 			array('id')));
@@ -156,11 +156,11 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
 		$query->where('b.published = 1');
 
-		// [Interpretation 2072] Reset the query using our newly populated query object.
+		// [Interpretation 2152] Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [Interpretation 2075] check if there was data returned
+		// [Interpretation 2155] check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			11th April, 2016
+	@build			26th May, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -55,13 +55,15 @@ defined('_JEXEC') or die('Restricted access');
 			jsonp: 'callback'
 		});
 	}
-	soundManager.setup({
-		url: '<?php echo JURI::root(true); ?>/media/com_sermondistributor/soundmanager/swf',
-		flashVersion: 9,
-		onready: function() {
-			// Ready to use; soundManager.createSound() etc. can now be called.
-		}
-	});
+	<?php if (1 == $this->item->playerKey) : ?>
+		soundManager.setup({
+			url: '<?php echo JURI::root(true); ?>/media/com_sermondistributor/soundmanager/swf',
+			flashVersion: 9,
+			onready: function() {
+				// Ready to use; soundManager.createSound() etc. can now be called.
+			}
+		});
+	<?php endif; ?>
 	</script>
 <?php else: ?>
 	<div class="uk-alert uk-alert-warning" data-uk-alert>

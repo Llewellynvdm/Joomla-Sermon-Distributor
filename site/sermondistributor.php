@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			11th April, 2016
+	@build			26th May, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -32,7 +32,7 @@ $document->addStyleSheet('components/com_sermondistributor/assets/css/site.css')
 $document->addScript('components/com_sermondistributor/assets/js/site.js');
 
 // Require helper files
-JLoader::register('SermondistributorHelper', dirname(__FILE__) . '/helpers/sermondistributor.php');
+JLoader::register('SermondistributorHelper', dirname(__FILE__) . '/helpers/sermondistributor.php'); 
 JLoader::register('SermondistributorHelperRoute', dirname(__FILE__) . '/helpers/route.php'); 
 
 // Triger the Global Site Event

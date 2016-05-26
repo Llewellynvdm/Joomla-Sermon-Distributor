@@ -357,7 +357,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_LOAD_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 11581] Option Set. -->
+			<!-- [Interpretation 11800] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_AUTO_LOAD</option>"
 			<option value="1">
@@ -373,7 +373,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_MIN_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 11606] Option Set. -->
+			<!-- [Interpretation 11825] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>"
 			<option value=".min">
@@ -385,13 +385,37 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_STYLE_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 11627] Option Set. -->
+			<!-- [Interpretation 11846] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_FLAT_LOAD</option>"
 			<option value=".almost-flat">
 				COM_SERMONDISTRIBUTOR_CONFIG_ALMOST_FLAT_LOAD</option>"
 			<option value=".gradient">
 				COM_SERMONDISTRIBUTOR_CONFIG_GRADIANT_LOAD</option>"
+		</field>
+	</fieldset>
+	<fieldset
+		name="player_custom_config"
+		label="COM_SERMONDISTRIBUTOR_CONFIG_PLAYER">
+
+		<!-- [Interpretation 678] Player Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="player"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PLAYER_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PLAYER_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="INT"
+			required="true"
+			default="1">
+			<!-- [Interpretation 749] Option Set. -->
+			<option value="">
+				COM_SERMONDISTRIBUTOR_CONFIG_SELECT_AN_OPTION</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_SOUNDMANAGER</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_JPLAYER</option>
 		</field>
 	</fieldset>
 	<fieldset

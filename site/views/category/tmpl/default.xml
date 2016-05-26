@@ -5,7 +5,7 @@
 			<![CDATA[COM_SERMONDISTRIBUTOR_MENU_CATEGORY_DESC]]>
 		</message>
 	</layout>
-	<!-- [Interpretation 998] Add fields to the request variables for the layout. -->
+	<!-- [Interpretation 1078] Add fields to the request variables for the layout. -->
 	<fields name="request">
 		<fieldset name="request"
 			addfieldpath="/administrator/components/com_sermondistributor/models/fields">
@@ -22,7 +22,7 @@
 		/>
 		</fieldset>
 	</fields>
-	<!-- [Interpretation 1013] Adding page parameters -->
+	<!-- [Interpretation 1093] Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
 		<!-- [Interpretation 678] Category_display Field. Type: Radio. (joomla) -->
@@ -33,7 +33,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -51,7 +51,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_BOX_CONTRAST_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -69,7 +69,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -89,7 +89,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -105,7 +105,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -121,7 +121,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMON_COUNT_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -137,7 +137,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -155,7 +155,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -175,7 +175,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -197,7 +197,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -227,7 +227,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -243,7 +243,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -259,7 +259,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_PREACHER_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -275,7 +275,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_SERIES_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -291,7 +291,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_DOWNLOAD_COUNTER_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -307,7 +307,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -323,7 +323,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_DOWNLOADS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -339,7 +339,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_SERMONS_OPEN_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 749]  [Interpretation 1036] Global & Option Set. -->
+			<!-- [Interpretation 749]  [Interpretation 1116] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">

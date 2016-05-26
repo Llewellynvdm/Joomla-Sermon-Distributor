@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.2" method="upgrade">
 	<name>COM_SERMONDISTRIBUTOR</name>
-	<creationDate>11th April, 2016</creationDate>
+	<creationDate>26th May, 2016</creationDate>
 	<author>Llewellyn van der Merwe</author>
 	<authorEmail>llewellyn@vdm.io</authorEmail>
 	<authorUrl>https://www.vdm.io/</authorUrl>
@@ -38,6 +38,7 @@
 		<folder>css</folder>
 		<folder>images</folder>
 		<folder>soundmanager</folder>
+		<folder>jplayer</folder>
 		<folder>uikit</folder>
 		<folder>footable</folder>
 	</media>

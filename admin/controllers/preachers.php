@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			11th April, 2016
+	@build			26th May, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
@@ -48,29 +48,29 @@ class SermondistributorControllerPreachers extends JControllerAdmin
 
 	public function exportData()
 	{
-		// [Interpretation 6705] Check for request forgeries
+		// [Interpretation 6800] Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-		// [Interpretation 6707] check if export is allowed for this user.
+		// [Interpretation 6802] check if export is allowed for this user.
 		$user = JFactory::getUser();
 		if ($user->authorise('preacher.export', 'com_sermondistributor') && $user->authorise('core.export', 'com_sermondistributor'))
 		{
-			// [Interpretation 6711] Get the input
+			// [Interpretation 6806] Get the input
 			$input = JFactory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
-			// [Interpretation 6714] Sanitize the input
+			// [Interpretation 6809] Sanitize the input
 			JArrayHelper::toInteger($pks);
-			// [Interpretation 6716] Get the model
+			// [Interpretation 6811] Get the model
 			$model = $this->getModel('Preachers');
-			// [Interpretation 6718] get the data to export
+			// [Interpretation 6813] get the data to export
 			$data = $model->getExportData($pks);
 			if (SermondistributorHelper::checkArray($data))
 			{
-				// [Interpretation 6722] now set the data to the spreadsheet
+				// [Interpretation 6817] now set the data to the spreadsheet
 				$date = JFactory::getDate();
 				SermondistributorHelper::xls($data,'Preachers_'.$date->format('jS_F_Y'),'Preachers exported ('.$date->format('jS F, Y').')','preachers');
 			}
 		}
-		// [Interpretation 6727] Redirect to the list screen with error.
+		// [Interpretation 6822] Redirect to the list screen with error.
 		$message = JText::_('COM_SERMONDISTRIBUTOR_EXPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers', false), $message, 'error');
 		return;
@@ -79,31 +79,31 @@ class SermondistributorControllerPreachers extends JControllerAdmin
 
 	public function importData()
 	{
-		// [Interpretation 6736] Check for request forgeries
+		// [Interpretation 6831] Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-		// [Interpretation 6738] check if import is allowed for this user.
+		// [Interpretation 6833] check if import is allowed for this user.
 		$user = JFactory::getUser();
 		if ($user->authorise('preacher.import', 'com_sermondistributor') && $user->authorise('core.import', 'com_sermondistributor'))
 		{
-			// [Interpretation 6742] Get the import model
+			// [Interpretation 6837] Get the import model
 			$model = $this->getModel('Preachers');
-			// [Interpretation 6744] get the headers to import
+			// [Interpretation 6839] get the headers to import
 			$headers = $model->getExImPortHeaders();
 			if (SermondistributorHelper::checkObject($headers))
 			{
-				// [Interpretation 6748] Load headers to session.
+				// [Interpretation 6843] Load headers to session.
 				$session = JFactory::getSession();
 				$headers = json_encode($headers);
 				$session->set('preacher_VDM_IMPORTHEADERS', $headers);
 				$session->set('backto_VDM_IMPORT', 'preachers');
 				$session->set('dataType_VDM_IMPORTINTO', 'preacher');
-				// [Interpretation 6754] Redirect to import view.
+				// [Interpretation 6849] Redirect to import view.
 				$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_SELECT_FILE_FOR_PREACHERS');
 				$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=import', false), $message);
 				return;
 			}
 		}
-		// [Interpretation 6766] Redirect to the list screen with error.
+		// [Interpretation 6869] Redirect to the list screen with error.
 		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers', false), $message, 'error');
 		return;

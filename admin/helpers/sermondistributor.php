@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			11th April, 2016
+	@build			26th May, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -119,7 +119,7 @@ abstract class SermondistributorHelper
 		}
 		$keyCounter = base64_encode($safe->encryptString(json_encode($keyCounter)));
 		$token = JSession::getFormToken();
-		$downloadURL = 'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
+		$downloadURL = JURI::root().'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
 		// check if local .htaccess should be set
 		$setHtaccess = false;
 		$onclick = ' onclick="sermonCounter(\''.$keyCounter.'\',\'FILENAME\');"';
@@ -151,7 +151,7 @@ abstract class SermondistributorHelper
 							// get the file name use the same method as the auto
 							$filename = self::getDownloadFileName($sermon,$key,'local');
 							$lockedFolderPath = base64_encode($safe->encryptString($localFolder.$key));
-							$sermon->download_links[$filename] = JRoute::_($downloadURL.'&link='.$lockedFolderPath.'&filename='.$filename);
+							$sermon->download_links[$filename] = $downloadURL.'&link='.$lockedFolderPath.'&filename='.$filename;
 							$sermon->onclick[$filename] = '';
 						}
 						elseif (2 == $sermon->link_type && $allowDirect)
@@ -180,7 +180,7 @@ abstract class SermondistributorHelper
 							{
 								// get the file name use the same method as the auto
 								$filename = self::getDownloadFileName($sermon,$key,'dropbox_manual');
-								$sermon->download_links[$filename] = JRoute::_($downloadURL.'&link='.$dropURL.'&filename='.$filename);
+								$sermon->download_links[$filename] = $downloadURL.'&link='.$dropURL.'&filename='.$filename;
 								$sermon->onclick[$filename] = '';
 							}
 							elseif (2 == $sermon->link_type && $dropURL)
@@ -210,7 +210,7 @@ abstract class SermondistributorHelper
 							if (1 == $sermon->link_type && $dropURL)
 							{
 								// get the file name (use the same method as the auto
-								$sermon->download_links[$filename] = JRoute::_($downloadURL.'&link='.$dropURL.'&filename='.$filename);
+								$sermon->download_links[$filename] = $downloadURL.'&link='.$dropURL.'&filename='.$filename;
 								$sermon->onclick[$filename] = '';
 							}
 							elseif (2 == $sermon->link_type && $dropURL)
@@ -234,7 +234,7 @@ abstract class SermondistributorHelper
 				if (1 == $sermon->link_type)
 				{
 					$lockedURL = base64_encode($safe->encryptString($sermon->url));
-					$sermon->download_links[$filename] = JRoute::_($downloadURL.'&link='.$lockedURL.'&filename='.$filename);
+					$sermon->download_links[$filename] = $downloadURL.'&link='.$lockedURL.'&filename='.$filename;
 					$sermon->onclick[$filename] = '';
 				}
 				elseif (2 == $sermon->link_type)
@@ -553,23 +553,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [Interpretation 653] if user not in those target groups then remove the item
+							// [Interpretation 675] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [Interpretation 658] set the return type
+					// [Interpretation 680] set the return type
 					switch ($help->type)
 					{
-						// [Interpretation 661] set joomla article
+						// [Interpretation 683] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [Interpretation 665] set help text
+						// [Interpretation 687] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [Interpretation 669] set Link
+						// [Interpretation 691] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -698,7 +698,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [Interpretation 1909] reset
+			// [Interpretation 1989] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -707,15 +707,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [Interpretation 1918] make sure uikit is loaded to config
+			// [Interpretation 1998] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [Interpretation 1923] sorter
+			// [Interpretation 2003] sorter
 			if (self::checkArray($temp))
 			{
-				// [Interpretation 1926] merger
+				// [Interpretation 2006] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -736,37 +736,37 @@ abstract class SermondistributorHelper
 	 */
 	public static function xls($rows,$fileName = null,$title = null,$subjectTab = null,$creator = 'Vast Development Method',$description = null,$category = null,$keywords = null,$modified = null)
 	{
-		// [Interpretation 708] set the user
+		// [Interpretation 730] set the user
 		$user = JFactory::getUser();
 		
-		// [Interpretation 711] set fieldname if not set
+		// [Interpretation 733] set fieldname if not set
 		if (!$fileName)
 		{
 			$fileName = 'exported_'.JFactory::getDate()->format('jS_F_Y');
 		}
-		// [Interpretation 716] set modiefied if not set
+		// [Interpretation 738] set modiefied if not set
 		if (!$modified)
 		{
 			$modified = $user->name;
 		}
-		// [Interpretation 721] set title if not set
+		// [Interpretation 743] set title if not set
 		if (!$title)
 		{
 			$title = 'Book1';
 		}
-		// [Interpretation 726] set tab name if not set
+		// [Interpretation 748] set tab name if not set
 		if (!$subjectTab)
 		{
 			$subjectTab = 'Sheet1';
 		}
 		
-		// [Interpretation 732] make sure the file is loaded		
+		// [Interpretation 754] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		
-		// [Interpretation 735] Create new PHPExcel object
+		// [Interpretation 757] Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
 		
-		// [Interpretation 738] Set document properties
+		// [Interpretation 760] Set document properties
 		$objPHPExcel->getProperties()->setCreator($creator)
 									 ->setCompany('Vast Development Method')
 									 ->setLastModifiedBy($modified)
@@ -785,7 +785,7 @@ abstract class SermondistributorHelper
 			$objPHPExcel->getProperties()->setCategory($category);
 		}
 		
-		// [Interpretation 757] Some styles
+		// [Interpretation 779] Some styles
 		$headerStyles = array(
 			'font'  => array(
 				'bold'  => true,
@@ -807,7 +807,7 @@ abstract class SermondistributorHelper
 				'name'  => 'Verdana'
 		));
 		
-		// [Interpretation 779] Add some data
+		// [Interpretation 801] Add some data
 		if (self::checkArray($rows))
 		{
 			$i = 1;
@@ -834,20 +834,20 @@ abstract class SermondistributorHelper
 			return false;
 		}
 		
-		// [Interpretation 806] Rename worksheet
+		// [Interpretation 828] Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($subjectTab);
 		
-		// [Interpretation 809] Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		// [Interpretation 831] Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
 		
-		// [Interpretation 812] Redirect output to a client's web browser (Excel5)
+		// [Interpretation 834] Redirect output to a client's web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'.$fileName.'.xls"');
 		header('Cache-Control: max-age=0');
-		// [Interpretation 816] If you're serving to IE 9, then the following may be needed
+		// [Interpretation 838] If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
 		
-		// [Interpretation 819] If you're serving to IE over SSL, then the following may be needed
+		// [Interpretation 841] If you're serving to IE over SSL, then the following may be needed
 		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
 		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
@@ -863,18 +863,27 @@ abstract class SermondistributorHelper
 	*/
 	public static function getFileHeaders($dataType)
 	{		
-		// [Interpretation 835] make sure the file is loaded		
+		// [Interpretation 857] make sure these files are loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
-		// [Interpretation 837] get session object
-		$session 	= JFactory::getSession();
+		JLoader::import('ChunkReadFilter', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/PHPExcel/Reader');
+		// [Interpretation 860] get session object
+		$session	= JFactory::getSession();
 		$package	= $session->get('package', null);
 		$package	= json_decode($package, true);
-		// [Interpretation 841] set the headers
+		// [Interpretation 864] set the headers
 		if(isset($package['dir']))
 		{
+			$chunkFilter = new PHPExcel_Reader_chunkReadFilter();
+			// [Interpretation 868] only load first three rows
+			$chunkFilter->setRows(2,1);
+			// [Interpretation 870] identify the file type
 			$inputFileType = PHPExcel_IOFactory::identify($package['dir']);
+			// [Interpretation 872] create the reader for this file type
 			$excelReader = PHPExcel_IOFactory::createReader($inputFileType);
+			// [Interpretation 874] load the limiting filter
+			$excelReader->setReadFilter($chunkFilter);
 			$excelReader->setReadDataOnly(true);
+			// [Interpretation 877] load the rows (only first three)
 			$excelObj = $excelReader->load($package['dir']);
 			$headers = array();
 			foreach ($excelObj->getActiveSheet()->getRowIterator() as $row)
@@ -970,31 +979,33 @@ abstract class SermondistributorHelper
 		return false;
 	}
 
-	public static function jsonToString($value, $sperator = ", ")
+	public static function jsonToString($value, $sperator = ", ", $table = null)
 	{
                 // check if string is JSON
                 $result = json_decode($value, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                // is JSON
+                if (json_last_error() === JSON_ERROR_NONE)
+		{
+			// is JSON
 			if (self::checkArray($result))
 			{
-				$value = '';
-				$counter = 0;
-				foreach ($result as $string)
+				if (self::checkString($table))
 				{
-					if ($counter)
+					$names = array();
+					foreach ($result as $val)
 					{
-						$value .= $sperator.$string;
+						if ($name = self::getVar($table, $val, 'id', 'name'))
+						{
+							$names[] = $name;
+						}
 					}
-					else
+					if (self::checkArray($names))
 					{
-						$value .= $string;
-					}
-					$counter++;
+						return (string) implode($sperator,$names);
+					}	
 				}
-				return $value;
+				return (string) implode($sperator,$result);
 			}
-                        return json_decode($value);
+                        return (string) json_decode($value);
                 }
                 return $value;
         }
@@ -1649,7 +1660,7 @@ abstract class SermondistributorHelper
 					$w .= ' ';
 					if($r < 100)
 					{
-						$word .= 'and ';
+						$w .= 'and ';
 					}
 					$w .= self::numberToString($r);
 				}
