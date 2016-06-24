@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			26th May, 2016
+	@build			24th June, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -50,48 +50,58 @@ class JFormFieldSermon extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [Interpretation 7157] see if we should add buttons
+		// [Interpretation 7370] see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [Interpretation 7159] get html
+		// [Interpretation 7372] get html
 		$html = parent::getInput();
-		// [Interpretation 7161] if true set button
+		// [Interpretation 7374] if true set button
 		if ($setButton === 'true')
 		{
 			$button = array();
 			$script = array();
 			$buttonName = $this->getAttribute('name');
-			// [Interpretation 7167] get the input from url
+			// [Interpretation 7380] get the input from url
 			$jinput = JFactory::getApplication()->input;
-			// [Interpretation 7169] get the view name & id
+			// [Interpretation 7382] get the view name & id
 			$values = $jinput->getArray(array(
 				'id' => 'int',
 				'view' => 'word'
 			));
-			// [Interpretation 7174] check if new item
+			// [Interpretation 7387] check if new item
 			$ref = '';
 			$refJ = '';
 			if (!is_null($values['id']) && strlen($values['view']))
 			{
-				// [Interpretation 7179] only load referal if not new item.
+				// [Interpretation 7392] only load referal if not new item.
 				$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				$refJ = '&ref=' . $values['view'] . '&refid=' . $values['id'];
 			}
 			$user = JFactory::getUser();
-			// [Interpretation 7184] only add if user allowed to create sermon
+			// [Interpretation 7397] only add if user allowed to create sermon
 			if ($user->authorise('sermon.create', 'com_sermondistributor'))
 			{
-				// [Interpretation 7202] build Create button
-				$button[] = '<a id="'.$buttonName.'Create" class="btn btn-small btn-success hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_CREATE_NEW_S', SermondistributorHelper::safeString($buttonName, 'W')).'" style="border-radius: 0px 4px 4px 0px; padding: 4px 4px 4px 7px;"
+				// [Interpretation 7415] build Create button
+				$buttonNamee = trim($buttonName);
+				$buttonNamee = preg_replace('/_+/', ' ', $buttonNamee);
+				$buttonNamee = preg_replace('/\s+/', ' ', $buttonNamee);
+				$buttonNamee = preg_replace("/[^A-Za-z ]/", '', $buttonNamee);
+				$buttonNamee = ucfirst(strtolower($buttonNamee));
+				$button[] = '<a id="'.$buttonName.'Create" class="btn btn-small btn-success hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_CREATE_NEW_S', $buttonNamee).'" style="border-radius: 0px 4px 4px 0px; padding: 4px 4px 4px 7px;"
 					href="index.php?option=com_sermondistributor&amp;view=sermon&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span></a>';
 			}
-			// [Interpretation 7207] only add if user allowed to edit sermon
+			// [Interpretation 7425] only add if user allowed to edit sermon
 			if (($buttonName == 'sermon' || $buttonName == 'sermons') && $user->authorise('sermon.edit', 'com_sermondistributor'))
 			{
-				// [Interpretation 7218] build edit button
-				$button[] = '<a id="'.$buttonName.'Edit" class="btn btn-small hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_EDIT_S', SermondistributorHelper::safeString($buttonName, 'W')).'" style="display: none; padding: 4px 4px 4px 7px;" href="#" >
+				// [Interpretation 7436] build edit button
+				$buttonNamee = trim($buttonName);
+				$buttonNamee = preg_replace('/_+/', ' ', $buttonNamee);
+				$buttonNamee = preg_replace('/\s+/', ' ', $buttonNamee);
+				$buttonNamee = preg_replace("/[^A-Za-z ]/", '', $buttonNamee);
+				$buttonNamee = ucfirst(strtolower($buttonNamee));
+				$button[] = '<a id="'.$buttonName.'Edit" class="btn btn-small hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_EDIT_S', $buttonNamee).'" style="display: none; padding: 4px 4px 4px 7px;" href="#" >
 					<span class="icon-edit"></span></a>';
-				// [Interpretation 7221] build script
+				// [Interpretation 7444] build script
 				$script[] = "
 					jQuery(document).ready(function() {
 						jQuery('#adminForm').on('change', '#jform_".$buttonName."',function (e) {
@@ -118,18 +128,18 @@ class JFormFieldSermon extends JFormFieldList
 						}
 					}";
 			}
-			// [Interpretation 7248] check if button was created for sermon field.
-			if (SermondistributorHelper::checkArray($button))
+			// [Interpretation 7471] check if button was created for sermon field.
+			if (is_array($button) && count($button) > 0)
 			{
-				// [Interpretation 7251] Add some final script
+				// [Interpretation 7474] Add some final script
 				$script[] = "
 					jQuery(document).ready(function() {
 						jQuery('#jform_".$buttonName."').closest('.control-group').addClass('input-append');
 					});";
-				// [Interpretation 7256] Load the needed script.
+				// [Interpretation 7479] Load the needed script.
 				$document = JFactory::getDocument();
 				$document->addScriptDeclaration(implode(' ',$script));
-				// [Interpretation 7259] return the button attached to input field.
+				// [Interpretation 7482] return the button attached to input field.
 				return $html . implode('',$button);
 			}
 		}

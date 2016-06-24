@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.2
-	@build			26th May, 2016
+	@build			24th June, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -33,7 +33,7 @@ JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
 $componentParams = JComponentHelper::getParams('com_sermondistributor');
 ?>
-
+<div id="sermondistributor_loader">
 <form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='.(int) $this->item->id.$this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
 	<?php echo JLayoutHelper::render('sermon.details_above', $this); ?><div class="form-horizontal">
@@ -121,6 +121,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 <div class="clearfix"></div>
 <?php echo JLayoutHelper::render('sermon.details_under', $this); ?>
 </form>
+</div>
 
 <script type="text/javascript">
 
