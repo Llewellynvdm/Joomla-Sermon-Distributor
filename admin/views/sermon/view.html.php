@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			24th June, 2016
+	@version		1.3.3
+	@build			2nd July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -70,7 +70,7 @@ class SermondistributorViewSermon extends JViewLegacy
                         $this->referral = '&ref='.(string)$this->ref;
                 }
 
-		// [Interpretation 6114] Get Linked view data
+		// [Interpretation 6144] Get Linked view data
 		$this->vwbstastics		= $this->get('Vwbstastics');
 
 		// Set the toolbar
@@ -95,27 +95,27 @@ class SermondistributorViewSermon extends JViewLegacy
 		$isNew = $this->item->id == 0;
 
 		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERMON_NEW' : 'COM_SERMONDISTRIBUTOR_SERMON_EDIT'), 'pencil-2 article-add');
-		// [Interpretation 10055] Built the actions for new and existing records.
+		// [Interpretation 10085] Built the actions for new and existing records.
 		if ($this->refid || $this->ref)
 		{
 			if ($this->canDo->get('sermon.create') && $isNew)
 			{
-				// [Interpretation 10067] We can create the record.
+				// [Interpretation 10097] We can create the record.
 				JToolBarHelper::save('sermon.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('sermon.edit'))
 			{
-				// [Interpretation 10079] We can save the record.
+				// [Interpretation 10109] We can save the record.
 				JToolBarHelper::save('sermon.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
-				// [Interpretation 10084] Do not creat but cancel.
+				// [Interpretation 10114] Do not creat but cancel.
 				JToolBarHelper::cancel('sermon.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
-				// [Interpretation 10089] We can close it.
+				// [Interpretation 10119] We can close it.
 				JToolBarHelper::cancel('sermon.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -123,7 +123,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			if ($isNew)
 			{
-				// [Interpretation 10097] For new records, check the create permission.
+				// [Interpretation 10127] For new records, check the create permission.
 				if ($this->canDo->get('sermon.create'))
 				{
 					JToolBarHelper::apply('sermon.apply', 'JTOOLBAR_APPLY');
@@ -136,11 +136,11 @@ class SermondistributorViewSermon extends JViewLegacy
 			{
 				if ($this->canDo->get('sermon.edit'))
 				{
-					// [Interpretation 10124] We can save the new record
+					// [Interpretation 10154] We can save the new record
 					JToolBarHelper::apply('sermon.apply', 'JTOOLBAR_APPLY');
 					JToolBarHelper::save('sermon.save', 'JTOOLBAR_SAVE');
-					// [Interpretation 10127] We can save this record, but check the create permission to see
-					// [Interpretation 10128] if we can return to make a new one.
+					// [Interpretation 10157] We can save this record, but check the create permission to see
+					// [Interpretation 10158] if we can return to make a new one.
 					if ($this->canDo->get('sermon.create'))
 					{
 						JToolBarHelper::custom('sermon.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
@@ -159,7 +159,7 @@ class SermondistributorViewSermon extends JViewLegacy
 			}
 		}
 		JToolbarHelper::divider();
-		// [Interpretation 10164] set help url for this view if found
+		// [Interpretation 10194] set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('sermon');
 		if (SermondistributorHelper::checkString($help_url))
 		{
@@ -197,21 +197,21 @@ class SermondistributorViewSermon extends JViewLegacy
 		$document->setTitle(JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERMON_NEW' : 'COM_SERMONDISTRIBUTOR_SERMON_EDIT'));
 		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/sermon.css"); 
 
-		// [Interpretation 6156] Add the CSS for Footable.
+		// [Interpretation 6186] Add the CSS for Footable.
 		$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');
 
-		// [Interpretation 6158] Use the Metro Style
+		// [Interpretation 6188] Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
 			$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.metro.min.css');
 		}
-		// [Interpretation 6163] Use the Legacy Style.
+		// [Interpretation 6193] Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
 			$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.standalone.min.css');
 		}
 
-		// [Interpretation 6168] Add the JavaScript for Footable
+		// [Interpretation 6198] Add the JavaScript for Footable
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.js');
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.sort.js');
 		$document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.filter.js');

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			24th June, 2016
+	@version		1.3.3
+	@build			2nd July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_document.php
@@ -53,7 +53,7 @@ class SermondistributorTableHelp_document extends JTable
 	{
 		parent::__construct('#__sermondistributor_help_document', 'id', $db);
 
-		// [Interpretation 3485] Adding History Options
+		// [Interpretation 3515] Adding History Options
 		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.help_document')); 
 	}	
  

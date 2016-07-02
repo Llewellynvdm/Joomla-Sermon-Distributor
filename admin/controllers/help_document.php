@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			24th June, 2016
+	@version		1.3.3
+	@build			2nd July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_document.php
@@ -60,13 +60,13 @@ class SermondistributorControllerHelp_document extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [Interpretation 9081] Access check.
+		// [Interpretation 9111] Access check.
 		$access = JFactory::getUser()->authorise('help_document.access', 'com_sermondistributor');
 		if (!$access)
 		{
 			return false;
 		}
-		// [Interpretation 9092] In the absense of better information, revert to the component permissions.
+		// [Interpretation 9122] In the absense of better information, revert to the component permissions.
 		return JFactory::getUser()->authorise('help_document.create', $this->option);
 	}
 
@@ -82,13 +82,13 @@ class SermondistributorControllerHelp_document extends JControllerForm
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [Interpretation 9235] get user object.
+		// [Interpretation 9265] get user object.
 		$user		= JFactory::getUser();
-		// [Interpretation 9237] get record id.
+		// [Interpretation 9267] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [Interpretation 9244] Access check.
+		// [Interpretation 9274] Access check.
 		$access = ($user->authorise('help_document.access', 'com_sermondistributor.help_document.' . (int) $recordId) &&  $user->authorise('help_document.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -97,17 +97,17 @@ class SermondistributorControllerHelp_document extends JControllerForm
 
 		if ($recordId)
 		{
-			// [Interpretation 9253] The record has been set. Check the record permissions.
+			// [Interpretation 9283] The record has been set. Check the record permissions.
 			$permission = $user->authorise('help_document.edit', 'com_sermondistributor.help_document.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('help_document.edit.own', 'com_sermondistributor.help_document.' . $recordId))
 				{
-					// [Interpretation 9275] Now test the owner is the user.
+					// [Interpretation 9305] Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [Interpretation 9279] Need to do a lookup from the model.
+						// [Interpretation 9309] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -117,7 +117,7 @@ class SermondistributorControllerHelp_document extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [Interpretation 9287] If the owner matches 'me' then allow.
+					// [Interpretation 9317] If the owner matches 'me' then allow.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('help_document.edit.own', 'com_sermondistributor'))
@@ -129,7 +129,7 @@ class SermondistributorControllerHelp_document extends JControllerForm
 				return false;
 			}
 		}
-		// [Interpretation 9309] Since there is no permission, revert to the component permissions.
+		// [Interpretation 9339] Since there is no permission, revert to the component permissions.
 		return $user->authorise('help_document.edit', $this->option);
 	}
 

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			24th June, 2016
+	@version		1.3.3
+	@build			2nd July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -43,14 +43,14 @@ class SermondistributorViewCategories extends JViewLegacy
 		$this->menu = $this->app->getMenu()->getActive();
 		// get the user object
 		$this->user = JFactory::getUser();
-		// [Interpretation 2440] Initialise variables.
+		// [Interpretation 2442] Initialise variables.
 		$this->items	= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 
-		// [Interpretation 2469] Check for errors.
+		// [Interpretation 2471] Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			JError::raiseWarning(500, implode("\n", $errors));
+			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
 		// do a quick build of all the links
@@ -76,10 +76,10 @@ class SermondistributorViewCategories extends JViewLegacy
 			$this->fooTableStyle = 2;
 		}
 
-		// [Interpretation 2486] Set the toolbar
+		// [Interpretation 2488] Set the toolbar
 		$this->addToolBar();
 
-		// [Interpretation 2488] set the document
+		// [Interpretation 2490] set the document
 		$this->_prepareDocument();
 
 		parent::display($tpl);
@@ -91,96 +91,96 @@ class SermondistributorViewCategories extends JViewLegacy
 	protected function _prepareDocument()
 	{
 
-		// [Interpretation 2923] always make sure jquery is loaded.
+		// [Interpretation 2925] always make sure jquery is loaded.
 		JHtml::_('jquery.framework');
-		// [Interpretation 2925] Load the header checker class.
+		// [Interpretation 2927] Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
-		// [Interpretation 2927] Initialize the header checker.
+		// [Interpretation 2929] Initialize the header checker.
 		$HeaderCheck = new HeaderCheck;
 
-		// [Interpretation 2932] Load uikit options.
+		// [Interpretation 2934] Load uikit options.
 		$uikit = $this->params->get('uikit_load');
-		// [Interpretation 2934] Set script size.
+		// [Interpretation 2936] Set script size.
 		$size = $this->params->get('uikit_min');
-		// [Interpretation 2936] Set css style.
+		// [Interpretation 2938] Set css style.
 		$style = $this->params->get('uikit_style');
 
-		// [Interpretation 2939] The uikit css.
+		// [Interpretation 2941] The uikit css.
 		if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit'.$style.$size.'.css');
 		}
-		// [Interpretation 2944] The uikit js.
+		// [Interpretation 2946] The uikit js.
 		if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit'.$size.'.js');
 		}
 
-		// [Interpretation 2953] Load the script to find all uikit components needed.
+		// [Interpretation 2955] Load the script to find all uikit components needed.
 		if ($uikit != 2)
 		{
-			// [Interpretation 2956] Set the default uikit components in this view.
+			// [Interpretation 2958] Set the default uikit components in this view.
 			$uikitComp = array();
 			$uikitComp[] = 'data-uk-tooltip';
 			$uikitComp[] = 'data-uk-grid';
 		}
 
-		// [Interpretation 2981] Load the needed uikit components in this view.
+		// [Interpretation 2983] Load the needed uikit components in this view.
 		if ($uikit != 2 && isset($uikitComp) && SermondistributorHelper::checkArray($uikitComp))
 		{
-			// [Interpretation 2984] load just in case.
+			// [Interpretation 2986] load just in case.
 			jimport('joomla.filesystem.file');
-			// [Interpretation 2986] loading...
+			// [Interpretation 2988] loading...
 			foreach ($uikitComp as $class)
 			{
 				foreach (SermondistributorHelper::$uk_components[$class] as $name)
 				{
-					// [Interpretation 2991] check if the CSS file exists.
+					// [Interpretation 2993] check if the CSS file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css'))
 					{
-						// [Interpretation 2994] load the css.
+						// [Interpretation 2996] load the css.
 						$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css');
 					}
-					// [Interpretation 2997] check if the JavaScript file exists.
+					// [Interpretation 2999] check if the JavaScript file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js'))
 					{
-						// [Interpretation 3000] load the js.
+						// [Interpretation 3002] load the js.
 						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js');
 					}
 				}
 			}
 		}  
 
-		// [Interpretation 6156] Add the CSS for Footable.
+		// [Interpretation 6186] Add the CSS for Footable.
 		$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');
 
-		// [Interpretation 6158] Use the Metro Style
+		// [Interpretation 6188] Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.metro.min.css');
 		}
-		// [Interpretation 6163] Use the Legacy Style.
+		// [Interpretation 6193] Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
 			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.standalone.min.css');
 		}
 
-		// [Interpretation 6168] Add the JavaScript for Footable
+		// [Interpretation 6198] Add the JavaScript for Footable
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.sort.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.filter.js');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable/js/footable.paginate.js'); 
-		// [Interpretation 2881] load the meta description
+		// [Interpretation 2883] load the meta description
 		if ($this->params->get('menu-meta_description'))
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
 		}
-		// [Interpretation 2886] load the key words if set
+		// [Interpretation 2888] load the key words if set
 		if ($this->params->get('menu-meta_keywords'))
 		{
 			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
 		}
-		// [Interpretation 2891] check the robot params
+		// [Interpretation 2893] check the robot params
 		if ($this->params->get('robots'))
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));

@@ -5,7 +5,7 @@
 			<![CDATA[COM_SERMONDISTRIBUTOR_MENU_PREACHER_DESC]]>
 		</message>
 	</layout>
-	<!-- [Interpretation 1078] Add fields to the request variables for the layout. -->
+	<!-- [Interpretation 1079] Add fields to the request variables for the layout. -->
 	<fields name="request">
 		<fieldset name="request"
 			addfieldpath="/administrator/components/com_sermondistributor/models/fields">
@@ -24,7 +24,7 @@
 		/>
 		</fieldset>
 	</fields>
-	<!-- [Interpretation 1093] Adding page parameters -->
+	<!-- [Interpretation 1094] Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
 		<!-- [Interpretation 781] Preacher_display Field. Type: Radio. (joomla) -->
@@ -35,7 +35,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -53,7 +53,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_BOX_CONTRAST_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -71,7 +71,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -91,7 +91,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -107,7 +107,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -123,7 +123,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMON_COUNT_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -139,7 +139,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -155,7 +155,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_EMAIL_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -171,7 +171,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_WEBSITE_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -189,7 +189,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -209,7 +209,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -231,7 +231,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -261,7 +261,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -277,7 +277,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -293,7 +293,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_SERIES_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -309,7 +309,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_CATEGORY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -325,7 +325,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_DOWNLOAD_COUNTER_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -341,7 +341,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -357,7 +357,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_DOWNLOADS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -373,7 +373,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_SERMONS_OPEN_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">

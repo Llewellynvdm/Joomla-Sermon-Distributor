@@ -200,15 +200,15 @@
 		</fieldset>
 	</fields>
 	
-	<!-- [Interpretation 9838] Access Control Fields. -->
+	<!-- [Interpretation 9868] Access Control Fields. -->
 	<fieldset name="accesscontrol">
-		<!-- [Interpretation 9840] Asset Id Field. Type: Hidden (joomla) -->
+		<!-- [Interpretation 9870] Asset Id Field. Type: Hidden (joomla) -->
 		<field
 			name="asset_id"
 			type="hidden"
 			filter="unset"
 		/>
-		<!-- [Interpretation 9846] Rules Field. Type: Rules (joomla) -->
+		<!-- [Interpretation 9876] Rules Field. Type: Rules (joomla) -->
 		<field
 			name="rules"
 			type="rules"

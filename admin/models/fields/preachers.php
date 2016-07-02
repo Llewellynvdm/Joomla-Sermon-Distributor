@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			24th June, 2016
+	@version		1.3.3
+	@build			2nd July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
@@ -50,37 +50,37 @@ class JFormFieldPreachers extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [Interpretation 7370] see if we should add buttons
+		// [Interpretation 7400] see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [Interpretation 7372] get html
+		// [Interpretation 7402] get html
 		$html = parent::getInput();
-		// [Interpretation 7374] if true set button
+		// [Interpretation 7404] if true set button
 		if ($setButton === 'true')
 		{
 			$button = array();
 			$script = array();
 			$buttonName = $this->getAttribute('name');
-			// [Interpretation 7380] get the input from url
+			// [Interpretation 7410] get the input from url
 			$jinput = JFactory::getApplication()->input;
-			// [Interpretation 7382] get the view name & id
+			// [Interpretation 7412] get the view name & id
 			$values = $jinput->getArray(array(
 				'id' => 'int',
 				'view' => 'word'
 			));
-			// [Interpretation 7387] check if new item
+			// [Interpretation 7417] check if new item
 			$ref = '';
 			$refJ = '';
 			if (!is_null($values['id']) && strlen($values['view']))
 			{
-				// [Interpretation 7392] only load referal if not new item.
+				// [Interpretation 7422] only load referal if not new item.
 				$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				$refJ = '&ref=' . $values['view'] . '&refid=' . $values['id'];
 			}
 			$user = JFactory::getUser();
-			// [Interpretation 7397] only add if user allowed to create preacher
+			// [Interpretation 7427] only add if user allowed to create preacher
 			if ($user->authorise('preacher.create', 'com_sermondistributor'))
 			{
-				// [Interpretation 7415] build Create button
+				// [Interpretation 7445] build Create button
 				$buttonNamee = trim($buttonName);
 				$buttonNamee = preg_replace('/_+/', ' ', $buttonNamee);
 				$buttonNamee = preg_replace('/\s+/', ' ', $buttonNamee);
@@ -90,10 +90,10 @@ class JFormFieldPreachers extends JFormFieldList
 					href="index.php?option=com_sermondistributor&amp;view=preacher&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span></a>';
 			}
-			// [Interpretation 7425] only add if user allowed to edit preacher
+			// [Interpretation 7455] only add if user allowed to edit preacher
 			if (($buttonName == 'preacher' || $buttonName == 'preachers') && $user->authorise('preacher.edit', 'com_sermondistributor'))
 			{
-				// [Interpretation 7436] build edit button
+				// [Interpretation 7466] build edit button
 				$buttonNamee = trim($buttonName);
 				$buttonNamee = preg_replace('/_+/', ' ', $buttonNamee);
 				$buttonNamee = preg_replace('/\s+/', ' ', $buttonNamee);
@@ -101,7 +101,7 @@ class JFormFieldPreachers extends JFormFieldList
 				$buttonNamee = ucfirst(strtolower($buttonNamee));
 				$button[] = '<a id="'.$buttonName.'Edit" class="btn btn-small hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_EDIT_S', $buttonNamee).'" style="display: none; padding: 4px 4px 4px 7px;" href="#" >
 					<span class="icon-edit"></span></a>';
-				// [Interpretation 7444] build script
+				// [Interpretation 7474] build script
 				$script[] = "
 					jQuery(document).ready(function() {
 						jQuery('#adminForm').on('change', '#jform_".$buttonName."',function (e) {
@@ -128,18 +128,18 @@ class JFormFieldPreachers extends JFormFieldList
 						}
 					}";
 			}
-			// [Interpretation 7471] check if button was created for preacher field.
+			// [Interpretation 7501] check if button was created for preacher field.
 			if (is_array($button) && count($button) > 0)
 			{
-				// [Interpretation 7474] Add some final script
+				// [Interpretation 7504] Add some final script
 				$script[] = "
 					jQuery(document).ready(function() {
 						jQuery('#jform_".$buttonName."').closest('.control-group').addClass('input-append');
 					});";
-				// [Interpretation 7479] Load the needed script.
+				// [Interpretation 7509] Load the needed script.
 				$document = JFactory::getDocument();
 				$document->addScriptDeclaration(implode(' ',$script));
-				// [Interpretation 7482] return the button attached to input field.
+				// [Interpretation 7512] return the button attached to input field.
 				return $html . implode('',$button);
 			}
 		}

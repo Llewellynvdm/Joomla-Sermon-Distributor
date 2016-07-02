@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			24th June, 2016
+	@version		1.3.3
+	@build			2nd July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -553,23 +553,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [Interpretation 675] if user not in those target groups then remove the item
+							// [Interpretation 676] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [Interpretation 680] set the return type
+					// [Interpretation 681] set the return type
 					switch ($help->type)
 					{
-						// [Interpretation 683] set joomla article
+						// [Interpretation 684] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [Interpretation 687] set help text
+						// [Interpretation 688] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [Interpretation 691] set Link
+						// [Interpretation 692] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -698,7 +698,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [Interpretation 1989] reset
+			// [Interpretation 1991] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -707,15 +707,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [Interpretation 1998] make sure uikit is loaded to config
+			// [Interpretation 2000] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [Interpretation 2003] sorter
+			// [Interpretation 2005] sorter
 			if (self::checkArray($temp))
 			{
-				// [Interpretation 2006] merger
+				// [Interpretation 2008] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -736,37 +736,37 @@ abstract class SermondistributorHelper
 	 */
 	public static function xls($rows,$fileName = null,$title = null,$subjectTab = null,$creator = 'Vast Development Method',$description = null,$category = null,$keywords = null,$modified = null)
 	{
-		// [Interpretation 730] set the user
+		// [Interpretation 731] set the user
 		$user = JFactory::getUser();
 		
-		// [Interpretation 733] set fieldname if not set
+		// [Interpretation 734] set fieldname if not set
 		if (!$fileName)
 		{
 			$fileName = 'exported_'.JFactory::getDate()->format('jS_F_Y');
 		}
-		// [Interpretation 738] set modiefied if not set
+		// [Interpretation 739] set modiefied if not set
 		if (!$modified)
 		{
 			$modified = $user->name;
 		}
-		// [Interpretation 743] set title if not set
+		// [Interpretation 744] set title if not set
 		if (!$title)
 		{
 			$title = 'Book1';
 		}
-		// [Interpretation 748] set tab name if not set
+		// [Interpretation 749] set tab name if not set
 		if (!$subjectTab)
 		{
 			$subjectTab = 'Sheet1';
 		}
 		
-		// [Interpretation 754] make sure the file is loaded		
+		// [Interpretation 755] make sure the file is loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		
-		// [Interpretation 757] Create new PHPExcel object
+		// [Interpretation 758] Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
 		
-		// [Interpretation 760] Set document properties
+		// [Interpretation 761] Set document properties
 		$objPHPExcel->getProperties()->setCreator($creator)
 									 ->setCompany('Vast Development Method')
 									 ->setLastModifiedBy($modified)
@@ -785,7 +785,7 @@ abstract class SermondistributorHelper
 			$objPHPExcel->getProperties()->setCategory($category);
 		}
 		
-		// [Interpretation 779] Some styles
+		// [Interpretation 780] Some styles
 		$headerStyles = array(
 			'font'  => array(
 				'bold'  => true,
@@ -807,7 +807,7 @@ abstract class SermondistributorHelper
 				'name'  => 'Verdana'
 		));
 		
-		// [Interpretation 801] Add some data
+		// [Interpretation 802] Add some data
 		if (self::checkArray($rows))
 		{
 			$i = 1;
@@ -834,20 +834,20 @@ abstract class SermondistributorHelper
 			return false;
 		}
 		
-		// [Interpretation 828] Rename worksheet
+		// [Interpretation 829] Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($subjectTab);
 		
-		// [Interpretation 831] Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		// [Interpretation 832] Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
 		
-		// [Interpretation 834] Redirect output to a client's web browser (Excel5)
+		// [Interpretation 835] Redirect output to a client's web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'.$fileName.'.xls"');
 		header('Cache-Control: max-age=0');
-		// [Interpretation 838] If you're serving to IE 9, then the following may be needed
+		// [Interpretation 839] If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
 		
-		// [Interpretation 841] If you're serving to IE over SSL, then the following may be needed
+		// [Interpretation 842] If you're serving to IE over SSL, then the following may be needed
 		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
 		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
@@ -863,27 +863,27 @@ abstract class SermondistributorHelper
 	*/
 	public static function getFileHeaders($dataType)
 	{		
-		// [Interpretation 857] make sure these files are loaded		
+		// [Interpretation 858] make sure these files are loaded		
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		JLoader::import('ChunkReadFilter', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/PHPExcel/Reader');
-		// [Interpretation 860] get session object
+		// [Interpretation 861] get session object
 		$session	= JFactory::getSession();
 		$package	= $session->get('package', null);
 		$package	= json_decode($package, true);
-		// [Interpretation 864] set the headers
+		// [Interpretation 865] set the headers
 		if(isset($package['dir']))
 		{
 			$chunkFilter = new PHPExcel_Reader_chunkReadFilter();
-			// [Interpretation 868] only load first three rows
+			// [Interpretation 869] only load first three rows
 			$chunkFilter->setRows(2,1);
-			// [Interpretation 870] identify the file type
+			// [Interpretation 871] identify the file type
 			$inputFileType = PHPExcel_IOFactory::identify($package['dir']);
-			// [Interpretation 872] create the reader for this file type
+			// [Interpretation 873] create the reader for this file type
 			$excelReader = PHPExcel_IOFactory::createReader($inputFileType);
-			// [Interpretation 874] load the limiting filter
+			// [Interpretation 875] load the limiting filter
 			$excelReader->setReadFilter($chunkFilter);
 			$excelReader->setReadDataOnly(true);
-			// [Interpretation 877] load the rows (only first three)
+			// [Interpretation 878] load the rows (only first three)
 			$excelObj = $excelReader->load($package['dir']);
 			$headers = array();
 			foreach ($excelObj->getActiveSheet()->getRowIterator() as $row)
@@ -1303,7 +1303,7 @@ abstract class SermondistributorHelper
 
 			if (!$asset->check() || !$asset->store())
 			{
-				JError::raiseWarning(500, $asset->getError());
+				JFactory::getApplication()->enqueueMessage($asset->getError(), 'warning');
 				return false;
 			}
 			else

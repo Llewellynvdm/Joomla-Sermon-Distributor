@@ -1,4 +1,4 @@
-# Sermon Distributor (1.3.2)
+# Sermon Distributor (1.3.3)
 
  ![Sermon Distributor image] (https://raw.githubusercontent.com/SermonDistributor/Joomla-3-Component/master/admin/assets/images/component-300.jpg "The Sermon Distributor")
 
@@ -23,8 +23,8 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe] (mailto:llewellyn@vdm.io)
 + *Name*: [Sermon Distributor] (https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 24th June, 2016
-+ *Version*: 1.3.2
++ *Last Build*: 2nd July, 2016
++ *Version*: 1.3.3
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,8 +36,8 @@ due to [Automated Component Builder] (https://www.vdm.io/joomla-component-builde
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **49030**
-+ *File count*: **354**
++ *Line count*: **49061**
++ *File count*: **355**
 + *Folder count*: **80**
 
 **90 Hours** or **11 Eight Hour Days** (the actual time the author spent)

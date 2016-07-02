@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			24th June, 2016
+	@version		1.3.3
+	@build			2nd July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -564,23 +564,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [Interpretation 675] if user not in those target groups then remove the item
+							// [Interpretation 676] if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [Interpretation 680] set the return type
+					// [Interpretation 681] set the return type
 					switch ($help->type)
 					{
-						// [Interpretation 683] set joomla article
+						// [Interpretation 684] set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [Interpretation 687] set help text
+						// [Interpretation 688] set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [Interpretation 691] set Link
+						// [Interpretation 692] set Link
 						case 3:
 							return $help->url;
 						break;
@@ -666,7 +666,7 @@ abstract class SermondistributorHelper
 
 			if (!$asset->check() || !$asset->store())
 			{
-				JError::raiseWarning(500, $asset->getError());
+				JFactory::getApplication()->enqueueMessage($asset->getError(), 'warning');
 				return false;
 			}
 			else
@@ -830,7 +830,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [Interpretation 1989] reset
+			// [Interpretation 1991] reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -839,15 +839,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [Interpretation 1998] make sure uikit is loaded to config
+			// [Interpretation 2000] make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [Interpretation 2003] sorter
+			// [Interpretation 2005] sorter
 			if (self::checkArray($temp))
 			{
-				// [Interpretation 2006] merger
+				// [Interpretation 2008] merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);

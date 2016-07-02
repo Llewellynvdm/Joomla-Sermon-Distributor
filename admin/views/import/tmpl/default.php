@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			24th June, 2016
+	@version		1.3.3
+	@build			2nd July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -29,6 +29,7 @@ defined('_JEXEC') or die('Restricted access');
 JHtml::_('jquery.framework');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('script', 'system/core.js', false, true);
+JHtml::_('behavior.keepalive');
 ?>
 <script type="text/javascript">
 <?php if ($this->hasPackage && SermondistributorHelper::checkArray($this->headerList)) : ?>

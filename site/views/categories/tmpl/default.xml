@@ -5,7 +5,7 @@
 			<![CDATA[COM_SERMONDISTRIBUTOR_MENU_CATEGORIES_DESC]]>
 		</message>
 	</layout>
-	<!-- [Interpretation 1093] Adding page parameters -->
+	<!-- [Interpretation 1094] Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
 		<!-- [Interpretation 781] Categories_display Field. Type: Radio. (joomla) -->
@@ -16,7 +16,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORIES_DISPLAY_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -36,7 +36,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -58,7 +58,7 @@
 			multiple="false"
 			filter="string"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="0">
@@ -88,7 +88,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORIES_ICON_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -104,7 +104,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORIES_DESC_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -120,7 +120,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORIES_SERMON_COUNT_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">
@@ -136,7 +136,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORIES_HITS_DESCRIPTION"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 852]  [Interpretation 1116] Global & Option Set. -->
+			<!-- [Interpretation 852]  [Interpretation 1117] Global & Option Set. -->
 			<option value="">
 				JGLOBAL_USE_GLOBAL</option>
 			<option value="1">

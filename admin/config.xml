@@ -357,7 +357,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_LOAD_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 12031] Option Set. -->
+			<!-- [Interpretation 12144] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_AUTO_LOAD</option>"
 			<option value="1">
@@ -373,7 +373,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_MIN_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 12056] Option Set. -->
+			<!-- [Interpretation 12169] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>"
 			<option value=".min">
@@ -385,7 +385,7 @@
 			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_STYLE_DESC"
 			class="btn-group btn-group-yesno"
 			default="">
-			<!-- [Interpretation 12077] Option Set. -->
+			<!-- [Interpretation 12190] Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_CONFIG_FLAT_LOAD</option>"
 			<option value=".almost-flat">
