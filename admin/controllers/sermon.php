@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -60,10 +60,10 @@ class SermondistributorControllerSermon extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [Interpretation 9066] get the user object
+		// [Interpretation 9061] get the user object
 		$user = JFactory::getUser();
 
-		// [Interpretation 9071] Access check.
+		// [Interpretation 9066] Access check.
 		$access = $user->authorise('sermon.access', 'com_sermondistributor');
 		if (!$access)
 		{
@@ -74,13 +74,13 @@ class SermondistributorControllerSermon extends JControllerForm
 
 		if ($categoryId)
 		{
-			// [Interpretation 9082] If the category has been passed in the URL check it.
+			// [Interpretation 9077] If the category has been passed in the URL check it.
 			$allow = $user->authorise('core.create', $this->option . '.sermons.category.' . $categoryId);
 		}
 
 		if ($allow === null)
 		{
-			// [Interpretation 9091] In the absense of better information, revert to the component permissions.
+			// [Interpretation 9086] In the absense of better information, revert to the component permissions.
 			return $user->authorise('sermon.create', $this->option);
 		}
 		else
@@ -100,13 +100,13 @@ class SermondistributorControllerSermon extends JControllerForm
 	 * @since   1.6
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
-	{		// [Interpretation 9169] get user object.
+	{		// [Interpretation 9164] get user object.
 		$user		= JFactory::getUser();
-		// [Interpretation 9171] get record id.
+		// [Interpretation 9166] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [Interpretation 9178] Access check.
+		// [Interpretation 9173] Access check.
 		$access = ($user->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $recordId) && $user->authorise('sermon.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -115,17 +115,17 @@ class SermondistributorControllerSermon extends JControllerForm
 
 		if ($recordId)
 		{
-			// [Interpretation 9187] The record has been set. Check the record permissions.
+			// [Interpretation 9182] The record has been set. Check the record permissions.
 			$permission = $user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('sermon.edit.own', 'com_sermondistributor.sermon.' . $recordId))
 				{
-					// [Interpretation 9209] Fallback on edit.own. Now test the owner is the user.
+					// [Interpretation 9204] Fallback on edit.own. Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [Interpretation 9213] Need to do a lookup from the model.
+						// [Interpretation 9208] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -135,7 +135,7 @@ class SermondistributorControllerSermon extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [Interpretation 9221] If the owner matches 'me' then do the test.
+					// [Interpretation 9216] If the owner matches 'me' then do the test.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('sermon.edit.own', 'com_sermondistributor'))
@@ -151,7 +151,7 @@ class SermondistributorControllerSermon extends JControllerForm
 
 			if ($categoryId)
 			{
-				// [Interpretation 9243] The category has been set. Check the category permissions.
+				// [Interpretation 9238] The category has been set. Check the category permissions.
 				$catpermission = $user->authorise('core.edit', $this->option . '.sermons.category.' . $categoryId);
 				if (!$catpermission && !is_null($catpermission))
 				{
@@ -159,7 +159,7 @@ class SermondistributorControllerSermon extends JControllerForm
 				}
 			}
 		}
-		// [Interpretation 9253] Since there is no permission, revert to the component permissions.
+		// [Interpretation 9248] Since there is no permission, revert to the component permissions.
 		return $user->authorise('sermon.edit', $this->option);
 	}
 

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
@@ -116,7 +116,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
-	{		// [Interpretation 9358] Get the form.
+	{		// [Interpretation 9353] Get the form.
 		$form = $this->loadForm('com_sermondistributor.statistic', 'statistic', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
@@ -126,12 +126,12 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 		$jinput = JFactory::getApplication()->input;
 
-		// [Interpretation 9443] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		// [Interpretation 9438] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0, 'INT');
 		}
-		// [Interpretation 9448] The back end uses id so we use that the rest of the time and set it to 0 by default.
+		// [Interpretation 9443] The back end uses id so we use that the rest of the time and set it to 0 by default.
 		else
 		{
 			$id = $jinput->get('id', 0, 'INT');
@@ -139,54 +139,54 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 		$user = JFactory::getUser();
 
-		// [Interpretation 9454] Check for existing item.
-		// [Interpretation 9455] Modify the form based on Edit State access controls.
+		// [Interpretation 9449] Check for existing item.
+		// [Interpretation 9450] Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('statistic.edit.state', 'com_sermondistributor.statistic.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('statistic.edit.state', 'com_sermondistributor')))
 		{
-			// [Interpretation 9468] Disable fields for display.
+			// [Interpretation 9463] Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('published', 'disabled', 'true');
-			// [Interpretation 9471] Disable fields while saving.
+			// [Interpretation 9466] Disable fields while saving.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [Interpretation 9476] If this is a new item insure the greated by is set.
+		// [Interpretation 9471] If this is a new item insure the greated by is set.
 		if (0 == $id)
 		{
-			// [Interpretation 9479] Set the created_by to this user
+			// [Interpretation 9474] Set the created_by to this user
 			$form->setValue('created_by', null, $user->id);
 		}
-		// [Interpretation 9482] Modify the form based on Edit Creaded By access controls.
+		// [Interpretation 9477] Modify the form based on Edit Creaded By access controls.
 		if ($id != 0 && (!$user->authorise('statistic.edit.created_by', 'com_sermondistributor.statistic.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('statistic.edit.created_by', 'com_sermondistributor')))
 		{
-			// [Interpretation 9494] Disable fields for display.
+			// [Interpretation 9489] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'disabled', 'true');
-			// [Interpretation 9496] Disable fields for display.
+			// [Interpretation 9491] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'readonly', 'true');
-			// [Interpretation 9498] Disable fields while saving.
+			// [Interpretation 9493] Disable fields while saving.
 			$form->setFieldAttribute('created_by', 'filter', 'unset');
 		}
-		// [Interpretation 9501] Modify the form based on Edit Creaded Date access controls.
+		// [Interpretation 9496] Modify the form based on Edit Creaded Date access controls.
 		if ($id != 0 && (!$user->authorise('statistic.edit.created', 'com_sermondistributor.statistic.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('statistic.edit.created', 'com_sermondistributor')))
 		{
-			// [Interpretation 9513] Disable fields for display.
+			// [Interpretation 9508] Disable fields for display.
 			$form->setFieldAttribute('created', 'disabled', 'true');
-			// [Interpretation 9515] Disable fields while saving.
+			// [Interpretation 9510] Disable fields while saving.
 			$form->setFieldAttribute('created', 'filter', 'unset');
 		}
-		// [Interpretation 9548] Only load these values if no id is found
+		// [Interpretation 9543] Only load these values if no id is found
 		if (0 == $id)
 		{
-			// [Interpretation 9551] Set redirected field name
+			// [Interpretation 9546] Set redirected field name
 			$redirectedField = $jinput->get('ref', null, 'STRING');
-			// [Interpretation 9553] Set redirected field value
+			// [Interpretation 9548] Set redirected field value
 			$redirectedValue = $jinput->get('refid', 0, 'INT');
 			if (0 != $redirectedValue && $redirectedField)
 			{
-				// [Interpretation 9557] Now set the local-redirected field default value
+				// [Interpretation 9552] Now set the local-redirected field default value
 				$form->setValue($redirectedField, null, $redirectedValue);
 			}
 		}
@@ -223,7 +223,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 			}
 
 			$user = JFactory::getUser();
-			// [Interpretation 9679] The record has been set. Check the record permissions.
+			// [Interpretation 9674] The record has been set. Check the record permissions.
 			return $user->authorise('statistic.delete', 'com_sermondistributor.statistic.' . (int) $record->id);
 		}
 		return false;
@@ -245,14 +245,14 @@ class SermondistributorModelStatistic extends JModelAdmin
 
 		if ($recordId)
 		{
-			// [Interpretation 9766] The record has been set. Check the record permissions.
+			// [Interpretation 9761] The record has been set. Check the record permissions.
 			$permission = $user->authorise('statistic.edit.state', 'com_sermondistributor.statistic.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				return false;
 			}
 		}
-		// [Interpretation 9783] In the absense of better information, revert to the component permissions.
+		// [Interpretation 9778] In the absense of better information, revert to the component permissions.
 		return $user->authorise('statistic.edit.state', 'com_sermondistributor');
 	}
     
@@ -267,7 +267,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [Interpretation 9591] Check specific edit permission then general edit permission.
+		// [Interpretation 9586] Check specific edit permission then general edit permission.
 		$user = JFactory::getUser();
 
 		return $user->authorise('statistic.edit', 'com_sermondistributor.statistic.'. ((int) isset($data[$key]) ? $data[$key] : 0)) or $user->authorise('statistic.edit',  'com_sermondistributor');

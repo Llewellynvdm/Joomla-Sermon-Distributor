@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -60,13 +60,13 @@ class SermondistributorControllerSeries extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// [Interpretation 9111] Access check.
+		// [Interpretation 9106] Access check.
 		$access = JFactory::getUser()->authorise('series.access', 'com_sermondistributor');
 		if (!$access)
 		{
 			return false;
 		}
-		// [Interpretation 9122] In the absense of better information, revert to the component permissions.
+		// [Interpretation 9117] In the absense of better information, revert to the component permissions.
 		return JFactory::getUser()->authorise('series.create', $this->option);
 	}
 
@@ -82,13 +82,13 @@ class SermondistributorControllerSeries extends JControllerForm
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [Interpretation 9265] get user object.
+		// [Interpretation 9260] get user object.
 		$user		= JFactory::getUser();
-		// [Interpretation 9267] get record id.
+		// [Interpretation 9262] get record id.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
 
 
-		// [Interpretation 9274] Access check.
+		// [Interpretation 9269] Access check.
 		$access = ($user->authorise('series.access', 'com_sermondistributor.series.' . (int) $recordId) &&  $user->authorise('series.access', 'com_sermondistributor'));
 		if (!$access)
 		{
@@ -97,17 +97,17 @@ class SermondistributorControllerSeries extends JControllerForm
 
 		if ($recordId)
 		{
-			// [Interpretation 9283] The record has been set. Check the record permissions.
+			// [Interpretation 9278] The record has been set. Check the record permissions.
 			$permission = $user->authorise('series.edit', 'com_sermondistributor.series.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				if ($user->authorise('series.edit.own', 'com_sermondistributor.series.' . $recordId))
 				{
-					// [Interpretation 9305] Now test the owner is the user.
+					// [Interpretation 9300] Now test the owner is the user.
 					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 					if (empty($ownerId))
 					{
-						// [Interpretation 9309] Need to do a lookup from the model.
+						// [Interpretation 9304] Need to do a lookup from the model.
 						$record = $this->getModel()->getItem($recordId);
 
 						if (empty($record))
@@ -117,7 +117,7 @@ class SermondistributorControllerSeries extends JControllerForm
 						$ownerId = $record->created_by;
 					}
 
-					// [Interpretation 9317] If the owner matches 'me' then allow.
+					// [Interpretation 9312] If the owner matches 'me' then allow.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('series.edit.own', 'com_sermondistributor'))
@@ -129,7 +129,7 @@ class SermondistributorControllerSeries extends JControllerForm
 				return false;
 			}
 		}
-		// [Interpretation 9339] Since there is no permission, revert to the component permissions.
+		// [Interpretation 9334] Since there is no permission, revert to the component permissions.
 		return $user->authorise('series.edit', $this->option);
 	}
 

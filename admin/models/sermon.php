@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -190,10 +190,10 @@ class SermondistributorModelSermon extends JModelAdmin
 		{
 			$items = $db->loadObjectList();
 
-			// [Interpretation 10432] set values to display correctly.
+			// [Interpretation 10427] set values to display correctly.
 			if (SermondistributorHelper::checkArray($items))
 			{
-				// [Interpretation 10435] get user object.
+				// [Interpretation 10430] get user object.
 				$user = JFactory::getUser();
 				foreach ($items as $nr => &$item)
 				{
@@ -222,7 +222,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
-	{		// [Interpretation 9358] Get the form.
+	{		// [Interpretation 9353] Get the form.
 		$form = $this->loadForm('com_sermondistributor.sermon', 'sermon', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
@@ -232,17 +232,17 @@ class SermondistributorModelSermon extends JModelAdmin
 
 		$jinput = JFactory::getApplication()->input;
 
-		// [Interpretation 9385] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		// [Interpretation 9380] The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0, 'INT');
 		}
-		// [Interpretation 9390] The back end uses id so we use that the rest of the time and set it to 0 by default.
+		// [Interpretation 9385] The back end uses id so we use that the rest of the time and set it to 0 by default.
 		else
 		{
 			$id = $jinput->get('id', 0, 'INT');
 		}
-		// [Interpretation 9395] Determine correct permissions to check.
+		// [Interpretation 9390] Determine correct permissions to check.
 		if ($this->getState('sermon.id'))
 		{
 			$id = $this->getState('sermon.id');
@@ -250,74 +250,74 @@ class SermondistributorModelSermon extends JModelAdmin
 			$catid = 0;
 			if (isset($this->getItem($id)->catid))
 			{
-				// [Interpretation 9402] set catagory id
+				// [Interpretation 9397] set catagory id
 				$catid = $this->getItem($id)->catid;
 
-				// [Interpretation 9404] Existing record. Can only edit in selected categories.
+				// [Interpretation 9399] Existing record. Can only edit in selected categories.
 				$form->setFieldAttribute('catid', 'action', 'core.edit');
 
-				// [Interpretation 9406] Existing record. Can only edit own items in selected categories.
+				// [Interpretation 9401] Existing record. Can only edit own items in selected categories.
 				$form->setFieldAttribute('catid', 'action', 'core.edit.own');
 			}
 		}
 		else
 		{
-			// [Interpretation 9412] New record. Can only create in selected categories.
+			// [Interpretation 9407] New record. Can only create in selected categories.
 			$form->setFieldAttribute('catid', 'action', 'core.create');
 		}
 
 		$user = JFactory::getUser();
 
-		// [Interpretation 9416] Check for existing item.
-		// [Interpretation 9417] Modify the form based on Edit State access controls.
+		// [Interpretation 9411] Check for existing item.
+		// [Interpretation 9412] Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('sermon.edit.state', 'com_sermondistributor.sermon.' . (int) $id))
 			|| (isset($catid) && $catid != 0 && !$user->authorise('core.edit.state', 'com_sermondistributor.sermons.category.' . (int) $catid))
 			|| ($id == 0 && !$user->authorise('sermon.edit.state', 'com_sermondistributor')))
 		{
-			// [Interpretation 9432] Disable fields for display.
+			// [Interpretation 9427] Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('published', 'disabled', 'true');
 
-			// [Interpretation 9435] Disable fields while saving.
+			// [Interpretation 9430] Disable fields while saving.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
-		// [Interpretation 9476] If this is a new item insure the greated by is set.
+		// [Interpretation 9471] If this is a new item insure the greated by is set.
 		if (0 == $id)
 		{
-			// [Interpretation 9479] Set the created_by to this user
+			// [Interpretation 9474] Set the created_by to this user
 			$form->setValue('created_by', null, $user->id);
 		}
-		// [Interpretation 9482] Modify the form based on Edit Creaded By access controls.
+		// [Interpretation 9477] Modify the form based on Edit Creaded By access controls.
 		if ($id != 0 && (!$user->authorise('sermon.edit.created_by', 'com_sermondistributor.sermon.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('sermon.edit.created_by', 'com_sermondistributor')))
 		{
-			// [Interpretation 9494] Disable fields for display.
+			// [Interpretation 9489] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'disabled', 'true');
-			// [Interpretation 9496] Disable fields for display.
+			// [Interpretation 9491] Disable fields for display.
 			$form->setFieldAttribute('created_by', 'readonly', 'true');
-			// [Interpretation 9498] Disable fields while saving.
+			// [Interpretation 9493] Disable fields while saving.
 			$form->setFieldAttribute('created_by', 'filter', 'unset');
 		}
-		// [Interpretation 9501] Modify the form based on Edit Creaded Date access controls.
+		// [Interpretation 9496] Modify the form based on Edit Creaded Date access controls.
 		if ($id != 0 && (!$user->authorise('sermon.edit.created', 'com_sermondistributor.sermon.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('sermon.edit.created', 'com_sermondistributor')))
 		{
-			// [Interpretation 9513] Disable fields for display.
+			// [Interpretation 9508] Disable fields for display.
 			$form->setFieldAttribute('created', 'disabled', 'true');
-			// [Interpretation 9515] Disable fields while saving.
+			// [Interpretation 9510] Disable fields while saving.
 			$form->setFieldAttribute('created', 'filter', 'unset');
 		}
-		// [Interpretation 9548] Only load these values if no id is found
+		// [Interpretation 9543] Only load these values if no id is found
 		if (0 == $id)
 		{
-			// [Interpretation 9551] Set redirected field name
+			// [Interpretation 9546] Set redirected field name
 			$redirectedField = $jinput->get('ref', null, 'STRING');
-			// [Interpretation 9553] Set redirected field value
+			// [Interpretation 9548] Set redirected field value
 			$redirectedValue = $jinput->get('refid', 0, 'INT');
 			if (0 != $redirectedValue && $redirectedField)
 			{
-				// [Interpretation 9557] Now set the local-redirected field default value
+				// [Interpretation 9552] Now set the local-redirected field default value
 				$form->setValue($redirectedField, null, $redirectedValue);
 			}
 		}
@@ -358,7 +358,7 @@ class SermondistributorModelSermon extends JModelAdmin
 
 			if ($allow)
 			{
-				// [Interpretation 9650] The record has been set. Check the record permissions.
+				// [Interpretation 9645] The record has been set. Check the record permissions.
 				return $user->authorise('sermon.delete', 'com_sermondistributor.sermon.' . (int) $record->id);
 			}
 			return $allow;
@@ -382,14 +382,14 @@ class SermondistributorModelSermon extends JModelAdmin
 
 		if ($recordId)
 		{
-			// [Interpretation 9723] The record has been set. Check the record permissions.
+			// [Interpretation 9718] The record has been set. Check the record permissions.
 			$permission = $user->authorise('sermon.edit.state', 'com_sermondistributor.sermon.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
 			{
 				return false;
 			}
 		}
-		// [Interpretation 9739] Check against the category.
+		// [Interpretation 9734] Check against the category.
 		if (!empty($record->catid))
 		{
 			$catpermission = $user->authorise('core.edit.state', 'com_sermondistributor.sermons.category.' . (int) $record->catid);
@@ -398,7 +398,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				return false;
 			}
 		}
-		// [Interpretation 9750] In the absense of better information, revert to the component permissions.
+		// [Interpretation 9745] In the absense of better information, revert to the component permissions.
 		return $user->authorise('sermon.edit.state', 'com_sermondistributor');
 	}
     
@@ -413,7 +413,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		// [Interpretation 9591] Check specific edit permission then general edit permission.
+		// [Interpretation 9586] Check specific edit permission then general edit permission.
 		$user = JFactory::getUser();
 
 		return $user->authorise('sermon.edit', 'com_sermondistributor.sermon.'. ((int) isset($data[$key]) ? $data[$key] : 0)) or $user->authorise('sermon.edit',  'com_sermondistributor');
@@ -512,20 +512,20 @@ class SermondistributorModelSermon extends JModelAdmin
 	*/
 	public function validate($form, $data, $group = null)
 	{
-		// [Interpretation 8552] check if the not_required field is set
+		// [Interpretation 8547] check if the not_required field is set
 		if (SermondistributorHelper::checkString($data['not_required']))
 		{
 			$requiredFields = (array) explode(',',(string) $data['not_required']);
 			$requiredFields = array_unique($requiredFields);
-			// [Interpretation 8557] now change the required field attributes value
+			// [Interpretation 8552] now change the required field attributes value
 			foreach ($requiredFields as $requiredField)
 			{
-				// [Interpretation 8560] make sure there is a string value
+				// [Interpretation 8555] make sure there is a string value
 				if (SermondistributorHelper::checkString($requiredField))
 				{
-					// [Interpretation 8563] change to false
+					// [Interpretation 8558] change to false
 					$form->setFieldAttribute($requiredField, 'required', 'false');
-					// [Interpretation 8565] also clear the data set
+					// [Interpretation 8560] also clear the data set
 					$data[$requiredField] = '';
 				}
 			}

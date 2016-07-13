@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_documents.php
@@ -113,16 +113,16 @@ class SermondistributorModelHelp_documents extends JModelList
 	 */
 	public function getItems()
 	{ 
-		// [Interpretation 10357] check in items
+		// [Interpretation 10352] check in items
 		$this->checkInNow();
 
 		// load parent items
 		$items = parent::getItems();
 
-		// [Interpretation 10432] set values to display correctly.
+		// [Interpretation 10427] set values to display correctly.
 		if (SermondistributorHelper::checkArray($items))
 		{
-			// [Interpretation 10435] get user object.
+			// [Interpretation 10430] get user object.
 			$user = JFactory::getUser();
 			foreach ($items as $nr => &$item)
 			{
@@ -133,7 +133,7 @@ class SermondistributorModelHelp_documents extends JModelList
 					continue;
 				}
 
-				// [Interpretation 10503] decode groups
+				// [Interpretation 10498] decode groups
 				$groupsArray = json_decode($item->groups, true);
 				if (SermondistributorHelper::checkArray($groupsArray))
 				{
@@ -156,14 +156,14 @@ class SermondistributorModelHelp_documents extends JModelList
 			}
 		} 
 
-		// [Interpretation 10704] set selection value to a translatable value
+		// [Interpretation 10699] set selection value to a translatable value
 		if (SermondistributorHelper::checkArray($items))
 		{
 			foreach ($items as $nr => &$item)
 			{
-				// [Interpretation 10711] convert type
+				// [Interpretation 10706] convert type
 				$item->type = $this->selectionTranslation($item->type, 'type');
-				// [Interpretation 10711] convert location
+				// [Interpretation 10706] convert location
 				$item->location = $this->selectionTranslation($item->location, 'location');
 			}
 		}
@@ -180,7 +180,7 @@ class SermondistributorModelHelp_documents extends JModelList
 	*/
 	public function selectionTranslation($value,$name)
 	{
-		// [Interpretation 10737] Array of type language strings
+		// [Interpretation 10732] Array of type language strings
 		if ($name == 'type')
 		{
 			$typeArray = array(
@@ -189,20 +189,20 @@ class SermondistributorModelHelp_documents extends JModelList
 				2 => 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TEXT',
 				3 => 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL'
 			);
-			// [Interpretation 10768] Now check if value is found in this array
+			// [Interpretation 10763] Now check if value is found in this array
 			if (isset($typeArray[$value]) && SermondistributorHelper::checkString($typeArray[$value]))
 			{
 				return $typeArray[$value];
 			}
 		}
-		// [Interpretation 10737] Array of location language strings
+		// [Interpretation 10732] Array of location language strings
 		if ($name == 'location')
 		{
 			$locationArray = array(
 				1 => 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN',
 				2 => 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE'
 			);
-			// [Interpretation 10768] Now check if value is found in this array
+			// [Interpretation 10763] Now check if value is found in this array
 			if (isset($locationArray[$value]) && SermondistributorHelper::checkString($locationArray[$value]))
 			{
 				return $locationArray[$value];
@@ -270,22 +270,22 @@ class SermondistributorModelHelp_documents extends JModelList
 			}
 		}
 
-		// [Interpretation 7540] Filter by Type.
+		// [Interpretation 7535] Filter by Type.
 		if ($type = $this->getState('filter.type'))
 		{
 			$query->where('a.type = ' . $db->quote($db->escape($type, true)));
 		}
-		// [Interpretation 7540] Filter by Location.
+		// [Interpretation 7535] Filter by Location.
 		if ($location = $this->getState('filter.location'))
 		{
 			$query->where('a.location = ' . $db->quote($db->escape($location, true)));
 		}
-		// [Interpretation 7540] Filter by Admin_view.
+		// [Interpretation 7535] Filter by Admin_view.
 		if ($admin_view = $this->getState('filter.admin_view'))
 		{
 			$query->where('a.admin_view = ' . $db->quote($db->escape($admin_view, true)));
 		}
-		// [Interpretation 7540] Filter by Site_view.
+		// [Interpretation 7535] Filter by Site_view.
 		if ($site_view = $this->getState('filter.site_view'))
 		{
 			$query->where('a.site_view = ' . $db->quote($db->escape($site_view, true)));
@@ -343,10 +343,10 @@ class SermondistributorModelHelp_documents extends JModelList
 			{
 				$items = $db->loadObjectList();
 
-				// [Interpretation 10432] set values to display correctly.
+				// [Interpretation 10427] set values to display correctly.
 				if (SermondistributorHelper::checkArray($items))
 				{
-					// [Interpretation 10435] get user object.
+					// [Interpretation 10430] get user object.
 					$user = JFactory::getUser();
 					foreach ($items as $nr => &$item)
 					{
@@ -357,13 +357,13 @@ class SermondistributorModelHelp_documents extends JModelList
 							continue;
 						}
 
-						// [Interpretation 10651] unset the values we don't want exported.
+						// [Interpretation 10646] unset the values we don't want exported.
 						unset($item->asset_id);
 						unset($item->checked_out);
 						unset($item->checked_out_time);
 					}
 				}
-				// [Interpretation 10660] Add headers to items array.
+				// [Interpretation 10655] Add headers to items array.
 				$headers = $this->getExImPortHeaders();
 				if (SermondistributorHelper::checkObject($headers))
 				{
@@ -410,7 +410,7 @@ class SermondistributorModelHelp_documents extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-		// [Interpretation 9975] Compile the store id.
+		// [Interpretation 9970] Compile the store id.
 		$id .= ':' . $this->getState('filter.id');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
@@ -434,15 +434,15 @@ class SermondistributorModelHelp_documents extends JModelList
 	*/
 	protected function checkInNow()
 	{
-		// [Interpretation 10373] Get set check in time
+		// [Interpretation 10368] Get set check in time
 		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');
 		
 		if ($time)
 		{
 
-			// [Interpretation 10378] Get a db connection.
+			// [Interpretation 10373] Get a db connection.
 			$db = JFactory::getDbo();
-			// [Interpretation 10380] reset query
+			// [Interpretation 10375] reset query
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->quoteName('#__sermondistributor_help_document'));
@@ -450,24 +450,24 @@ class SermondistributorModelHelp_documents extends JModelList
 			$db->execute();
 			if ($db->getNumRows())
 			{
-				// [Interpretation 10388] Get Yesterdays date
+				// [Interpretation 10383] Get Yesterdays date
 				$date = JFactory::getDate()->modify($time)->toSql();
-				// [Interpretation 10390] reset query
+				// [Interpretation 10385] reset query
 				$query = $db->getQuery(true);
 
-				// [Interpretation 10392] Fields to update.
+				// [Interpretation 10387] Fields to update.
 				$fields = array(
 					$db->quoteName('checked_out_time') . '=\'0000-00-00 00:00:00\'',
 					$db->quoteName('checked_out') . '=0'
 				);
 
-				// [Interpretation 10397] Conditions for which records should be updated.
+				// [Interpretation 10392] Conditions for which records should be updated.
 				$conditions = array(
 					$db->quoteName('checked_out') . '!=0', 
 					$db->quoteName('checked_out_time') . '<\''.$date.'\''
 				);
 
-				// [Interpretation 10402] Check table
+				// [Interpretation 10397] Check table
 				$query->update($db->quoteName('#__sermondistributor_help_document'))->set($fields)->where($conditions); 
 
 				$db->setQuery($query);

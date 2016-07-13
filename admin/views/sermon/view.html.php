@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -95,27 +95,27 @@ class SermondistributorViewSermon extends JViewLegacy
 		$isNew = $this->item->id == 0;
 
 		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERMON_NEW' : 'COM_SERMONDISTRIBUTOR_SERMON_EDIT'), 'pencil-2 article-add');
-		// [Interpretation 10085] Built the actions for new and existing records.
+		// [Interpretation 10080] Built the actions for new and existing records.
 		if ($this->refid || $this->ref)
 		{
 			if ($this->canDo->get('sermon.create') && $isNew)
 			{
-				// [Interpretation 10097] We can create the record.
+				// [Interpretation 10092] We can create the record.
 				JToolBarHelper::save('sermon.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('sermon.edit'))
 			{
-				// [Interpretation 10109] We can save the record.
+				// [Interpretation 10104] We can save the record.
 				JToolBarHelper::save('sermon.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
-				// [Interpretation 10114] Do not creat but cancel.
+				// [Interpretation 10109] Do not creat but cancel.
 				JToolBarHelper::cancel('sermon.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
-				// [Interpretation 10119] We can close it.
+				// [Interpretation 10114] We can close it.
 				JToolBarHelper::cancel('sermon.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -123,7 +123,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			if ($isNew)
 			{
-				// [Interpretation 10127] For new records, check the create permission.
+				// [Interpretation 10122] For new records, check the create permission.
 				if ($this->canDo->get('sermon.create'))
 				{
 					JToolBarHelper::apply('sermon.apply', 'JTOOLBAR_APPLY');
@@ -136,11 +136,11 @@ class SermondistributorViewSermon extends JViewLegacy
 			{
 				if ($this->canDo->get('sermon.edit'))
 				{
-					// [Interpretation 10154] We can save the new record
+					// [Interpretation 10149] We can save the new record
 					JToolBarHelper::apply('sermon.apply', 'JTOOLBAR_APPLY');
 					JToolBarHelper::save('sermon.save', 'JTOOLBAR_SAVE');
-					// [Interpretation 10157] We can save this record, but check the create permission to see
-					// [Interpretation 10158] if we can return to make a new one.
+					// [Interpretation 10152] We can save this record, but check the create permission to see
+					// [Interpretation 10153] if we can return to make a new one.
 					if ($this->canDo->get('sermon.create'))
 					{
 						JToolBarHelper::custom('sermon.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
@@ -159,7 +159,7 @@ class SermondistributorViewSermon extends JViewLegacy
 			}
 		}
 		JToolbarHelper::divider();
-		// [Interpretation 10194] set help url for this view if found
+		// [Interpretation 10189] set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('sermon');
 		if (SermondistributorHelper::checkString($help_url))
 		{

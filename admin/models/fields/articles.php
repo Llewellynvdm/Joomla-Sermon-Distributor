@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		articles.php
@@ -131,16 +131,11 @@ class JFormFieldArticles extends JFormFieldList
 			// [Interpretation 7501] check if button was created for article field.
 			if (is_array($button) && count($button) > 0)
 			{
-				// [Interpretation 7504] Add some final script
-				$script[] = "
-					jQuery(document).ready(function() {
-						jQuery('#jform_".$buttonName."').closest('.control-group').addClass('input-append');
-					});";
-				// [Interpretation 7509] Load the needed script.
+				// [Interpretation 7504] Load the needed script.
 				$document = JFactory::getDocument();
 				$document->addScriptDeclaration(implode(' ',$script));
-				// [Interpretation 7512] return the button attached to input field.
-				return $html . implode('',$button);
+				// [Interpretation 7507] return the button attached to input field.
+				return '<div class="input-append">' .$html . implode('',$button).'</div>';
 			}
 		}
 		return $html;

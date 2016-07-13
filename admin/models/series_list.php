@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series_list.php
@@ -97,16 +97,16 @@ class SermondistributorModelSeries_list extends JModelList
 	 */
 	public function getItems()
 	{ 
-		// [Interpretation 10357] check in items
+		// [Interpretation 10352] check in items
 		$this->checkInNow();
 
 		// load parent items
 		$items = parent::getItems();
 
-		// [Interpretation 10432] set values to display correctly.
+		// [Interpretation 10427] set values to display correctly.
 		if (SermondistributorHelper::checkArray($items))
 		{
-			// [Interpretation 10435] get user object.
+			// [Interpretation 10430] get user object.
 			$user = JFactory::getUser();
 			foreach ($items as $nr => &$item)
 			{
@@ -236,10 +236,10 @@ class SermondistributorModelSeries_list extends JModelList
 			{
 				$items = $db->loadObjectList();
 
-				// [Interpretation 10432] set values to display correctly.
+				// [Interpretation 10427] set values to display correctly.
 				if (SermondistributorHelper::checkArray($items))
 				{
-					// [Interpretation 10435] get user object.
+					// [Interpretation 10430] get user object.
 					$user = JFactory::getUser();
 					foreach ($items as $nr => &$item)
 					{
@@ -250,13 +250,13 @@ class SermondistributorModelSeries_list extends JModelList
 							continue;
 						}
 
-						// [Interpretation 10651] unset the values we don't want exported.
+						// [Interpretation 10646] unset the values we don't want exported.
 						unset($item->asset_id);
 						unset($item->checked_out);
 						unset($item->checked_out_time);
 					}
 				}
-				// [Interpretation 10660] Add headers to items array.
+				// [Interpretation 10655] Add headers to items array.
 				$headers = $this->getExImPortHeaders();
 				if (SermondistributorHelper::checkObject($headers))
 				{
@@ -303,7 +303,7 @@ class SermondistributorModelSeries_list extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-		// [Interpretation 9975] Compile the store id.
+		// [Interpretation 9970] Compile the store id.
 		$id .= ':' . $this->getState('filter.id');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
@@ -323,15 +323,15 @@ class SermondistributorModelSeries_list extends JModelList
 	*/
 	protected function checkInNow()
 	{
-		// [Interpretation 10373] Get set check in time
+		// [Interpretation 10368] Get set check in time
 		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');
 		
 		if ($time)
 		{
 
-			// [Interpretation 10378] Get a db connection.
+			// [Interpretation 10373] Get a db connection.
 			$db = JFactory::getDbo();
-			// [Interpretation 10380] reset query
+			// [Interpretation 10375] reset query
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->quoteName('#__sermondistributor_series'));
@@ -339,24 +339,24 @@ class SermondistributorModelSeries_list extends JModelList
 			$db->execute();
 			if ($db->getNumRows())
 			{
-				// [Interpretation 10388] Get Yesterdays date
+				// [Interpretation 10383] Get Yesterdays date
 				$date = JFactory::getDate()->modify($time)->toSql();
-				// [Interpretation 10390] reset query
+				// [Interpretation 10385] reset query
 				$query = $db->getQuery(true);
 
-				// [Interpretation 10392] Fields to update.
+				// [Interpretation 10387] Fields to update.
 				$fields = array(
 					$db->quoteName('checked_out_time') . '=\'0000-00-00 00:00:00\'',
 					$db->quoteName('checked_out') . '=0'
 				);
 
-				// [Interpretation 10397] Conditions for which records should be updated.
+				// [Interpretation 10392] Conditions for which records should be updated.
 				$conditions = array(
 					$db->quoteName('checked_out') . '!=0', 
 					$db->quoteName('checked_out_time') . '<\''.$date.'\''
 				);
 
-				// [Interpretation 10402] Check table
+				// [Interpretation 10397] Check table
 				$query->update($db->quoteName('#__sermondistributor_series'))->set($fields)->where($conditions); 
 
 				$db->setQuery($query);

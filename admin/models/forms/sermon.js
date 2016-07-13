@@ -10,7 +10,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.3
-	@build			2nd July, 2016
+	@build			13th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.js
@@ -76,7 +76,7 @@ function vvvvvvv(source_vvvvvvv)
 	var source = source_vvvvvvv.some(source_vvvvvvv_SomeFunc);
 
 
-	// [Interpretation 7763] set this function logic
+	// [Interpretation 7758] set this function logic
 	if (source)
 	{
 		jQuery('#jform_build').closest('.control-group').show();
@@ -107,7 +107,7 @@ function vvvvvvv(source_vvvvvvv)
 // the vvvvvvv Some function
 function source_vvvvvvv_SomeFunc(source_vvvvvvv)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (source_vvvvvvv == 2)
 	{
 		return true;
@@ -143,7 +143,7 @@ function vvvvvvw(source_vvvvvvw,build_vvvvvvw)
 	var build = build_vvvvvvw.some(build_vvvvvvw_SomeFunc);
 
 
-	// [Interpretation 7763] set this function logic
+	// [Interpretation 7758] set this function logic
 	if (source && build)
 	{
 		jQuery('.note_auto_dropbox').closest('.control-group').show();
@@ -157,7 +157,7 @@ function vvvvvvw(source_vvvvvvw,build_vvvvvvw)
 // the vvvvvvw Some function
 function source_vvvvvvw_SomeFunc(source_vvvvvvw)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (source_vvvvvvw == 2)
 	{
 		return true;
@@ -168,7 +168,7 @@ function source_vvvvvvw_SomeFunc(source_vvvvvvw)
 // the vvvvvvw Some function
 function build_vvvvvvw_SomeFunc(build_vvvvvvw)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (build_vvvvvvw == 2)
 	{
 		return true;
@@ -204,7 +204,7 @@ function vvvvvvy(source_vvvvvvy,build_vvvvvvy)
 	var build = build_vvvvvvy.some(build_vvvvvvy_SomeFunc);
 
 
-	// [Interpretation 7763] set this function logic
+	// [Interpretation 7758] set this function logic
 	if (source && build)
 	{
 		jQuery('#jform_manual_files').closest('.control-group').show();
@@ -237,7 +237,7 @@ function vvvvvvy(source_vvvvvvy,build_vvvvvvy)
 // the vvvvvvy Some function
 function source_vvvvvvy_SomeFunc(source_vvvvvvy)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (source_vvvvvvy == 2)
 	{
 		return true;
@@ -248,7 +248,7 @@ function source_vvvvvvy_SomeFunc(source_vvvvvvy)
 // the vvvvvvy Some function
 function build_vvvvvvy_SomeFunc(build_vvvvvvy)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (build_vvvvvvy == 1)
 	{
 		return true;
@@ -284,7 +284,7 @@ function vvvvvvz(build_vvvvvvz,source_vvvvvvz)
 	var source = source_vvvvvvz.some(source_vvvvvvz_SomeFunc);
 
 
-	// [Interpretation 7763] set this function logic
+	// [Interpretation 7758] set this function logic
 	if (build && source)
 	{
 		jQuery('#jform_manual_files').closest('.control-group').show();
@@ -317,7 +317,7 @@ function vvvvvvz(build_vvvvvvz,source_vvvvvvz)
 // the vvvvvvz Some function
 function build_vvvvvvz_SomeFunc(build_vvvvvvz)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (build_vvvvvvz == 1)
 	{
 		return true;
@@ -328,7 +328,7 @@ function build_vvvvvvz_SomeFunc(build_vvvvvvz)
 // the vvvvvvz Some function
 function source_vvvvvvz_SomeFunc(source_vvvvvvz)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (source_vvvvvvz == 2)
 	{
 		return true;
@@ -352,7 +352,7 @@ function vvvvvwa(source_vvvvvwa)
 	var source = source_vvvvvwa.some(source_vvvvvwa_SomeFunc);
 
 
-	// [Interpretation 7763] set this function logic
+	// [Interpretation 7758] set this function logic
 	if (source)
 	{
 		jQuery('#jform_local_files').closest('.control-group').show();
@@ -383,7 +383,7 @@ function vvvvvwa(source_vvvvvwa)
 // the vvvvvwa Some function
 function source_vvvvvwa_SomeFunc(source_vvvvvwa)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (source_vvvvvwa == 1)
 	{
 		return true;
@@ -407,7 +407,7 @@ function vvvvvwb(source_vvvvvwb)
 	var source = source_vvvvvwb.some(source_vvvvvwb_SomeFunc);
 
 
-	// [Interpretation 7763] set this function logic
+	// [Interpretation 7758] set this function logic
 	if (source)
 	{
 		jQuery('#jform_url').closest('.control-group').show();
@@ -438,7 +438,7 @@ function vvvvvwb(source_vvvvvwb)
 // the vvvvvwb Some function
 function source_vvvvvwb_SomeFunc(source_vvvvvwb)
 {
-	// [Interpretation 7750] set the function logic
+	// [Interpretation 7745] set the function logic
 	if (source_vvvvvwb == 3)
 	{
 		return true;
@@ -449,7 +449,7 @@ function source_vvvvvwb_SomeFunc(source_vvvvvwb)
 // the vvvvvwc function
 function vvvvvwc(link_type_vvvvvwc)
 {
-	// [Interpretation 7785] set the function logic
+	// [Interpretation 7780] set the function logic
 	if (link_type_vvvvvwc == 2)
 	{
 		jQuery('.note_link_directed').closest('.control-group').show();
@@ -463,7 +463,7 @@ function vvvvvwc(link_type_vvvvvwc)
 // the vvvvvwd function
 function vvvvvwd(link_type_vvvvvwd)
 {
-	// [Interpretation 7785] set the function logic
+	// [Interpretation 7780] set the function logic
 	if (link_type_vvvvvwd == 1)
 	{
 		jQuery('.note_link_encrypted').closest('.control-group').show();
