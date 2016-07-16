@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -43,13 +43,13 @@ class SermondistributorViewSermon extends JViewLegacy
 		$this->menu = $this->app->getMenu()->getActive();
 		// get the user object
 		$this->user = JFactory::getUser();
-		// [Interpretation 2354] Initialise variables.
+		// Initialise variables.
 		$this->item	= $this->get('Item');
 
-		// [Interpretation 2389] Check for errors.
+		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			JError::raiseWarning(500, implode("\n", $errors));
+			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
 		// add a hit to the sermon
@@ -60,10 +60,10 @@ class SermondistributorViewSermon extends JViewLegacy
 		// set view key
 		$this->item->viewKey = 'sermon';
 
-		// [Interpretation 2406] Set the toolbar
+		// Set the toolbar
 		$this->addToolBar();
 
-		// [Interpretation 2408] set the document
+		// set the document
 		$this->_prepareDocument();
 
 		parent::display($tpl);
@@ -107,40 +107,40 @@ class SermondistributorViewSermon extends JViewLegacy
 	protected function _prepareDocument()
 	{
 
-		// [Interpretation 2843] always make sure jquery is loaded.
+		// always make sure jquery is loaded.
 		JHtml::_('jquery.framework');
-		// [Interpretation 2845] Load the header checker class.
+		// Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
-		// [Interpretation 2847] Initialize the header checker.
+		// Initialize the header checker.
 		$HeaderCheck = new HeaderCheck;
 
-		// [Interpretation 2852] Load uikit options.
+		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');
-		// [Interpretation 2854] Set script size.
+		// Set script size.
 		$size = $this->params->get('uikit_min');
-		// [Interpretation 2856] Set css style.
+		// Set css style.
 		$style = $this->params->get('uikit_style');
 
-		// [Interpretation 2859] The uikit css.
+		// The uikit css.
 		if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit'.$style.$size.'.css');
 		}
-		// [Interpretation 2864] The uikit js.
+		// The uikit js.
 		if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 		{
 			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit'.$size.'.js');
 		}
 
-		// [Interpretation 2873] Load the script to find all uikit components needed.
+		// Load the script to find all uikit components needed.
 		if ($uikit != 2)
 		{
-			// [Interpretation 2876] Set the default uikit components in this view.
+			// Set the default uikit components in this view.
 			$uikitComp = array();
 			$uikitComp[] = 'data-uk-tooltip';
 			$uikitComp[] = 'data-uk-grid';
 
-			// [Interpretation 2885] Get field uikit components needed in this view.
+			// Get field uikit components needed in this view.
 			$uikitFieldComp = $this->get('UikitComp');
 			if (isset($uikitFieldComp) && SermondistributorHelper::checkArray($uikitFieldComp))
 			{
@@ -156,32 +156,32 @@ class SermondistributorViewSermon extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 2901] Load the needed uikit components in this view.
+		// Load the needed uikit components in this view.
 		if ($uikit != 2 && isset($uikitComp) && SermondistributorHelper::checkArray($uikitComp))
 		{
-			// [Interpretation 2904] load just in case.
+			// load just in case.
 			jimport('joomla.filesystem.file');
-			// [Interpretation 2906] loading...
+			// loading...
 			foreach ($uikitComp as $class)
 			{
 				foreach (SermondistributorHelper::$uk_components[$class] as $name)
 				{
-					// [Interpretation 2911] check if the CSS file exists.
+					// check if the CSS file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css'))
 					{
-						// [Interpretation 2914] load the css.
+						// load the css.
 						$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit/css/components/'.$name.$style.$size.'.css');
 					}
-					// [Interpretation 2917] check if the JavaScript file exists.
+					// check if the JavaScript file exists.
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js'))
 					{
-						// [Interpretation 2920] load the js.
+						// load the js.
 						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js');
 					}
 				}
 			}
 		}   
-		// [Interpretation 2750] load the meta description
+		// load the meta description
 		if (isset($this->item->metadesc) && $this->item->metadesc)
 		{
 			$this->document->setDescription($this->item->metadesc);
@@ -190,7 +190,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
 		}
-		// [Interpretation 2759] load the key words if set
+		// load the key words if set
 		if (isset($this->item->metakey) && $this->item->metakey)
 		{
 			$this->document->setMetadata('keywords', $this->item->metakey);
@@ -199,7 +199,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
 		}
-		// [Interpretation 2768] check the robot params
+		// check the robot params
 		if (isset($this->item->robots) && $this->item->robots)
 		{
 			$this->document->setMetadata('robots', $this->item->robots);
@@ -208,12 +208,12 @@ class SermondistributorViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-		// [Interpretation 2777] check if autor is to be set
+		// check if autor is to be set
 		if (isset($this->item->created_by) && $this->params->get('MetaAuthor') == '1')
 		{
 			$this->document->setMetaData('author', $this->item->created_by);
 		}
-		// [Interpretation 2782] check if metadata is available
+		// check if metadata is available
 		if (isset($this->item->metadata) && $this->item->metadata)
 		{
 			$mdata = json_decode($this->item->metadata,true);
@@ -225,15 +225,31 @@ class SermondistributorViewSermon extends JViewLegacy
 				}
 			}
 		} 
-		// default for sound mananger 2
-		$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/soundmanager/script/soundmanager2-nodebug-jsmin.js');
-		// 360-player
-		$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/360player.css');
-		$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/360player-visualization.css');
-		// 360-player
-		$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/script/berniecode-animator.js');
-		$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/script/excanvas.js');
-		$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/script/360player.js'); 
+		// set the player key for the sermon view
+		$this->item->playerKey = (int) $this->params->get('player', 1);
+		if (1 == $this->item->playerKey)
+		{
+			// default for sound mananger 2
+			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/soundmanager/script/soundmanager2-nodebug-jsmin.js');
+			// 360-player
+			$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/360player.css');
+			$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/360player-visualization.css');
+			// 360-player
+			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/script/berniecode-animator.js');
+			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/script/excanvas.js');
+			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/soundmanager/demo/360-player/script/360player.js');
+		}
+		elseif (2 == $this->item->playerKey)
+		{
+			// blue Monday
+			$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/jplayer/skin/blue.monday/css/jplayer.blue.monday.min.css');
+			// default for jPlayer.js
+			$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/jplayer/jplayer/jquery.jplayer.min.js');
+			if (count($this->item->download_links) > 1)
+			{
+				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/jplayer/add-on/jplayer.playlist.min.js');
+			}
+		} 
 		// add the document default css file
 		$this->document->addStyleSheet(JURI::root(true) .'/components/com_sermondistributor/assets/css/sermon.css'); 
         }

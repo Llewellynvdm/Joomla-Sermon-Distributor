@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -202,11 +202,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			);
                 }  
 
-		// [Interpretation 8430] Set Sermon Name Selection
+		// Set Sermon Name Selection
 		$this->sermonNameOptions = JFormHelper::loadFieldType('Sermon')->getOptions();
 		if ($this->sermonNameOptions)
 		{
-			// [Interpretation 8434] Sermon Name Filter
+			// Sermon Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL').' -',
 				'filter_sermon',
@@ -215,7 +215,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8443] Sermon Name Batch Selection
+				// Sermon Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL').' -',
 					'batch[sermon]',
@@ -224,11 +224,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 8430] Set Preacher Name Selection
+		// Set Preacher Name Selection
 		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->getOptions();
 		if ($this->preacherNameOptions)
 		{
-			// [Interpretation 8434] Preacher Name Filter
+			// Preacher Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL').' -',
 				'filter_preacher',
@@ -237,7 +237,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8443] Preacher Name Batch Selection
+				// Preacher Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL').' -',
 					'batch[preacher]',
@@ -246,11 +246,11 @@ class SermondistributorViewStatistics extends JViewLegacy
 			}
 		}
 
-		// [Interpretation 8430] Set Series Name Selection
+		// Set Series Name Selection
 		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->getOptions();
 		if ($this->seriesNameOptions)
 		{
-			// [Interpretation 8434] Series Name Filter
+			// Series Name Filter
 			JHtmlSidebar::addFilter(
 				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL').' -',
 				'filter_series',
@@ -259,7 +259,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
-				// [Interpretation 8443] Series Name Batch Selection
+				// Series Name Batch Selection
 				JHtmlBatch_::addListSelection(
 					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL').' -',
 					'batch[series]',

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categoriespanel.php
@@ -42,7 +42,11 @@ defined('JPATH_BASE') or die('Restricted access');
 			<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?>
 		</div>
 	<?php endif ;?>
-	<h3 class="uk-panel-title"><?php echo $displayData->name; ?></h3>
+	<h3 class="uk-panel-title">
+		<a href="<?php echo $displayData->link; ?>" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_OPEN'); ?> <?php echo $displayData->name; ?>">
+			<?php echo $displayData->name; ?>
+		</a>
+	</h3>
 	<?php if ($displayData->params->get('categories_icon')): ?>
 		<?php $displayData->icon = (isset($displayData->icon) && $displayData->icon) ? $displayData->icon : $displayData->params->get('category_default_icon'); ?>
 		<?php if ($displayData->icon): ?>

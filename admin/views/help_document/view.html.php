@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -92,27 +92,27 @@ class SermondistributorViewHelp_document extends JViewLegacy
 		$isNew = $this->item->id == 0;
 
 		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_NEW' : 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_EDIT'), 'pencil-2 article-add');
-		// [Interpretation 9616] Built the actions for new and existing records.
+		// Built the actions for new and existing records.
 		if ($this->refid || $this->ref)
 		{
 			if ($this->canDo->get('help_document.create') && $isNew)
 			{
-				// [Interpretation 9628] We can create the record.
+				// We can create the record.
 				JToolBarHelper::save('help_document.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('help_document.edit'))
 			{
-				// [Interpretation 9640] We can save the record.
+				// We can save the record.
 				JToolBarHelper::save('help_document.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
-				// [Interpretation 9645] Do not creat but cancel.
+				// Do not creat but cancel.
 				JToolBarHelper::cancel('help_document.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
-				// [Interpretation 9650] We can close it.
+				// We can close it.
 				JToolBarHelper::cancel('help_document.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -120,7 +120,7 @@ class SermondistributorViewHelp_document extends JViewLegacy
 		{
 			if ($isNew)
 			{
-				// [Interpretation 9658] For new records, check the create permission.
+				// For new records, check the create permission.
 				if ($this->canDo->get('help_document.create'))
 				{
 					JToolBarHelper::apply('help_document.apply', 'JTOOLBAR_APPLY');
@@ -133,11 +133,11 @@ class SermondistributorViewHelp_document extends JViewLegacy
 			{
 				if ($this->canDo->get('help_document.edit'))
 				{
-					// [Interpretation 9685] We can save the new record
+					// We can save the new record
 					JToolBarHelper::apply('help_document.apply', 'JTOOLBAR_APPLY');
 					JToolBarHelper::save('help_document.save', 'JTOOLBAR_SAVE');
-					// [Interpretation 9688] We can save this record, but check the create permission to see
-					// [Interpretation 9689] if we can return to make a new one.
+					// We can save this record, but check the create permission to see
+					// if we can return to make a new one.
 					if ($this->canDo->get('help_document.create'))
 					{
 						JToolBarHelper::custom('help_document.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
@@ -156,7 +156,7 @@ class SermondistributorViewHelp_document extends JViewLegacy
 			}
 		}
 		JToolbarHelper::divider();
-		// [Interpretation 9725] set help url for this view if found
+		// set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('help_document');
 		if (SermondistributorHelper::checkString($help_url))
 		{
@@ -194,7 +194,7 @@ class SermondistributorViewHelp_document extends JViewLegacy
 		$document->setTitle(JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_NEW' : 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_EDIT'));
 		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/help_document.css"); 
 		$document->addScript(JURI::root() . $this->script);
-		$document->addScript(JURI::root() . "administrator/components/com_sermondistributor/views/help_document/submitbutton.js");
+		$document->addScript(JURI::root() . "administrator/components/com_sermondistributor/views/help_document/submitbutton.js"); 
 		JText::script('view not acceptable. Error');
 	}
 }

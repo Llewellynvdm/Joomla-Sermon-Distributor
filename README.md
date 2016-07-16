@@ -1,4 +1,4 @@
-# Sermon Distributor (1.3.2)
+# Sermon Distributor (1.3.4)
 
  ![Sermon Distributor image] (https://raw.githubusercontent.com/SermonDistributor/Joomla-3-Component/master/admin/assets/images/component-300.jpg "The Sermon Distributor")
 
@@ -23,32 +23,32 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe] (mailto:llewellyn@vdm.io)
 + *Name*: [Sermon Distributor] (https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 11th April, 2016
-+ *Version*: 1.3.2
++ *Last Build*: 16th July, 2016
++ *Version*: 1.3.4
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Build Time :hourglass:
 
-**135 Hours** or **17 Eight Hour Days** (actual time the author saved -
+**137 Hours** or **17 Eight Hour Days** (actual time the author saved -
 due to [Automated Component Builder] (https://www.vdm.io/joomla-component-builder))
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **48233**
-+ *File count*: **352**
-+ *Folder count*: **79**
++ *Line count*: **49071**
++ *File count*: **356**
++ *Folder count*: **80**
 
-**88 Hours** or **11 Eight Hour Days** (the actual time the author spent)
+**90 Hours** or **11 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
 > **debugging @34hours** = codingtime / 4;
-> **planning @19hours** = codingtime / 7;
-> **mapping @13hours** = codingtime / 10;
-> **office @22hours** = codingtime / 6;)
+> **planning @20hours** = codingtime / 7;
+> **mapping @14hours** = codingtime / 10;
+> **office @23hours** = codingtime / 6;)
 
-**223 Hours** or **28 Eight Hour Days**
+**227 Hours** or **28 Eight Hour Days**
 (a total of the realistic time frame for this project)
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
@@ -58,3 +58,9 @@ Project duration: **5.6 weeks** or **1.2 months**
 
 > This **component** was build with a Joomla [Automated Component Builder] (https://www.vdm.io/joomla-component-builder).
 > Developed by [Llewellyn van der Merwe] (mailto:joomla@vdm.io)
+
+## Donations
+
+ If you want to support this project, please consider donating:
+ * PayPal: pay@vdm.io
+ * Bitcoin: 3H35PYwikEosvcjxHXGPLS1GufZ4b4iFu3

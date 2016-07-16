@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
@@ -50,37 +50,92 @@ class JFormFieldPreachers extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		// [Interpretation 7009] see if we should add buttons
+		// see if we should add buttons
 		$setButton = $this->getAttribute('button');
-		// [Interpretation 7011] get html
+		// get html
 		$html = parent::getInput();
-		// [Interpretation 7013] if true set button
+		// if true set button
 		if ($setButton === 'true')
 		{
+			$button = array();
+			$script = array();
+			$buttonName = $this->getAttribute('name');
+			// get the input from url
+			$jinput = JFactory::getApplication()->input;
+			// get the view name & id
+			$values = $jinput->getArray(array(
+				'id' => 'int',
+				'view' => 'word'
+			));
+			// check if new item
+			$ref = '';
+			$refJ = '';
+			if (!is_null($values['id']) && strlen($values['view']))
+			{
+				// only load referal if not new item.
+				$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
+				$refJ = '&ref=' . $values['view'] . '&refid=' . $values['id'];
+			}
 			$user = JFactory::getUser();
-			// [Interpretation 7017] only add if user allowed to create preacher
+			// only add if user allowed to create preacher
 			if ($user->authorise('preacher.create', 'com_sermondistributor'))
 			{
-				// [Interpretation 7035] get the input from url
-				$jinput = JFactory::getApplication()->input;
-				// [Interpretation 7037] get the view name & id
-				$values = $jinput->getArray(array(
-					'id' => 'int',
-					'view' => 'word'
-				));
-				// [Interpretation 7042] check if new item
-				$ref = '';
-				if (!is_null($values['id']) && strlen($values['view']))
-				{
-					// [Interpretation 7046] only load referal if not new item.
-					$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
-				}
-				// [Interpretation 7049] build the button
-				$button = '<a class="btn btn-small btn-success"
+				// build Create button
+				$buttonNamee = trim($buttonName);
+				$buttonNamee = preg_replace('/_+/', ' ', $buttonNamee);
+				$buttonNamee = preg_replace('/\s+/', ' ', $buttonNamee);
+				$buttonNamee = preg_replace("/[^A-Za-z ]/", '', $buttonNamee);
+				$buttonNamee = ucfirst(strtolower($buttonNamee));
+				$button[] = '<a id="'.$buttonName.'Create" class="btn btn-small btn-success hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_CREATE_NEW_S', $buttonNamee).'" style="border-radius: 0px 4px 4px 0px; padding: 4px 4px 4px 7px;"
 					href="index.php?option=com_sermondistributor&amp;view=preacher&amp;layout=edit'.$ref.'" >
-					<span class="icon-new icon-white"></span>' . JText::_('COM_SERMONDISTRIBUTOR_NEW') . '</a>';
-				// [Interpretation 7053] return the button attached to input field
-				return $html . $button;
+					<span class="icon-new icon-white"></span></a>';
+			}
+			// only add if user allowed to edit preacher
+			if (($buttonName == 'preacher' || $buttonName == 'preachers') && $user->authorise('preacher.edit', 'com_sermondistributor'))
+			{
+				// build edit button
+				$buttonNamee = trim($buttonName);
+				$buttonNamee = preg_replace('/_+/', ' ', $buttonNamee);
+				$buttonNamee = preg_replace('/\s+/', ' ', $buttonNamee);
+				$buttonNamee = preg_replace("/[^A-Za-z ]/", '', $buttonNamee);
+				$buttonNamee = ucfirst(strtolower($buttonNamee));
+				$button[] = '<a id="'.$buttonName.'Edit" class="btn btn-small hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_EDIT_S', $buttonNamee).'" style="display: none; padding: 4px 4px 4px 7px;" href="#" >
+					<span class="icon-edit"></span></a>';
+				// build script
+				$script[] = "
+					jQuery(document).ready(function() {
+						jQuery('#adminForm').on('change', '#jform_".$buttonName."',function (e) {
+							e.preventDefault();
+							var ".$buttonName."Value = jQuery('#jform_".$buttonName."').val();
+							".$buttonName."Button(".$buttonName."Value);
+						});
+						var ".$buttonName."Value = jQuery('#jform_".$buttonName."').val();
+						".$buttonName."Button(".$buttonName."Value);
+					});
+					function ".$buttonName."Button(value) {
+						if (value > 0) {
+							// hide the create button
+							jQuery('#".$buttonName."Create').hide();
+							// show edit button
+							jQuery('#".$buttonName."Edit').show();
+							var url = 'index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id='+value+'".$refJ."';
+							jQuery('#".$buttonName."Edit').attr('href', url);
+						} else {
+							// show the create button
+							jQuery('#".$buttonName."Create').show();
+							// hide edit button
+							jQuery('#".$buttonName."Edit').hide();
+						}
+					}";
+			}
+			// check if button was created for preacher field.
+			if (is_array($button) && count($button) > 0)
+			{
+				// Load the needed script.
+				$document = JFactory::getDocument();
+				$document->addScriptDeclaration(implode(' ',$script));
+				// return the button attached to input field.
+				return '<div class="input-append">' .$html . implode('',$button).'</div>';
 			}
 		}
 		return $html;

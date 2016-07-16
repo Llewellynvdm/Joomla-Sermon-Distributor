@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_main.php
@@ -27,16 +27,18 @@
 defined('_JEXEC') or die('Restricted access');
 
 ?>
-<?php if(is_array($this->icons['main'])) :?>
+<?php if(isset($this->icons['main']) && is_array($this->icons['main'])) :?>
 	<?php foreach($this->icons['main'] as $icon): ?>
-        <div class="dashboard-wraper">
-           <div class="dashboard-content"> 
-                <a class="icon" href="<?php echo $icon->url; ?>">
-                    <img alt="<?php echo $icon->alt; ?>" src="components/com_sermondistributor/assets/images/icons/<?php  echo $icon->image; ?>">
-                    <span class="dashboard-title"><?php echo JText::_($icon->name); ?></span>
-                </a>
-            </div>
-        </div>
-    <?php endforeach; ?>
-<div class="clearfix"></div>
+		<div class="dashboard-wraper">
+			<div class="dashboard-content"> 
+				<a class="icon" href="<?php echo $icon->url; ?>">
+					<img alt="<?php echo $icon->alt; ?>" src="components/com_sermondistributor/assets/images/icons/<?php  echo $icon->image; ?>">
+					<span class="dashboard-title"><?php echo JText::_($icon->name); ?></span>
+				</a>
+			 </div>
+		</div>
+	<?php endforeach; ?>
+	<div class="clearfix"></div>
+<?php else: ?>
+	<div class="alert alert-error"><h4 class="alert-heading"><?php echo JText::_("Permission denied, or not correctly set"); ?></h4><div class="alert-message"><?php echo JText::_("Please notify your System Administrator if result is unexpected."); ?></div></div>
 <?php endif; ?>

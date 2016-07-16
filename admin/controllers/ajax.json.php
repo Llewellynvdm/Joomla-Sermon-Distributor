@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -72,9 +72,9 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if(array_key_exists('callback',$_GET))
+						if($callback = $jinput->get('callback', null, 'CMD'))
 						{
-							echo $_GET['callback'] . "(".json_encode($result).");";
+							echo $callback . "(".json_encode($result).");";
 						}
 						elseif($returnRaw)
 						{
@@ -87,9 +87,9 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if(array_key_exists('callback',$_GET))
+						if($callback = $jinput->get('callback', null, 'CMD'))
 						{
-							echo $_GET['callback']."(".json_encode($e).");";
+							echo $callback."(".json_encode($e).");";
 						}
 						else
 						{
@@ -110,9 +110,9 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if(array_key_exists('callback',$_GET))
+						if($callback = $jinput->get('callback', null, 'CMD'))
 						{
-							echo $_GET['callback'] . "(".json_encode($result).");";
+							echo $callback . "(".json_encode($result).");";
 						}
 						elseif($returnRaw)
 						{
@@ -125,9 +125,9 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if(array_key_exists('callback',$_GET))
+						if($callback = $jinput->get('callback', null, 'CMD'))
 						{
-							echo $_GET['callback']."(".json_encode($e).");";
+							echo $callback."(".json_encode($e).");";
 						}
 						else
 						{
@@ -148,9 +148,9 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if(array_key_exists('callback',$_GET))
+						if($callback = $jinput->get('callback', null, 'CMD'))
 						{
-							echo $_GET['callback'] . "(".json_encode($result).");";
+							echo $callback . "(".json_encode($result).");";
 						}
 						elseif($returnRaw)
 						{
@@ -163,9 +163,9 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if(array_key_exists('callback',$_GET))
+						if($callback = $jinput->get('callback', null, 'CMD'))
 						{
-							echo $_GET['callback']."(".json_encode($e).");";
+							echo $callback."(".json_encode($e).");";
 						}
 						else
 						{
@@ -177,9 +177,9 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		}
                 else
                 {
-			if(array_key_exists('callback',$_GET))
+			if($callback = $jinput->get('callback', null, 'CMD'))
                         {
-				echo $_GET['callback']."(".json_encode(false).");";
+				echo $callback."(".json_encode(false).");";
 			}
                         else
                         {

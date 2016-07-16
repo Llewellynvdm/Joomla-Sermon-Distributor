@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		serieslist.php
@@ -65,13 +65,13 @@ class SermondistributorModelSerieslist extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [Interpretation 2212] Get a db connection.
+		// Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2221] Create a new query object.
+		// Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 1072] Get from #__sermondistributor_series as a
+		// Get from #__sermondistributor_series as a
 		$query->select($db->quoteName(
 			array('a.id','a.asset_id','a.name','a.alias','a.description','a.icon','a.hits','a.ordering'),
 			array('id','asset_id','name','alias','description','icon','hits','ordering')));
@@ -80,7 +80,7 @@ class SermondistributorModelSerieslist extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [Interpretation 2242] return the query object
+		// return the query object
 		return $query;
 	}
 
@@ -95,9 +95,10 @@ class SermondistributorModelSerieslist extends JModelList
                 // check if this user has permission to access items
                 if (!$user->authorise('site.serieslist.access', 'com_sermondistributor'))
                 {
-			JError::raiseWarning(500, JText::_('Not authorised!'));
+			$app = JFactory::getApplication();
+			$app->enqueueMessage(JText::_('Not authorised!'), 'error');
 			// redirect away if not a correct (TODO for now we go to default view)
-			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
+			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
                 } 
 		// load parent items
@@ -106,16 +107,16 @@ class SermondistributorModelSerieslist extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [Interpretation 2262] Convert the parameter fields into objects.
+		// Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [Interpretation 2265] Always create a slug for sef URL's
+			// Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// [Interpretation 1289] Make sure the content prepare plugins fire on description.
+			// Make sure the content prepare plugins fire on description.
 			$item->description = JHtml::_('content.prepare',$item->description);
-			// [Interpretation 1291] Checking if description has uikit components that must be loaded.
+			// Checking if description has uikit components that must be loaded.
 			$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
-			// [Interpretation 1322] set idSeriesSermonB to the $item object.
+			// set idSeriesSermonB to the $item object.
 			$item->idSeriesSermonB = $this->getIdSeriesSermonBcae_B($item->id);
 		} 
 
@@ -144,13 +145,13 @@ class SermondistributorModelSerieslist extends JModelList
 	*/
 	public function getIdSeriesSermonBcae_B($id)
 	{
-		// [Interpretation 2014] Get a db connection.
+		// Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2016] Create a new query object.
+		// Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 2018] Get from #__sermondistributor_sermon as b
+		// Get from #__sermondistributor_sermon as b
 		$query->select($db->quoteName(
 			array('b.id'),
 			array('id')));
@@ -159,11 +160,11 @@ class SermondistributorModelSerieslist extends JModelList
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
 		$query->where('b.published = 1');
 
-		// [Interpretation 2072] Reset the query using our newly populated query object.
+		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [Interpretation 2075] check if there was data returned
+		// check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();

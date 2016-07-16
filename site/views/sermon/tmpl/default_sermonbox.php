@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_sermonbox.php
@@ -125,7 +125,9 @@ $this->item->params = $this->params;
 					<?php if ($this->params->get('add_to_dropbox') && isset($this->item->dropbox_buttons)): ?>
 						<li><?php echo JLayoutHelper::render('addtodropboxbutton', $this->item); ?></li>
 					<?php endif; ?>
-						<?php echo JLayoutHelper::render('mediaplayer', $this->item); ?>
+						<?php if (1 == $this->item->playerKey): ?>
+							<?php echo JLayoutHelper::render('mediaplayer', $this->item); ?>
+						<?php endif; ?>
 				</ul>
 			</div>
 		</div>
@@ -144,3 +146,6 @@ $this->item->params = $this->params;
 	</div>
 	</div>
 </div>
+<?php if (2 == $this->item->playerKey): ?>
+	<?php echo JLayoutHelper::render('mediaplayer', $this->item); ?>
+<?php endif; ?>

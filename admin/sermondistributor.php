@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -29,7 +29,7 @@ defined('_JEXEC') or die('Restricted access');
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_sermondistributor'))
 {
-	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+	return JError::raiseWaring(404, JText::_('JERROR_ALERTNOAUTHOR'));
 };
 
 // Load cms libraries
@@ -43,7 +43,7 @@ $document->addStyleSheet('components/com_sermondistributor/assets/css/admin.css'
 $document->addScript('components/com_sermondistributor/assets/js/admin.js');
 
 // require helper files
-JLoader::register('SermondistributorHelper', dirname(__FILE__) . '/helpers/sermondistributor.php');
+JLoader::register('SermondistributorHelper', dirname(__FILE__) . '/helpers/sermondistributor.php'); 
 JLoader::register('JHtmlBatch_', dirname(__FILE__) . '/helpers/html/batch_.php'); 
 
 // Triger the Global Admin Event

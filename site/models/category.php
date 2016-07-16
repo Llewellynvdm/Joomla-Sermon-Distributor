@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		category.php
@@ -65,37 +65,37 @@ class SermondistributorModelCategory extends JModelList
 		$this->app		= JFactory::getApplication();
 		$this->input		= $this->app->input;
 		$this->initSet		= true; 
-		// [Interpretation 2212] Get a db connection.
+		// Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2221] Create a new query object.
+		// Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 1072] Get from #__sermondistributor_sermon as a
+		// Get from #__sermondistributor_sermon as a
 		$query->select($db->quoteName(
 			array('a.id','a.asset_id','a.name','a.alias','a.link_type','a.short_description','a.icon','a.preacher','a.series','a.catid','a.description','a.source','a.build','a.manual_files','a.local_files','a.url','a.auto_sermons','a.published','a.created_by','a.modified_by','a.created','a.modified','a.version','a.hits','a.ordering'),
 			array('id','asset_id','name','alias','link_type','short_description','icon','preacher','series','catid','description','source','build','manual_files','local_files','url','auto_sermons','published','created_by','modified_by','created','modified','version','hits','ordering')));
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
 
-		// [Interpretation 1072] Get from #__sermondistributor_preacher as c
+		// Get from #__sermondistributor_preacher as c
 		$query->select($db->quoteName(
 			array('c.name','c.alias'),
 			array('preacher_name','preacher_alias')));
 		$query->join('LEFT', ($db->quoteName('#__sermondistributor_preacher', 'c')) . ' ON (' . $db->quoteName('a.preacher') . ' = ' . $db->quoteName('c.id') . ')');
 
-		// [Interpretation 1072] Get from #__sermondistributor_series as d
+		// Get from #__sermondistributor_series as d
 		$query->select($db->quoteName(
 			array('d.name','d.alias'),
 			array('series_name','series_alias')));
 		$query->join('LEFT', ($db->quoteName('#__sermondistributor_series', 'd')) . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('d.id') . ')');
 
-		// [Interpretation 1072] Get from #__categories as b
+		// Get from #__categories as b
 		$query->select($db->quoteName(
 			array('b.title'),
 			array('category')));
 		$query->join('LEFT', ($db->quoteName('#__categories', 'b')) . ' ON (' . $db->quoteName('a.catid') . ' = ' . $db->quoteName('b.id') . ')');
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
-		// [Interpretation 1417] Check if JRequest::getInt('id') is a string or numeric value.
+		// Check if JRequest::getInt('id') is a string or numeric value.
 		$checkValue = JRequest::getInt('id');
 		if (isset($checkValue) && SermondistributorHelper::checkString($checkValue))
 		{
@@ -112,7 +112,7 @@ class SermondistributorModelCategory extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
-		// [Interpretation 2242] return the query object
+		// return the query object
 		return $query;
 	}
 
@@ -127,9 +127,10 @@ class SermondistributorModelCategory extends JModelList
                 // check if this user has permission to access items
                 if (!$user->authorise('site.category.access', 'com_sermondistributor'))
                 {
-			JError::raiseWarning(500, JText::_('Not authorised!'));
+			$app = JFactory::getApplication();
+			$app->enqueueMessage(JText::_('Not authorised!'), 'error');
 			// redirect away if not a correct (TODO for now we go to default view)
-			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
+			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
                 } 
 		// load parent items
@@ -138,26 +139,26 @@ class SermondistributorModelCategory extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// [Interpretation 2262] Convert the parameter fields into objects.
+		// Convert the parameter fields into objects.
 		foreach ($items as $nr => &$item)
 		{
-			// [Interpretation 2265] Always create a slug for sef URL's
+			// Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
 			if (SermondistributorHelper::checkString($item->local_files))
 			{
-				// [Interpretation 1274] Decode local_files
+				// Decode local_files
 				$item->local_files = json_decode($item->local_files, true);
 			}
 			if (SermondistributorHelper::checkString($item->manual_files))
 			{
-				// [Interpretation 1274] Decode manual_files
+				// Decode manual_files
 				$item->manual_files = json_decode($item->manual_files, true);
 			}
-			// [Interpretation 1289] Make sure the content prepare plugins fire on description.
+			// Make sure the content prepare plugins fire on description.
 			$item->description = JHtml::_('content.prepare',$item->description);
-			// [Interpretation 1291] Checking if description has uikit components that must be loaded.
+			// Checking if description has uikit components that must be loaded.
 			$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
-			// [Interpretation 1322] set idSermonStatisticE to the $item object.
+			// set idSermonStatisticE to the $item object.
 			$item->idSermonStatisticE = $this->getIdSermonStatisticBcea_E($item->id);
 		} 
 
@@ -218,24 +219,24 @@ class SermondistributorModelCategory extends JModelList
 	*/
 	public function getIdSermonStatisticBcea_E($id)
 	{
-		// [Interpretation 2014] Get a db connection.
+		// Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2016] Create a new query object.
+		// Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 2018] Get from #__sermondistributor_statistic as e
+		// Get from #__sermondistributor_statistic as e
 		$query->select($db->quoteName(
 			array('e.filename','e.sermon','e.preacher','e.series','e.counter'),
 			array('filename','sermon','preacher','series','counter')));
 		$query->from($db->quoteName('#__sermondistributor_statistic', 'e'));
 		$query->where('e.sermon = ' . $db->quote($id));
 
-		// [Interpretation 2072] Reset the query using our newly populated query object.
+		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [Interpretation 2075] check if there was data returned
+		// check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();
@@ -263,18 +264,18 @@ class SermondistributorModelCategory extends JModelList
 			$this->levels		= $this->user->getAuthorisedViewLevels();
 			$this->initSet		= true;
 		}
-		// [Interpretation 1634] Get a db connection.
+		// Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 1636] Create a new query object.
+		// Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 1072] Get from #__categories as a
+		// Get from #__categories as a
 		$query->select($db->quoteName(
 			array('a.id','a.parent_id','a.lft','a.rgt','a.level','a.title','a.alias','a.note','a.description','a.params','a.metadesc','a.metakey','a.metadata','a.hits','a.language','a.version'),
 			array('id','parent_id','lft','rgt','level','name','alias','note','description','params','metadesc','metakey','metadata','hits','language','version')));
 		$query->from($db->quoteName('#__categories', 'a'));
-		// [Interpretation 1417] Check if JRequest::getInt('id') is a string or numeric value.
+		// Check if JRequest::getInt('id') is a string or numeric value.
 		$checkValue = JRequest::getInt('id');
 		if (isset($checkValue) && SermondistributorHelper::checkString($checkValue))
 		{
@@ -291,19 +292,19 @@ class SermondistributorModelCategory extends JModelList
 		$query->where('a.published = 1');
 		$query->order('a.title ASC');
 
-		// [Interpretation 1647] Reset the query using our newly populated query object.
+		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
-		// [Interpretation 1649] Load the results as a stdClass object.
+		// Load the results as a stdClass object.
 		$data = $db->loadObject();
 
 		if (empty($data))
 		{
 			return false;
 		}
-		// [Interpretation 1322] set idCatidSermonB to the $data object.
+		// set idCatidSermonB to the $data object.
 		$data->idCatidSermonB = $this->getIdCatidSermonFbdf_B($data->id);
 
-		// [Interpretation 1748] return data object.
+		// return data object.
 		return $data;
 	}
 
@@ -315,32 +316,32 @@ class SermondistributorModelCategory extends JModelList
 	*/
 	public function getIdCatidSermonFbdf_B($id)
 	{
-		// [Interpretation 2014] Get a db connection.
+		// Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2016] Create a new query object.
+		// Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 2018] Get from #__sermondistributor_sermon as b
+		// Get from #__sermondistributor_sermon as b
 		$query->select($db->quoteName(
 			array('b.id'),
 			array('id')));
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'b'));
 		$query->where('b.catid  = ' . $db->quote($id));
 
-		// [Interpretation 2072] Reset the query using our newly populated query object.
+		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [Interpretation 2075] check if there was data returned
+		// check if there was data returned
 		if ($db->getNumRows())
 		{
 			$items = $db->loadObjectList();
 
-			// [Interpretation 2128] Convert the parameter fields into objects.
+			// Convert the parameter fields into objects.
 			foreach ($items as $nr => &$item)
 			{
-				// [Interpretation 1310] set idSermonStatisticC to the $item object.
+				// set idSermonStatisticC to the $item object.
 				$item->idSermonStatisticC = $this->getIdSermonStatisticFbdf_C($item->id);
 			}
 			return $items;
@@ -356,24 +357,24 @@ class SermondistributorModelCategory extends JModelList
 	*/
 	public function getIdSermonStatisticFbdf_C($id)
 	{
-		// [Interpretation 2014] Get a db connection.
+		// Get a db connection.
 		$db = JFactory::getDbo();
 
-		// [Interpretation 2016] Create a new query object.
+		// Create a new query object.
 		$query = $db->getQuery(true);
 
-		// [Interpretation 2018] Get from #__sermondistributor_statistic as c
+		// Get from #__sermondistributor_statistic as c
 		$query->select($db->quoteName(
 			array('c.counter'),
 			array('counter')));
 		$query->from($db->quoteName('#__sermondistributor_statistic', 'c'));
 		$query->where('c.sermon = ' . $db->quote($id));
 
-		// [Interpretation 2072] Reset the query using our newly populated query object.
+		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		$db->execute();
 
-		// [Interpretation 2075] check if there was data returned
+		// check if there was data returned
 		if ($db->getNumRows())
 		{
 			return $db->loadObjectList();

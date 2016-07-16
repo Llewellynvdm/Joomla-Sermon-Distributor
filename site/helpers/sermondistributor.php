@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.2
-	@build			11th April, 2016
+	@version		1.3.4
+	@build			16th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -119,7 +119,7 @@ abstract class SermondistributorHelper
 		}
 		$keyCounter = base64_encode($safe->encryptString(json_encode($keyCounter)));
 		$token = JSession::getFormToken();
-		$downloadURL = 'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
+		$downloadURL = JURI::root().'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
 		// check if local .htaccess should be set
 		$setHtaccess = false;
 		$onclick = ' onclick="sermonCounter(\''.$keyCounter.'\',\'FILENAME\');"';
@@ -151,7 +151,7 @@ abstract class SermondistributorHelper
 							// get the file name use the same method as the auto
 							$filename = self::getDownloadFileName($sermon,$key,'local');
 							$lockedFolderPath = base64_encode($safe->encryptString($localFolder.$key));
-							$sermon->download_links[$filename] = JRoute::_($downloadURL.'&link='.$lockedFolderPath.'&filename='.$filename);
+							$sermon->download_links[$filename] = $downloadURL.'&link='.$lockedFolderPath.'&filename='.$filename;
 							$sermon->onclick[$filename] = '';
 						}
 						elseif (2 == $sermon->link_type && $allowDirect)
@@ -180,7 +180,7 @@ abstract class SermondistributorHelper
 							{
 								// get the file name use the same method as the auto
 								$filename = self::getDownloadFileName($sermon,$key,'dropbox_manual');
-								$sermon->download_links[$filename] = JRoute::_($downloadURL.'&link='.$dropURL.'&filename='.$filename);
+								$sermon->download_links[$filename] = $downloadURL.'&link='.$dropURL.'&filename='.$filename;
 								$sermon->onclick[$filename] = '';
 							}
 							elseif (2 == $sermon->link_type && $dropURL)
@@ -210,7 +210,7 @@ abstract class SermondistributorHelper
 							if (1 == $sermon->link_type && $dropURL)
 							{
 								// get the file name (use the same method as the auto
-								$sermon->download_links[$filename] = JRoute::_($downloadURL.'&link='.$dropURL.'&filename='.$filename);
+								$sermon->download_links[$filename] = $downloadURL.'&link='.$dropURL.'&filename='.$filename;
 								$sermon->onclick[$filename] = '';
 							}
 							elseif (2 == $sermon->link_type && $dropURL)
@@ -234,7 +234,7 @@ abstract class SermondistributorHelper
 				if (1 == $sermon->link_type)
 				{
 					$lockedURL = base64_encode($safe->encryptString($sermon->url));
-					$sermon->download_links[$filename] = JRoute::_($downloadURL.'&link='.$lockedURL.'&filename='.$filename);
+					$sermon->download_links[$filename] = $downloadURL.'&link='.$lockedURL.'&filename='.$filename;
 					$sermon->onclick[$filename] = '';
 				}
 				elseif (2 == $sermon->link_type)
@@ -457,34 +457,37 @@ abstract class SermondistributorHelper
 		}
 		return false;
 	}
-
-	public static function jsonToString($value)
+	
+	public static function jsonToString($value, $sperator = ", ", $table = null)
 	{
-		// check if string is JSON
-		$result = json_decode($value, true);
-		if (json_last_error() === JSON_ERROR_NONE) {
+                // check if string is JSON
+                $result = json_decode($value, true);
+                if (json_last_error() === JSON_ERROR_NONE)
+		{
 			// is JSON
-				if (self::checkArray($result))
+			if (self::checkArray($result))
+			{
+				if (self::checkString($table))
 				{
-					$value = '';
-					$counter = 0;
-					foreach ($result as $string)
+					$names = array();
+					foreach ($result as $val)
 					{
-						if ($counter)
+						if ($name = self::getVar($table, $val, 'id', 'name'))
 						{
-							$value .= ", ".$string;
+							$names[] = $name;
 						}
-						else
-						{
-							$value .= $string;
-						}
-						$counter++;
 					}
+					if (self::checkArray($names))
+					{
+						return (string) implode($sperator,$names);
+					}	
 				}
-			return json_decode($value);
-		}
-		return $value;
-	}
+				return (string) implode($sperator,$result);
+			}
+                        return (string) json_decode($value);
+                }
+                return $value;
+        }
 	
 	/**
 	*	Load the Component xml manifest.
@@ -561,23 +564,23 @@ abstract class SermondistributorHelper
 						$targetgroups = json_decode($help->groups, true);
 						if (!array_intersect($targetgroups, $groups))
 						{
-							// [Interpretation 653] if user not in those target groups then remove the item
+							// if user not in those target groups then remove the item
 							unset($helps[$nr]);
 							continue;
 						}
 					}
-					// [Interpretation 658] set the return type
+					// set the return type
 					switch ($help->type)
 					{
-						// [Interpretation 661] set joomla article
+						// set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
 						break;
-						// [Interpretation 665] set help text
+						// set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
 						break;
-						// [Interpretation 669] set Link
+						// set Link
 						case 3:
 							return $help->url;
 						break;
@@ -663,7 +666,7 @@ abstract class SermondistributorHelper
 
 			if (!$asset->check() || !$asset->store())
 			{
-				JError::raiseWarning(500, $asset->getError());
+				JFactory::getApplication()->enqueueMessage($asset->getError(), 'warning');
 				return false;
 			}
 			else
@@ -827,7 +830,7 @@ abstract class SermondistributorHelper
 	{
 		if (strpos($content,'class="uk-') !== false)
 		{
-			// [Interpretation 1909] reset
+			// reset
 			$temp = array();
 			foreach (self::$uk_components as $looking => $add)
 			{
@@ -836,15 +839,15 @@ abstract class SermondistributorHelper
 					$temp[] = $looking;
 				}
 			}
-			// [Interpretation 1918] make sure uikit is loaded to config
+			// make sure uikit is loaded to config
 			if (strpos($content,'class="uk-') !== false)
 			{
 				self::$uikit = true;
 			}
-			// [Interpretation 1923] sorter
+			// sorter
 			if (self::checkArray($temp))
 			{
-				// [Interpretation 1926] merger
+				// merger
 				if (self::checkArray($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
@@ -870,9 +873,15 @@ abstract class SermondistributorHelper
 		$db = JFactory::getDbo();
 		// Create a new query object.
 		$query = $db->getQuery(true);
-
-		$query->select($db->quoteName(array($what)));
-		$query->from($db->quoteName('#__'.$main.'_'.$table));
+		$query->select($db->quoteName(array($what)));		
+		if (empty($table))
+		{
+			$query->from($db->quoteName('#__'.$main));
+		}
+		else
+		{
+			$query->from($db->quoteName('#__'.$main.'_'.$table));
+		}
 		if (is_numeric($where))
 		{
 			$query->where($db->quoteName($whereString) . ' '.$operator.' '.(int) $where);
@@ -1429,7 +1438,7 @@ abstract class SermondistributorHelper
 					$w .= ' ';
 					if($r < 100)
 					{
-						$word .= 'and ';
+						$w .= 'and ';
 					}
 					$w .= self::numberToString($r);
 				}
