@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			16th July, 2016
+	@build			17th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_toolbar.php
