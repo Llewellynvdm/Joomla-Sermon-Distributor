@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			16th July, 2016
+	@build			17th July, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		download.php
@@ -68,33 +68,42 @@ class SermondistributorControllerDownload extends JControllerLegacy
 							$link = rtrim($opener->decryptString(base64_decode($enUrl)));
 							$info = $this->getContentInfo($link);
 							// set headers
+							$app = JFactory::getApplication();
+							$app->setHeader('Content-Encoding', 'none', true);
+							$app->setHeader('Content-Transfer-Encoding', 'binary'. true);
+							$app->setHeader('Content-disposition', 'attachment; filename="'.$filename.'";', true);
 							if (isset($info['type']) && $info['type'])
 							{
-								header('Content-Type: '.$info['type']);
+								$app->setHeader('Content-Type', $info['type'], true);
 							}
 							elseif (strpos($filename, '.mp3') !== false)
 							{
-								header('Content-Type: audio/mpeg');
+								$app->setHeader('Content-Type', 'audio/mpeg', true);
 							}
 							else
 							{
-								header('Content-Type: application/octet-stream');
+								$app->setHeader('Content-Type', 'application/octet-stream', true);
 							}
-							header("Content-Transfer-Encoding: Binary"); 
-							header("Content-disposition: attachment; filename=\"" . $filename . "\"");
-							header('Expires: 0');
-							header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-							header('Pragma: public');
+							// important to have the file size.
 							if (isset($info['filesize']) && $info['filesize'])
 							{
-								header('Content-Length: ' . $info['filesize']);
+								$app->setHeader('Content-Length', (int) $info['filesize'], true);
+								$app->setHeader('Accept-ranges', 'bytes', true);
+								$app->setHeader('Content-ranges', 'bytes 0-'.(int) $info['filesize'], true);
 							}
-							ob_clean();
-							flush();
-							// this is faster but expose the dropbox url
-							// header("Location: $link");
-							// this is slower but better much more secure
+							$app->setHeader('Connection', 'keep-alive', true);
+							$app->setHeader('Content-security-policy', 'referrer no-referrer', true);							
+							$app->setHeader('etag', md5($enUrl), true);
+							$app->setHeader('Pragma', 'public', true);
+							$app->setHeader('cache-control', 'max-age=0', true);
+							$app->setHeader('x-robots-tag', 'noindex, nofollow, noimageindex', true);
+							$app->setHeader('x-content-security-policy', 'referrer no-referrer', true);
+							$app->setHeader('x-webkit-csp', 'referrer no-referrer', true);
+							$app->setHeader('x-content-security-policy', 'referrer no-referrer', true);
+							// get the file
 							readfile($link); 
+							$app->sendHeaders();
+							$app->close();
 							jexit();
 						}
 					}
