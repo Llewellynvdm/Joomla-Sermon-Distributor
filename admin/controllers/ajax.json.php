@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -45,6 +45,8 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		$this->registerTask('checkDropboxListing', 'ajax');
 		$this->registerTask('updateDropboxListing', 'ajax');
 		$this->registerTask('getUpdateProgress', 'ajax');
+		$this->registerTask('isNew', 'ajax');
+		$this->registerTask('isRead', 'ajax');
 	}
 
 	public function ajax()
@@ -143,6 +145,82 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						if($typeValue && $user->id != 0)
 						{
 							$result = $this->getModel('ajax')->updateProgress($typeValue);
+						}
+						else
+						{
+							$result = false;
+						}
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
+						}
+						else
+						{
+							echo "(".json_encode($result).");";
+						}
+					}
+					catch(Exception $e)
+					{
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback."(".json_encode($e).");";
+						}
+						else
+						{
+							echo "(".json_encode($e).");";
+						}
+					}
+				break;
+				case 'isNew':
+					try
+					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$noticeValue = $jinput->get('notice', NULL, 'STRING');
+						if($noticeValue && $user->id != 0)
+						{
+							$result = $this->getModel('ajax')->isNew($noticeValue);
+						}
+						else
+						{
+							$result = false;
+						}
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
+						}
+						else
+						{
+							echo "(".json_encode($result).");";
+						}
+					}
+					catch(Exception $e)
+					{
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback."(".json_encode($e).");";
+						}
+						else
+						{
+							echo "(".json_encode($e).");";
+						}
+					}
+				break;
+				case 'isRead':
+					try
+					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$noticeValue = $jinput->get('notice', NULL, 'STRING');
+						if($noticeValue && $user->id != 0)
+						{
+							$result = $this->getModel('ajax')->isRead($noticeValue);
 						}
 						else
 						{

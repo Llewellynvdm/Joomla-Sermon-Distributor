@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -49,6 +49,10 @@ class SermondistributorViewSermondistributor extends JViewLegacy
 		// Assign data to the view
 		$this->icons			= $this->get('Icons');
 		$this->contributors		= SermondistributorHelper::getContributors();
+		$this->github	= $this->get('Github');
+		$this->readme	= $this->get('Readme');
+		$this->wiki	= $this->get('Wiki');
+		$this->noticeboard	= $this->get('Noticeboard');
 
 		// Set the toolbar
 		$this->addToolBar();

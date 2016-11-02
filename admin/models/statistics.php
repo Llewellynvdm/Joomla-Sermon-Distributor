@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistics.php
@@ -134,7 +134,7 @@ class SermondistributorModelStatistics extends JModelList
 				}
 
 			}
-		} 
+		}  
         
 		// return items
 		return $items;
@@ -206,7 +206,7 @@ class SermondistributorModelStatistics extends JModelList
 			}
 			else
 			{
-				$search = $db->quote('%' . $db->escape($search, true) . '%');
+				$search = $db->quote('%' . $db->escape($search) . '%');
 				$query->where('(a.filename LIKE '.$search.' OR a.sermon LIKE '.$search.' OR g.name LIKE '.$search.' OR a.preacher LIKE '.$search.' OR h.name LIKE '.$search.' OR a.series LIKE '.$search.' OR i.name LIKE '.$search.')');
 			}
 		}
@@ -214,17 +214,17 @@ class SermondistributorModelStatistics extends JModelList
 		// Filter by sermon.
 		if ($sermon = $this->getState('filter.sermon'))
 		{
-			$query->where('a.sermon = ' . $db->quote($db->escape($sermon, true)));
+			$query->where('a.sermon = ' . $db->quote($db->escape($sermon)));
 		}
 		// Filter by preacher.
 		if ($preacher = $this->getState('filter.preacher'))
 		{
-			$query->where('a.preacher = ' . $db->quote($db->escape($preacher, true)));
+			$query->where('a.preacher = ' . $db->quote($db->escape($preacher)));
 		}
 		// Filter by series.
 		if ($series = $this->getState('filter.series'))
 		{
-			$query->where('a.series = ' . $db->quote($db->escape($series, true)));
+			$query->where('a.series = ' . $db->quote($db->escape($series)));
 		}
 
 		// Add the list ordering clause.

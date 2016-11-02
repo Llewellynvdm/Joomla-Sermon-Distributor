@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_documents.php
@@ -167,7 +167,7 @@ class SermondistributorModelHelp_documents extends JModelList
 				$item->location = $this->selectionTranslation($item->location, 'location');
 			}
 		}
-
+ 
         
 		// return items
 		return $items;
@@ -265,30 +265,30 @@ class SermondistributorModelHelp_documents extends JModelList
 			}
 			else
 			{
-				$search = $db->quote('%' . $db->escape($search, true) . '%');
-				$query->where('(a.title LIKE '.$search.' OR a.type LIKE '.$search.' OR a.location LIKE '.$search.' OR a.admin_view LIKE '.$search.' OR a.site_view LIKE '.$search.')');
+				$search = $db->quote('%' . $db->escape($search) . '%');
+				$query->where('(a.title LIKE '.$search.' OR a.type LIKE '.$search.' OR a.location LIKE '.$search.' OR a.admin_view LIKE '.$search.' OR g. LIKE '.$search.' OR a.site_view LIKE '.$search.' OR h. LIKE '.$search.')');
 			}
 		}
 
 		// Filter by Type.
 		if ($type = $this->getState('filter.type'))
 		{
-			$query->where('a.type = ' . $db->quote($db->escape($type, true)));
+			$query->where('a.type = ' . $db->quote($db->escape($type)));
 		}
 		// Filter by Location.
 		if ($location = $this->getState('filter.location'))
 		{
-			$query->where('a.location = ' . $db->quote($db->escape($location, true)));
+			$query->where('a.location = ' . $db->quote($db->escape($location)));
 		}
-		// Filter by Admin_view.
+		// Filter by admin_view.
 		if ($admin_view = $this->getState('filter.admin_view'))
 		{
-			$query->where('a.admin_view = ' . $db->quote($db->escape($admin_view, true)));
+			$query->where('a.admin_view = ' . $db->quote($db->escape($admin_view)));
 		}
-		// Filter by Site_view.
+		// Filter by site_view.
 		if ($site_view = $this->getState('filter.site_view'))
 		{
-			$query->where('a.site_view = ' . $db->quote($db->escape($site_view, true)));
+			$query->where('a.site_view = ' . $db->quote($db->escape($site_view)));
 		}
 
 		// Add the list ordering clause.

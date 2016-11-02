@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -247,7 +247,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 		}
 
 		// Set Admin View Selection
-		$this->admin_viewOptions = $this->getTheAdmin_viewSelections();
+		$this->admin_viewOptions = JFormHelper::loadFieldType('Adminviewfolderlist')->getOptions();
 		if ($this->admin_viewOptions)
 		{
 			// Admin View Filter
@@ -269,7 +269,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 		}
 
 		// Set Site View Selection
-		$this->site_viewOptions = $this->getTheSite_viewSelections();
+		$this->site_viewOptions = JFormHelper::loadFieldType('Siteviewfolderlist')->getOptions();
 		if ($this->site_viewOptions)
 		{
 			// Site View Filter
@@ -334,8 +334,8 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			'a.title' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TITLE_LABEL'),
 			'a.type' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_LABEL'),
 			'a.location' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_LABEL'),
-			'a.admin_view' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL'),
-			'a.site_view' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL'),
+			'g.' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL'),
+			'h.' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL'),
 			'a.id' => JText::_('JGRID_HEADING_ID')
 		);
 	} 
@@ -406,70 +406,6 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 				$text = $model->selectionTranslation($location,'location');
 				// Now add the location and its text to the options array
 				$filter[] = JHtml::_('select.option', $location, JText::_($text));
-			}
-			return $filter;
-		}
-		return false;
-	}
-
-	protected function getTheAdmin_viewSelections()
-	{
-		// Get a db connection.
-		$db = JFactory::getDbo();
-
-		// Create a new query object.
-		$query = $db->getQuery(true);
-
-		// Select the text.
-		$query->select($db->quoteName('admin_view'));
-		$query->from($db->quoteName('#__sermondistributor_help_document'));
-		$query->order($db->quoteName('admin_view') . ' ASC');
-
-		// Reset the query using our newly populated query object.
-		$db->setQuery($query);
-
-		$results = $db->loadColumn();
-
-		if ($results)
-		{
-			$results = array_unique($results);
-			$filter = array();
-			foreach ($results as $admin_view)
-			{
-				// Now add the admin_view and its text to the options array
-				$filter[] = JHtml::_('select.option', $admin_view, $admin_view);
-			}
-			return $filter;
-		}
-		return false;
-	}
-
-	protected function getTheSite_viewSelections()
-	{
-		// Get a db connection.
-		$db = JFactory::getDbo();
-
-		// Create a new query object.
-		$query = $db->getQuery(true);
-
-		// Select the text.
-		$query->select($db->quoteName('site_view'));
-		$query->from($db->quoteName('#__sermondistributor_help_document'));
-		$query->order($db->quoteName('site_view') . ' ASC');
-
-		// Reset the query using our newly populated query object.
-		$db->setQuery($query);
-
-		$results = $db->loadColumn();
-
-		if ($results)
-		{
-			$results = array_unique($results);
-			$filter = array();
-			foreach ($results as $site_view)
-			{
-				// Now add the site_view and its text to the options array
-				$filter[] = JHtml::_('select.option', $site_view, $site_view);
 			}
 			return $filter;
 		}

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
@@ -37,7 +37,6 @@ class com_sermondistributorInstallerScript
 {
 	/**
 	 * method to install the component
-	 *
 	 *
 	 * @return void
 	 */
@@ -619,17 +618,27 @@ class com_sermondistributorInstallerScript
 	 */
 	function preflight($type, $parent)
 	{
+		// get application
+		$app = JFactory::getApplication();
+		// is redundant ...hmmm
 		if ($type == 'uninstall')
-		{        	
+		{
 			return true;
 		}
-		
-		$app = JFactory::getApplication();
+		// the default for both install and update
 		$jversion = new JVersion();
-		if (!$jversion->isCompatible('3.4.1'))
+		if (!$jversion->isCompatible('3.6.0'))
 		{
-			$app->enqueueMessage('Please upgrade to at least Joomla! 3.4.1 before continuing!', 'error');
+			$app->enqueueMessage('Please upgrade to at least Joomla! 3.6.0 before continuing!', 'error');
 			return false;
+		}
+		// do any updates needed
+		if ($type == 'update')
+		{
+		}
+		// do any install needed
+		if ($type == 'install')
+		{
 		}
 	}
 
@@ -666,7 +675,7 @@ class com_sermondistributorInstallerScript
 			$sermon->table = '{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "Sermon","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$sermon->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "catid","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","preacher":"preacher","series":"series","short_description":"short_description","link_type":"link_type","source":"source","icon":"icon","tags":"tags","local_files":"local_files","description":"description","alias":"alias","not_required":"not_required","manual_files":"manual_files","scripture":"scripture","url":"url","build":"build","auto_sermons":"auto_sermons"}}';
 			$sermon->router = 'SermondistributorHelperRoute::getSermonRoute';
-			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","not_required","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "local_files","targetTable": "","targetColumn": "","displayColumn": ""},{"sourceColumn": "manual_files","targetTable": "","targetColumn": "","displayColumn": ""}]}';
+			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","not_required","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Set the object into the content types table.
 			$sermon_Inserted = $db->insertObject('#__content_types', $sermon);
@@ -783,7 +792,7 @@ class com_sermondistributorInstallerScript
 			$sermon->table = '{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "Sermon","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$sermon->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "catid","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","preacher":"preacher","series":"series","short_description":"short_description","link_type":"link_type","source":"source","icon":"icon","tags":"tags","local_files":"local_files","description":"description","alias":"alias","not_required":"not_required","manual_files":"manual_files","scripture":"scripture","url":"url","build":"build","auto_sermons":"auto_sermons"}}';
 			$sermon->router = 'SermondistributorHelperRoute::getSermonRoute';
-			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","not_required","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "local_files","targetTable": "","targetColumn": "","displayColumn": ""},{"sourceColumn": "manual_files","targetTable": "","targetColumn": "","displayColumn": ""}]}';
+			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","not_required","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Check if sermon type is already in content_type DB.
 			$sermon_id = null;

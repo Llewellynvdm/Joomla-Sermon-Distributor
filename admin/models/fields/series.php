@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -150,7 +150,7 @@ class JFormFieldSeries extends JFormFieldList
 	{
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select($db->quoteName(array('a.id','a.name'),array('id','series_name')));
+		$query->select($db->quoteName(array('a.id','a.name'),array('id','series_request_id_name')));
 		$query->from($db->quoteName('#__sermondistributor_series', 'a'));
 		$query->where($db->quoteName('a.published') . ' = 1');
 		$query->order('a.name ASC');
@@ -162,7 +162,7 @@ class JFormFieldSeries extends JFormFieldList
 			$options[] = JHtml::_('select.option', '', 'Select a series');
 			foreach($items as $item)
 			{
-				$options[] = JHtml::_('select.option', $item->id, $item->series_name);
+				$options[] = JHtml::_('select.option', $item->id, $item->series_request_id_name);
 			}
 		}
 		return $options;

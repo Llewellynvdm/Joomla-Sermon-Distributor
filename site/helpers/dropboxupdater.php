@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		dropboxupdater.php
@@ -384,7 +384,7 @@ class Dropboxupdater
 		if (SermondistributorHelper::checkArray($this->listing))
 		{			
 			// encrypt the urls
-			$locker = new FOFEncryptAes($this->localkey, 256);
+			$locker = new FOFEncryptAes($this->localkey, 128);
 			foreach ($this->listing as $folder => $link)
 			{
 				$storeage[$folder] = base64_encode($locker->encryptString($link));

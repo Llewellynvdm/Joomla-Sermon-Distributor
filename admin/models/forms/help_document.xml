@@ -166,25 +166,27 @@
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE</option>
 		</field>
-		<!-- Admin_view Field. Type: Folderlist. (joomla) -->
+		<!-- Admin_view Field. Type: Adminviewfolderlist. (custom) -->
 		<field
-			type="folderlist"
+			type="adminviewfolderlist"
 			name="admin_view"
 			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL"
-			directory="/administrator/components/com_sermondistributor/views"
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_DESCRIPTION"
-			hide_none="true"
-			hide_default="true"
+			class="list_class"
+			multiple="false"
+			required="true"
+			button="false"
 		/>
-		<!-- Site_view Field. Type: Folderlist. (joomla) -->
+		<!-- Site_view Field. Type: Siteviewfolderlist. (custom) -->
 		<field
-			type="folderlist"
+			type="siteviewfolderlist"
 			name="site_view"
 			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL"
-			directory="/components/com_sermondistributor/views"
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_DESCRIPTION"
-			hide_none="true"
-			hide_default="true"
+			class="list_class"
+			multiple="false"
+			required="true"
+			button="false"
 		/>
 		<!-- Target Field. Type: Radio. (joomla) -->
 		<field

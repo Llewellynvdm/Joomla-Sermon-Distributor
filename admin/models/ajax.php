@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -64,6 +64,54 @@ class SermondistributorModelAjax extends JModelList
 			}
 		}
 		return true;
+	}
+
+	/**
+	* 	Check and if a vdm notice is new (per/user)
+	**/
+	public function isNew($notice)
+	{
+		// first get the file path
+		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, $fileType = '.md', JPATH_COMPONENT_ADMINISTRATOR);
+		// check if the file is set
+		if (($content = @file_get_contents($path_filename)) !== FALSE)
+		{
+			if ($notice == $content)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	* 	set That a notice has been read (per/user)
+	**/
+	public function isRead($notice)
+	{
+		// first get the file path
+		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, $fileType = '.md', JPATH_COMPONENT_ADMINISTRATOR);
+		// set as read if not already set
+		if (($content = @file_get_contents($path_filename)) !== FALSE)
+		{
+			if ($notice == $content)
+			{
+				return true;
+			}
+		}
+		return $this->saveFile($notice,$path_filename);
+	}
+
+	protected function saveFile($data,$path_filename)
+	{
+		if (SermondistributorHelper::checkString($data))
+		{
+			$fp = fopen($path_filename, 'w');
+			fwrite($fp, $data);
+			fclose($fp);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -478,12 +526,12 @@ class SermondistributorModelAjax extends JModelList
 			// set the date object
 			$date = JFactory::getDate();
 			// build the object
-			$object->name			= $name;
+			$object->name		= $name;
 			$object->alias			= $alias;
 			$object->published		= $this->app_params->get($type.'_state', 1);
 			$object->created		= $date->toSql();
 			$object->version		= 1;
-			$object->access			= 1; // TODO must use a global setting here
+			$object->access		= 1; // TODO must use a global setting here
 			// Insert the object into the table.
 			$done = $db->insertObject('#__sermondistributor_'.$type, $object);
 			// if done return last used id

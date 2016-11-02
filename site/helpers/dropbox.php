@@ -3,7 +3,7 @@
 				Vast Development Method
 /-------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.0 - 01st July, 2015
+	@version			1.0.0 - 01st July, 2015
 	@package		Dropbox Links builder
 	@subpackage		dropboxlinks.php
 	@author			Llewellyn van der Merwe <http://www.vdm.io>

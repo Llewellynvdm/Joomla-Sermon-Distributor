@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
@@ -150,7 +150,7 @@ class JFormFieldPreachers extends JFormFieldList
 	{
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select($db->quoteName(array('a.id','a.name'),array('id','preacher_name')));
+		$query->select($db->quoteName(array('a.id','a.name'),array('id','preacher_request_id_name')));
 		$query->from($db->quoteName('#__sermondistributor_preacher', 'a'));
 		$query->where($db->quoteName('a.published') . ' = 1');
 		$query->order('a.name ASC');
@@ -162,7 +162,7 @@ class JFormFieldPreachers extends JFormFieldList
 			$options[] = JHtml::_('select.option', '', 'Select a preacher');
 			foreach($items as $item)
 			{
-				$options[] = JHtml::_('select.option', $item->id, $item->preacher_name);
+				$options[] = JHtml::_('select.option', $item->id, $item->preacher_request_id_name);
 			}
 		}
 		return $options;

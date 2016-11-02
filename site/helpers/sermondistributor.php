@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -97,6 +97,11 @@ abstract class SermondistributorHelper
 	protected static $manuallisting = false;
 
 	/**
+	* 	The user notice info File Name
+	**/
+	protected static $usernotice = false;
+
+	/**
 	* 	check Dropbox Local Listing
 	**/
 	public static function getDownloadLinks(&$sermon)
@@ -105,7 +110,7 @@ abstract class SermondistributorHelper
 		// Get local key
 		$localkey = self::getLocalKey();
 		// decrypt the urls
-		$safe = new FOFEncryptAes($localkey, 256);
+		$safe = new FOFEncryptAes($localkey, 128);
 		// internal download url
 		$keyCounter = new stdClass;
 		$keyCounter->sermon = $sermon->id;
@@ -289,7 +294,7 @@ abstract class SermondistributorHelper
 	{
 		// Get local key
 		$localkey = self::getLocalKey();
-		$opener = new FOFEncryptAes($localkey, 256);
+		$opener = new FOFEncryptAes($localkey, 128);
 		$counter = json_decode(rtrim($opener->decryptString(base64_decode($counter))));
 		if (self::checkObject($counter))
 		{
@@ -413,16 +418,16 @@ abstract class SermondistributorHelper
 		return false;
 	}
 	
-	protected static function getFilePath($type, $name = 'listing')
+	public static function getFilePath($type, $name = 'listing', $key = '', $fileType = '.json', $PATH = JPATH_COMPONENT_SITE)
 	{
 		if (!self::checkString(self::${$type.$name}))
 		{
 			// Get local key
 			$localkey = self::getLocalKey();
 			// set the name
-			$fileName = md5($type.$name.$localkey);
+			$fileName = md5($type.$name.$localkey.$key);
 			// set file path			
-			self::${$type.$name} = JPATH_COMPONENT_SITE.'/helpers/'.$fileName.'.json';
+			self::${$type.$name} = $PATH.'/helpers/'.$fileName.$fileType;
 		}
 		// return the path
 		return self::${$type.$name};

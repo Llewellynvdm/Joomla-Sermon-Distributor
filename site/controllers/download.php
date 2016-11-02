@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.3.4
-	@build			17th July, 2016
+	@build			31st October, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		download.php
@@ -62,15 +62,20 @@ class SermondistributorControllerDownload extends JControllerLegacy
 						// we must first count this download
 						if (SermondistributorHelper::countDownload($keys,$filename))
 						{
+							// get Site name
+							$config = JFactory::getConfig();
+							$vendor = $config->get('sitename');
+							$name = SermondistributorHelper::safeString($filename, 'Ww');
 							// Get local key
 							$localkey = SermondistributorHelper::getLocalKey();
-							$opener = new FOFEncryptAes($localkey, 256);
+							$opener = new FOFEncryptAes($localkey, 128);
 							$link = rtrim($opener->decryptString(base64_decode($enUrl)));
 							$info = $this->getContentInfo($link);
 							// set headers
 							$app = JFactory::getApplication();
+							$app->setHeader('Accept-ranges', 'bytes', true);
+							$app->setHeader('Connection', 'keep-alive', true);
 							$app->setHeader('Content-Encoding', 'none', true);
-							$app->setHeader('Content-Transfer-Encoding', 'binary'. true);
 							$app->setHeader('Content-disposition', 'attachment; filename="'.$filename.'";', true);
 							if (isset($info['type']) && $info['type'])
 							{
@@ -88,11 +93,13 @@ class SermondistributorControllerDownload extends JControllerLegacy
 							if (isset($info['filesize']) && $info['filesize'])
 							{
 								$app->setHeader('Content-Length', (int) $info['filesize'], true);
-								$app->setHeader('Accept-ranges', 'bytes', true);
-								$app->setHeader('Content-ranges', 'bytes 0-'.(int) $info['filesize'], true);
+								$app->setHeader('Content-Size', (int) $info['filesize'], true);	
 							}
-							$app->setHeader('Connection', 'keep-alive', true);
-							$app->setHeader('Content-security-policy', 'referrer no-referrer', true);							
+							$app->setHeader('Content-security-policy', 'referrer no-referrer', true);
+							$app->setHeader('Content-Name', '"'.$name.'"', true);
+							$app->setHeader('Content-Version', '1.0', true);
+							$app->setHeader('Content-Vendor', '"'.$vendor.'"', true);
+							$app->setHeader('Content-URL', '"'.JUri::getInstance().'"', true);							
 							$app->setHeader('etag', md5($enUrl), true);
 							$app->setHeader('Pragma', 'public', true);
 							$app->setHeader('cache-control', 'max-age=0', true);
@@ -141,7 +148,7 @@ class SermondistributorControllerDownload extends JControllerLegacy
 		if (preg_match('/Content-Length: (\d+)/', $data, $matches))
 		{
 			// Contains file size in bytes
-			$found['filesize'] = (int)$matches[1];
+			$found['filesize'] = (int) $matches[1];
 
 		}
 		// get the Content Type
