@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		files_fullwidth.php
@@ -35,8 +35,8 @@ $fields = $displayData->get('fields') ?: array(
 	'note_link_encrypted',
 	'source',
 	'build',
-	'note_manual_dropbox',
-	'note_auto_dropbox',
+	'note_manual_externalsource',
+	'note_auto_externalsource',
 	'manual_files',
 	'local_files',
 	'url'

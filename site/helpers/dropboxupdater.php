@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		dropboxupdater.php
@@ -31,10 +31,6 @@ defined('_JEXEC') or die('Restricted access');
  */
 class Dropboxupdater
 {
-	/**
-	* 	to see where we are in the prosses
-	**/
-	public $progress = array('report' => 0);
 	
 	/**
 	* 	update flag (if false update will not happen)
@@ -42,14 +38,19 @@ class Dropboxupdater
 	protected $okay = true;
 	
 	/**
-	* 	the type of linksto update
+	* 	update flag (if false update will not happen)
 	**/
-	protected $type;
+	protected $data = null;
 	
 	/**
-	* 	allow a forced manual update
+	* 	the file Key
 	**/
-	protected $runManual;
+	protected $fileKey;
+	
+	/**
+	* 	allow a forced update
+	**/
+	protected $forceUpdate;
 	
 	/**
 	* 	Todays date-time
@@ -67,14 +68,9 @@ class Dropboxupdater
 	protected $updateMethod;
 	
 	/**
-	* 	update links
+	* 	update targets
 	**/
-	protected $updateLinks = array();
-	
-	/**
-	* 	Listing of dropbox links
-	**/
-	protected $listing = array();
+	protected $updateTarget;
 
 	/**
 	* 	info related to this update
@@ -88,9 +84,19 @@ class Dropboxupdater
 	protected $localkey = false;
 	
 	/**
+	* 	Main dropbox class
+	**/
+	protected $dropbox;
+	
+	/**
 	* 	component parameters
 	**/
 	protected $app_params;
+	
+	/**
+	* 	the errors
+	**/
+	protected $errors = array();
 
 	/**
 	*	everything we want done when initialized
@@ -99,32 +105,68 @@ class Dropboxupdater
 	{
 		// get params
 		$this->app_params = JComponentHelper::getParams('com_sermondistributor');
-
-		// set local key
-		$this->localkey = md5($this->app_params->get('link_encryption', 'localKey34fdWEkl'));
 	}
 
 	/**
-	*	update mehtod
+	*	get the logged errors array
 	**/
-	public function update($type = false, $runManual = false)
+	public function getErrors()
+	{
+		return $this->errors;
+	}
+
+	/**
+	*	set the error to the log
+	**/
+	protected function setErrors($error)
+	{
+		if (SermondistributorHelper::checkString($error))
+		{
+			$this->errors[] = $error;
+		}
+		elseif (SermondistributorHelper::checkArray($error))
+		{
+			foreach($error as $log)
+			{
+				if (SermondistributorHelper::checkString($log))
+				{
+					$this->errors[] = $log;
+				}
+			}
+		}
+	}
+
+	/**
+	*	update method
+	**/
+	public function update($id, $target, $type = false, $forceUpdate = false, $sleutel = null)
 	{
 		if ($type)
 		{
-			// start frech
+			// start fresh
 			$this->okay = true;
-			// set type
+			$this->data = null;
+			// is this a forced run
+			$this->forceUpdate = $forceUpdate;
+			// the file key
+			$this->fileKey = SermondistributorHelper::safeString($id.$target.$type);
+			// set the type of this listing
 			$this->type = $type;
-			$this->runManual = $runManual;
 			
-			// set progress file name
-			$this->progressFilePath = JPATH_COMPONENT_SITE.'/helpers/'.md5($this->type.'progress'.$this->localkey).'.json';
+			// get the external source data being updated
+			$this->setExternalSourceData($id);
+			
+			// load the token if manualy set
+			if ($sleutel)
+			{
+				$this->setExternalSourceData($id, array('oauthtoken' => $sleutel));
+			}
 	
 			// what update method is set
 			$this->setUpdateMethod();
 
 			// set the update links
-			$this->setUpdateLinks();
+			$this->setUpdateTarget($target);
 
 			// set needed dates
 			if ($this->okay)
@@ -135,18 +177,13 @@ class Dropboxupdater
 			// get info data or set if not found
 			if ($this->okay)
 			{
-				$this->setInfoData();
+				$this->setUpdateInfoData();
 			}
 
 			// check if update should run now
 			if ($this->okay)
 			{
 				$this->checkUpdateStatus();
-			}
-			// set progress
-			if ($this->okay)
-			{
-				$this->saveProgress();
 			}
 			
 			// before update save update info incase class is called again
@@ -170,20 +207,46 @@ class Dropboxupdater
 			if ($this->okay)
 			{
 				// set the config
-				$this->setDropboxConfig();
-				// set progress
-				$this->progress['report'] = 30;
-				$this->saveProgress();
+				$this->setDetailsConfig();
 				// load the file
 				JLoader::import('dropbox', JPATH_COMPONENT_SITE.'/helpers');
-				// okay now update
-				if ($this->doUpdate())
+				$build = 1;
+				if ('auto' == $this->type)
 				{
-					return $this->okay;
+					$build = 2;
 				}
+				// load the dropbox class
+				$this->dropbox = new Dropbox(SermondistributorHelper::getModel('local_listing', JPATH_COMPONENT_ADMINISTRATOR), $build);
+				// okay now update
+				$this->okay = $this->doUpdate();
 			}
+			// always reset if all okay
+			return $this->resetUpdate();
 		}
+		$this->setErrors('The update type is unknown.');
 		return false;
+	}
+	
+	/**
+	 *	set the exsternal source data
+	 */
+	protected function setExternalSourceData($id, $data = array())
+	{
+		// get the data if not set
+		if (!$this->data || !SermondistributorHelper::checkObject($this->data))
+		{
+			// load model to get the data
+			$model = SermondistributorHelper::getModel('external_source', JPATH_COMPONENT_ADMINISTRATOR);
+			$this->data = $model->getItem($id);
+		}
+		// if new data is set load it
+		if (SermondistributorHelper::checkArray($data))
+		{
+			foreach ($data as $key => $value)
+			{
+				$this->data->$key = $value;
+			}
+		}				
 	}
 
 	/**
@@ -191,14 +254,13 @@ class Dropboxupdater
 	**/
 	protected function setUpdateMethod()
 	{
-		$method = $this->app_params->get($this->type.'_link_update_method', 0);
-		if ($this->runManual)
+		if ($this->forceUpdate)
 		{
 			// this is a manual method
 			$this->updateMethod = 'manual';
 		}
-		elseif (2 == $method)
-		{	
+		elseif (2 == $this->data->update_method)
+		{
 			// this it an auto mehtod
 			$this->updateMethod = 'auto';
 		}
@@ -209,30 +271,54 @@ class Dropboxupdater
 	}
 	
 	/**
-	*	set update Links
+	*	set update target
 	**/
-	protected function setUpdateLinks()
+	protected function setUpdateTarget($nr)
 	{
-		// the number of links
-		$numbers = range(1, 4);
-		// now check if they are set
-		foreach ($numbers as $number)
+		// get target based on type and position
+		if ('full' == $this->data->permissiontype && $nr > 0)
 		{
-			// set the number to string
-			$numStr = SermondistributorHelper::safeString($number);
-			// Get the url
-			$url = $this->app_params->get($this->type.'dropbox'.$numStr, null);
-			// only load those that are set
-			if ($url)
+			$position = $nr - 1;
+			if (1 == $this->data->dropboxoptions && SermondistributorHelper::checkJson($this->data->sharedurl))
 			{
-				$this->updateLinks[] = $url;
+				$targets = json_decode($this->data->sharedurl)->tsharedurl;
+			}
+			elseif (2 == $this->data->dropboxoptions && SermondistributorHelper::checkJson($this->data->folder))
+			{
+				$targets = json_decode($this->data->folder)->tfolder;
+			}
+			// check if we found any
+			if (!isset($targets[$position]) || !SermondistributorHelper::checkString($targets[$position]))
+			{
+				$this->setErrors('The target Shared-url or Folder is not set.');
+				$this->okay = false;
+			}
+			else
+			{
+				$this->updateTarget = $targets[$position];
 			}
 		}
-		// check if we found any
-		if (!isset($this->updateLinks) || !SermondistributorHelper::checkArray($this->updateLinks))
+		else
 		{
-			$this->okay = false;
+			$this->updateTarget = '';
 		}
+	}
+
+	/**
+	*	set the configeration for exsternal source class
+	**/
+	protected function setDetailsConfig()
+	{
+		// reset config
+		$this->detailsConfig = array();
+		// the source ID
+		$this->detailsConfig['sourceID'] = $this->data->id;
+		// get the legal files set
+		$this->detailsConfig['addTypes'] = $this->data->filetypes;
+		// set other config settings
+		$this->detailsConfig['dropboxOption'] = $this->data->dropboxoptions;
+		// set dropbox target
+		$this->detailsConfig['dropboxTarget'] = $this->updateTarget;
 	}
 	
 	/**
@@ -252,7 +338,7 @@ class Dropboxupdater
 		else
 		{
 			// based on the auto time we will set the next update date/time
-			$timer = $this->app_params->get($this->type.'_dropbox_timer', '60');
+			$timer = $this->data->update_timer;
 			if ($timer != 0)
 			{
 				// Get Next Update Time
@@ -261,18 +347,19 @@ class Dropboxupdater
 			// if timer is 0 we should not update
 			else
 			{
+				$this->setErrors('The timer is not setup correctly.');
 				$this->okay = false;
 			}			
 		}
 	}
 	
 	/**
-	*	set update mehtod
+	*	set update info data
 	**/
-	protected function setInfoData()
+	protected function setUpdateInfoData()
 	{
 		// set the info file name
-		$fileName = md5($this->type.'info'.$this->localkey);
+		$fileName = md5($this->fileKey.'info'.$this->localkey);
 		// set file path
 		$this->infoFilePath = JPATH_COMPONENT_SITE.'/helpers/'.$fileName.'.json';
 		
@@ -298,24 +385,18 @@ class Dropboxupdater
 		if ($this->updateInfo->updateactive)
 		{
 			$this->okay = false;
+			$this->setErrors('There is an update already running.');
 		}
 		// check if the time has come to do the next update
 		elseif (('auto' == $this->updateMethod) && ($this->updateInfo->nextupdate > $this->today))
 		{
 			$this->okay = false;
+			$this->setErrors('It is not yet time to run this update.');
 		}
 		else
 		{
 			$this->updateInfo->updatenow = true;
 		}
-	}
-
-	/**
-	*	save the update info
-	**/
-	protected function saveProgress()
-	{
-		return $this->saveJson(json_encode($this->progress),$this->progressFilePath);
 	}
 
 	/**
@@ -333,93 +414,32 @@ class Dropboxupdater
 	{
 		// we need more then the normal time to run this script 5 minutes at least.
 		ini_set('max_execution_time', 500);
-		// get data of all the urls
-		foreach ($this->updateLinks as $mainUrl)
+		// get data of all the shared links of all target items
+		if (!$this->dropbox->getFiles($this->data->oauthtoken, $this->data->permissiontype, $this->detailsConfig))
 		{
-			// set progress
-			if ($this->progress['report'] < 60)
-			{
-				$this->progress['report'] = $this->progress['report'] + 5;
-				$this->saveProgress();
-			}
-			// get ldropbox links
-			$dropbox = new Dropbox($mainUrl, $this->dropboxConfig);
-			// set progress
-			if ($this->progress['report'] < 70)
-			{
-				$this->progress['report'] = $this->progress['report'] + 5;
-				$this->saveProgress();
-			}
-			// get the links
-			if (SermondistributorHelper::checkArray($dropbox->files))
-			{
-				$this->listing = array_merge($this->listing, $dropbox->files);
-			}
-			// set progress
-			if ($this->progress['report'] < 80)
-			{
-				$this->progress['report'] = $this->progress['report'] + 5;
-				$this->saveProgress();
-			}
-			unset($dropbox);
+			$this->setErrors($this->dropbox->error_summary);
+			return false;
+		}		
+		// if this is a manual update, then revoke the token
+		if ($this->forceUpdate)
+		{
+			$this->dropbox->revokeToken();
 		}
-		
-		// now store the new listing
-		return $this->setNewListing();
+		return true;
 	}
 	
-	protected function setNewListing()
-	{		
-		// set progress
-		$this->progress['report'] = 100;
-		$this->saveProgress();
-		// reset storage
-		$storeage = array();
-		// set the listing file name
-		$fileName = md5($this->type.'listing'.$this->localkey);
-		// set file path
-		$listingFilePath = JPATH_COMPONENT_SITE.'/helpers/'.$fileName.'.json';
-		
-		// now store the new listing
-		if (SermondistributorHelper::checkArray($this->listing))
-		{			
-			// encrypt the urls
-			$locker = new FOFEncryptAes($this->localkey, 128);
-			foreach ($this->listing as $folder => $link)
-			{
-				$storeage[$folder] = base64_encode($locker->encryptString($link));
-			}
-		}
-		else
-		{
-			$this->okay = false;
-		}
-		// save the update links.
-		$this->saveJson(json_encode($storeage),$listingFilePath);
-		// make sure the update reset
-		$this->updateInfo->nextupdate = $this->next;
-		$this->updateInfo->updateactive = false;
-		$this->updateInfo->updatenow = false;
-				
-		return $this->saveUpdateInfo();
-	}
-
-	/**
-	*	set the configeration for dropbox class
-	**/
-	protected function setDropboxConfig()
+	public function resetUpdate()
 	{
-		// reset config
-		$this->dropboxConfig = array();
-		// get the legal files set
-		$getfiles = $this->app_params->get('dropbox_filetypes', null);
-		if (SermondistributorHelper::checkArray($getfiles))
+		if ($this->okay || (isset($this->dropbox->forceReset) && $this->dropbox->forceReset))
 		{
-			$this->dropboxConfig['get'] = $getfiles;
+			// make sure the update reset
+			$this->updateInfo->nextupdate = $this->next;
+			$this->updateInfo->updateactive = false;
+			$this->updateInfo->updatenow = false;
+			// store final update
+			$this->saveUpdateInfo();
 		}
-		// set other config settings
-		$this->dropboxConfig['save'] = false;
-		$this->dropboxConfig['download'] = false;
+		return $this->okay;
 	}
 
 	protected function saveJson($data,$filename)

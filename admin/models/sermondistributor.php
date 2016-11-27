@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -43,10 +43,13 @@ class SermondistributorModelSermondistributor extends JModelList
 		$icons  = array();
                 // view groups array
 		$viewGroups = array(
-			'main' => array('png.preacher.add', 'png.preachers', 'png.sermon.add', 'png.sermons', 'png.sermons.catid', 'png.series.add', 'png.series_list', 'png.statistics', 'png.help_documents')
+			'main' => array('png.preacher.add', 'png.preachers', 'png.sermon.add', 'png.sermons', 'png.sermons.catid', 'png.series.add', 'png.series_list', 'png.statistics', 'png.external_source.add', 'png.external_sources', 'png.manual_updater', 'png.local_listings', 'png.help_documents')
 		);
 		// view access array
 		$viewAccess = array(
+			'manual_updater.access' => 'manual_updater.access',
+			'manual_updater.submenu' => 'manual_updater.submenu',
+			'manual_updater.dashboard_list' => 'manual_updater.dashboard_list',
 			'preacher.create' => 'preacher.create',
 			'preachers.access' => 'preacher.access',
 			'preacher.access' => 'preacher.access',
@@ -70,6 +73,17 @@ class SermondistributorModelSermondistributor extends JModelList
 			'statistic.access' => 'statistic.access',
 			'statistics.submenu' => 'statistic.submenu',
 			'statistics.dashboard_list' => 'statistic.dashboard_list',
+			'external_source.create' => 'external_source.create',
+			'external_sources.access' => 'external_source.access',
+			'external_source.access' => 'external_source.access',
+			'external_sources.submenu' => 'external_source.submenu',
+			'external_sources.dashboard_list' => 'external_source.dashboard_list',
+			'external_source.dashboard_add' => 'external_source.dashboard_add',
+			'local_listing.create' => 'local_listing.create',
+			'local_listings.access' => 'local_listing.access',
+			'local_listing.access' => 'local_listing.access',
+			'local_listings.submenu' => 'local_listing.submenu',
+			'local_listings.dashboard_list' => 'local_listing.dashboard_list',
 			'help_document.create' => 'help_document.create',
 			'help_documents.access' => 'help_document.access',
 			'help_document.access' => 'help_document.access',

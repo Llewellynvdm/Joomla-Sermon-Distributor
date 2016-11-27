@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -37,23 +37,26 @@ abstract class SermondistributorHelper
 	**/
 	public static function globalEvent($document)
 	{
-		self::loadDropboxAjax($document);
+		self::loadExternalUpdateAjax($document);
 	} 
 
 	/**
-	* 	Load the Dropbox Ajax to page
+	* 	Load the External Update Ajax to page
 	**/
-	public static function loadDropboxAjax($document)
+	public static function loadExternalUpdateAjax($document)
 	{
-		$document->addScriptDeclaration("
+		$updates = self::getExternalListingUpdateKeys(); // id, target, type
+		if (self::checkArray($updates))
+		{
+			$document->addScriptDeclaration("
 			jQuery(window).load(function() {
-				checkDropboxListing(3);
+				checkExternalListing(".implode('); checkExternalListing(', $updates).");
 			});
 			
-			function checkDropboxListing(fromview){
-				var getUrl = '".JURI::root()."index.php?option=com_sermondistributor&task=ajax.checkDropboxListing&format=json';
-				if(fromview > 0){
-					var request = 'token=".JSession::getFormToken()."&fromview='+fromview;
+			function checkExternalListing(id, target, type) {
+				var getUrl = '".JURI::root()."index.php?option=com_sermondistributor&task=ajax.autoUpdateLocalListingExternal&format=json';
+				if(target > 0 && type > 0 && id > 0){
+					var request = 'token=".JSession::getFormToken()."&target='+target+'&id='+id+'&type='+type;
 				}
 				return jQuery.ajax({
 					type: 'GET',
@@ -62,39 +65,29 @@ abstract class SermondistributorHelper
 					data: request,
 					jsonp: 'callback'
 				});
-			}
-		");
-	}
+			}");
+		}
+	} 
 
 	/**
-	* 	The dropbox links auto
+	* 	The external source links auto
 	**/
-	protected static $links_dropbox_auto;
+	protected static $links_externalsource_auto;
 	
 	/**
-	* 	The dropbox links manual
+	* 	The external source links manual
 	**/
-	protected static $links_dropbox_manual;
+	protected static $links_externalsource_manual;
 
 	/**
-	* 	The dropbox info File Name
+	* 	The external source selection auto
 	**/
-	protected static $autoprogress = false;
-
+	protected static $select_externalsource_auto;
+	
 	/**
-	* 	The dropbox info File Name
+	* 	The external source selection manual
 	**/
-	protected static $manualprogress = false;
-
-	/**
-	* 	The dropbox info File Name
-	**/
-	protected static $autolisting = false;
-
-	/**
-	* 	The dropbox info File Name
-	**/
-	protected static $manuallisting = false;
+	protected static $select_externalsource_manual;
 
 	/**
 	* 	The user notice info File Name
@@ -102,7 +95,42 @@ abstract class SermondistributorHelper
 	protected static $usernotice = false;
 
 	/**
-	* 	check Dropbox Local Listing
+	* 	The update error info File Name
+	**/
+	protected static $updateerror = false;
+
+	/**
+	* 	The update errors
+	**/
+	protected static $updateErrors = array();
+
+	/**
+	* 	prepare base64 string for url
+	**/
+	public static function base64_urlencode($string, $encode = false)
+	{
+		if ($encode)
+		{
+			$string = base64_encode($string);
+		}
+		return str_replace(array('+', '/'), array('-', '_'), $string);
+	}
+
+	/**
+	* 	prepare base64 string form url
+	**/
+	public static function base64_urldecode($string, $decode = false)
+	{
+		$string = str_replace(array('-', '_'), array('+', '/'), $string);
+		if ($decode)
+		{
+			$string = base64_decode($string);
+		}
+		return $string;
+	}
+
+	/**
+	* 	get Download links of a sermon
 	**/
 	public static function getDownloadLinks(&$sermon)
 	{
@@ -122,12 +150,13 @@ abstract class SermondistributorHelper
 		{
 			$keyCounter->series = $sermon->series;
 		}
-		$keyCounter = base64_encode($safe->encryptString(json_encode($keyCounter)));
+		$keyCounterRAW = $safe->encryptString(json_encode($keyCounter));
+		$keyCounter = self::base64_urlencode($keyCounterRAW);
 		$token = JSession::getFormToken();
 		$downloadURL = JURI::root().'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
 		// check if local .htaccess should be set
 		$setHtaccess = false;
-		$onclick = ' onclick="sermonCounter(\''.$keyCounter.'\',\'FILENAME\');"';
+		$onclick = ' onclick="sermonCounter(\''.$keyCounterRAW.'\',\'FILENAME\');"';
 		// check what source of our link
 		switch ($sermon->source)
 		{
@@ -155,8 +184,8 @@ abstract class SermondistributorHelper
 						{
 							// get the file name use the same method as the auto
 							$filename = self::getDownloadFileName($sermon,$key,'local');
-							$lockedFolderPath = base64_encode($safe->encryptString($localFolder.$key));
-							$sermon->download_links[$filename] = $downloadURL.'&link='.$lockedFolderPath.'&filename='.$filename;
+							$lockedFolderPath = $safe->encryptString($localFolder.$key);
+							$sermon->download_links[$filename] = $downloadURL.'&link='.self::base64_urlencode($lockedFolderPath).'&filename='.$filename;
 							$sermon->onclick[$filename] = '';
 						}
 						elseif (2 == $sermon->link_type && $allowDirect)
@@ -171,7 +200,7 @@ abstract class SermondistributorHelper
 				break;
 			case 2:
 				// Dropbox get global dropbox switch 
-				$dropboxButton = JComponentHelper::getParams('com_sermondistributor')->get('add_to_dropbox', 1);
+				$addToButton = JComponentHelper::getParams('com_sermondistributor')->get('add_to_button', 0);
 				if (1 == $sermon->build)
 				{
 					if (self::checkArray($sermon->manual_files))
@@ -180,24 +209,43 @@ abstract class SermondistributorHelper
 						foreach($sermon->manual_files as $key)
 						{
 							// get the link
-							$dropURL = self::getDropboxLink('manual',1,$key);
+							$dropURL = self::getExternalSourceLink('manual',1,$key);
 							if (1 == $sermon->link_type && $dropURL)
 							{
 								// get the file name use the same method as the auto
 								$filename = self::getDownloadFileName($sermon,$key,'dropbox_manual');
-								$sermon->download_links[$filename] = $downloadURL.'&link='.$dropURL.'&filename='.$filename;
+								// should we encrypt string this string
+								if ('localKey34fdWEkl' == $localkey || (base64_encode(base64_decode($dropURL, true)) !== $dropURL)) // hmmm no global key has been set
+								{
+									$dropURL = $safe->encryptString($dropURL);
+								}
+								$sermon->download_links[$filename] = $downloadURL.'&link='.self::base64_urlencode($dropURL).'&filename='.$filename;
 								$sermon->onclick[$filename] = '';
 							}
 							elseif (2 == $sermon->link_type && $dropURL)
 							{
 								$filename = str_replace('VDM_pLeK_h0uEr/', '', $key);
-								$sermon->download_links[$filename] = rtrim($safe->decryptString(base64_decode($dropURL)));
+								if ('localKey34fdWEkl' == $localkey) // hmmm no global key has been set (so don't decrypt)
+								{
+									$sermon->download_links[$filename] = $dropURL;
+								}
+								else
+								{
+									$sermon->download_links[$filename] = rtrim($safe->decryptString($dropURL), "\0");
+								}
 								$sermon->onclick[$filename] = str_replace('FILENAME', $filename, $onclick);
 							}
 							// build dropbox switch if needed
-							if (1 == $dropboxButton && $dropURL)
+							if (1 == $addToButton && $dropURL)
 							{
-								$sermon->dropbox_buttons[$filename] = str_replace('?dl=1', '?dl=0', rtrim($safe->decryptString(base64_decode($dropURL))));
+								if ('localKey34fdWEkl' == $localkey) // hmmm no global key has been set (so don't decrypt)
+								{
+									$sermon->dropbox_buttons[$filename] = str_replace('?dl=1', '?dl=0', $dropURL);
+								}
+								else
+								{
+									$sermon->dropbox_buttons[$filename] = str_replace('?dl=1', '?dl=0', rtrim($safe->decryptString($dropURL), "\0"));
+								}
 								$sermon->onclick_drobox[$filename] = str_replace('FILENAME', $filename, $onclick);
 							}
 						}
@@ -211,22 +259,41 @@ abstract class SermondistributorHelper
 						foreach($sermon->auto_sermons as $filename => $key)
 						{
 							// get the link
-							$dropURL = self::getDropboxLink('auto',1,$key);
+							$dropURL = self::getExternalSourceLink('auto',1,$key);
 							if (1 == $sermon->link_type && $dropURL)
 							{
+								// should we encrypt string this string
+								if ('localKey34fdWEkl' == $localkey || (base64_encode(base64_decode($dropURL, true)) !== $dropURL)) // hmmm no global key has been set
+								{
+									$dropURL = $safe->encryptString($dropURL);
+								}
 								// get the file name (use the same method as the auto
-								$sermon->download_links[$filename] = $downloadURL.'&link='.$dropURL.'&filename='.$filename;
+								$sermon->download_links[$filename] = $downloadURL.'&link='.self::base64_urlencode($dropURL).'&filename='.$filename;
 								$sermon->onclick[$filename] = '';
 							}
 							elseif (2 == $sermon->link_type && $dropURL)
 							{
-								$sermon->download_links[$filename] = rtrim($safe->decryptString(base64_decode($dropURL)));
+								if ('localKey34fdWEkl' == $localkey) // hmmm no global key has been set (so don't decrypt)
+								{
+									$sermon->download_links[$filename] = $dropURL;
+								}
+								else
+								{
+									$sermon->download_links[$filename] = rtrim($safe->decryptString($dropURL), "\0");
+								}
 								$sermon->onclick[$filename] = str_replace('FILENAME', $filename, $onclick);
 							}
 							// build dropbox switch if needed
-							if (1 == $dropboxButton && $dropURL)
+							if (1 == $addToButton && $dropURL)
 							{
-								$sermon->dropbox_buttons[$filename] = str_replace('?dl=1', '?dl=0', rtrim($safe->decryptString(base64_decode($dropURL))));
+								if ('localKey34fdWEkl' == $localkey) // hmmm no global key has been set (so don't decrypt)
+								{
+									$sermon->dropbox_buttons[$filename] = str_replace('?dl=1', '?dl=0', $dropURL);
+								}
+								else
+								{
+									$sermon->dropbox_buttons[$filename] = str_replace('?dl=1', '?dl=0', rtrim($safe->decryptString($dropURL), "\0"));
+								}
 								$sermon->onclick_drobox[$filename] = str_replace('FILENAME', $filename, $onclick);
 							}
 						}
@@ -238,8 +305,8 @@ abstract class SermondistributorHelper
 				$filename = self::getDownloadFileName($sermon,$sermon->url,'url');
 				if (1 == $sermon->link_type)
 				{
-					$lockedURL = base64_encode($safe->encryptString($sermon->url));
-					$sermon->download_links[$filename] = $downloadURL.'&link='.$lockedURL.'&filename='.$filename;
+					$lockedURL = $safe->encryptString($sermon->url);
+					$sermon->download_links[$filename] = $downloadURL.'&link='.self::base64_urlencode($lockedURL).'&filename='.$filename;
 					$sermon->onclick[$filename] = '';
 				}
 				elseif (2 == $sermon->link_type)
@@ -261,25 +328,104 @@ abstract class SermondistributorHelper
 		}
 		return true;
 	}
+
+	public static function getExternalListingUpdateKeys($id = null, $updateMethod = 2, $returnType = 1)
+	{
+		// first check if this file already has statistics
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(array('id','sharedurl','folder','permissiontype','dropboxoptions','build')));
+		$query->from($db->quoteName('#__sermondistributor_external_source'));
+		$query->where($db->quoteName('update_method') . ' = '. (int) $updateMethod);
+		if ($id && is_numeric($id))
+		{
+			$query->where($db->quoteName('id') . ' = '. (int) $id);
+		}
+		elseif ($id && self::checkArray($id))
+		{
+			$ids = implode(',', array_map( 'intval', $id));
+			$query->where($db->quoteName('id') . ' IN  (' . $ids . ')');
+		}
+		$query->where($db->quoteName('published') . ' = 1');
+		$db->setQuery($query);
+		$db->execute();
+		if ($db->getNumRows())
+		{
+			$results = $db->loadObjectList();
+			$updates = array();
+			foreach ($results as $result)
+			{
+				if ('full' == $result->permissiontype)
+				{
+					// load folder or urls
+					switch ($result->dropboxoptions)
+					{
+						case 1: // sharedurl
+							if (self::checkJson($result->sharedurl))
+							{
+								$targets = json_decode($result->sharedurl)->tsharedurl;
+							}
+						break;
+						case 2: // folders
+							if (self::checkJson($result->folder))
+							{
+								$targets = json_decode($result->folder)->tfolder;
+							}
+						break;
+					}
+					if (self::checkArray($targets))
+					{
+						foreach ($targets as $key => $value)
+						{
+							$nr = $key + 1;
+							// id, target, type
+							if (1 == $returnType)
+							{
+								$updates[] = $result->id . ', '. $nr . ', ' . $result->build;
+							}
+							else // only return the targets
+							{
+								$updates[] = $nr;
+							}
+						}
+					}
+				}
+				else
+				{
+					// id, target, type
+					if (1 == $returnType)
+					{
+						$updates[] = $result->id . ', 1, '. $result->build;
+					}
+					else // only return the targets
+					{
+						$updates[] = 1;
+					}
+				}
+			}
+			return $updates;
+		}
+		return false;
+	}
 	
-	public static function getDropboxLink($type, $return = false, $target = false)
+	public static function getExternalSourceLink($type, $return = 7, $get = false, $target = 'links')
 	{
 		// make sure all defaults are set
-		$found = self::checkDropboxLocalListing($type);
+		$found = self::checkExternalSourceLocalListing($type, $target);
 		if ($found)
 		{
 			switch($return)
 			{
 				case 1:
 					// return a link
-					if (isset(self::${'links_dropbox_'.$type}[$target]))
+					if (isset(self::${$target.'_externalsource_'.$type}[$get]))
 					{
-						return self::${'links_dropbox_'.$type}[$target];
+						return self::${$target.'_externalsource_'.$type}[$get];
 					}
 					break;
 				case 2:
 					// return all links
-					return self::${'links_dropbox_'.$type};
+					return self::${$target.'_externalsource_'.$type};
 					break;
 				default :
 					// just confirm that it is set
@@ -295,7 +441,7 @@ abstract class SermondistributorHelper
 		// Get local key
 		$localkey = self::getLocalKey();
 		$opener = new FOFEncryptAes($localkey, 128);
-		$counter = json_decode(rtrim($opener->decryptString(base64_decode($counter))));
+		$counter = json_decode(rtrim($opener->decryptString($counter), "\0"));
 		if (self::checkObject($counter))
 		{
 			$counter->filename = $filename;
@@ -390,27 +536,37 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* 	check Dropbox Local Listing (do we have the files)
+	* 	check External Source Local Listing (do we have the files)
 	**/
-	public static function checkDropboxLocalListing($type)
+	public static function checkExternalSourceLocalListing($type, $get = 'links')
 	{
-		$filePath = self::getFilePath($type);
 		// get the local links
-		if (self::checkArray(self::${'links_dropbox_'.$type}))
+		if (isset(self::${$get.'_externalsource_'.$type}) && self::checkArray(self::${$get.'_externalsource_'.$type}))
 		{
 			// return true we have links loaded
 			return true;
 		}
-		elseif (($jsonlinks = @file_get_contents($filePath)) !== FALSE)
-		{			
-			if (self::checkString($jsonlinks))
+		else
+		{
+			$target = array('links' => 'url', 'select' => 'name');
+			$build = array( 'auto' => 2, 'manual' => 1);
+			if (isset($build[$type]))
 			{
-				// get saved links
-				$storeage = json_decode($jsonlinks,true);
-				if (self::checkArray($storeage))
+				// load the links from the database
+				$db = JFactory::getDbo();
+				// Create a new query object.
+				$query = $db->getQuery(true);
+				$query->select($db->quoteName(array('key', $target[$get])));
+				$query->from($db->quoteName('#__sermondistributor_local_listing'));
+				$query->where($db->quoteName('build') . ' = '. (int) $build[$type]);
+				$query->where($db->quoteName('published') . ' = 1'); // TODO we can now limit the links to access groups
+ 				// Reset the query using our newly populated query object.
+				$db->setQuery($query);
+				$db->execute();
+				if ($db->getNumRows())
 				{
-					// load the saved links
-					self::${'links_dropbox_'.$type} = $storeage;
+					self::${$get.'_externalsource_'.$type} = $db->loadAssocList('key', $target[$get]);
+					// return true we have links loaded
 					return true;
 				}
 			}
@@ -436,31 +592,80 @@ abstract class SermondistributorHelper
 	/**
 	* 	get the localkey
 	**/
-	protected static $localkey = false;
+	protected static $localkey = array();
 	
-	public static function getLocalKey()
+	public static function getLocalKey($type = 'basic_key')
 	{
-		if (!self::$localkey)
+		if (!isset(self::$localkey[$type]))
 		{
 			// get the main key
-			self::$localkey = md5(JComponentHelper::getParams('com_sermondistributor')->get('link_encryption', 'localKey34fdWEkl'));
+			self::$localkey[$type] = JComponentHelper::getParams('com_sermondistributor')->get($type, 'localKey34fdWEkl');
 		}
-		return self::$localkey;
+		return self::$localkey[$type];
 	}
 
-	public static function updateDropbox($type = false, $force = false)
+	public static function updateExternalSource($id, $target = 0, $type = false, $force = false, $sleutel = null)
 	{
-		// load the file
-		JLoader::import('dropboxupdater', JPATH_COMPONENT_SITE.'/helpers');
-		// update types
-		$types = array('manual','auto');
-		// okay now update this type
-		if (self::checkString($type) && in_array($type,$types))
+		$source = self::getVar('external_source', (int) $id, 'id', 'externalsources');
+		if (1 == $source) // Dropbox is the source
 		{
-			$dropbox = new Dropboxupdater();
-			return $dropbox->update($type,$force);
+			// load the file
+			JLoader::import('dropboxupdater', JPATH_COMPONENT_SITE.'/helpers');
+			// update types
+			$types = array('manual','auto');
+			// okay now update this type
+			if (self::checkString($type) && in_array($type,$types))
+			{
+				$dropbox = new Dropboxupdater();
+				if ($dropbox->update($id, $target, $type, $force, $sleutel))
+				{
+					return true;
+				}
+				self::setUpdateError($id, $dropbox->getErrors());
+				return false;
+			}
 		}
+		self::setUpdateError($id, array(JText::_('COM_SERMONDISTRIBUTOR_THE_EXTERNAL_SOURCE_COULD_NOT_BE_FOUND')));
 		return false;
+	}
+	
+	public static function getUpdateError($id, $fileKey = null)
+	{
+		// get update error from file
+		if ($fileKey)
+		{
+			$file_path = self::getFilePath('update', 'error', $fileKey, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
+			// check if it is set
+			if (($text = @file_get_contents($file_path)) !== FALSE)
+			{
+				// no error on success
+				if ('success' != $text)
+				{
+					return $text;
+				}
+			}
+			return false;
+		}
+		if (isset(self::$updateErrors[$id]) && self::checkArray(self::$updateErrors[$id]))
+		{
+			return '<ul><li>'.implode('</li><li>', self::$updateErrors[$id]).'</li><ul>';
+		}
+		return JText::_('COM_SERMONDISTRIBUTOR_UNKNOWN_ERROR_HAS_OCCURRED');
+	}
+	
+	protected static function setUpdateError($id, $errorArray)
+	{
+		if (self::checkArray($errorArray) && $id > 0)
+		{
+			foreach ($errorArray as $error)
+			{
+				if (!isset(self::$updateErrors[$id]))
+				{
+					self::$updateErrors[$id] = array();
+				}
+				self::$updateErrors[$id][] = $error;
+			}
+		}
 	}
 	
 	public static function jsonToString($value, $sperator = ", ", $table = null)
@@ -1468,5 +1673,20 @@ abstract class SermondistributorHelper
 			$key[] = $bag[$get];
 		}
 		return implode($key);
+	}
+
+	public static function getCryptKey($type, $default = null)
+	{
+		if ('basic' == $type)
+		{
+			// Get the global params
+			$params = JComponentHelper::getParams('com_sermondistributor', true);
+			$basic_key = $params->get('basic_key', $default);
+			if ($basic_key)
+			{
+				return $basic_key;
+			}
+		}
+		return false;
 	}
 }

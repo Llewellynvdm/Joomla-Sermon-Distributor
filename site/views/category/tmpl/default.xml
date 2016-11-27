@@ -25,6 +25,14 @@
 	<!-- Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
+		<!-- Category_default_icon Field. Type: Media. (joomla) -->
+		<field
+			type="media"
+			name="category_default_icon"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_DEFAULT_ICON_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_DEFAULT_ICON_DESCRIPTION"
+			directory="Set the default icon for categories."
+		/>			
 		<!-- Category_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
@@ -145,8 +153,8 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- Spacer_hr_g Field. Type: Spacer. A None Database Field. (joomla) -->
-		<field type="spacer" name="spacer_hr_g" hr="true" class="spacer_hr_g" />			
+		<!-- Spacer_hr_b Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_b" hr="true" class="spacer_hr_b" />			
 		<!-- Category_sermons_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"

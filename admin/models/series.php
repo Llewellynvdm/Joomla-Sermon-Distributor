@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -236,7 +236,7 @@ class SermondistributorModelSeries extends JModelAdmin
 			$sourceArray = array(
 				0 => 'COM_SERMONDISTRIBUTOR_SERMON_SELECT_SOURCE',
 				1 => 'COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FOLDER',
-				2 => 'COM_SERMONDISTRIBUTOR_SERMON_DROPBOX',
+				2 => 'COM_SERMONDISTRIBUTOR_SERMON_EXTERNAL_SOURCE',
 				3 => 'COM_SERMONDISTRIBUTOR_SERMON_URL'
 			);
 			// Now check if value is found in this array
@@ -259,7 +259,8 @@ class SermondistributorModelSeries extends JModelAdmin
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
-	{		// Get the form.
+	{
+		// Get the form.
 		$form = $this->loadForm('com_sermondistributor.series', 'series', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))

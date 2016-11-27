@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
@@ -493,6 +493,178 @@ class com_sermondistributorInstallerScript
 		// Select id from content type table
 		$query->select($db->quoteName('type_id'));
 		$query->from($db->quoteName('#__content_types'));
+		// Where External_source alias is found
+		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.external_source') );
+		$db->setQuery($query);
+		// Execute query to see if alias is found
+		$db->execute();
+		$external_source_found = $db->getNumRows();
+		// Now check if there were any rows
+		if ($external_source_found)
+		{
+			// Since there are load the needed  external_source type ids
+			$external_source_ids = $db->loadColumn();
+			// Remove External_source from the content type table
+			$external_source_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.external_source') );
+			// Create a new query object.
+			$query = $db->getQuery(true);
+			$query->delete($db->quoteName('#__content_types'));
+			$query->where($external_source_condition);
+			$db->setQuery($query);
+			// Execute the query to remove External_source items
+			$external_source_done = $db->execute();
+			if ($external_source_done);
+			{
+				// If succesfully remove External_source add queued success message.
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__content_type</b> table'));
+			}
+
+			// Remove External_source items from the contentitem tag map table
+			$external_source_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.external_source') );
+			// Create a new query object.
+			$query = $db->getQuery(true);
+			$query->delete($db->quoteName('#__contentitem_tag_map'));
+			$query->where($external_source_condition);
+			$db->setQuery($query);
+			// Execute the query to remove External_source items
+			$external_source_done = $db->execute();
+			if ($external_source_done);
+			{
+				// If succesfully remove External_source add queued success message.
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+			}
+
+			// Remove External_source items from the ucm content table
+			$external_source_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.external_source') );
+			// Create a new query object.
+			$query = $db->getQuery(true);
+			$query->delete($db->quoteName('#__ucm_content'));
+			$query->where($external_source_condition);
+			$db->setQuery($query);
+			// Execute the query to remove External_source items
+			$external_source_done = $db->execute();
+			if ($external_source_done);
+			{
+				// If succesfully remove External_source add queued success message.
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__ucm_content</b> table'));
+			}
+
+			// Make sure that all the External_source items are cleared from DB
+			foreach ($external_source_ids as $external_source_id)
+			{
+				// Remove External_source items from the ucm base table
+				$external_source_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $external_source_id);
+				// Create a new query object.
+				$query = $db->getQuery(true);
+				$query->delete($db->quoteName('#__ucm_base'));
+				$query->where($external_source_condition);
+				$db->setQuery($query);
+				// Execute the query to remove External_source items
+				$db->execute();
+
+				// Remove External_source items from the ucm history table
+				$external_source_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $external_source_id);
+				// Create a new query object.
+				$query = $db->getQuery(true);
+				$query->delete($db->quoteName('#__ucm_history'));
+				$query->where($external_source_condition);
+				$db->setQuery($query);
+				// Execute the query to remove External_source items
+				$db->execute();
+			}
+		}
+
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		// Select id from content type table
+		$query->select($db->quoteName('type_id'));
+		$query->from($db->quoteName('#__content_types'));
+		// Where Local_listing alias is found
+		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.local_listing') );
+		$db->setQuery($query);
+		// Execute query to see if alias is found
+		$db->execute();
+		$local_listing_found = $db->getNumRows();
+		// Now check if there were any rows
+		if ($local_listing_found)
+		{
+			// Since there are load the needed  local_listing type ids
+			$local_listing_ids = $db->loadColumn();
+			// Remove Local_listing from the content type table
+			$local_listing_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.local_listing') );
+			// Create a new query object.
+			$query = $db->getQuery(true);
+			$query->delete($db->quoteName('#__content_types'));
+			$query->where($local_listing_condition);
+			$db->setQuery($query);
+			// Execute the query to remove Local_listing items
+			$local_listing_done = $db->execute();
+			if ($local_listing_done);
+			{
+				// If succesfully remove Local_listing add queued success message.
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__content_type</b> table'));
+			}
+
+			// Remove Local_listing items from the contentitem tag map table
+			$local_listing_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.local_listing') );
+			// Create a new query object.
+			$query = $db->getQuery(true);
+			$query->delete($db->quoteName('#__contentitem_tag_map'));
+			$query->where($local_listing_condition);
+			$db->setQuery($query);
+			// Execute the query to remove Local_listing items
+			$local_listing_done = $db->execute();
+			if ($local_listing_done);
+			{
+				// If succesfully remove Local_listing add queued success message.
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+			}
+
+			// Remove Local_listing items from the ucm content table
+			$local_listing_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.local_listing') );
+			// Create a new query object.
+			$query = $db->getQuery(true);
+			$query->delete($db->quoteName('#__ucm_content'));
+			$query->where($local_listing_condition);
+			$db->setQuery($query);
+			// Execute the query to remove Local_listing items
+			$local_listing_done = $db->execute();
+			if ($local_listing_done);
+			{
+				// If succesfully remove Local_listing add queued success message.
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__ucm_content</b> table'));
+			}
+
+			// Make sure that all the Local_listing items are cleared from DB
+			foreach ($local_listing_ids as $local_listing_id)
+			{
+				// Remove Local_listing items from the ucm base table
+				$local_listing_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $local_listing_id);
+				// Create a new query object.
+				$query = $db->getQuery(true);
+				$query->delete($db->quoteName('#__ucm_base'));
+				$query->where($local_listing_condition);
+				$db->setQuery($query);
+				// Execute the query to remove Local_listing items
+				$db->execute();
+
+				// Remove Local_listing items from the ucm history table
+				$local_listing_condition = array( $db->quoteName('ucm_type_id') . ' = ' . $local_listing_id);
+				// Create a new query object.
+				$query = $db->getQuery(true);
+				$query->delete($db->quoteName('#__ucm_history'));
+				$query->where($local_listing_condition);
+				$db->setQuery($query);
+				// Execute the query to remove Local_listing items
+				$db->execute();
+			}
+		}
+
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		// Select id from content type table
+		$query->select($db->quoteName('type_id'));
+		$query->from($db->quoteName('#__content_types'));
 		// Where Help_document alias is found
 		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.help_document') );
 		$db->setQuery($query);
@@ -635,6 +807,99 @@ class com_sermondistributorInstallerScript
 		// do any updates needed
 		if ($type == 'update')
 		{
+		// load the helper class
+		JLoader::register('SermondistributorHelper', JPATH_ADMINISTRATOR . '/components/com_sermondistributor/helpers/sermondistributor.php');
+		// check the version of Sermon Distributor
+		$manifest = SermondistributorHelper::manifest();
+		if (isset($manifest->version) && strpos($manifest->version, '.') !== false)
+		{
+			$version = explode('.', $manifest->version);
+			if ($version[0] == 1 && $version[1] < 4)
+			{
+				// Get a db connection.
+				$db = JFactory::getDbo();
+				// Create a new query object.
+				$query = $db->getQuery(true);
+				// update all manual and auto links in sermons
+				$query->select($db->quoteName(array('id', 'manual_files')));
+				$query->from($db->quoteName('#__sermondistributor_sermon'));
+				$query->where($db->quoteName('source') . ' = 2');
+				// Reset the query using our newly populated query object.
+				$db->setQuery($query);
+				$db->execute();
+				if ($db->getNumRows())
+				{
+					$rows = $db->loadAssocList('id', 'manual_files');
+					foreach ($rows as $id => $files)
+					{
+						if (SermondistributorHelper::checkJson($files))
+						{
+							$files = json_decode($files, true);
+							if (SermondistributorHelper::checkArray($files))
+							{
+								foreach ($files as $nr => &$file)
+								{
+									$tmp = str_replace('VDM_pLeK_h0uEr/', '', $file);
+									$new = strtolower($tmp);
+									// now update the file
+									$file = str_replace($tmp, $new, $file);
+								}
+							}
+						}
+						// only update if it was fixed
+						if (SermondistributorHelper::checkArray($files))
+						{
+							$object = new stdClass();
+							// make sure the files are set to json
+							$object->manual_files = json_encode($files);
+							$object->id = $id;
+							JFactory::getDbo()->updateObject('#__sermondistributor_sermon', $object, 'id');
+						}
+					}
+				}
+				// do an update by moving config data to the new external source area.
+				$this->comParams = JComponentHelper::getParams('com_sermondistributor');
+				// the number of links
+				$numbers = range(1, 4);
+				// the types of links
+				$types = array('auto','manual');
+				// the update targets
+				$this->updateTargetsU = array();
+				$this->updateTargetsF = array();
+				// get all listed targets bast on type
+				foreach ($types as $type)
+				{
+					// now check if they are set
+					foreach ($numbers as $number)
+					{
+						// set the number to string
+						$numStr = SermondistributorHelper::safeString($number);
+						// Get the url
+						$url = $this->comParams->get($type.'dropbox'.$numStr, null);
+						// only load those that are set
+						if ($url && SermondistributorHelper::checkString($url))
+						{
+							if (!isset($this->updateTargetsU[$type]))
+							{
+								$this->updateTargetsU[$type] = array();
+							}
+							$this->updateTargetsU[$type][] = $url;
+						}
+						// Get the folders if set
+						$folder = $this->comParams->get($type.'dropboxfolder'.$numStr, null);
+						// only load those that are set
+						if ($folder && SermondistributorHelper::checkString($folder))
+						{
+							if (!isset($this->updateTargetsF[$type]))
+							{
+								$this->updateTargetsF[$type] = array();
+							}
+							$this->updateTargetsF[$type][] = $folder;
+						}
+					}
+				}
+			}
+		}
 		}
 		// do any install needed
 		if ($type == 'install')
@@ -716,6 +981,30 @@ class com_sermondistributorInstallerScript
 			// Set the object into the content types table.
 			$statistic_Inserted = $db->insertObject('#__content_types', $statistic);
 
+			// Create the external_source content type object.
+			$external_source = new stdClass();
+			$external_source->type_title = 'Sermondistributor External_source';
+			$external_source->type_alias = 'com_sermondistributor.external_source';
+			$external_source->table = '{"special": {"dbtable": "#__sermondistributor_external_source","key": "id","type": "External_source","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
+			$external_source->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","permissiontype":"permissiontype","update_timer":"update_timer","dropboxoptions":"dropboxoptions","oauthtoken":"oauthtoken","not_required":"not_required"}}';
+			$external_source->router = 'SermondistributorHelperRoute::getExternal_sourceRoute';
+			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","externalsources","update_method","build","update_timer","dropboxoptions","not_required"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+
+			// Set the object into the content types table.
+			$external_source_Inserted = $db->insertObject('#__content_types', $external_source);
+
+			// Create the local_listing content type object.
+			$local_listing = new stdClass();
+			$local_listing->type_title = 'Sermondistributor Local_listing';
+			$local_listing->type_alias = 'com_sermondistributor.local_listing';
+			$local_listing->table = '{"special": {"dbtable": "#__sermondistributor_local_listing","key": "id","type": "Local_listing","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
+			$local_listing->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","build":"build","size":"size","external_source":"external_source","key":"key","url":"url"}}';
+			$local_listing->router = 'SermondistributorHelperRoute::getLocal_listingRoute';
+			$local_listing->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/local_listing.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","build","size","external_source"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "external_source","targetTable": "#__sermondistributor_external_source","targetColumn": "id","displayColumn": "description"}]}';
+
+			// Set the object into the content types table.
+			$local_listing_Inserted = $db->insertObject('#__content_types', $local_listing);
+
 			// Create the help_document content type object.
 			$help_document = new stdClass();
 			$help_document->type_title = 'Sermondistributor Help_document';
@@ -734,7 +1023,7 @@ class com_sermondistributorInstallerScript
 
 			// Field to update.
 			$fields = array(
-				$db->quoteName('params') . ' = ' . $db->quote('{"autorName":"Llewellyn van der Merwe","autorEmail":"llewellyn@vdm.io","player":"1","add_to_dropbox":"0","dropbox_filetypes":"zero","manual_link_update_method":"1","manual_dropbox_timer":"60","auto_link_update_method":"1","auto_dropbox_timer":"60","preacher_state":"1","series_state":"1","sermon_state":"1","auto_link_type":"1","link_encryption":")$KCGiB3BEfDf6kzEWrFnHex5uTJxlQG","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"zero","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"zero","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"one","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","check_in":"-1 day","save_history":"1","history_limit":"10","uikit_load":"1","uikit_min":"","uikit_style":""}'),
+				$db->quoteName('params') . ' = ' . $db->quote('{"autorName":"Llewellyn van der Merwe","autorEmail":"llewellyn@vdm.io","player":"1","add_to_button":"zero","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"zero","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"zero","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"one","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","check_in":"-1 day","save_history":"1","history_limit":"10","uikit_load":"1","uikit_min":"","uikit_style":""}'),
 			);
 
 			// Condition.
@@ -901,6 +1190,64 @@ class com_sermondistributorInstallerScript
 				$statistic_Inserted = $db->insertObject('#__content_types', $statistic);
 			}
 
+			// Create the external_source content type object.
+			$external_source = new stdClass();
+			$external_source->type_title = 'Sermondistributor External_source';
+			$external_source->type_alias = 'com_sermondistributor.external_source';
+			$external_source->table = '{"special": {"dbtable": "#__sermondistributor_external_source","key": "id","type": "External_source","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
+			$external_source->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","permissiontype":"permissiontype","update_timer":"update_timer","dropboxoptions":"dropboxoptions","oauthtoken":"oauthtoken","not_required":"not_required"}}';
+			$external_source->router = 'SermondistributorHelperRoute::getExternal_sourceRoute';
+			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","externalsources","update_method","build","update_timer","dropboxoptions","not_required"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+
+			// Check if external_source type is already in content_type DB.
+			$external_source_id = null;
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('type_id')));
+			$query->from($db->quoteName('#__content_types'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($external_source->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$external_source->type_id = $db->loadResult();
+				$external_source_Updated = $db->updateObject('#__content_types', $external_source, 'type_id');
+			}
+			else
+			{
+				$external_source_Inserted = $db->insertObject('#__content_types', $external_source);
+			}
+
+			// Create the local_listing content type object.
+			$local_listing = new stdClass();
+			$local_listing->type_title = 'Sermondistributor Local_listing';
+			$local_listing->type_alias = 'com_sermondistributor.local_listing';
+			$local_listing->table = '{"special": {"dbtable": "#__sermondistributor_local_listing","key": "id","type": "Local_listing","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
+			$local_listing->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","build":"build","size":"size","external_source":"external_source","key":"key","url":"url"}}';
+			$local_listing->router = 'SermondistributorHelperRoute::getLocal_listingRoute';
+			$local_listing->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/local_listing.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","build","size","external_source"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "external_source","targetTable": "#__sermondistributor_external_source","targetColumn": "id","displayColumn": "description"}]}';
+
+			// Check if local_listing type is already in content_type DB.
+			$local_listing_id = null;
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('type_id')));
+			$query->from($db->quoteName('#__content_types'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($local_listing->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$local_listing->type_id = $db->loadResult();
+				$local_listing_Updated = $db->updateObject('#__content_types', $local_listing, 'type_id');
+			}
+			else
+			{
+				$local_listing_Inserted = $db->insertObject('#__content_types', $local_listing);
+			}
+
 			// Create the help_document content type object.
 			$help_document = new stdClass();
 			$help_document->type_title = 'Sermondistributor Help_document';
@@ -931,10 +1278,97 @@ class com_sermondistributorInstallerScript
 			}
 
 
+
+			// check if any links were found
+			if ((isset($this->updateTargetsU) && SermondistributorHelper::checkArray($this->updateTargetsU)) || (isset($this->updateTargetsF) && SermondistributorHelper::checkArray($this->updateTargetsF)))
+			{
+				// Get a db connection.
+				$db = JFactory::getDbo();
+
+				// get the file types
+				$dropbox_filetypes = $this->comParams->get("dropbox_filetypes", null);
+
+				// some defaults
+				$user = JFactory::getUser();
+				$todayDate = JFactory::getDate()->toSql();
+
+				// now store the old data to the new area
+				if (isset($this->updateTargetsU) &&SermondistributorHelper::checkArray($this->updateTargetsU))
+				{
+					foreach ($this->updateTargetsU as $type => $urls)
+					{
+						$description = 'Config '. $type . ' url ';
+						$buildOption = 1;
+						if ('auto' == $type)
+						{
+							$buildOption = 2;
+						}
+						$urls = '"'.implode('", "', $urls).'"';
+						$data = new stdClass();
+						if (SermondistributorHelper::checkArray($dropbox_filetypes))
+						{
+							$data->filetypes = json_encode($dropbox_filetypes);
+						}
+						$data->externalsources = 1;
+						$data->build = $buildOption;
+						$data->description = $description;
+						$data->update_method = 1;
+						$data->update_timer = 0;
+						$data->permissiontype = 'full';
+						$data->created = $todayDate;
+						$data->created_by = $user->id;
+						$data->sharedurl = '{"sharedurl":['.$urls.']}';
+						// add to database
+						if ($db->insertObject('#__sermondistributor_external_source', $data))
+						{
+							$aId = $db->insertid();
+							// make sure the access of asset is set
+							SermondistributorHelper::setAsset($aId,'external_source');
+						}
+					}
+				}
+				if (isset($this->updateTargetsF) && SermondistributorHelper::checkArray($this->updateTargetsF))
+				{
+					foreach ($this->updateTargetsF as $type => $folder)
+					{
+						$description = 'Config '. $type . ' folder ';
+						$buildOption = 1;
+						if ('auto' == $type)
+						{
+							$buildOption = 2;
+						}
+						$folder = '"'.implode('", "', $folder).'"';
+						$data = new stdClass();
+						if (SermondistributorHelper::checkArray($dropbox_filetypes))
+						{
+							$data->filetypes = json_encode($dropbox_filetypes);
+						}
+						$data->externalsources = 1;
+						$data->build = $buildOption;
+						$data->description = $description;
+						$data->update_method = 1;
+						$data->update_timer = 0;
+						$data->permissiontype = 'full';
+						$data->created = $todayDate;
+						$data->created_by = $user->id;
+						$data->folder = '{"folder":['.$folder.']}';
+						// add to database
+						if ($db->insertObject('#__sermondistributor_external_source', $data))
+						{
+							$aId = $db->insertid();
+							// make sure the access of asset is set
+							SermondistributorHelper::setAsset($aId,'external_source');
+						}
+					}
+				}
+				// Get Application object
+				$app = JFactory::getApplication();
+				$app->enqueueMessage('Your Dropbox integration has been moved, and can now be viewed at the new external source view. You will now need an APP token to update your local listing of the Dropbox files. Please review the Wiki tab when creating/editing the external source, or open an issue on github if you experience any more difficulties.', 'Info');
+			}
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
 				</a>
-				<h3>Upgrade to Version 1.3.8 Was Successful! Let us know if anything is not working as expected.</h3>';
+				<h3>Upgrade to Version 1.4.0 Was Successful! Let us know if anything is not working as expected.</h3>';
 		}
 	}
 }

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -42,11 +42,11 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		JResponse::setHeader('Content-Disposition','attachment;filename="getajax.json"');
 		JResponse::setHeader("Access-Control-Allow-Origin", "*");
 		// load the tasks 
-		$this->registerTask('checkDropboxListing', 'ajax');
-		$this->registerTask('updateDropboxListing', 'ajax');
-		$this->registerTask('getUpdateProgress', 'ajax');
+		$this->registerTask('autoUpdateLocalListingExternal', 'ajax');
+		$this->registerTask('updateLocalListingExternal', 'ajax');
 		$this->registerTask('isNew', 'ajax');
 		$this->registerTask('isRead', 'ajax');
+		$this->registerTask('getBuildTable', 'ajax');
 	}
 
 	public function ajax()
@@ -61,14 +61,16 @@ class SermondistributorControllerAjax extends JControllerLegacy
 			$task = $this->getTask();
 			switch($task)
                         {
-				case 'checkDropboxListing':
+				case 'autoUpdateLocalListingExternal':
 					try
 					{
 						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
-						$fromviewValue = $jinput->get('fromview', NULL, 'INT');
-						if($fromviewValue && $user->id != 0)
+						$idValue = $jinput->get('id', NULL, 'INT');
+						$targetValue = $jinput->get('target', NULL, 'INT');
+						$typeValue = $jinput->get('type', NULL, 'INT');
+						if($idValue && $targetValue && $typeValue)
 						{
-							$result = $this->getModel('ajax')->dropbox($fromviewValue);
+							$result = $this->getModel('ajax')->autoUpdateLocalListingExternal($idValue, $targetValue, $typeValue);
 						}
 						else
 						{
@@ -99,52 +101,17 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						}
 					}
 				break;
-				case 'updateDropboxListing':
+				case 'updateLocalListingExternal':
 					try
 					{
 						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$idValue = $jinput->get('id', NULL, 'INT');
+						$targetValue = $jinput->get('target', NULL, 'INT');
 						$typeValue = $jinput->get('type', NULL, 'INT');
-						if($typeValue && $user->id != 0)
+						$sleutelValue = $jinput->get('sleutel', NULL, 'CMD');
+						if($idValue && $targetValue && $typeValue && $sleutelValue && $user->id != 0)
 						{
-							$result = $this->getModel('ajax')->updateDropbox($typeValue);
-						}
-						else
-						{
-							$result = false;
-						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
-						{
-							echo $callback . "(".json_encode($result).");";
-						}
-						elseif($returnRaw)
-						{
-							echo json_encode($result);
-						}
-						else
-						{
-							echo "(".json_encode($result).");";
-						}
-					}
-					catch(Exception $e)
-					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
-						{
-							echo $callback."(".json_encode($e).");";
-						}
-						else
-						{
-							echo "(".json_encode($e).");";
-						}
-					}
-				break;
-				case 'getUpdateProgress':
-					try
-					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
-						$typeValue = $jinput->get('type', NULL, 'INT');
-						if($typeValue && $user->id != 0)
-						{
-							$result = $this->getModel('ajax')->updateProgress($typeValue);
+							$result = $this->getModel('ajax')->updateLocalListingExternal($idValue, $targetValue, $typeValue, $sleutelValue);
 						}
 						else
 						{
@@ -221,6 +188,45 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						if($noticeValue && $user->id != 0)
 						{
 							$result = $this->getModel('ajax')->isRead($noticeValue);
+						}
+						else
+						{
+							$result = false;
+						}
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
+						}
+						else
+						{
+							echo "(".json_encode($result).");";
+						}
+					}
+					catch(Exception $e)
+					{
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback."(".json_encode($e).");";
+						}
+						else
+						{
+							echo "(".json_encode($e).");";
+						}
+					}
+				break;
+				case 'getBuildTable':
+					try
+					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$idNameValue = $jinput->get('idName', NULL, 'WORD');
+						$ojectValue = $jinput->get('oject', NULL, 'STRING');
+						if($idNameValue && $ojectValue && $user->id != 0)
+						{
+							$result = $this->getModel('ajax')->getBuildTable($idNameValue, $ojectValue);
 						}
 						else
 						{

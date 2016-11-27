@@ -27,6 +27,14 @@
 	<!-- Adding page parameters -->
 	<fields name="params">
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR">
+		<!-- Preacher_default_icon Field. Type: Media. (joomla) -->
+		<field
+			type="media"
+			name="preacher_default_icon"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_DEFAULT_ICON_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHER_DEFAULT_ICON_DESCRIPTION"
+			directory="Set the default icon for preachers."
+		/>			
 		<!-- Preacher_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
@@ -179,8 +187,8 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- Spacer_hr_f Field. Type: Spacer. A None Database Field. (joomla) -->
-		<field type="spacer" name="spacer_hr_f" hr="true" class="spacer_hr_f" />			
+		<!-- Spacer_hr_a Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_a" hr="true" class="spacer_hr_a" />			
 		<!-- Preacher_sermons_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"

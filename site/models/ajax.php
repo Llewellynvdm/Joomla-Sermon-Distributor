@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -45,28 +45,6 @@ class SermondistributorModelAjax extends JModelList
 
 	// Used in sermon
 	/**
-	* 	Check and Set Dropbox local listing
-	**/
-	public function dropbox($view)
-	{
-		// we update both if posible
-		$types = array('manual','auto');
-		foreach ($types as $type)
-		{
-			// run the update
-			if (SermondistributorHelper::updateDropbox($type))
-			{
-				// now update the system if needed
-				if ('auto' == $type)
-				{
-					$this->updateSystemWithDropbox();
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
 	* 	Update the file download counter
 	**/
 	public function countDownload($key,$filename)
@@ -75,13 +53,58 @@ class SermondistributorModelAjax extends JModelList
 		return SermondistributorHelper::countDownload($key,$filename);
 	}
 
+	protected function saveFile($data,$path_filename)
+	{
+		if (SermondistributorHelper::checkString($data))
+		{
+			$fp = fopen($path_filename, 'w');
+			fwrite($fp, $data);
+			fclose($fp);
+			return true;
+		}
+		return false;
+	}
+
 	/**
-	* 	Update the System with Dropbox local listing
+	* 	Auto Update Local Listing External
 	**/
-	protected function updateSystemWithDropbox()
+	public function autoUpdateLocalListingExternal($id, $target, $type)
+	{		
+		if (1 == $type)
+		{
+			$type = 'manual';
+		}
+		elseif (2 == $type)
+		{
+			$type = 'auto';
+		}
+		// the types allowed
+		$types = array('manual','auto');
+		// check the type
+		if (SermondistributorHelper::checkString($type) && in_array($type,$types))
+		{
+			// run the updatetype
+			if (SermondistributorHelper::updateExternalSource($id, $target, $type))
+			{
+				// now update the system if needed
+				if ('auto' == $type)
+				{
+					$this->updateSystemWithExternalSource($id);
+				}
+				return array('success' => true);
+			}
+			// return array('error' => SermondistributorHelper::getUpdateError($id));
+		}
+		// return array('error' => JText::_('COM_SERMONDISTRIBUTOR_BCOULD_NOT_USE_THE_GIVEN_TOKEN_OR_THE_GIVEN_BUILD_OPTION_DOES_NOT_EXISTB'));
+	}
+
+	/**
+	* 	Update the System with External Source local listing
+	**/
+	protected function updateSystemWithExternalSource($id)
 	{
 		// check if we should update with auto listing
-		$links_dropbox_auto = SermondistributorHelper::getDropboxLink('auto', 2);
+		$links_dropbox_auto = SermondistributorHelper::getExternalSourceLink('auto', 2);
 		if (SermondistributorHelper::checkArray($links_dropbox_auto))
 		{
 			$bucket = array();
@@ -129,7 +152,7 @@ class SermondistributorModelAjax extends JModelList
 		}
 		return false;
 	}
-	
+
 	protected function setSermons($db)
 	{
 		// check if we have values
@@ -192,7 +215,7 @@ class SermondistributorModelAjax extends JModelList
 		}
 		return $this->allSermonsCheckStatus($db);
 	}
-	
+
 	protected function allSermonsCheckStatus($db)
 	{
 		$query = $db->getQuery(true);
@@ -221,7 +244,6 @@ class SermondistributorModelAjax extends JModelList
 		$db->setQuery($query);
 		return $db->execute();
 	}
-
 
 	protected function loadSermonData($preacher,$preacherName,$series,$seriesName,$sermon,$placeholder,$db)
 	{
@@ -475,23 +497,53 @@ class SermondistributorModelAjax extends JModelList
 		return 0;
 	}
 	
+	protected $category = array();
+	
 	protected function getCatogoryId($name,$db)
 	{
 		// sanitize the name to an alias
 		$alias = $this->getAlias($name);
-		// Create a new query object.
-		$query = $db->getQuery(true);
-		$query->select($db->quoteName(array('id')));
-		$query->from($db->quoteName('#__categories'));
-		$query->where($db->quoteName('alias') . ' = '. $db->quote($alias));
-		$query->where($db->quoteName('extension') . ' = '. $db->quote('com_sermondistributor.sermons'));
-		$db->setQuery($query);
-		$db->execute();
-		if ($db->getNumRows())
+		if (!isset($this->category[$alias]))
 		{
-			return $db->loadResult();
+			// Create a new query object.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__categories'));
+			$query->where($db->quoteName('alias') . ' = '. $db->quote($alias));
+			$query->where($db->quoteName('extension') . ' = '. $db->quote('com_sermondistributor.sermons'));
+			$db->setQuery($query);
+			$db->execute();
+			if ($db->getNumRows())
+			{
+				$this->category[$alias] = $db->loadResult();
+			}
+			else
+			{
+				// if still not set, then create category
+				$this->category[$alias] = $this->createCategory($name,$alias);
+			}
 		}
-		return 0; // TODO creat a category if not found
+		return $this->category[$alias];
+	}
+	
+	protected function createCategory($name,$alias)
+	{
+		// load the category table
+		JTable::addIncludePath(JPATH_LIBRARIES . '/joomla/database/table');
+		$category = JTable::getInstance('Category');
+		$category->extension = 'com_sermondistributor.sermons';
+		$category->title = $name;
+		$category->alias = $alias;
+		$category->description = '';
+		$category->published = 1;
+		$category->access = 1;
+		$category->params = '{"category_layout":"","image":"","image_alt":""}';
+		$category->metadata = '{"author":"","robots":""}';
+		$category->language = '*';
+		$category->setLocation(1, 'last-child');
+		$category->store(true);
+		$category->rebuildPath($category->id);
+		return $category->id;
 	}
 	
 	/**

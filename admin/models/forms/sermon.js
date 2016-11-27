@@ -9,8 +9,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.js
@@ -36,14 +36,14 @@ jQuery(document).ready(function()
 	vvvvvvv(source_vvvvvvv);
 
 	var source_vvvvvvw = jQuery("#jform_source").val();
-	var build_vvvvvvw = jQuery("#jform_build input[type='radio']:checked").val();
+	var build_vvvvvvw = jQuery("#jform_build").val();
 	vvvvvvw(source_vvvvvvw,build_vvvvvvw);
 
 	var source_vvvvvvy = jQuery("#jform_source").val();
-	var build_vvvvvvy = jQuery("#jform_build input[type='radio']:checked").val();
+	var build_vvvvvvy = jQuery("#jform_build").val();
 	vvvvvvy(source_vvvvvvy,build_vvvvvvy);
 
-	var build_vvvvvvz = jQuery("#jform_build input[type='radio']:checked").val();
+	var build_vvvvvvz = jQuery("#jform_build").val();
 	var source_vvvvvvz = jQuery("#jform_source").val();
 	vvvvvvz(build_vvvvvvz,source_vvvvvvz);
 
@@ -146,11 +146,11 @@ function vvvvvvw(source_vvvvvvw,build_vvvvvvw)
 	// set this function logic
 	if (source && build)
 	{
-		jQuery('.note_auto_dropbox').closest('.control-group').show();
+		jQuery('.note_auto_externalsource').closest('.control-group').show();
 	}
 	else
 	{
-		jQuery('.note_auto_dropbox').closest('.control-group').hide();
+		jQuery('.note_auto_externalsource').closest('.control-group').hide();
 	}
 }
 
@@ -217,7 +217,7 @@ function vvvvvvy(source_vvvvvvy,build_vvvvvvy)
 			jform_vvvvvvyvvx_required = false;
 		}
 
-		jQuery('.note_manual_dropbox').closest('.control-group').show();
+		jQuery('.note_manual_externalsource').closest('.control-group').show();
 	}
 	else
 	{
@@ -230,7 +230,7 @@ function vvvvvvy(source_vvvvvvy,build_vvvvvvy)
 			jQuery('#jform_manual_files').removeClass('required');
 			jform_vvvvvvyvvx_required = true;
 		}
-		jQuery('.note_manual_dropbox').closest('.control-group').hide();
+		jQuery('.note_manual_externalsource').closest('.control-group').hide();
 	}
 }
 
@@ -297,7 +297,7 @@ function vvvvvvz(build_vvvvvvz,source_vvvvvvz)
 			jform_vvvvvvzvvy_required = false;
 		}
 
-		jQuery('.note_manual_dropbox').closest('.control-group').show();
+		jQuery('.note_manual_externalsource').closest('.control-group').show();
 	}
 	else
 	{
@@ -310,7 +310,7 @@ function vvvvvvz(build_vvvvvvz,source_vvvvvvz)
 			jQuery('#jform_manual_files').removeClass('required');
 			jform_vvvvvvzvvy_required = true;
 		}
-		jQuery('.note_manual_dropbox').closest('.control-group').hide();
+		jQuery('.note_manual_externalsource').closest('.control-group').hide();
 	}
 }
 

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -45,34 +45,12 @@ class SermondistributorModelAjax extends JModelList
 
 	// Used in sermon
 	/**
-	* 	Check and Set Dropbox local listing
-	**/
-	public function dropbox($view)
-	{
-		// we update both if posible
-		$types = array('manual','auto');
-		foreach ($types as $type)
-		{
-			// run the update
-			if (SermondistributorHelper::updateDropbox($type))
-			{
-				// now update the system if needed
-				if ('auto' == $type)
-				{
-					$this->updateSystemWithDropbox();
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
 	* 	Check and if a vdm notice is new (per/user)
 	**/
 	public function isNew($notice)
 	{
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, $fileType = '.md', JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, '.md', JPATH_COMPONENT_ADMINISTRATOR);
 		// check if the file is set
 		if (($content = @file_get_contents($path_filename)) !== FALSE)
 		{
@@ -90,7 +68,7 @@ class SermondistributorModelAjax extends JModelList
 	public function isRead($notice)
 	{
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, $fileType = '.md', JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, '.md', JPATH_COMPONENT_ADMINISTRATOR);
 		// set as read if not already set
 		if (($content = @file_get_contents($path_filename)) !== FALSE)
 		{
@@ -115,68 +93,89 @@ class SermondistributorModelAjax extends JModelList
 	}
 
 	/**
-	* 	Update Dropbox local listing
+	* 	Auto Update Local Listing External
 	**/
-	public function updateDropbox($type)
-	{
-		if (1 == $type)
+	public function autoUpdateLocalListingExternal($id, $target, $typeID)
+	{		
+		if (1 == $typeID)
 		{
 			$type = 'manual';
 		}
-		elseif (2 == $type)
+		elseif (2 == $typeID)
 		{
 			$type = 'auto';
 		}
-		// the types allowed
-		$types = array('manual','auto');
+		// first get the file path
+		$path_filename = SermondistributorHelper::getFilePath('update', 'error', $id.$target.$typeID, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
 		// check the type
-		if (SermondistributorHelper::checkString($type) && in_array($type,$types))
+		if (isset($type) && SermondistributorHelper::checkString($type))
 		{
-			// run the update
-			if (SermondistributorHelper::updateDropbox($type,true))
+			// run the updatetype
+			if (SermondistributorHelper::updateExternalSource($id, $target, $type))
 			{
 				// now update the system if needed
 				if ('auto' == $type)
 				{
-					$this->updateSystemWithDropbox();
+					$this->updateSystemWithExternalSource($id);
 				}
+				$this->saveFile('success',$path_filename);
 				return true;
 			}
+			$this->saveFile(SermondistributorHelper::getUpdateError($id),$path_filename);
+			return false;
 		}
+		$this->saveFile(JText::_('COM_SERMONDISTRIBUTOR_BTHERE_WAS_AN_ERRORB'),$path_filename);
 		return false;
 	}
 
 	/**
-	* 	Status of update progress of the local listing
+	* 	Update Local Listing of External Source (manually)
 	**/
-	public function updateProgress($type)
+	public function updateLocalListingExternal($id, $target, $typeID, $sleutel)
 	{
-		if (1 == $type)
+		if (1 == $typeID)
 		{
 			$type = 'manual';
 		}
-		elseif (2 == $type)
+		elseif (2 == $typeID)
 		{
 			$type = 'auto';
 		}
-		// the types allowed
-		$types = array('manual','auto');
-		// check the type
-		if (SermondistributorHelper::checkString($type) && in_array($type,$types))
+		// first get the file path
+		$path_filename = SermondistributorHelper::getFilePath('update', 'error', $id.$target.$typeID, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
+		// check "die sleutel" and the type
+		if (isset($type) && SermondistributorHelper::checkString($sleutel))
 		{
-			// return the update progress
-			return SermondistributorHelper::getUpdateProgress($type);
+			// run the update
+			if (SermondistributorHelper::updateExternalSource($id, $target, $type, true, $sleutel))
+			{
+				// now update the system if needed
+				if ('auto' == $type)
+				{
+					$this->updateSystemWithExternalSource($id);
+				}
+				$this->saveFile('success',$path_filename);
+				return array('success' => true);
+			}
+			// store the error
+			$error = SermondistributorHelper::getUpdateError($id);
+			$this->saveFile($error,$path_filename);
+			// return the error
+			return array('error' => $error);
 		}
-		return false;
+		// store the error
+		$error = JText::_('COM_SERMONDISTRIBUTOR_BCOULD_NOT_USE_THE_GIVEN_TOKEN_OR_THE_GIVEN_BUILD_OPTION_DOES_NOT_EXISTB');
+		$this->saveFile($error,$path_filename);
+		return array('error' => $error);
 	}
 
 	/**
-	* 	Update the System with Dropbox local listing
+	* 	Update the System with External Source local listing
 	**/
-	protected function updateSystemWithDropbox()
+	protected function updateSystemWithExternalSource($id)
 	{
 		// check if we should update with auto listing
-		$links_dropbox_auto = SermondistributorHelper::getDropboxLink('auto', 2);
+		$links_dropbox_auto = SermondistributorHelper::getExternalSourceLink('auto', 2);
 		if (SermondistributorHelper::checkArray($links_dropbox_auto))
 		{
 			$bucket = array();
@@ -224,7 +223,7 @@ class SermondistributorModelAjax extends JModelList
 		}
 		return false;
 	}
-	
+
 	protected function setSermons($db)
 	{
 		// check if we have values
@@ -287,7 +286,7 @@ class SermondistributorModelAjax extends JModelList
 		}
 		return $this->allSermonsCheckStatus($db);
 	}
-	
+
 	protected function allSermonsCheckStatus($db)
 	{
 		$query = $db->getQuery(true);
@@ -316,7 +315,6 @@ class SermondistributorModelAjax extends JModelList
 		$db->setQuery($query);
 		return $db->execute();
 	}
-
 
 	protected function loadSermonData($preacher,$preacherName,$series,$seriesName,$sermon,$placeholder,$db)
 	{
@@ -526,12 +524,12 @@ class SermondistributorModelAjax extends JModelList
 			// set the date object
 			$date = JFactory::getDate();
 			// build the object
-			$object->name		= $name;
+			$object->name			= $name;
 			$object->alias			= $alias;
 			$object->published		= $this->app_params->get($type.'_state', 1);
 			$object->created		= $date->toSql();
 			$object->version		= 1;
-			$object->access		= 1; // TODO must use a global setting here
+			$object->access			= 1; // TODO must use a global setting here
 			// Insert the object into the table.
 			$done = $db->insertObject('#__sermondistributor_'.$type, $object);
 			// if done return last used id
@@ -655,6 +653,131 @@ class SermondistributorModelAjax extends JModelList
 			{
 				$this->uniqeValueArray['sermon']['alias'][$alias] = $alias;
 			}
+		}
+	}
+
+	// Used in external_source
+	protected $functionArray = array();
+	
+	protected $languageArray = array();
+
+	protected function setLanguage($key,$lang)
+	{
+		$this->languageArray[$key] = $lang;
+	}
+
+	public function getLanguage()
+	{
+		// return the language string that were set
+		return $this->languageArray;
+	}
+
+	protected function setAutoLangZero()
+	{
+		// set the headers
+		$headers = array(
+			'tsharedurl' => JText::_('COM_SERMONDISTRIBUTOR_SHAREDURL'),
+			'tfolder' => JText::_('COM_SERMONDISTRIBUTOR_TARGETED_FOLDER')
+		);
+		// loop the array
+		foreach ($headers as $key => $lang)
+		{
+			$this->setLanguage($key,$lang);
+		}
+	}
+	
+	protected function autoLoader()
+	{
+		$functions = range(0,10);
+		foreach ($functions as $function)
+		{
+			$function = 'setAutoLang'.SermondistributorHelper::safeString($function, 'f');
+			if (method_exists($this, $function))
+			{
+				$this->{$function}();
+			}
+		}
+		foreach ($functions as $function)
+		{
+			$function = 'setAutoFunc'.SermondistributorHelper::safeString($function, 'f');
+			if (method_exists($this, $function))
+			{
+				$this->{$function}();
+			}
+		}
+	}
+
+	public function getBuildTable($idName,$oject)
+	{
+		if (SermondistributorHelper::checkJson($oject) && SermondistributorHelper::checkString($idName))
+		{
+			$array = json_decode($oject, true);
+			if (SermondistributorHelper::checkArray($array))
+			{ 
+				// make sure we run the autoloader to insure all is set
+				$this->autoLoader();
+				// set the target headers
+				$targetHeaders 	= $this->getLanguage();
+				// start table build
+				$table 		= '<table id="table_'.$idName.'" class="uk-table" style="margin: 5px 0 20px;"><thead><tr>';
+				$rows		= array();
+				foreach ($array as $header => $values)
+				{
+					if (SermondistributorHelper::checkArray($values))
+					{
+						$targetHeader = (isset($targetHeaders[$header])) ? $targetHeaders[$header] : SermondistributorHelper::safeString($header, 'W');
+						$table .= '<th style="padding: 10px; text-align: center; border: 1px solid rgb(221, 221, 221);" scope="col">'.$targetHeader.'</th>';
+						foreach ($values as $nr => $value)
+						{
+							// set the value for the row
+							$this->setRows($nr, $this->setValue($header, $value), $rows);
+						}
+					}
+				}
+				// close header start body
+				$table .= '</tr></thead><tbody>';
+				// add rows to table
+				if (SermondistributorHelper::checkArray($rows))
+				{
+					foreach ($rows as $row)
+					{
+						$table .= '<tr>'.$row.'</tr>';
+					}
+				}
+				
+				// close the body and table
+				$table .= '</tbody></table>';
+				// return the table
+				return $table;
+			}
+		}
+		return false;
+	}
+
+	protected function setValue($header,$value)
+	{
+		if (array_key_exists($header, $this->functionArray) && method_exists($this, $this->functionArray[$header]))
+		{
+			$value = $this->{$this->functionArray[$header]}($header,$value);
+		}
+		// if no value are set
+		if (!SermondistributorHelper::checkString($value))
+		{
+			$value = '-';
+		}
+		return $value;
+	}
+
+	protected function setRows($nr, $value, &$rows)
+	{
+		// build rows
+		if (!isset($rows[$nr]))
+		{
+			$rows[$nr] = '<td style="padding: 10px; text-align: center; border: 1px solid rgb(221, 221, 221);">'.$value.'</td>';
+		}
+		else
+		{
+			$rows[$nr] .= '<td style="padding: 10px; text-align: center; border: 1px solid rgb(221, 221, 221);">'.$value.'</td>';
 		}
 	}
 }

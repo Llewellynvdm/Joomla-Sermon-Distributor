@@ -3,9 +3,9 @@
 				Vast Development Method
 /-------------------------------------------------------------------------------------------------------/
 
-	@version			1.0.0 - 01st July, 2015
-	@package		Dropbox Links builder
-	@subpackage		dropboxlinks.php
+	@version			2.0.0 - 03rd November, 2016
+	@package		Dropbox API 2
+	@subpackage		dropbox.php
 	@author			Llewellyn van der Merwe <http://www.vdm.io>
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
@@ -20,295 +20,406 @@ defined('_JEXEC') or die;
  */
 class Dropbox
 {
-	// the file name
-	public $fileName;
+	/**
+	 * final url
+	 */
+	protected $url;
+	
+	/**
+	 * The array for the post url
+	 */
+	protected $postUrl = array( 
+		"protocol" => "https://",
+		"suddomain" => "api.",
+		"domain" => "dropboxapi.com",
+		"path" => "/2/"
+	);
 
-	// the file array
-	public $files = array();
+	/**
+	 * the verious pathes we need
+	 */	
+	protected $domainpath = array( 
+		"list_folder" => "files/list_folder",
+		"list_folder_continue" => "files/list_folder/continue",
+		"create_shared_link" => "sharing/create_shared_link",
+		"get_shared_link_metadata" => "sharing/get_shared_link_metadata",
+		"revoke" => "auth/token/revoke"
+	);
 
-	// the extension to get
-	protected $getfiles = array();
+	/**
+	 * the target pathe to get
+	 */	
+	protected $targetPath = false;
+	protected $targetPathOriginal = false;
 
-	// the extensions to leave
-	protected $notfiles = array();
+	/**
+	 * oauth token
+	 */	
+	protected $oauthToken;
 
-	// the folder array
-	protected $folders = array();
+	/**
+	 * the verious pathes we need
+	 */	
+	protected $permissionType;
 
-	// folder identifiers
-	protected $getfolders = array('?dl=0');
+	/**
+	 * The loop controller in calling Dropbox API
+	 */	
+	protected $continueCalling = array();
 
-	// the list of extension to help identify what is folders (not exhaustive, only some of the commen files)
-	protected $notfolders = array(
-		'.3gp','.3gpp','.7z','.aac','.act','.aiff','.aiff','.amr','.ape','.ar','.asf','.au','.avi','.awb','.bmp','.bup','.bzip2','.crx','.css','.dct','.deb','.djvu',
-		'.doc','.docx','.drc','.dss','.ear','.egg','.exe','.flac','.flv','.gif','.gifv','.gzip','.htaccess','.html','.ico','.ini','.iso','.jar','.jpeg','.jpg','.js',
-		'.json','.lzip','.m3u','.m4a','.m4p','.m4v','.mkv','.mmf','.mng','.mov','.mp3','.mp4','.mpc','.mpeg','.mpeg4','.mpegps','.mpg','.mpkg','.msi','.odt','.ogg',
-		'.opus','.pdf','.pea','.php','.pkg','.png','.ppt','.pptx','.ps','.psd','.pst','.pxv','.rar','.raw','.rm','.rmvb','.rpm','.rtf','.shar','.sql','.svg','.sxw',
-		'.tar','.tgz','.tgz','.tiff','.txt','.veg','.vep','.vob','.wav','.webm','.wma','.wmv','.xar','.xls','.xml','.yuv','.zip' );
+	/**
+	 * the success switch
+	 */	
+	protected $succes;
 
-	// the directory where the downloaded files should be stored
-	protected $dir;
+	/**
+	 * the type call
+	 */	
+	protected $type;
+
+	/**
+	 * the query for the call
+	 */	
+	protected $query;
+
+	/**
+	 * the query for the call
+	 */	
+	protected $model;
+
+	/**
+	 * the mediaData bucket
+	 */	
+	public $mediaData = array();
+
+	/**
+	 * the error messages
+	 */	
+	public $error_summary = array();
+	
+	/**
+	* 	force the update to reset
+	**/
+	public $forceReset = false;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct($mainurl, $config = array('save' => false, 'filename' => 'dropbox', 'download' => false, 'dir' => __DIR__))
+	public function __construct(JModelLegacy $model, $buildType)
 	{
-		if ($this->checkArray($config))
+		// set the url at this point for now
+		$this->url = $this->postUrl["protocol"].$this->postUrl["suddomain"].$this->postUrl["domain"].$this->postUrl["path"];
+		// set the local model
+		$this->model = $model;
+		// set the build type
+		$this->build = (int) $buildType;
+	}
+
+	/**
+	 * getFiles
+	 * 
+	 * =============
+	 * $details
+	 * =============
+	 * sourceID
+	 * dropboxOption
+	 * dropboxTarget
+	 * addTypes
+	 * 
+	 */
+	public function getFiles($token, $permissiontype, $details = array())
+	{
+		// we need more then the normal time to run this script 5 minutes at least.
+		ini_set('max_execution_time', 500);
+		// set the oauth toke
+		$this->oauthToken = $token;
+		
+		// set the permission type
+		$this->permissionType = $permissiontype;
+		
+		// set the details
+		if ($this->checkArray($details))
 		{
-			// we need more then the normal time to run this script 5 minutes at least.
-			ini_set('max_execution_time', 500); // TODO this is not the best option I am sure, but for now seems like the only option.
-			// set main url
-			$this->mainurl = $mainurl;
-			// if custom get list is set use it
-			if (isset($config['get']) && $this->checkArray($config['get']))
+			foreach ($details as $detail => $value)
 			{
-				$this->getfiles = $config['get'];
+				$this->$detail = $value;
 			}
-			elseif (isset($config['get']) && $this->checkString($config['get']))
-			{
-				$this->getfiles = array($config['get']);
-			}
-			// if custom excludelist is set use it
-			if (isset($config['not']) && $this->checkArray($config['not']))
-			{
-				$this->notfiles = $config['not'];
-			}
-			elseif (isset($config['not']) && $this->checkString($config['not']))
-			{
-				$this->notfiles = array($config['not']);
-			}
-			// set main folder name
-			$this->fileName = (isset($config['filename'])) ? md5($this->mainurl.$config['filename']) : md5($this->mainurl.'nofilenamewasset');
-			// set save switch
-			$save = (isset($config['save'])) ? $config['save'] : false;
-			// set download switch
-			$download = (isset($config['download'])) ? $config['download'] : false;
-			// make sure the note folder identifiers are complete
-			$this->notfolders = array_unique(array_merge($this->getfiles,$this->notfiles,$this->notfolders));
-			// set local directory
-			$this->dir = (isset($config['dir'])) ? $config['dir'] : __DIR__;
-			// check if the parching of the drobox files is up to date
-			if (($json = @file_get_contents($this->fileName.".json")) !== FALSE)
-			{
-				$this->files = json_decode($json, true);
-			}
-			else
-			{
-				// set all folders
-				$this->parseFolders($this->mainurl, 'VDM_pLeK_h0uEr');
-			}
-			// check if we should save the file
-			if ($save)
-			{
-				$this->save();
-			}
-			// check if we should download the file
-			if ($download)
-			{
-				$this->download();
-			}
+		}
+		
+		// set the curent folder path
+		if (!$this->setFolderPath())
+		{
+			return false;
+		}
+		
+		// start the main factory that calles for the folder data
+		$this->query = array("path" => $this->targetPath, "recursive" => true, "include_media_info" => true);
+		$this->type = 'list_folder';
+		if ($this->makeCall())
+		{
+			return true;
+		}
+	}
+	
+	public function revokeToken($token = null)
+	{
+		if ($token)
+		{
+			// set the oauth toke
+			$this->oauthToken = $token;
+		}
+		// set the call to revoke the token
+		$this->query = 'null';
+		$this->type = 'revoke';
+		if ($this->makeCall())
+		{
 			return true;
 		}
 		return false;
 	}
-
-	public function download($dir = null)
+	
+	protected function setFolderPath()
 	{
-		if ($this->checkArray($this->files))
+		if ('full' == $this->permissionType && isset($this->dropboxOption) && isset($this->dropboxTarget) && $this->checkString($this->dropboxTarget))
 		{
-			// insure the directory is set
-			$dir = ($dir) ? $dir : $this->dir;
-			foreach($this->files as $path => $url)
+			if (2 == $this->dropboxOption)
 			{
-				// now setup correct path
-				$path = str_replace('VDM_pLeK_h0uEr', $dir, $path);
-				// boom here we go move....
-				$this->getFile($url, $path);
+				// simply set the path
+				$this->targetPath = '/'.trim(strtolower($this->dropboxTarget), '/');
+				
+				return true;
+			}
+			elseif (1 == $this->dropboxOption)
+			{
+				// make a call to get the path
+				$this->query = array("url" => $this->dropboxTarget);
+				$this->type = 'get_shared_link_metadata';
+				if ($this->makeCall())
+				{
+					return true;
+				}
 			}
 		}
-	}
-
-	public function getFile($url, $path)
-	{
-		$newfname = $path;
-		if (($file = @fopen($url, "rb")) !== FALSE)
+		elseif ('app' == $this->permissionType)
 		{
-			$filename = substr($path, strrpos($path, '/'));
-			$makePath = str_replace($filename,'',$path);
-			if (!file_exists($makePath))
-			{
-				mkdir($makePath, 0755, true);
-			}
-
-			$newf = fopen($newfname, "wb");
+			$this->targetPath = "";
+			
+			return true;
+		}
+		return false;
+	}
+	
+	protected function makeCall()
+	{
+		if ($this->_isCurl())
+		{
+			return $this->makeCurlCall();
 		}
 		else
 		{
-			echo 'error! '.$url.' not found';
-		}
-
-		if ($newf)
-		{
-			while(!feof($file))
-			{
-			  fwrite($newf, fread($file, 1024 * 8 ), 1024 * 8 );
-			}
-		}
-
-		if ($file)
-		{
-			fclose($file);
-		}
-
-		if ($newf)
-		{
-			fclose($newf);
+			return $this->makeGetCall();
 		}
 	}
-
-	public function save($filename = null)
+	
+	protected function makeGetCall()
 	{
-		if ($this->checkString($filename))
+		
+		$options = array(
+			'http' => array(
+				'header' => "Content-Type: application/json\r\n".
+					"Authorization: Bearer ".$this->oauthToken,
+				'method'  => "POST"
+			),
+		);
+		
+		if ($this->checkArray($this->query))
 		{
-			// set main folder name
-			$this->fileName = md5($this->mainurl.$filename);
+			$this->query = json_encode($this->query);
 		}
-		if ($this->checkArray($this->files))
-		{
-			$data = json_encode($this->files);
-			// now save this folders data to a file.
-			$this->saveJson($data);
+		$options['http']['content'] = $this->query;
+		
+		$context = stream_context_create($options);
+		$response = file_get_contents($this->url.$this->domainpath[$this->type], false, $context);
 
-			return true;
+
+		if ($response === FALSE)
+		{
+			$this->error_summary[] = $this->type.'_error';
+			return false;
+		}
+		else
+		{
+			// store the result
+			return $this->setTheResult(json_decode($response));
+		}
+	}
+	
+	protected function makeCurlCall()
+	{
+		$headers = array('Authorization: Bearer '. $this->oauthToken,
+		    'Content-Type: application/json'
+		);
+		
+		$ch = curl_init($this->url.$this->domainpath[$this->type]);
+		
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		// check if query is set		
+		if ($this->checkArray($this->query))
+		{
+			$this->query = json_encode($this->query);
+		}
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->query);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		// curl_setopt($ch, CURLOPT_VERBOSE, 1); // debug
+		
+		$response = curl_exec($ch);
+		
+		curl_close($ch);
+		
+		if ($this->checkJson($response))
+		{
+			$response = json_decode($response);
+		}
+		// store the result
+		return $this->setTheResult($response);
+	}
+	
+	protected function setTheResult($data)
+	{
+		// if there was an error stop!!!
+		if (isset($data->error_summary))
+		{
+			$this->error_summary[] = $data->error_summary;
+			$this->forceReset = true;
+			return false;
+		}
+		
+		// deal with each type
+		switch ($this->type)
+		{
+			case "list_folder":			
+			case "list_folder_continue":
+				if (isset($data->entries) && $this->checkArray($data->entries))
+				{
+					if ($this->storeFiles($data->entries))
+					{
+						// run the continue if needed
+						if (isset($data->has_more) && $data->has_more && isset($data->cursor))
+						{
+							// start the main factory that calles for the folder data
+							$this->query = array("cursor" => $data->cursor);
+							$this->type = 'list_folder_continue';
+							if ($this->makeCall())
+							{
+								return true;
+							}
+						}
+						return true;
+					}
+				}
+				$this->error_summary[] = $this->type.'_error';
+				break;
+			case "create_shared_link":
+				if (isset($data->url) && isset($data->path) && $this->storeSharedLink($this->fixPath($data->path), str_replace('?dl=0','?dl=1',$data->url)))
+				{
+					// we stored the link
+					return true;
+				}
+				$this->error_summary[] = $this->type.'_error';
+				break;
+			case "get_shared_link_metadata":
+				if (isset($data->path_lower))
+				{
+					$this->targetPath = $data->path_lower;
+					return true;
+				}
+				$this->error_summary[]	= $this->type.'_error';
+				break;
+			case "revoke":
+				if (is_null($data))
+				{
+					return true;
+				}
+				$this->error_summary[] = $this->type.'_error';
+				break;
+		}
+		$this->forceReset = true;
+		return false;
+	}
+	
+	protected function storeSharedLink($path, $url)
+	{
+		// we need to store the url to DB
+		if (isset($this->mediaData[$path]))
+		{
+			$localListing				= array();
+			$localListing['id']			= 0;
+			$localListing['name']			= $this->mediaData[$path]['name'];
+			$localListing['size']			= $this->mediaData[$path]['size'];
+			$localListing['key']			= $path;
+			$localListing['url']			= $url;
+			$localListing['build']			= $this->build;
+			$localListing['external_source']	= (int) $this->sourceID;
+			// free some memory
+			unset($this->mediaData[$path]);
+			// check if item already set
+			if ($id = $this->model->searchForId($path))
+			{
+				// update item
+				$localListing['id'] = $id;
+			}
+			return $this->model->save($localListing);
 		}
 		return false;
 	}
 
-	protected function saveJson($data)
-	{
-		if ($this->checkString($data))
-		{
-			/*
-				for now it will save
-				the files in the same
-				directory as the php
-				file where the class
-				is called we will have
-				to change this to suite
-				your custom needs.
-			*/
-			$fp = fopen($this->fileName.'.json', 'w');
-			fwrite($fp, $data);
-			fclose($fp);
-		}
-	}
-
-	protected function parseFolders($url, $foldername)
-	{
-		if ($this->checkString($url))
-		{
-			// get the page html
-			if (($html = @file_get_contents($url)) !== FALSE)
+	protected function storeFiles($entries)
+	{		
+		foreach ($entries as $item)
+		{			
+			if (isset($item->{'.tag'}) && 'file' == $item->{'.tag'} && isset($item->name))
 			{
-				//Create a new DOM document
-				$dom = new DOMDocument;
-
-				//Parse the HTML. The @ is used to suppress any parsing errors
-				//that will be thrown if the $html string isn't valid XHTML.
-				@$dom->loadHTML($html);
-
-				//Get all links. You could also use any other tag name here,
-				//like 'img' or 'table', to extract other tags.
-				$links = $dom->getElementsByTagName('a');
-
-				//Iterate over the extracted links and display their URLs
-				if ($this->checkObject($links))
+				$addLink = false;
+				// remove if not related to type
+				if (isset($this->addTypes) && $this->checkArray($this->addTypes))
 				{
-					// the types
-					$types = array('folders','files');
-					foreach ($types as $type)
+					foreach ($this->addTypes as $add)
 					{
-						// folder bucket
-						$buket = array();
-						foreach ($links as $nr => $link)
+						if (strpos($item->name,$add) !== false)
 						{
-							// switch to add link
-							$add = false;
-							// get actual link
-							$href = $link->getAttribute('href');
-							// only use link reated to type
-							if ($this->checkArray($this->{'get'.$type}) && $this->checkString($href))
-							{
-								foreach ($this->{'get'.$type} as $get)
-								{
-									if (!$add)
-									{
-										if (strpos($get,'?dl') === false)
-										{
-											$get = $get . '?dl=0';
-										}
-										if (strpos($href,'https://www.dropbox.com/') !== false  && strpos($href,$get) !== false)
-										{
-											$add = true;
-										}
-									}
-								}
-							}
-							else
-							{
-								if (strpos($href,'https://www.dropbox.com/') !== false && strpos($href,'?dl=0') !== false)
-								{
-									$add = true;
-								}
-							}
-
-							// remove if not related to type
-							if ($this->checkArray($this->{'not'.$type}) && $this->checkString($href) && $add)
-							{
-								foreach ($this->{'not'.$type} as $not)
-								{
-									if ($add)
-									{
-										if (strpos($href,$not) !== false)
-										{
-											$add = false;
-										}
-									}
-								}
-							}
-
-							// now add if still related to type
-							if ($add)
-							{
-								if (!in_array($href,$buket))
-								{
-									$name = str_replace('?dl=0','',substr($href, strrpos($href, '/') + 1));
-
-									if ($type == 'folders' && strpos($name,'.') === false)
-									{
-										// parse this folder for more files and sub folders
-										$this->parseFolders($href, $foldername.'/'.str_replace('?lst','',$name));
-										$buket[] = $href;
-										unset($links->$nr);
-
-									}
-									elseif ($type == 'files' && strpos($name,'.') !== false)
-									{
-										// Add to file list
-										$this->files[$foldername.'/'.$name] = str_replace('?dl=0','?dl=1',$href);
-										$buket[] = $href;
-										unset($links->$nr);
-									}
-								}
-							}
+							$addLink = true;
 						}
 					}
 				}
-				return true;
+				if ($addLink && isset($item->path_lower))
+				{
+					// store media info
+					$this->mediaData[$this->fixPath($item->path_lower)] = array('name' => $item->name, 'size' => $item->size);
+					// get the shared link
+					$this->query = array("path" => $item->path_lower);
+					$this->type = 'create_shared_link';
+					if (!$this->makeCall())
+					{
+						return false;
+					}
+				}
 			}
 		}
-		return false;
+		return true;
+	}
+	
+	protected function fixPath($path)
+	{
+		if ($this->checkString($this->targetPath))
+		{
+			$path = str_replace($this->targetPath, 'VDM_pLeK_h0uEr', $path);
+		}
+		else
+		{
+			$path = 'VDM_pLeK_h0uEr'.$path;
+		}
+		return $path;
 	}
 
 	protected function checkObject($object)
@@ -328,6 +439,16 @@ class Dropbox
 		}
 		return false;
 	}
+	
+	protected function checkJson($string)
+	{
+		if ($this->checkString($string))
+		{
+			json_decode($string);
+			return (json_last_error() === JSON_ERROR_NONE);
+		}
+		return false;
+	}
 
 	protected function checkString($string)
 	{
@@ -337,6 +458,10 @@ class Dropbox
 		}
 		return false;
 	}
+	
+	protected function _isCurl()
+	{
+		return function_exists('curl_version');
+	}
 }
 
-?>

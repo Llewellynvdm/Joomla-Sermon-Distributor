@@ -201,7 +201,7 @@
 			<option value="1">
 				COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FOLDER</option>
 			<option value="2">
-				COM_SERMONDISTRIBUTOR_SERMON_DROPBOX</option>
+				COM_SERMONDISTRIBUTOR_SERMON_EXTERNAL_SOURCE</option>
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_SERMON_URL</option>
 		</field>
@@ -248,8 +248,8 @@
 			buttons="false"
 			filter="safehtml"
 		/>
-		<!-- Note_auto_dropbox Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_auto_dropbox" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_DROPBOX_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_DROPBOX_DESCRIPTION" heading="h4" class="alert alert-info note_auto_dropbox" />
+		<!-- Note_auto_externalsource Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_auto_externalsource" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_auto_externalsource" />
 		<!-- Alias Field. Type: Text. (joomla) -->
 		<field
 			type="text"
@@ -267,13 +267,13 @@
 		/>
 		<!-- Note_link_directed Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="note_link_directed" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_directed" close="true" />
-		<!-- Note_manual_dropbox Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_manual_dropbox" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_DROPBOX_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_DROPBOX_DESCRIPTION" heading="h4" class="alert alert-info note_manual_dropbox" />
+		<!-- Note_manual_externalsource Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_manual_externalsource" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_manual_externalsource" />
 		<!-- Note_link_encrypted Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="note_link_encrypted" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_encrypted" close="true" />
-		<!-- Manual_files Field. Type: Dropboxfiles. (custom) -->
+		<!-- Manual_files Field. Type: Externalsourcefiles. (custom) -->
 		<field
-			type="dropboxfiles"
+			type="externalsourcefiles"
 			name="manual_files"
 			label="COM_SERMONDISTRIBUTOR_SERMON_MANUAL_FILES_LABEL"
 			description="COM_SERMONDISTRIBUTOR_SERMON_MANUAL_FILES_DESCRIPTION"
@@ -314,20 +314,23 @@
 			message="Error! Please add sermon url here."
 			hint="COM_SERMONDISTRIBUTOR_SERMON_URL_HINT"
 		/>
-		<!-- Build Field. Type: Radio. (joomla) -->
+		<!-- Build Field. Type: List. (joomla) -->
 		<field
-			type="radio"
+			type="list"
 			name="build"
 			label="COM_SERMONDISTRIBUTOR_SERMON_BUILD_LABEL"
 			description="COM_SERMONDISTRIBUTOR_SERMON_BUILD_DESCRIPTION"
-			class="btn-group btn-group-yesno"
-			default="1"
+			class="list_class"
+			multiple="false"
+			filter="INT"
 			required="true">
 			<!-- Option Set. -->
+			<option value="">
+				COM_SERMONDISTRIBUTOR_SERMON_SELECT_AN_OPTION</option>
 			<option value="1">
-				COM_SERMONDISTRIBUTOR_SERMON_MANUAL</option>
+				COM_SERMONDISTRIBUTOR_SERMON_MANUAL_LOCAL_SELECTION</option>
 			<option value="2">
-				COM_SERMONDISTRIBUTOR_SERMON_AUTOMATIC</option>
+				COM_SERMONDISTRIBUTOR_SERMON_DYNAMIC_AUTOMATIC_BUILD</option>
 		</field>
 		<!-- Auto_sermons Field. Type: Hidden. (joomla) -->
 		<field

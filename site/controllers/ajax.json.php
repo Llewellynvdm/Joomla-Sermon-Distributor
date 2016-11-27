@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -42,7 +42,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		JResponse::setHeader('Content-Disposition','attachment;filename="getajax.json"');
 		JResponse::setHeader("Access-Control-Allow-Origin", "*");
 		// load the tasks 
-		$this->registerTask('checkDropboxListing', 'ajax');
+		$this->registerTask('autoUpdateLocalListingExternal', 'ajax');
 		$this->registerTask('countDownload', 'ajax');
 	}
 
@@ -58,14 +58,16 @@ class SermondistributorControllerAjax extends JControllerLegacy
 			$task = $this->getTask();
 			switch($task)
                         {
-				case 'checkDropboxListing':
+				case 'autoUpdateLocalListingExternal':
 					try
 					{
 						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
-						$fromviewValue = $jinput->get('fromview', NULL, 'INT');
-						if($fromviewValue)
+						$idValue = $jinput->get('id', NULL, 'INT');
+						$targetValue = $jinput->get('target', NULL, 'INT');
+						$typeValue = $jinput->get('type', NULL, 'INT');
+						if($idValue && $targetValue && $typeValue)
 						{
-							$result = $this->getModel('ajax')->dropbox($fromviewValue);
+							$result = $this->getModel('ajax')->autoUpdateLocalListingExternal($idValue, $targetValue, $typeValue);
 						}
 						else
 						{

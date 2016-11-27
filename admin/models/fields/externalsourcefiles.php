@@ -10,11 +10,11 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
-	@subpackage		dropboxfiles.php
+	@subpackage		externalsourcefiles.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
@@ -31,16 +31,16 @@ jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 /**
- * Dropboxfiles Form Field class for the Sermondistributor component
+ * Externalsourcefiles Form Field class for the Sermondistributor component
  */
-class JFormFieldDropboxfiles extends JFormFieldList
+class JFormFieldExternalsourcefiles extends JFormFieldList
 {
 	/**
-	 * The dropboxfiles field type.
+	 * The externalsourcefiles field type.
 	 *
 	 * @var		string
 	 */
-	public $type = 'dropboxfiles'; 
+	public $type = 'externalsourcefiles'; 
 	/**
 	 * Override to add new button
 	 *
@@ -149,15 +149,14 @@ class JFormFieldDropboxfiles extends JFormFieldList
 	public function getOptions()
 	{
 		// set the default
-		$options[] = JHtml::_('select.option', '', JText::_('The local listing of the Manual Dropbox folder is empty.'));
-		$links = SermondistributorHelper::getDropboxLink('manual',2);
-		if (SermondistributorHelper::checkArray($links))
+		$options[] = JHtml::_('select.option', '', JText::_('The local listing of the Manual External Source folder/s is empty.'));
+		$selection = SermondistributorHelper::getExternalSourceLink('manual', 2, false, 'select');
+		if (SermondistributorHelper::checkArray($selection))
 		{
 			$options = array();
-			foreach ($links as $file => $link)
+			foreach ($selection as $key => $name)
 			{
-				$name = substr($file, strrpos($file, '/') + 1);
-				$options[] = JHtml::_('select.option', $file, $name);
+				$options[] = JHtml::_('select.option', $key, $name);
 			}
 		}
 		return $options;

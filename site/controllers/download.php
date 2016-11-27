@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		download.php
@@ -54,8 +54,8 @@ class SermondistributorControllerDownload extends JControllerLegacy
 			switch($task)
                         {
 				case 'file':
-					$keys = $jinput->get('key', NULL, 'BASE64');
-					$enUrl = $jinput->get('link', NULL, 'BASE64');
+					$keys = SermondistributorHelper::base64_urldecode($jinput->get('key', NULL, 'STRING'));
+					$enUrl = SermondistributorHelper::base64_urldecode($jinput->get('link', NULL, 'STRING'));
 					$filename = $jinput->get('filename', NULL, 'CMD');
 					if((base64_encode(base64_decode($enUrl, true)) === $enUrl) && (base64_encode(base64_decode($keys, true)) === $keys) && $filename)
 					{
@@ -69,7 +69,7 @@ class SermondistributorControllerDownload extends JControllerLegacy
 							// Get local key
 							$localkey = SermondistributorHelper::getLocalKey();
 							$opener = new FOFEncryptAes($localkey, 128);
-							$link = rtrim($opener->decryptString(base64_decode($enUrl)));
+							$link = rtrim($opener->decryptString($enUrl), "\0");
 							$info = $this->getContentInfo($link);
 							// set headers
 							$app = JFactory::getApplication();
@@ -117,7 +117,7 @@ class SermondistributorControllerDownload extends JControllerLegacy
 				break;
 			}
 		}
-		return false;
+		die('Restricted access');
 	}
 	
 	protected function getContentInfo($url)

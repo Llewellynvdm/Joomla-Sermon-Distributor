@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.3.8
-	@build			2nd November, 2016
+	@version		1.4.0
+	@build			27th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -48,7 +48,7 @@ defined('_JEXEC') or die('Restricted access');
 			var request = 'token=<?php echo JSession::getFormToken(); ?>&key='+key+'&filename='+filename;
 		}
 		return jQuery.ajax({
-			type: 'GET',
+			type: 'POST',
 			url: getUrl,
 			dataType: 'jsonp',
 			data: request,
