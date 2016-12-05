@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		router.php
@@ -124,16 +124,10 @@ class SermondistributorRouter extends JComponentRouterBase
 	 * @since   3.3
 	 */
 	public function parse(&$segments)
-	{
-		//var_dump($segments);
-		//$app = JFactory::getApplication();
-		//$menu = $app->getMenu();
-		//$item = $menu->getActive();
-		
+	{		
 		$count = count($segments);
 		$vars = array();
-				
-		//var_dump($item->query['view']);
+		
 		//Handle View and Identifier
 		switch($segments[0])
 		{
@@ -175,7 +169,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				else
 				{
-					$id = $this->getVar('categories', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('categories', $segments[$count-1], 'alias', 'id', true);
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -247,7 +241,7 @@ class SermondistributorRouter extends JComponentRouterBase
 		return $vars;
 	} 
 
-	protected function getVar($table, $where = null, $whereString = 'user', $what = 'id', $operator = '=', $main = 'sermondistributor')
+	protected function getVar($table, $where = null, $whereString = 'user', $what = 'id', $category = false, $operator = '=', $main = 'sermondistributor')
 	{
 		if(!$where)
 		{
@@ -259,7 +253,7 @@ class SermondistributorRouter extends JComponentRouterBase
 		$query = $db->getQuery(true);
 
 		$query->select($db->quoteName(array($what)));
-		if ('categories' == $table || 'category' == $table)
+		if ('categories' == $table || 'category' == $table || $category)
 		{
 			$query->from($db->quoteName('#__categories'));
 		}

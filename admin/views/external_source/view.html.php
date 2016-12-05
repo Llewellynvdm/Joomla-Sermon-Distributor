@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -152,6 +152,16 @@ class SermondistributorViewExternal_source extends JViewLegacy
 				{
 					JToolBarHelper::custom('external_source.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 				}
+				if ($this->canDo->get('external_source.clear_local_listing'))
+				{
+					// add Clear Local Listing button.
+					JToolBarHelper::custom('external_source.clearLocalListing', 'delete', '', 'COM_SERMONDISTRIBUTOR_CLEAR_LOCAL_LISTING', false);
+				}
+				if ($this->canDo->get('external_source.reset_update_status'))
+				{
+					// add Reset Update Status button.
+					JToolBarHelper::custom('external_source.resetUpdateStatus', 'undo-2', '', 'COM_SERMONDISTRIBUTOR_RESET_UPDATE_STATUS', false);
+				}
 				JToolBarHelper::cancel('external_source.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
@@ -197,10 +207,6 @@ class SermondistributorViewExternal_source extends JViewLegacy
 		$document->addScriptDeclaration("var token = '".JSession::getFormToken()."';"); 
 		$document->addScript(JURI::root() . $this->script);
 		$document->addScript(JURI::root() . "administrator/components/com_sermondistributor/views/external_source/submitbutton.js"); 
-		// add JavaScripts
-		$document->addScript( JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit.min.js' );
-		// add the style sheets
-		$document->addStyleSheet( JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit.gradient.min.css' );
 		JText::script('view not acceptable. Error');
 	}
 }

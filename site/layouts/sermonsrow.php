@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermonsrow.php

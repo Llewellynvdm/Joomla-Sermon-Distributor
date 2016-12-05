@@ -46,6 +46,22 @@
 			default="10"
 		/>
 		<field type="spacer" name="spacerHistory" hr="true" />
+
+		<!-- Max_execution_time Field. Type: Integer. (joomla) -->
+		<field
+			type="integer"
+			name="max_execution_time"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_MAX_EXECUTION_TIME_LABEL"
+			default="500"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_MAX_EXECUTION_TIME_DESCRIPTION"
+			class="text_area"
+			required="true"
+			first="500"
+			last="50000"
+			step="10"
+		/>		
+		<!-- Spacer_hr_d Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_d" hr="true" class="spacer_hr_d" />
 		<field name="autorTitle"
 			type="spacer"
 			label="COM_SERMONDISTRIBUTOR_CONFIG_AUTHOR"

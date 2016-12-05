@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -47,6 +47,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		$this->registerTask('isNew', 'ajax');
 		$this->registerTask('isRead', 'ajax');
 		$this->registerTask('getBuildTable', 'ajax');
+		$this->registerTask('getSourceStatus', 'ajax');
 	}
 
 	public function ajax()
@@ -65,12 +66,12 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					try
 					{
 						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
-						$idValue = $jinput->get('id', NULL, 'INT');
+						$listingValue = $jinput->get('listing', NULL, 'INT');
 						$targetValue = $jinput->get('target', NULL, 'INT');
 						$typeValue = $jinput->get('type', NULL, 'INT');
-						if($idValue && $targetValue && $typeValue)
+						if($listingValue && $targetValue && $typeValue)
 						{
-							$result = $this->getModel('ajax')->autoUpdateLocalListingExternal($idValue, $targetValue, $typeValue);
+							$result = $this->getModel('ajax')->autoUpdateLocalListingExternal($listingValue, $targetValue, $typeValue);
 						}
 						else
 						{
@@ -227,6 +228,44 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						if($idNameValue && $ojectValue && $user->id != 0)
 						{
 							$result = $this->getModel('ajax')->getBuildTable($idNameValue, $ojectValue);
+						}
+						else
+						{
+							$result = false;
+						}
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
+						}
+						else
+						{
+							echo "(".json_encode($result).");";
+						}
+					}
+					catch(Exception $e)
+					{
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback."(".json_encode($e).");";
+						}
+						else
+						{
+							echo "(".json_encode($e).");";
+						}
+					}
+				break;
+				case 'getSourceStatus':
+					try
+					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$idValue = $jinput->get('id', NULL, 'INT');
+						if($idValue && $user->id != 0)
+						{
+							$result = $this->getModel('ajax')->getSourceStatus($idValue);
 						}
 						else
 						{

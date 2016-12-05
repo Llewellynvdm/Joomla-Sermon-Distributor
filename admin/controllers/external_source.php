@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.php
@@ -47,6 +47,148 @@ class SermondistributorControllerExternal_source extends JControllerForm
 	{
 		$this->view_list = 'External_sources'; // safeguard for setting the return view listing to the main view.
 		parent::__construct($config);
+	}
+
+	public function clearLocalListing() 
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// get the data
+		$originalData = $this->input->post->get('jform', array(), 'array');
+		if (isset($originalData['id']) && $originalData['id'] > 0)
+		{			
+			// get the needed
+			$app   	= JFactory::getApplication();
+			$lang  	= JFactory::getLanguage();
+			$model 	= $this->getModel();
+			$user 	= JFactory::getUser();
+			$context = "$this->option.edit.$this->context";
+			if (!$user->authorise('external_source.clear_local_listing', 'com_sermondistributor'))
+			{
+				// force production is not permitted
+				$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_YOU_DO_NOT_HAVE_PERMISSION_TO_CLEAR_LOCAL_LISTING'), 'error');
+				// Save the data in the session.
+				$app->setUserState($context . '.data', $originalData);
+				// Redirect back to the edit screen.
+				$this->setRedirect(
+					JRoute::_(
+						'index.php?option=' . $this->option . '&view=' . $this->view_item
+						. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
+					)
+				);
+				return false;
+			}
+			// clear the listing
+			$cleared = $model->clearLocalListing($originalData['id']);
+			if (!$cleared)
+			{
+				// force production is not permitted
+				$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_WAS_NOT_CLEARED'), 'error');
+				// Save the data in the session.
+				$app->setUserState($context . '.data', $originalData);
+				// Redirect back to the edit screen.
+				$this->setRedirect(
+					JRoute::_(
+						'index.php?option=' . $this->option . '&view=' . $this->view_item
+						. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
+					)
+				);
+				return false;
+			}
+			// force production is not permitted
+			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_WAS_CLEARED_SUCCESSFULLY'), 'success');
+			// Save the data in the session.
+			$app->setUserState($context . '.data', $originalData);
+			// Redirect back to the edit screen.
+			$this->setRedirect(
+				JRoute::_(
+					'index.php?option=' . $this->option . '&view=' . $this->view_item
+					. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
+				)
+			);
+			return true;
+		}
+		$this->setError(JText::_('COM_SERMONDISTRIBUTOR_CLEARING_LOCAL_LISTING_CAN_NOT_BE_DONE'));
+		$this->setMessage($this->getError(), 'error');
+		// Redirect back to the list screen.
+		$this->setRedirect(
+			JRoute::_(
+				'index.php?option=' . $this->option . '&view=' . $this->view_list
+				. $this->getRedirectToListAppend(), false
+			)
+		);
+		return false;
+	}
+
+	public function resetUpdateStatus() 
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// get the data
+		$originalData = $this->input->post->get('jform', array(), 'array');
+		if (isset($originalData['id']) && $originalData['id'] > 0)
+		{			
+			// get the needed
+			$app   	= JFactory::getApplication();
+			$lang  	= JFactory::getLanguage();
+			$model 	= $this->getModel();
+			$user 	= JFactory::getUser();
+			$context = "$this->option.edit.$this->context";
+			if (!$user->authorise('external_source.reset_update_status', 'com_sermondistributor'))
+			{
+				// force production is not permitted
+				$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_YOU_DO_NOT_HAVE_PERMISSION_TO_RESET_UPDATE_STATUS'), 'error');
+				// Save the data in the session.
+				$app->setUserState($context . '.data', $originalData);
+				// Redirect back to the edit screen.
+				$this->setRedirect(
+					JRoute::_(
+						'index.php?option=' . $this->option . '&view=' . $this->view_item
+						. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
+					)
+				);
+				return false;
+			}
+			// reset update status
+			$reset = $model->resetUpdateStatus($originalData['id']);
+			if (isset($reset['error']))
+			{
+				// reset update status did not happen
+				$app->enqueueMessage($reset['error'], 'error');
+				// Save the data in the session.
+				$app->setUserState($context . '.data', $originalData);
+				// Redirect back to the edit screen.
+				$this->setRedirect(
+					JRoute::_(
+						'index.php?option=' . $this->option . '&view=' . $this->view_item
+						. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
+					)
+				);
+				return false;
+			}
+			// reset update status success
+			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_RESETTING_THE_UPDATE_STATUS_WAS_SUCCESSFUL'), 'success');
+			// Save the data in the session.
+			$app->setUserState($context . '.data', $originalData);
+			// Redirect back to the edit screen.
+			$this->setRedirect(
+				JRoute::_(
+					'index.php?option=' . $this->option . '&view=' . $this->view_item
+					. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
+				)
+			);
+			return true;
+		}
+		$this->setError(JText::_('COM_SERMONDISTRIBUTOR_RESET_UPDATE_STATUS_CAN_NOT_BE_DONE'));
+		$this->setMessage($this->getError(), 'error');
+		// Redirect back to the list screen.
+		$this->setRedirect(
+			JRoute::_(
+				'index.php?option=' . $this->option . '&view=' . $this->view_list
+				. $this->getRedirectToListAppend(), false
+			)
+		);
+		return false;
 	}
 
         /**

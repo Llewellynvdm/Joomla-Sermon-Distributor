@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -62,12 +62,12 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					try
 					{
 						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
-						$idValue = $jinput->get('id', NULL, 'INT');
+						$listingValue = $jinput->get('listing', NULL, 'INT');
 						$targetValue = $jinput->get('target', NULL, 'INT');
 						$typeValue = $jinput->get('type', NULL, 'INT');
-						if($idValue && $targetValue && $typeValue)
+						if($listingValue && $targetValue && $typeValue)
 						{
-							$result = $this->getModel('ajax')->autoUpdateLocalListingExternal($idValue, $targetValue, $typeValue);
+							$result = $this->getModel('ajax')->autoUpdateLocalListingExternal($listingValue, $targetValue, $typeValue);
 						}
 						else
 						{

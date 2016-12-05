@@ -215,46 +215,6 @@
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DYNAMIC_AUTOMATIC_BUILD</option>
 		</field>
-		<!-- Permissiontype Field. Type: Radio. (joomla) -->
-		<field
-			type="radio"
-			name="permissiontype"
-			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_PERMISSIONTYPE_LABEL"
-			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_PERMISSIONTYPE_DESCRIPTION"
-			class="btn-group btn-group-yesno"
-			default="app">
-			<!-- Option Set. -->
-			<option value="full">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_FULL_DROPBOX</option>
-			<option value="app">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_APP_FOLDER</option>
-		</field>
-		<!-- Update_timer Field. Type: Integer. (joomla) -->
-		<field
-			type="integer"
-			name="update_timer"
-			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_UPDATE_TIMER_LABEL"
-			default="60"
-			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_UPDATE_TIMER_DESCRIPTION"
-			class="text_area"
-			first="0"
-			last="50000"
-			step="10"
-		/>
-		<!-- Dropboxoptions Field. Type: Radio. (joomla) -->
-		<field
-			type="radio"
-			name="dropboxoptions"
-			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DROPBOXOPTIONS_LABEL"
-			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DROPBOXOPTIONS_DESCRIPTION"
-			class="btn-group btn-group-yesno"
-			default="1">
-			<!-- Option Set. -->
-			<option value="1">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_SHARED_URL</option>
-			<option value="2">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_FOLDER_PATH</option>
-		</field>
 		<!-- Folder Field. Type: Repeatable. (joomla) -->
 		<field
 			type="repeatable"
@@ -285,12 +245,51 @@
 				</fieldset>
 			</fields>
 		</field>
-		<!-- Note_auto_dropbox Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_auto_dropbox" label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NOTE_AUTO_DROPBOX_LABEL" description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NOTE_AUTO_DROPBOX_DESCRIPTION" heading="h4" class="alert alert-info note_auto_dropbox" />
+		<!-- Note_auto_externalsource Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_auto_externalsource" label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NOTE_AUTO_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NOTE_AUTO_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_auto_externalsource" />
+		<!-- Dropboxoptions Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="dropboxoptions"
+			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DROPBOXOPTIONS_LABEL"
+			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DROPBOXOPTIONS_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="1">
+			<!-- Option Set. -->
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_SHARED_URL</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_FOLDER_PATH</option>
+		</field>
+		<!-- Update_timer Field. Type: Integer. (joomla) -->
+		<field
+			type="integer"
+			name="update_timer"
+			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_UPDATE_TIMER_LABEL"
+			default="60"
+			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_UPDATE_TIMER_DESCRIPTION"
+			class="text_area"
+			required="true"
+			first="60"
+			last="50000"
+			step="10"
+		/>
 		<!-- App_limitation_note Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="app_limitation_note" description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_APP_LIMITATION_NOTE_DESCRIPTION" class="app_limitation_note" />
-		<!-- Wiki_check_note Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="wiki_check_note" label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_WIKI_CHECK_NOTE_LABEL" description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_WIKI_CHECK_NOTE_DESCRIPTION" class="alert alert-success wiki_check_note" />
+		<!-- Permissiontype Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="permissiontype"
+			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_PERMISSIONTYPE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_PERMISSIONTYPE_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="app">
+			<!-- Option Set. -->
+			<option value="full">
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_FULL_DROPBOX</option>
+			<option value="app">
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_APP_FOLDER</option>
+		</field>
 		<!-- Sharedurl Field. Type: Repeatable. (joomla) -->
 		<field
 			type="repeatable"
@@ -336,8 +335,8 @@
 			message="Error! Please add generated access token here."
 			hint="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_OAUTHTOKEN_HINT"
 		/>
-		<!-- Note_manual_dropbox Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_manual_dropbox" label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NOTE_MANUAL_DROPBOX_LABEL" description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NOTE_MANUAL_DROPBOX_DESCRIPTION" heading="h4" class="alert alert-info note_manual_dropbox" />
+		<!-- Note_manual_externalsource Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_manual_externalsource" label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NOTE_MANUAL_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NOTE_MANUAL_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_manual_externalsource" />
 		<!-- Generated_access_token_note Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="generated_access_token_note" label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_GENERATED_ACCESS_TOKEN_NOTE_LABEL" description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_GENERATED_ACCESS_TOKEN_NOTE_DESCRIPTION" heading="h4" class="alert alert-info generated_access_token_note" />
 		<!-- Not_required Field. Type: Hidden. (joomla) -->

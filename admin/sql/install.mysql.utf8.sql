@@ -185,8 +185,8 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_external_source` (
 	KEY `idx_externalsources` (`externalsources`),
 	KEY `idx_update_method` (`update_method`),
 	KEY `idx_build` (`build`),
-	KEY `idx_permissiontype` (`permissiontype`),
-	KEY `idx_dropboxoptions` (`dropboxoptions`)
+	KEY `idx_dropboxoptions` (`dropboxoptions`),
+	KEY `idx_permissiontype` (`permissiontype`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_local_listing` (

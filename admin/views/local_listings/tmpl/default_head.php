@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_head.php
@@ -52,7 +52,7 @@ defined('_JEXEC') or die('Restricted access');
 	<th class="nowrap hidden-phone" >
 			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_LABEL', 'size', $this->listDirn, $this->listOrder); ?>
 	</th>
-	<th class="nowrap hidden-phone" >
+	<th class="nowrap" >
 			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL', 'external_source_description', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap hidden-phone" >

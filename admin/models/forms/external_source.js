@@ -10,7 +10,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.js
@@ -23,7 +23,8 @@
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // Some Global Values
-jform_vvvvvwmvwd_required = false;
+jform_vvvvvwjvwd_required = false;
+jform_vvvvvwmvwe_required = false;
 
 // Initial Script
 jQuery(document).ready(function()
@@ -257,10 +258,27 @@ function vvvvvwj(update_method_vvvvvwj)
 	if (update_method_vvvvvwj == 2)
 	{
 		jQuery('#jform_update_timer').closest('.control-group').show();
+		if (jform_vvvvvwjvwd_required)
+		{
+			updateFieldRequired('update_timer',0);
+			jQuery('#jform_update_timer').prop('required','required');
+			jQuery('#jform_update_timer').attr('aria-required',true);
+			jQuery('#jform_update_timer').addClass('required');
+			jform_vvvvvwjvwd_required = false;
+		}
+
 	}
 	else
 	{
 		jQuery('#jform_update_timer').closest('.control-group').hide();
+		if (!jform_vvvvvwjvwd_required)
+		{
+			updateFieldRequired('update_timer',1);
+			jQuery('#jform_update_timer').removeAttr('required');
+			jQuery('#jform_update_timer').removeAttr('aria-required');
+			jQuery('#jform_update_timer').removeClass('required');
+			jform_vvvvvwjvwd_required = true;
+		}
 	}
 }
 
@@ -283,11 +301,11 @@ function vvvvvwk(build_vvvvvwk)
 	// set this function logic
 	if (build)
 	{
-		jQuery('.note_auto_dropbox').closest('.control-group').show();
+		jQuery('.note_auto_externalsource').closest('.control-group').show();
 	}
 	else
 	{
-		jQuery('.note_auto_dropbox').closest('.control-group').hide();
+		jQuery('.note_auto_externalsource').closest('.control-group').hide();
 	}
 }
 
@@ -321,11 +339,11 @@ function vvvvvwl(build_vvvvvwl)
 	// set this function logic
 	if (build)
 	{
-		jQuery('.note_manual_dropbox').closest('.control-group').show();
+		jQuery('.note_manual_externalsource').closest('.control-group').show();
 	}
 	else
 	{
-		jQuery('.note_manual_dropbox').closest('.control-group').hide();
+		jQuery('.note_manual_externalsource').closest('.control-group').hide();
 	}
 }
 
@@ -372,26 +390,26 @@ function vvvvvwm(externalsources_vvvvvwm,update_method_vvvvvwm)
 	if (externalsources && update_method)
 	{
 		jQuery('#jform_oauthtoken').closest('.control-group').show();
-		if (jform_vvvvvwmvwd_required)
+		if (jform_vvvvvwmvwe_required)
 		{
 			updateFieldRequired('oauthtoken',0);
 			jQuery('#jform_oauthtoken').prop('required','required');
 			jQuery('#jform_oauthtoken').attr('aria-required',true);
 			jQuery('#jform_oauthtoken').addClass('required');
-			jform_vvvvvwmvwd_required = false;
+			jform_vvvvvwmvwe_required = false;
 		}
 
 	}
 	else
 	{
 		jQuery('#jform_oauthtoken').closest('.control-group').hide();
-		if (!jform_vvvvvwmvwd_required)
+		if (!jform_vvvvvwmvwe_required)
 		{
 			updateFieldRequired('oauthtoken',1);
 			jQuery('#jform_oauthtoken').removeAttr('required');
 			jQuery('#jform_oauthtoken').removeAttr('aria-required');
 			jQuery('#jform_oauthtoken').removeClass('required');
-			jform_vvvvvwmvwd_required = true;
+			jform_vvvvvwmvwe_required = true;
 		}
 	}
 }
@@ -1002,11 +1020,9 @@ function vvvvvww(build_vvvvvww)
 	// set this function logic
 	if (build)
 	{
-		jQuery('.wiki_check_note').closest('.control-group').show();
 	}
 	else
 	{
-		jQuery('.wiki_check_note').closest('.control-group').hide();
 	}
 }
 
@@ -1067,8 +1083,38 @@ jQuery(document).ready(function()
 	if (folders) {
 		getBuildTable(folders,'jform_folder');
 	}
+	var source_id = jQuery('#jform_id').val();
+	if (source_id) {
+		getSourceStatus(source_id);
+	}
 	jQuery('.save-modal-data').text('Done');
 });
+function getSourceStatus_server(sourceID){
+	var getUrl = "index.php?option=com_sermondistributor&task=ajax.getSourceStatus&format=json";
+	if(token.length > 0 && sourceID > 0){
+		var request = 'token='+token+'&id='+sourceID;
+	}
+	return jQuery.ajax({
+		type: 'GET',
+		url: getUrl,
+		dataType: 'jsonp',
+		data: request,
+		jsonp: 'callback'
+	});
+}
+function getSourceStatus(sourceID){
+	getSourceStatus_server(sourceID).done(function(result) {
+		if(result){
+			setSourceStatus(result);
+		} else {
+			jQuery('#sourceStatus').remove();			
+		}
+	})
+}
+function setSourceStatus(result){
+	jQuery('#sourceStatus').remove();
+	jQuery('#jform_update_method').closest('.control-group').append('<div id="sourceStatus" class="controls"><br />'+result+'</div>');
+}
 function getBuildTable_server(string,idName){
 	var getUrl = "index.php?option=com_sermondistributor&task=ajax.getBuildTable&format=json";
 	if(token.length > 0 && string.length > 0 && idName.length > 0){

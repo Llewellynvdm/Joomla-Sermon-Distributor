@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_body.php
@@ -89,17 +89,8 @@ $edit = "index.php?option=com_sermondistributor&view=external_sources&task=exter
 		<td class="hidden-phone">
 			<?php echo JText::_($item->externalsources); ?>
 		</td>
-		<td class="nowrap">
-			<?php if ($canDo->get('external_source.edit')): ?>
-				<div class="name">
-					<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>"><?php echo JText::_($item->update_method); ?></a>
-					<?php if ($item->checked_out): ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'external_sources.', $canCheckin); ?>
-					<?php endif; ?>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo JText::_($item->update_method); ?></div>
-			<?php endif; ?>
+		<td class="hidden-phone">
+			<?php echo JText::_($item->update_method); ?>
 		</td>
 		<td class="hidden-phone">
 			<?php echo JText::_($item->filetypes); ?>

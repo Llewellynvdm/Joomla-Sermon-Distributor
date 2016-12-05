@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.php
@@ -64,6 +64,80 @@ class SermondistributorModelExternal_source extends JModelAdmin
 	public function getTable($type = 'external_source', $prefix = 'SermondistributorTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	public function clearLocalListing($id) 
+	{
+		// clear local listing
+		if ($id > 0)
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+ 
+			$conditions = array(
+				$db->quoteName('external_source') . ' = ' . (int) $id
+			);
+ 
+			$query->delete($db->quoteName('#__sermondistributor_local_listing'));
+			$query->where($conditions);
+ 
+			$db->setQuery($query);
+ 
+			return $db->execute();
+		}
+		return false;
+	}
+
+	public function resetUpdateStatus($id) 
+	{
+		// reset the update status
+		if ($id > 0)
+		{
+			if ($targets = SermondistributorHelper::getExternalListingUpdateKeys($id, null))
+			{
+				// import the Joomla librarys
+				jimport('joomla.filesystem.file');
+				$errors = array();
+				foreach ($targets as $target)
+				{
+					// build info file key
+					$targetArray = explode(', ', $target);
+					$targetArray[2] = ($targetArray[2] == 2) ? 'auto' : 'manual';
+					$infoFileKey = SermondistributorHelper::safeString(implode('', $targetArray));
+					$infoFileName = md5($infoFileKey.'info').'.json';
+					// info on update path
+					$infoFilePath = JPATH_COMPONENT_SITE.'/helpers/'.$infoFileName;
+					// now remove file if found
+					if (JFile::exists($infoFilePath))
+					{
+						if (!JFile::delete($infoFilePath))
+						{
+							$errors[] = JText::sprintf('COM_SERMONDISTRIBUTOR_S_COULD_NOT_BE_REMOVE', $infoFileName);
+						}
+					}
+					// remove any notice on update errors
+					$key = preg_replace('/[ ,]+/', '', trim($target));
+					$noticeFilePath =  SermondistributorHelper::getFilePath('update', 'error', $key, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
+					// now remove file if found
+					if (JFile::exists($noticeFilePath))
+					{
+						if (!JFile::delete($noticeFilePath))
+						{
+							$noticeFileName = basename($noticeFilePath);
+							$errors[] = JText::sprintf('COM_SERMONDISTRIBUTOR_S_COULD_NOT_BE_REMOVE', $noticeFileName);
+						}
+					}
+				}
+				// check if there was an error
+				if (SermondistributorHelper::checkArray($errors))
+				{
+					return array('error' => '<ul><li>'.implode('</li><li>', $errors).'</li></ul>');
+				}
+				return true;
+			}
+			return array('error' => JText::_('COM_SERMONDISTRIBUTOR_THERE_IS_NO_TARGETS_SET_FOR_THIS_SOURCE_CAN_NOT_RESET_THE_UPDATE_STATUS'));
+		}
+		return array('error' => JText::_('COM_SERMONDISTRIBUTOR_NO_ID_FOUND_CAN_NOT_RESET_THE_UPDATE_STATUS'));
 	}
     
 	/**
@@ -278,39 +352,23 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				$form->setFieldAttribute('build', 'required', 'false');
 			}
 		}
-		// Modify the form based on Edit Permissiontype access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.permissiontype', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.permissiontype', 'com_sermondistributor')))
+		// Modify the form based on Edit Folder access controls.
+		if ($id != 0 && (!$user->authorise('external_source.edit.folder', 'com_sermondistributor.external_source.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('external_source.edit.folder', 'com_sermondistributor')))
 		{
 			// Disable fields for display.
-			$form->setFieldAttribute('permissiontype', 'disabled', 'true');
+			$form->setFieldAttribute('folder', 'disabled', 'true');
 			// Disable fields for display.
-			$form->setFieldAttribute('permissiontype', 'readonly', 'true');
+			$form->setFieldAttribute('folder', 'readonly', 'true');
 			// Disable radio button for display.
-			$class = $form->getFieldAttribute('permissiontype', 'class', '');
-			$form->setFieldAttribute('permissiontype', 'class', $class.' disabled no-click');
-			if (!$form->getValue('permissiontype'))
+			$class = $form->getFieldAttribute('folder', 'class', '');
+			$form->setFieldAttribute('folder', 'class', $class.' disabled no-click');
+			if (!$form->getValue('folder'))
 			{
 				// Disable fields while saving.
-				$form->setFieldAttribute('permissiontype', 'filter', 'unset');
+				$form->setFieldAttribute('folder', 'filter', 'unset');
 				// Disable fields while saving.
-				$form->setFieldAttribute('permissiontype', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Update Timer access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.update_timer', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.update_timer', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('update_timer', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('update_timer', 'readonly', 'true');
-			if (!$form->getValue('update_timer'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('update_timer', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('update_timer', 'required', 'false');
+				$form->setFieldAttribute('folder', 'required', 'false');
 			}
 		}
 		// Modify the form based on Edit Dropboxoptions access controls.
@@ -332,23 +390,39 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				$form->setFieldAttribute('dropboxoptions', 'required', 'false');
 			}
 		}
-		// Modify the form based on Edit Folder access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.folder', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.folder', 'com_sermondistributor')))
+		// Modify the form based on Edit Update Timer access controls.
+		if ($id != 0 && (!$user->authorise('external_source.edit.update_timer', 'com_sermondistributor.external_source.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('external_source.edit.update_timer', 'com_sermondistributor')))
 		{
 			// Disable fields for display.
-			$form->setFieldAttribute('folder', 'disabled', 'true');
+			$form->setFieldAttribute('update_timer', 'disabled', 'true');
 			// Disable fields for display.
-			$form->setFieldAttribute('folder', 'readonly', 'true');
-			// Disable radio button for display.
-			$class = $form->getFieldAttribute('folder', 'class', '');
-			$form->setFieldAttribute('folder', 'class', $class.' disabled no-click');
-			if (!$form->getValue('folder'))
+			$form->setFieldAttribute('update_timer', 'readonly', 'true');
+			if (!$form->getValue('update_timer'))
 			{
 				// Disable fields while saving.
-				$form->setFieldAttribute('folder', 'filter', 'unset');
+				$form->setFieldAttribute('update_timer', 'filter', 'unset');
 				// Disable fields while saving.
-				$form->setFieldAttribute('folder', 'required', 'false');
+				$form->setFieldAttribute('update_timer', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Permissiontype access controls.
+		if ($id != 0 && (!$user->authorise('external_source.edit.permissiontype', 'com_sermondistributor.external_source.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('external_source.edit.permissiontype', 'com_sermondistributor')))
+		{
+			// Disable fields for display.
+			$form->setFieldAttribute('permissiontype', 'disabled', 'true');
+			// Disable fields for display.
+			$form->setFieldAttribute('permissiontype', 'readonly', 'true');
+			// Disable radio button for display.
+			$class = $form->getFieldAttribute('permissiontype', 'class', '');
+			$form->setFieldAttribute('permissiontype', 'class', $class.' disabled no-click');
+			if (!$form->getValue('permissiontype'))
+			{
+				// Disable fields while saving.
+				$form->setFieldAttribute('permissiontype', 'filter', 'unset');
+				// Disable fields while saving.
+				$form->setFieldAttribute('permissiontype', 'required', 'false');
 			}
 		}
 		// Modify the form based on Edit Sharedurl access controls.

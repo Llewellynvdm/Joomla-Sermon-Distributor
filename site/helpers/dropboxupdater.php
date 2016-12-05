@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		dropboxupdater.php
@@ -77,11 +77,6 @@ class Dropboxupdater
 	**/
 	protected $updateInfo;
 	protected $infoFilePath;
-	
-	/**
-	* 	get the localkey
-	**/
-	protected $localkey = false;
 	
 	/**
 	* 	Main dropbox class
@@ -359,7 +354,7 @@ class Dropboxupdater
 	protected function setUpdateInfoData()
 	{
 		// set the info file name
-		$fileName = md5($this->fileKey.'info'.$this->localkey);
+		$fileName = md5($this->fileKey.'info');
 		// set file path
 		$this->infoFilePath = JPATH_COMPONENT_SITE.'/helpers/'.$fileName.'.json';
 		
@@ -413,7 +408,7 @@ class Dropboxupdater
 	protected function doUpdate()
 	{
 		// we need more then the normal time to run this script 5 minutes at least.
-		ini_set('max_execution_time', 500);
+		ini_set('max_execution_time', $this->app_params->get('max_execution_time', 500));
 		// get data of all the shared links of all target items
 		if (!$this->dropbox->getFiles($this->data->oauthtoken, $this->data->permissiontype, $this->detailsConfig))
 		{

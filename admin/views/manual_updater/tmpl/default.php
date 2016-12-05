@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -101,7 +101,8 @@ jQuery(document).ready(function($) {
 				<?php $targets = SermondistributorHelper::getExternalListingUpdateKeys($item->id, 1, 2); ?>
 				<?php if (SermondistributorHelper::checkArray($targets)) : ?>
 					<?php foreach($targets as $target): ?>
-					<?php if ($error = SermondistributorHelper::getUpdateError($item->id, $item->id.$target.$item->build)): ?>
+					<?php $error = SermondistributorHelper::getUpdateError(0, $item->id.$target.$item->build); ?>
+					<?php if (SermondistributorHelper::checkString($error)): ?>
 						<?php $errorKey = SermondistributorHelper::safeString($item->id.$target.$item->build); ?>
 						<a class="btn btn-danger" href="#<?php echo 'error'.$errorKey; ?>" data-toggle="modal"><?php echo JText::_('COM_SERMONDISTRIBUTOR_VIEW_ERROR'); ?></a>
 						<?php echo JHtml::_('bootstrap.renderModal', 'error'.$errorKey, array('title' => JText::_('COM_SERMONDISTRIBUTOR_THERE_WAS_AN_ERROR_DURING_THE_LAST_UPDATE_ATTEMPT')), $error); ?>

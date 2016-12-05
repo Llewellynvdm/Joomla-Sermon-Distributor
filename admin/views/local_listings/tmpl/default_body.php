@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_body.php
@@ -92,8 +92,14 @@ $edit = "index.php?option=com_sermondistributor&view=local_listings&task=local_l
 		<td class="hidden-phone">
 			<?php echo $this->escape($item->size); ?>
 		</td>
-		<td class="hidden-phone">
-			<?php echo $this->escape($item->external_source_description); ?>
+		<td class="nowrap">
+			<?php if ($this->user->authorise('external_source.edit', 'com_sermondistributor.external_source.' . (int)$item->external_source)): ?>
+				<div class="name">
+					<a href="index.php?option=com_sermondistributor&view=external_sources&task=external_source.edit&id=<?php echo $item->external_source; ?>&ref=local_listings"><?php echo $this->escape($item->external_source_description); ?></a>
+				</div>
+			<?php else: ?>
+				<div class="name"><?php echo $this->escape($item->external_source_description); ?></div>
+			<?php endif; ?>
 		</td>
 		<td class="hidden-phone">
 			<?php echo $this->escape($item->key); ?>

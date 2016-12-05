@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -45,19 +45,25 @@ abstract class SermondistributorHelper
 	**/
 	public static function loadExternalUpdateAjax($document)
 	{
-		$updates = self::getExternalListingUpdateKeys(); // id, target, type
-		if (self::checkArray($updates))
+		$update = self::getNextUpdateValues(); // id, target, type
+		if ($update)
 		{
 			$document->addScriptDeclaration("
 			jQuery(window).load(function() {
-				checkExternalListing(".implode('); checkExternalListing(', $updates).");
+				checkExternalListing(".$update.");
 			});
 			
 			function checkExternalListing(id, target, type) {
+				checkExternalListing_server(id, target, type).done(function(result) {
+					// good it is done
+				});
+			}
+			
+			function checkExternalListing_server(id, target, type) {
 				var getUrl = '".JURI::root()."index.php?option=com_sermondistributor&task=ajax.autoUpdateLocalListingExternal&format=json';
 				if(target > 0 && type > 0 && id > 0){
-					var request = 'token=".JSession::getFormToken()."&target='+target+'&id='+id+'&type='+type;
-				}
+					var request = 'token=".JSession::getFormToken()."&target='+target+'&listing='+id+'&type='+type;
+				}				
 				return jQuery.ajax({
 					type: 'GET',
 					url: getUrl,
@@ -98,6 +104,11 @@ abstract class SermondistributorHelper
 	* 	The update error info File Name
 	**/
 	protected static $updateerror = false;
+
+	/**
+	* 	The update last File path
+	**/
+	protected static $updatelast = false;
 
 	/**
 	* 	The update errors
@@ -329,6 +340,49 @@ abstract class SermondistributorHelper
 		return true;
 	}
 
+	protected static function getNextUpdateValues()
+	{
+		// get actual update values
+		$updates = self::getExternalListingUpdateKeys();
+		// get last update
+		$updatePath = self::getFilePath('update', 'last', 'vDm', '.txt', JPATH_COMPONENT_ADMINISTRATOR);
+		if (($lastUpdate = @file_get_contents($updatePath)) !== FALSE && self::checkArray($updates))
+		{
+			// now check what is next
+			$lastKey = array_search($lastUpdate, $updates);
+			if (!is_null($lastKey))
+			{
+				$nextKey = $lastKey + 1;
+				if (isset($updates[$nextKey]))
+				{
+					self::saveFile($updates[$nextKey],$updatePath);
+					return $updates[$nextKey];
+				}
+			}
+		}
+		// rest and start with the first key
+		if (self::checkArray($updates))
+		{
+			// save the first set
+			$start = reset($updates);
+			self::saveFile($start,$updatePath);
+			return $start;
+		}
+		return false;
+	}
+
+	protected static function saveFile($data,$path_filename)
+	{
+		if (self::checkString($data))
+		{
+			$fp = fopen($path_filename, 'w');
+			fwrite($fp, $data);
+			fclose($fp);
+			return true;
+		}
+		return false;
+	}
+
 	public static function getExternalListingUpdateKeys($id = null, $updateMethod = 2, $returnType = 1)
 	{
 		// first check if this file already has statistics
@@ -336,7 +390,10 @@ abstract class SermondistributorHelper
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName(array('id','sharedurl','folder','permissiontype','dropboxoptions','build')));
 		$query->from($db->quoteName('#__sermondistributor_external_source'));
-		$query->where($db->quoteName('update_method') . ' = '. (int) $updateMethod);
+		if ($updateMethod && is_numeric($updateMethod))
+		{
+			$query->where($db->quoteName('update_method') . ' = '. (int) $updateMethod);
+		}
 		if ($id && is_numeric($id))
 		{
 			$query->where($db->quoteName('id') . ' = '. (int) $id);
@@ -574,19 +631,29 @@ abstract class SermondistributorHelper
 		return false;
 	}
 	
-	public static function getFilePath($type, $name = 'listing', $key = '', $fileType = '.json', $PATH = JPATH_COMPONENT_SITE)
+	public static function getFilePath($type, $name = 'listing', $key = 'vDm', $fileType = '.json', $PATH = JPATH_COMPONENT_SITE)
 	{
-		if (!self::checkString(self::${$type.$name}))
+		if (!isset(self::${$type.$name}[$key]) || !self::checkString(self::${$type.$name}[$key]))
 		{
 			// Get local key
 			$localkey = self::getLocalKey();
+			// check the key
+			$keyMD5 = '';
+			if ('vDm' != $key)
+			{
+				$keyMD5 = $key;
+			}
 			// set the name
-			$fileName = md5($type.$name.$localkey.$key);
+			$fileName = md5($type.$name.$localkey.$keyMD5);
 			// set file path			
-			self::${$type.$name} = $PATH.'/helpers/'.$fileName.$fileType;
+			self::${$type.$name}[$key] = $PATH.'/helpers/'.$fileName.$fileType;
 		}
-		// return the path
-		return self::${$type.$name};
+		if (isset(self::${$type.$name}[$key]) && self::checkString(self::${$type.$name}[$key]))
+		{
+			// return the path
+			return self::${$type.$name}[$key];
+		}
+		return '';
 	}
 
 	/**
@@ -628,6 +695,85 @@ abstract class SermondistributorHelper
 		self::setUpdateError($id, array(JText::_('COM_SERMONDISTRIBUTOR_THE_EXTERNAL_SOURCE_COULD_NOT_BE_FOUND')));
 		return false;
 	}
+
+	public static function getSourceStatus($id)
+	{
+		// fist get errors if any is found
+		$errors = array();
+		if ($targets = self::getExternalListingUpdateKeys($id, null, 1))
+		{
+			foreach ($targets as $target)
+			{
+				$key = preg_replace('/[ ,]+/', '', trim($target));
+				if ($error = self::getUpdateError(0, $key))
+				{
+					$errors[] = $error;
+				}
+			}
+		}
+		// check when was the last update
+		$updateInfo = self::updateInfo($id);
+		if (!$updateInfo)
+		{
+			$errors[] = JText::_('COM_SERMONDISTRIBUTOR_THIS_SOURCE_HAS_NO_LOCAL_LISTING_SET');
+		}
+		// build the return string
+		if (isset($updateInfo['last']) || self::checkArray($errors))
+		{
+			$body = array();
+			// great we have source status
+			if (isset($updateInfo['last']))
+			{
+				$body[] = '<h3>'. JText::_('COM_SERMONDISTRIBUTOR_LISTING_INFO') . '</h3>';
+				$body[] = '<p><b>'. JText::_('COM_SERMONDISTRIBUTOR_LAST_UPDATE') . ':</b> <em>'.$updateInfo['last'];
+				$body[] = '</em><br /><b>'. JText::_('COM_SERMONDISTRIBUTOR_NUMBER_OF_FILES_LISTED') . ':</b> <em>'.$updateInfo['qty'];
+				$body[] = '</em></p>';
+			}
+			// now set any errors found
+			if (self::checkArray($errors))
+			{
+				$body[] = '<h3>'. JText::_('COM_SERMONDISTRIBUTOR_NOTICE') . '</h3>';
+				$body[] = implode('', $errors);
+			}
+			return '<a class="btn btn-small btn-success" href="#source-status'.$id.'" data-toggle="modal">'.JText::_('COM_SERMONDISTRIBUTOR_VIEW_UPDATE_STATUS').'</a>' 
+				. JHtml::_('bootstrap.renderModal', 'source-status'.$id, array('title' => JText::_('COM_SERMONDISTRIBUTOR_SOURCE_STATUS_REPORT')), implode('', $body));
+		}
+ 		// no status found
+		return false;
+	}
+
+	public static function updateInfo($id)
+	{
+		$db = JFactory::getDbo();
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(array('a.created','a.modified')));
+		$query->from($db->quoteName('#__sermondistributor_local_listing', 'a'));
+		$query->where($db->quoteName('a.external_source') . ' = ' . (int) $id);
+ 		// Reset the query using our newly populated query object.
+		$db->setQuery($query);
+		$db->execute();
+		if ($qty = $db->getNumRows())
+		{
+			$data = $db->loadRowList();
+			$last = 0;
+			foreach ($data as $dates)
+			{
+				foreach ($dates as $date)
+				{
+					$time = strtotime($date);
+					if ($time > $last)
+					{
+						$last = $time;
+					}
+				}
+			}
+			$info['qty'] = (int) $qty;
+			$info['last'] = self::fancyDate($last);
+			return $info;
+		}
+		return false;
+	}
 	
 	public static function getUpdateError($id, $fileKey = null)
 	{
@@ -646,9 +792,9 @@ abstract class SermondistributorHelper
 			}
 			return false;
 		}
-		if (isset(self::$updateErrors[$id]) && self::checkArray(self::$updateErrors[$id]))
+		elseif (isset(self::$updateErrors[$id]) && self::checkArray(self::$updateErrors[$id]))
 		{
-			return '<ul><li>'.implode('</li><li>', self::$updateErrors[$id]).'</li><ul>';
+			return '<ul><li>'.implode('</li><li>', self::$updateErrors[$id]).'</li></ul>';
 		}
 		return JText::_('COM_SERMONDISTRIBUTOR_UNKNOWN_ERROR_HAS_OCCURRED');
 	}
@@ -666,6 +812,52 @@ abstract class SermondistributorHelper
 				self::$updateErrors[$id][] = $error;
 			}
 		}
+	}
+
+	/**
+	 *	Change to nice fancy date
+	 */
+	public static function fancyDate($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('jS \o\f F Y',$date);
+	}
+
+	/**
+	 *	Change to nice fancy time and date
+	 */
+	public static function fancyDateTime($time)
+	{
+		if (!self::isValidTimeStamp($time))
+		{
+			$time = strtotime($time);
+		}
+		return date('(G:i) jS \o\f F Y',$time);
+	}
+
+	/**
+	 *	Change to nice hour:minutes time
+	 */
+	public static function fancyTime($time)
+	{
+		if (!self::isValidTimeStamp($time))
+		{
+			$time = strtotime($time);
+		}
+		return date('G:i',$time);
+	}
+
+	/**
+	 *	Check if string is a valid time stamp
+	 */
+	public static function isValidTimeStamp($timestamp)
+	{
+		return ((int) $timestamp === $timestamp)
+		&& ($timestamp <= PHP_INT_MAX)
+		&& ($timestamp >= ~PHP_INT_MAX);
 	}
 	
 	public static function jsonToString($value, $sperator = ", ", $table = null)

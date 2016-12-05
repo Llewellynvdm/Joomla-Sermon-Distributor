@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categories.php
@@ -73,8 +73,8 @@ class SermondistributorModelCategories extends JModelList
 
 		// Get from #__categories as a
 		$query->select($db->quoteName(
-			array('a.id','a.title','a.alias','a.description','a.hits','a.language'),
-			array('id','name','alias','description','hits','language')));
+			array('a.id','a.title','a.alias','a.description','a.hits','a.language','a.params'),
+			array('id','name','alias','description','hits','language','params')));
 		$query->from($db->quoteName('#__categories', 'a'));
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
 		$query->where('a.published = 1');
@@ -114,7 +114,7 @@ class SermondistributorModelCategories extends JModelList
 			// Always create a slug for sef URL's
 			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
 			// set idCatidSermonB to the $item object.
-			$item->idCatidSermonB = $this->getIdCatidSermonBced_B($item->id);
+			$item->idCatidSermonB = $this->getIdCatidSermonEfee_B($item->id);
 		} 
 
 
@@ -126,6 +126,15 @@ class SermondistributorModelCategories extends JModelList
 				{
 					// remove empty category
 					unset($items[$nr]);
+				}
+				// set the icon if found
+				if (SermondistributorHelper::checkJson($item->params))
+				{
+					$params = json_decode($item->params, true);
+					if (isset($params['image']) && SermondistributorHelper::checkString($params['image']))
+					{
+						$item->icon = $params['image'];
+					}
 				}
 			}
 		}
@@ -140,7 +149,7 @@ class SermondistributorModelCategories extends JModelList
 	* @return mixed  An array of Sermon Objects on success, false on failure.
 	*
 	*/
-	public function getIdCatidSermonBced_B($id)
+	public function getIdCatidSermonEfee_B($id)
 	{
 		// Get a db connection.
 		$db = JFactory::getDbo();

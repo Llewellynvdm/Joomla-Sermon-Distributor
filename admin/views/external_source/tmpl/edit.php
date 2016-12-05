@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.0
-	@build			27th November, 2016
+	@build			4th December, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -78,12 +78,12 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-	<?php echo JHtml::_('bootstrap.addTab', 'external_sourceTab', 'wiki', JText::_('COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_WIKI', true)); ?>
+	<?php echo JHtml::_('bootstrap.addTab', 'external_sourceTab', 'build_option', JText::_('COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_BUILD_OPTION', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 		</div>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span12">
-				<?php echo JLayoutHelper::render('external_source.wiki_fullwidth', $this); ?>
+				<?php echo JLayoutHelper::render('external_source.build_option_fullwidth', $this); ?>
 			</div>
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
