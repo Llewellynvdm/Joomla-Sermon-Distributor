@@ -80,7 +80,7 @@
 			label="COM_SERMONDISTRIBUTOR_CONFIG_AUTHOR_EMAIL_LABEL"
 			description="COM_SERMONDISTRIBUTOR_CONFIG_AUTHOR_EMAIL_DESC"
 			size="60"
-			default="llewellyn@vdm.io"
+			default="joomla@vdm.io"
 			readonly="true"
 			class="readonly"
 		/>
@@ -379,6 +379,8 @@
 				COM_SERMONDISTRIBUTOR_CONFIG_SOUNDMANAGER</option>
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_CONFIG_JPLAYER</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_HTML_FIVE_BASIC</option>
 		</field>
 	</fieldset>
 	<fieldset

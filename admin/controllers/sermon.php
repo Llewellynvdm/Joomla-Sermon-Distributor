@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		@update number 89 of this MVC
+	@build			16th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -60,33 +60,14 @@ class SermondistributorControllerSermon extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// get the user object
-		$user = JFactory::getUser();
-
 		// Access check.
-		$access = $user->authorise('sermon.access', 'com_sermondistributor');
+		$access = JFactory::getUser()->authorise('sermon.access', 'com_sermondistributor');
 		if (!$access)
 		{
 			return false;
 		}
-		$categoryId = JArrayHelper::getValue($data, 'catid', $this->input->getInt('filter_category_id'), 'int');
-		$allow = null;
-
-		if ($categoryId)
-		{
-			// If the category has been passed in the URL check it.
-			$allow = $user->authorise('core.create', $this->option . '.sermons.category.' . $categoryId);
-		}
-
-		if ($allow === null)
-		{
-			// In the absense of better information, revert to the component permissions.
-			return $user->authorise('sermon.create', $this->option);
-		}
-		else
-		{
-			return $allow;
-		}
+		// In the absense of better information, revert to the component permissions.
+		return JFactory::getUser()->authorise('sermon.create', $this->option);
 	}
 
 	/**
@@ -117,7 +98,7 @@ class SermondistributorControllerSermon extends JControllerForm
 		{
 			// The record has been set. Check the record permissions.
 			$permission = $user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int) $recordId);
-			if (!$permission && !is_null($permission))
+			if (!$permission)
 			{
 				if ($user->authorise('sermon.edit.own', 'com_sermondistributor.sermon.' . $recordId))
 				{
@@ -145,18 +126,6 @@ class SermondistributorControllerSermon extends JControllerForm
 					}
 				}
 				return false;
-			}
-
-			$categoryId = (int) isset($data['catid']) ? $data['catid']: $this->getModel()->getItem($recordId)->catid;
-
-			if ($categoryId)
-			{
-				// The category has been set. Check the category permissions.
-				$catpermission = $user->authorise('core.edit', $this->option . '.sermons.category.' . $categoryId);
-				if (!$catpermission && !is_null($catpermission))
-				{
-					return false;
-				}
 			}
 		}
 		// Since there is no permission, revert to the component permissions.

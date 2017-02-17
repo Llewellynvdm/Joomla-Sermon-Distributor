@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		1.4.1
+	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		localfiles.php
@@ -61,7 +61,8 @@ class JFormFieldLocalfiles extends JFormFieldList
 			$script = array();
 			$buttonName = $this->getAttribute('name');
 			// get the input from url
-			$jinput = JFactory::getApplication()->input;
+			$app = JFactory::getApplication();
+			$jinput = $app->input;
 			// get the view name & id
 			$values = $jinput->getArray(array(
 				'id' => 'int',
@@ -78,7 +79,7 @@ class JFormFieldLocalfiles extends JFormFieldList
 			}
 			$user = JFactory::getUser();
 			// only add if user allowed to create 
-			if ($user->authorise('core.create', 'com_sermondistributor'))
+			if ($user->authorise('core.create', 'com_sermondistributor') && $app->isAdmin()) // TODO for now only in admin area.
 			{
 				// build Create button
 				$buttonNamee = trim($buttonName);
@@ -91,7 +92,7 @@ class JFormFieldLocalfiles extends JFormFieldList
 					<span class="icon-new icon-white"></span></a>';
 			}
 			// only add if user allowed to edit 
-			if (($buttonName == '' || $buttonName == '')  && $user->authorise('core.edit', 'com_sermondistributor'))
+			if (($buttonName === '' || $buttonName === '')  && $user->authorise('core.edit', 'com_sermondistributor') && $app->isAdmin()) // TODO for now only in admin area.
 			{
 				// build edit button
 				$buttonNamee = trim($buttonName);
@@ -151,7 +152,7 @@ class JFormFieldLocalfiles extends JFormFieldList
 		// get local folder
 		$localfolder = JComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images');
 		// set the default
-		$options[] = JHtml::_('select.option', '', JText::sprintf('Please add files to (%s)',$localfolder));
+		$options[] = JHtml::_('select.option', '', JText::sprintf('COM_SERMONDISTRIBUTOR_PLEASE_ADD_FILES_TO_S',$localfolder));
 		// inport all needed classes
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');

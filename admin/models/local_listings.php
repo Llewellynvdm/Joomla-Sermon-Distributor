@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 10 of this MVC
+	@build			27th November, 2016
+	@created		20th November, 2016
 	@package		Sermon Distributor
 	@subpackage		local_listings.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -159,7 +159,7 @@ class SermondistributorModelLocal_listings extends JModelList
 	public function selectionTranslation($value,$name)
 	{
 		// Array of build language strings
-		if ($name == 'build')
+		if ($name === 'build')
 		{
 			$buildArray = array(
 				0 => 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SELECT_AN_OPTION',

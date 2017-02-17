@@ -152,4 +152,21 @@
 		<maintainerurl>https://www.vdm.io/</maintainerurl>
 		<targetplatform name="joomla" version="3.*"/>
 	</update>
+	<update>
+		<name>Sermon Distributor</name>
+		<description>A sermon distributor that links to Dropbox.</description>
+		<element>com_sermondistributor</element>
+		<type>component</type>
+		<version>1.4.1</version>
+		<infourl title="Sermon Distributor!">https://www.vdm.io/</infourl>
+		<downloads>
+			<downloadurl type="full" format="zip">https://github.com/SermonDistributor/Joomla-3-Component/releases/download/v1.4.1/SD_v1.4.1.zip</downloadurl>
+		</downloads>
+		<tags>
+			<tag>stable</tag>
+		</tags>
+		<maintainer>Llewellyn van der Merwe</maintainer>
+		<maintainerurl>https://www.vdm.io/</maintainerurl>
+		<targetplatform name="joomla" version="3.*"/>
+	</update>
 </updates>

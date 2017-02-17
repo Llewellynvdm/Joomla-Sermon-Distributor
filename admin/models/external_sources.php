@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 53 of this MVC
+	@build			27th November, 2016
+	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		external_sources.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -181,7 +181,7 @@ class SermondistributorModelExternal_sources extends JModelList
 	public function selectionTranslation($value,$name)
 	{
 		// Array of externalsources language strings
-		if ($name == 'externalsources')
+		if ($name === 'externalsources')
 		{
 			$externalsourcesArray = array(
 				0 => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_SELECT_AN_OPTION',
@@ -194,7 +194,7 @@ class SermondistributorModelExternal_sources extends JModelList
 			}
 		}
 		// Array of update_method language strings
-		if ($name == 'update_method')
+		if ($name === 'update_method')
 		{
 			$update_methodArray = array(
 				1 => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MANUAL',
@@ -207,7 +207,7 @@ class SermondistributorModelExternal_sources extends JModelList
 			}
 		}
 		// Array of filetypes language strings
-		if ($name == 'filetypes')
+		if ($name === 'filetypes')
 		{
 			$filetypesArray = array(
 				'.mp3' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MPTHREE',
@@ -246,7 +246,7 @@ class SermondistributorModelExternal_sources extends JModelList
 			}
 		}
 		// Array of build language strings
-		if ($name == 'build')
+		if ($name === 'build')
 		{
 			$buildArray = array(
 				0 => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_SELECT_AN_OPTION',

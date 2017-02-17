@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		@update number 89 of this MVC
+	@build			16th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons.php
@@ -177,7 +177,7 @@ class SermondistributorModelSermons extends JModelList
 	public function selectionTranslation($value,$name)
 	{
 		// Array of link_type language strings
-		if ($name == 'link_type')
+		if ($name === 'link_type')
 		{
 			$link_typeArray = array(
 				1 => 'COM_SERMONDISTRIBUTOR_SERMON_ENCRYPTED',
@@ -190,7 +190,7 @@ class SermondistributorModelSermons extends JModelList
 			}
 		}
 		// Array of source language strings
-		if ($name == 'source')
+		if ($name === 'source')
 		{
 			$sourceArray = array(
 				0 => 'COM_SERMONDISTRIBUTOR_SERMON_SELECT_SOURCE',

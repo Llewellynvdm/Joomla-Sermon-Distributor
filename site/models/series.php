@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 29 of this MVC
+	@build			21st November, 2016
+	@created		10th November, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -124,15 +124,15 @@ class SermondistributorModelSeries extends JModelList
 	public function getItems()
 	{
 		$user = JFactory::getUser();
-                // check if this user has permission to access items
-                if (!$user->authorise('site.series.access', 'com_sermondistributor'))
-                {
+		// check if this user has permission to access item
+		if (!$user->authorise('site.series.access', 'com_sermondistributor'))
+		{
 			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('Not authorised!'), 'error');
-			// redirect away if not a correct (TODO for now we go to default view)
+			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_SERIES'), 'error');
+			// redirect away to the default view if no access allowed.
 			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
-                } 
+		}  
 		// load parent items
 		$items = parent::getItems();
 
@@ -140,26 +140,29 @@ class SermondistributorModelSeries extends JModelList
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
 		// Convert the parameter fields into objects.
-		foreach ($items as $nr => &$item)
+		if (SermondistributorHelper::checkArray($items))
 		{
-			// Always create a slug for sef URL's
-			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			if (SermondistributorHelper::checkString($item->local_files))
+			foreach ($items as $nr => &$item)
 			{
-				// Decode local_files
-				$item->local_files = json_decode($item->local_files, true);
+				// Always create a slug for sef URL's
+				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+				if (SermondistributorHelper::checkJson($item->local_files))
+				{
+					// Decode local_files
+					$item->local_files = json_decode($item->local_files, true);
+				}
+				if (SermondistributorHelper::checkJson($item->manual_files))
+				{
+					// Decode manual_files
+					$item->manual_files = json_decode($item->manual_files, true);
+				}
+				// Make sure the content prepare plugins fire on description.
+				$item->description = JHtml::_('content.prepare',$item->description);
+				// Checking if description has uikit components that must be loaded.
+				$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
+				// set idSermonStatisticE to the $item object.
+				$item->idSermonStatisticE = $this->getIdSermonStatisticEfeb_E($item->id);
 			}
-			if (SermondistributorHelper::checkString($item->manual_files))
-			{
-				// Decode manual_files
-				$item->manual_files = json_decode($item->manual_files, true);
-			}
-			// Make sure the content prepare plugins fire on description.
-			$item->description = JHtml::_('content.prepare',$item->description);
-			// Checking if description has uikit components that must be loaded.
-			$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
-			// set idSermonStatisticE to the $item object.
-			$item->idSermonStatisticE = $this->getIdSermonStatisticEfeb_E($item->id);
 		} 
 
 
@@ -372,10 +375,13 @@ class SermondistributorModelSeries extends JModelList
 		}
 
 		// Convert the parameter fields into objects.
-		foreach ($items as $nr => &$item)
+		if (SermondistributorHelper::checkArray($items))
 		{
-			// Always create a slug for sef URL's
-			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
+			foreach ($items as $nr => &$item)
+			{
+				// Always create a slug for sef URL's
+				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+			}
 		}
 		// return items
 		return $items;
@@ -443,10 +449,13 @@ class SermondistributorModelSeries extends JModelList
 		}
 
 		// Convert the parameter fields into objects.
-		foreach ($items as $nr => &$item)
+		if (SermondistributorHelper::checkArray($items))
 		{
-			// Always create a slug for sef URL's
-			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
+			foreach ($items as $nr => &$item)
+			{
+				// Always create a slug for sef URL's
+				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+			}
 		}
 		// return items
 		return $items;

@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 53 of this MVC
+	@build			27th November, 2016
+	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		view.html.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -340,15 +340,15 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 			// get model
 			$model = $this->getModel();
 			$results = array_unique($results);
-			$filter = array();
+			$_filter = array();
 			foreach ($results as $externalsources)
 			{
 				// Translate the externalsources selection
 				$text = $model->selectionTranslation($externalsources,'externalsources');
 				// Now add the externalsources and its text to the options array
-				$filter[] = JHtml::_('select.option', $externalsources, JText::_($text));
+				$_filter[] = JHtml::_('select.option', $externalsources, JText::_($text));
 			}
-			return $filter;
+			return $_filter;
 		}
 		return false;
 	}
@@ -376,15 +376,15 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 			// get model
 			$model = $this->getModel();
 			$results = array_unique($results);
-			$filter = array();
+			$_filter = array();
 			foreach ($results as $update_method)
 			{
 				// Translate the update_method selection
 				$text = $model->selectionTranslation($update_method,'update_method');
 				// Now add the update_method and its text to the options array
-				$filter[] = JHtml::_('select.option', $update_method, JText::_($text));
+				$_filter[] = JHtml::_('select.option', $update_method, JText::_($text));
 			}
-			return $filter;
+			return $_filter;
 		}
 		return false;
 	}
@@ -412,15 +412,15 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 			// get model
 			$model = $this->getModel();
 			$results = array_unique($results);
-			$filter = array();
+			$_filter = array();
 			foreach ($results as $build)
 			{
 				// Translate the build selection
 				$text = $model->selectionTranslation($build,'build');
 				// Now add the build and its text to the options array
-				$filter[] = JHtml::_('select.option', $build, JText::_($text));
+				$_filter[] = JHtml::_('select.option', $build, JText::_($text));
 			}
-			return $filter;
+			return $_filter;
 		}
 		return false;
 	}

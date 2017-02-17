@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 44 of this MVC
+	@build			27th November, 2016
+	@created		4th November, 2016
 	@package		Sermon Distributor
 	@subpackage		view.html.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -51,7 +51,7 @@ class SermondistributorViewManual_updater extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			JError::raiseError(500, implode("\n", $errors));
+			JError::raiseError(500, implode(PHP_EOL, $errors));
 			return false;
 		}
 
@@ -77,7 +77,7 @@ class SermondistributorViewManual_updater extends JViewLegacy
 		// always make sure jquery is loaded.
 		JHtml::_('jquery.framework');
 		// Load the header checker class.
-		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
+		require_once( JPATH_COMPONENT_ADMINISTRATOR.'/helpers/headercheck.php' );
 		// Initialize the header checker.
 		$HeaderCheck = new HeaderCheck;
 
@@ -127,7 +127,7 @@ class SermondistributorViewManual_updater extends JViewLegacy
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js'))
 					{
 						// load the js.
-						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js');
+						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js', 'text/javascript', true);
 					}
 				}
 			}

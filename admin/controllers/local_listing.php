@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 10 of this MVC
+	@build			27th November, 2016
+	@created		20th November, 2016
 	@package		Sermon Distributor
 	@subpackage		local_listing.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -99,7 +99,7 @@ class SermondistributorControllerLocal_listing extends JControllerForm
 		{
 			// The record has been set. Check the record permissions.
 			$permission = $user->authorise('local_listing.edit', 'com_sermondistributor.local_listing.' . (int) $recordId);
-			if (!$permission && !is_null($permission))
+			if (!$permission)
 			{
 				if ($user->authorise('local_listing.edit.own', 'com_sermondistributor.local_listing.' . $recordId))
 				{

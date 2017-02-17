@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 8 of this MVC
+	@build			18th November, 2015
+	@created		29th October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -99,7 +99,7 @@ class SermondistributorControllerStatistic extends JControllerForm
 		{
 			// The record has been set. Check the record permissions.
 			$permission = $user->authorise('statistic.edit', 'com_sermondistributor.statistic.' . (int) $recordId);
-			if (!$permission && !is_null($permission))
+			if (!$permission)
 			{
 				if ($user->authorise('statistic.edit.own', 'com_sermondistributor.statistic.' . $recordId))
 				{

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		@update number 16 of this MVC
+	@build			4th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -99,7 +99,7 @@ class SermondistributorControllerSeries extends JControllerForm
 		{
 			// The record has been set. Check the record permissions.
 			$permission = $user->authorise('series.edit', 'com_sermondistributor.series.' . (int) $recordId);
-			if (!$permission && !is_null($permission))
+			if (!$permission)
 			{
 				if ($user->authorise('series.edit.own', 'com_sermondistributor.series.' . $recordId))
 				{

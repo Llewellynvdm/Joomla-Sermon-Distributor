@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		@update number 16 of this MVC
+	@build			4th November, 2016
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -218,7 +218,7 @@ class SermondistributorModelSeries extends JModelAdmin
 	public function selectionTranslationVwcsermons($value,$name)
 	{
 		// Array of link_type language strings
-		if ($name == 'link_type')
+		if ($name === 'link_type')
 		{
 			$link_typeArray = array(
 				1 => 'COM_SERMONDISTRIBUTOR_SERMON_ENCRYPTED',
@@ -231,7 +231,7 @@ class SermondistributorModelSeries extends JModelAdmin
 			}
 		}
 		// Array of source language strings
-		if ($name == 'source')
+		if ($name === 'source')
 		{
 			$sourceArray = array(
 				0 => 'COM_SERMONDISTRIBUTOR_SERMON_SELECT_SOURCE',
@@ -863,7 +863,7 @@ class SermondistributorModelSeries extends JModelAdmin
 				foreach ($values as $key => $value)
 				{
 					// Do special action for access.
-					if ('access' == $key && strlen($value) > 0)
+					if ('access' === $key && strlen($value) > 0)
 					{
 						$this->table->$key = $value;
 					}
@@ -936,7 +936,7 @@ class SermondistributorModelSeries extends JModelAdmin
 		}
 
 		// Alter the name for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			$origTable = clone $this->getTable();
 			$origTable->load($input->getInt('id'));
@@ -990,7 +990,7 @@ class SermondistributorModelSeries extends JModelAdmin
 		}
 
 		// Alter the uniqe field for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			// Automatic handling of other uniqe fields
 			$uniqeFields = $this->getUniqeFields();

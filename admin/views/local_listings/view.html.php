@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 10 of this MVC
+	@build			27th November, 2016
+	@created		20th November, 2016
 	@package		Sermon Distributor
 	@subpackage		view.html.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -319,15 +319,15 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 			// get model
 			$model = $this->getModel();
 			$results = array_unique($results);
-			$filter = array();
+			$_filter = array();
 			foreach ($results as $build)
 			{
 				// Translate the build selection
 				$text = $model->selectionTranslation($build,'build');
 				// Now add the build and its text to the options array
-				$filter[] = JHtml::_('select.option', $build, JText::_($text));
+				$_filter[] = JHtml::_('select.option', $build, JText::_($text));
 			}
-			return $filter;
+			return $_filter;
 		}
 		return false;
 	}

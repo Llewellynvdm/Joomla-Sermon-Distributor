@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		1.4.1
+	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -50,19 +50,13 @@ abstract class SermondistributorHelper
 		{
 			$document->addScriptDeclaration("
 			jQuery(window).load(function() {
-				checkExternalListing(".$update.");
+				theQueue(".$update.");
 			});
 			
-			function checkExternalListing(id, target, type) {
-				checkExternalListing_server(id, target, type).done(function(result) {
-					// good it is done
-				});
-			}
-			
-			function checkExternalListing_server(id, target, type) {
-				var getUrl = '".JURI::root()."index.php?option=com_sermondistributor&task=ajax.autoUpdateLocalListingExternal&format=json';
+			function theQueue(id, target, type) {
+				var getUrl = '".JURI::root()."index.php?option=com_sermondistributor&task=ajax.theQueue&format=json';
 				if(target > 0 && type > 0 && id > 0){
-					var request = 'token=".JSession::getFormToken()."&target='+target+'&listing='+id+'&type='+type;
+					var request = 'token=".JSession::getFormToken()."&tar='+target+'&list='+id+'&type='+type;
 				}				
 				return jQuery.ajax({
 					type: 'GET',
@@ -114,7 +108,7 @@ abstract class SermondistributorHelper
 	* 	The update errors
 	**/
 	protected static $updateErrors = array();
-
+			
 	/**
 	* 	prepare base64 string for url
 	**/
@@ -139,7 +133,7 @@ abstract class SermondistributorHelper
 		}
 		return $string;
 	}
-
+			
 	/**
 	* 	get Download links of a sermon
 	**/
@@ -813,7 +807,7 @@ abstract class SermondistributorHelper
 			}
 		}
 	}
-
+			
 	/**
 	 *	Change to nice fancy date
 	 */
@@ -824,6 +818,18 @@ abstract class SermondistributorHelper
 			$date = strtotime($date);
 		}
 		return date('jS \o\f F Y',$date);
+	}
+
+	/**
+	 *	Change to nice fancy day time and date
+	 */
+	public static function fancyDayTimeDate($time)
+	{
+		if (!self::isValidTimeStamp($time))
+		{
+			$time = strtotime($time);
+		}
+		return date('D ga jS \o\f F Y',$time);
 	}
 
 	/**
@@ -859,6 +865,7 @@ abstract class SermondistributorHelper
 		&& ($timestamp <= PHP_INT_MAX)
 		&& ($timestamp >= ~PHP_INT_MAX);
 	}
+			 
 	
 	public static function jsonToString($value, $sperator = ", ", $table = null)
 	{
@@ -1407,7 +1414,7 @@ abstract class SermondistributorHelper
 			{
 				// The record has been set. Check the record permissions.
 				$permission = $user->authorise($action->name, 'com_sermondistributor.'.$view.'.' . (int) $record->id);
-				if (!$permission && !is_null($permission))
+				if (!$permission) // TODO removed && !is_null($permission)
 				{
 					if ($action->name == 'core.edit' || $action->name == $view.'.edit')
 					{
@@ -1591,10 +1598,22 @@ abstract class SermondistributorHelper
 		return false;
 	}
 
-	public static function checkArray($array)
+	public static function checkArray($array, $removeEmptyString = false)
 	{
 		if (isset($array) && is_array($array) && count($array) > 0)
 		{
+			// also make sure the empty strings are removed
+			if ($removeEmptyString)
+			{
+				foreach ($array as $key => $string)
+				{
+					if (empty($string))
+					{
+						unset($array[$key]);
+					}
+				}
+				return self::checkArray($array, false);
+			}
 			return true;
 		}
 		return false;
@@ -1662,60 +1681,72 @@ abstract class SermondistributorHelper
 
 	public static function safeString($string, $type = 'L', $spacer = '_')
 	{
-		// remove all numbers and replace with english text version (works well only up to a thousand)
-		$string = self::replaceNumbers($string);
-
-		if (self::checkString($string))
-		{
+		// remove all numbers and replace with english text version (works well only up to millions)
+                $string = self::replaceNumbers($string);
+		// 0nly continue if we have a string
+                if (self::checkString($string))
+                {
 			// remove all other characters
 			$string = trim($string);
 			$string = preg_replace('/'.$spacer.'+/', ' ', $string);
 			$string = preg_replace('/\s+/', ' ', $string);
 			$string = preg_replace("/[^A-Za-z ]/", '', $string);
-			// return a string with all first letter of each word uppercase(no undersocre)
-			if ($type == 'W')
-				    {
-			    return ucwords(strtolower($string));
-			}
-				    elseif ($type == 'w')
-				    {
-			    return strtolower($string);
-			}
-				    elseif ($type == 'Ww')
-				    {
-			    return ucfirst(strtolower($string));
-			}
-				    elseif ($type == 'WW')
-				    {
-			    return strtoupper($string);
-			}
-			elseif ($type == 'U')
+			// select final adaptations
+			if ($type === 'L' || $type === 'strtolower')
+                        {
+                                // replace white space with underscore
+                                $string = preg_replace('/\s+/', $spacer, $string);
+                                // default is to return lower
+                                return strtolower($string);
+                        }
+			elseif ($type === 'W')
 			{
-				// replace white space with underscore
-				$string = preg_replace('/\s+/', $spacer, $string);
-				// return all upper
-				return strtoupper($string);
+				// return a string with all first letter of each word uppercase(no undersocre)
+				return ucwords(strtolower($string));
 			}
-			elseif ($type == 'F')
+			elseif ($type === 'w' || $type === 'word')
 			{
-				// replace white space with underscore
-				$string = preg_replace('/\s+/', $spacer, $string);
-				// return with first caracter to upper
+				// return a string with all lowercase(no undersocre)
+				return strtolower($string);
+			}
+			elseif ($type === 'Ww' || $type === 'Word')
+			{
+				// return a string with first letter of the first word uppercase and all the rest lowercase(no undersocre)
 				return ucfirst(strtolower($string));
 			}
-			elseif ($type == 'L')
+			elseif ($type === 'WW' || $type === 'WORD')
 			{
-				// replace white space with underscore
-				$string = preg_replace('/\s+/', $spacer, $string);
-				// default is to return lower
-				    return strtolower($string);
+				// return a string with all the uppercase(no undersocre)
+				return strtoupper($string);
 			}
-
-			// return string
-			return $string;
-		}
-		// not a string
-		return '';
+                        elseif ($type === 'U' || $type === 'strtoupper')
+                        {
+                                // replace white space with underscore
+                                $string = preg_replace('/\s+/', $spacer, $string);
+                                // return all upper
+                                return strtoupper($string);
+                        }
+                        elseif ($type === 'F' || $type === 'ucfirst')
+                        {
+                                // replace white space with underscore
+                                $string = preg_replace('/\s+/', $spacer, $string);
+                                // return with first caracter to upper
+                                return ucfirst(strtolower($string));
+                        }
+                        elseif ($type === 'cA' || $type === 'cAmel' || $type === 'camelcase')
+			{
+				// convert all words to first letter uppercase
+				$string = ucwords(strtolower($string));
+				// remove white space
+				$string = preg_replace('/\s+/', '', $string);
+				// now return first letter lowercase
+				return lcfirst($string);
+			}
+                        // return string
+                        return $string;
+                }
+                // not a string
+                return '';
 	}
 
 	public static function htmlEscape($var, $charset = 'UTF-8', $sorten = false, $length = 40)
@@ -1869,7 +1900,7 @@ abstract class SermondistributorHelper
 
 	public static function getCryptKey($type, $default = null)
 	{
-		if ('basic' == $type)
+		if ('basic' === $type)
 		{
 			// Get the global params
 			$params = JComponentHelper::getParams('com_sermondistributor', true);

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		1.4.1
+	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		articles.php
@@ -61,7 +61,8 @@ class JFormFieldArticles extends JFormFieldList
 			$script = array();
 			$buttonName = $this->getAttribute('name');
 			// get the input from url
-			$jinput = JFactory::getApplication()->input;
+			$app = JFactory::getApplication();
+			$jinput = $app->input;
 			// get the view name & id
 			$values = $jinput->getArray(array(
 				'id' => 'int',
@@ -78,7 +79,7 @@ class JFormFieldArticles extends JFormFieldList
 			}
 			$user = JFactory::getUser();
 			// only add if user allowed to create article
-			if ($user->authorise('core.create', 'com_sermondistributor'))
+			if ($user->authorise('core.create', 'com_sermondistributor') && $app->isAdmin()) // TODO for now only in admin area.
 			{
 				// build Create button
 				$buttonNamee = trim($buttonName);
@@ -91,7 +92,7 @@ class JFormFieldArticles extends JFormFieldList
 					<span class="icon-new icon-white"></span></a>';
 			}
 			// only add if user allowed to edit article
-			if (($buttonName == 'article' || $buttonName == 'articles')  && $user->authorise('core.edit', 'com_sermondistributor'))
+			if (($buttonName === 'article' || $buttonName === 'articles')  && $user->authorise('core.edit', 'com_sermondistributor') && $app->isAdmin()) // TODO for now only in admin area.
 			{
 				// build edit button
 				$buttonNamee = trim($buttonName);

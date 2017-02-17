@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 44 of this MVC
+	@build			27th November, 2016
+	@created		4th November, 2016
 	@package		Sermon Distributor
 	@subpackage		default.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -38,7 +38,7 @@ JHtml::_('behavior.keepalive');
 <?php if ($this->canDo->get('manual_updater.access')): ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function(task) {
-		if (task == 'manual_updater.back') {
+		if (task === 'manual_updater.back') {
 			parent.history.back();
 			return false;
 		} else {

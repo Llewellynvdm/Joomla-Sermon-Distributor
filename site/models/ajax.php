@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		1.4.1
+	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -66,9 +66,9 @@ class SermondistributorModelAjax extends JModelList
 	}
 
 	/**
-	* 	Auto Update Local Listing External
+	* 	The Queue to Update Local Listing of External Source
 	**/
-	public function autoUpdateLocalListingExternal($id, $target, $type)
+	public function theQueue($id, $target, $type)
 	{		
 		if (1 == $type)
 		{

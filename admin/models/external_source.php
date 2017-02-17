@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 53 of this MVC
+	@build			27th November, 2016
+	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		external_source.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -1038,7 +1038,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				foreach ($values as $key => $value)
 				{
 					// Do special action for access.
-					if ('access' == $key && strlen($value) > 0)
+					if ('access' === $key && strlen($value) > 0)
 					{
 						$this->table->$key = $value;
 					}
@@ -1128,7 +1128,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 		}
 
 		// Alter the uniqe field for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			// Automatic handling of other uniqe fields
 			$uniqeFields = $this->getUniqeFields();

@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 41 of this MVC
+	@build			19th December, 2016
+	@created		10th November, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -92,16 +92,16 @@ class SermondistributorModelSermon extends JModelItem
 	 */
 	public function getItem($pk = null)
 	{
-		$this->user	= JFactory::getUser();
-                // check if this user has permission to access item
-                if (!$this->user->authorise('site.sermon.access', 'com_sermondistributor'))
-                {
+		$this->user		= JFactory::getUser();
+		// check if this user has permission to access item
+		if (!$this->user->authorise('site.sermon.access', 'com_sermondistributor'))
+		{
 			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('Not authorised!'), 'error');
-			// redirect away if not a correct (TODO for now we go to default view)
+			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_SERMON'), 'error');
+			// redirect away to the default view if no access allowed.
 			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
-                }
+		}
 		$this->userId		= $this->user->get('id');
 		$this->guest		= $this->user->get('guest');
                 $this->groups		= $this->user->get('groups');
@@ -164,15 +164,15 @@ class SermondistributorModelSermon extends JModelItem
 					$app = JFactory::getApplication();
 					// If no data is found redirect to default page and show warning.
 					$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_FOUND_OR_ACCESS_DENIED'), 'warning');
-					$app->redirect('index.php?option=com_sermondistributor&view=preachers');
+					$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 					return false;
 				}
-				if (SermondistributorHelper::checkString($data->local_files))
+				if (SermondistributorHelper::checkJson($data->local_files))
 				{
 					// Decode local_files
 					$data->local_files = json_decode($data->local_files, true);
 				}
-				if (SermondistributorHelper::checkString($data->manual_files))
+				if (SermondistributorHelper::checkJson($data->manual_files))
 				{
 					// Decode manual_files
 					$data->manual_files = json_decode($data->manual_files, true);

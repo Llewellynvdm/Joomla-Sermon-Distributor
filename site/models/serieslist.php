@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 26 of this MVC
+	@build			11th April, 2016
+	@created		30th October, 2015
 	@package		Sermon Distributor
 	@subpackage		serieslist.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -92,15 +92,15 @@ class SermondistributorModelSerieslist extends JModelList
 	public function getItems()
 	{
 		$user = JFactory::getUser();
-                // check if this user has permission to access items
-                if (!$user->authorise('site.serieslist.access', 'com_sermondistributor'))
-                {
+		// check if this user has permission to access item
+		if (!$user->authorise('site.serieslist.access', 'com_sermondistributor'))
+		{
 			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('Not authorised!'), 'error');
-			// redirect away if not a correct (TODO for now we go to default view)
+			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_SERIESLIST'), 'error');
+			// redirect away to the default view if no access allowed.
 			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
-                } 
+		}  
 		// load parent items
 		$items = parent::getItems();
 
@@ -108,16 +108,19 @@ class SermondistributorModelSerieslist extends JModelList
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
 		// Convert the parameter fields into objects.
-		foreach ($items as $nr => &$item)
+		if (SermondistributorHelper::checkArray($items))
 		{
-			// Always create a slug for sef URL's
-			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// Make sure the content prepare plugins fire on description.
-			$item->description = JHtml::_('content.prepare',$item->description);
-			// Checking if description has uikit components that must be loaded.
-			$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
-			// set idSeriesSermonB to the $item object.
-			$item->idSeriesSermonB = $this->getIdSeriesSermonBcae_B($item->id);
+			foreach ($items as $nr => &$item)
+			{
+				// Always create a slug for sef URL's
+				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+				// Make sure the content prepare plugins fire on description.
+				$item->description = JHtml::_('content.prepare',$item->description);
+				// Checking if description has uikit components that must be loaded.
+				$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
+				// set idSeriesSermonB to the $item object.
+				$item->idSeriesSermonB = $this->getIdSeriesSermonBcae_B($item->id);
+			}
 		} 
 
 

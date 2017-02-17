@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 20 of this MVC
+	@build			28th November, 2016
+	@created		5th November, 2015
 	@package		Sermon Distributor
 	@subpackage		categories.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -93,15 +93,15 @@ class SermondistributorModelCategories extends JModelList
 	public function getItems()
 	{
 		$user = JFactory::getUser();
-                // check if this user has permission to access items
-                if (!$user->authorise('site.categories.access', 'com_sermondistributor'))
-                {
+		// check if this user has permission to access item
+		if (!$user->authorise('site.categories.access', 'com_sermondistributor'))
+		{
 			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('Not authorised!'), 'error');
-			// redirect away if not a correct (TODO for now we go to default view)
+			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_CATEGORIES'), 'error');
+			// redirect away to the default view if no access allowed.
 			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
-                } 
+		}  
 		// load parent items
 		$items = parent::getItems();
 
@@ -109,12 +109,15 @@ class SermondistributorModelCategories extends JModelList
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
 		// Convert the parameter fields into objects.
-		foreach ($items as $nr => &$item)
+		if (SermondistributorHelper::checkArray($items))
 		{
-			// Always create a slug for sef URL's
-			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			// set idCatidSermonB to the $item object.
-			$item->idCatidSermonB = $this->getIdCatidSermonEfee_B($item->id);
+			foreach ($items as $nr => &$item)
+			{
+				// Always create a slug for sef URL's
+				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+				// set idCatidSermonB to the $item object.
+				$item->idCatidSermonB = $this->getIdCatidSermonEfee_B($item->id);
+			}
 		} 
 
 

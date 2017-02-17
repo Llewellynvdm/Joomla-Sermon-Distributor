@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 20 of this MVC
+	@build			17th October, 2016
+	@created		13th July, 2015
 	@package		Sermon Distributor
 	@subpackage		help_documents.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -181,7 +181,7 @@ class SermondistributorModelHelp_documents extends JModelList
 	public function selectionTranslation($value,$name)
 	{
 		// Array of type language strings
-		if ($name == 'type')
+		if ($name === 'type')
 		{
 			$typeArray = array(
 				0 => 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SELECT_AN_OPTION',
@@ -196,7 +196,7 @@ class SermondistributorModelHelp_documents extends JModelList
 			}
 		}
 		// Array of location language strings
-		if ($name == 'location')
+		if ($name === 'location')
 		{
 			$locationArray = array(
 				1 => 'COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN',

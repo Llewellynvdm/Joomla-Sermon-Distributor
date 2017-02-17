@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 20 of this MVC
+	@build			17th October, 2016
+	@created		13th July, 2015
 	@package		Sermon Distributor
 	@subpackage		help_document.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -760,7 +760,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 				foreach ($values as $key => $value)
 				{
 					// Do special action for access.
-					if ('access' == $key && strlen($value) > 0)
+					if ('access' === $key && strlen($value) > 0)
 					{
 						$this->table->$key = $value;
 					}
@@ -839,7 +839,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 		}
 
 		// Alter the title for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			$origTable = clone $this->getTable();
 			$origTable->load($input->getInt('id'));
@@ -893,7 +893,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 		}
 
 		// Alter the uniqe field for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			// Automatic handling of other uniqe fields
 			$uniqeFields = $this->getUniqeFields();

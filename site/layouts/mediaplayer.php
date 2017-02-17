@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		1.4.1
+	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		mediaplayer.php
@@ -78,12 +78,17 @@ if (isset($displayData->download_links) && count($displayData->download_links))
 			}
 			$num++;
 		}
+		elseif (3 == $displayData->playerKey)
+		{
+			// use html5 player (plain and simple)
+			$players[] = JLayoutHelper::render('htmlfive', $link);	
+		}
 	}
 	// use jPlayer layout
 	if (isset($players['script']) && SermondistributorHelper::checkArray($players['script']))
 	{
 		$players['swfPath'] = JURI::root() .'media/com_sermondistributor/jplayer/jplayer';
-		if (2 == $displayData->playerKey&& 1 == count($displayData->download_links))
+		if (2 == $displayData->playerKey && 1 == count($displayData->download_links))
 		{
 			$players = JLayoutHelper::render('jplayerbluemonday', $players);
 		}
@@ -99,4 +104,6 @@ if (isset($displayData->download_links) && count($displayData->download_links))
 	<li><?php echo implode('',$players); ?></li>
 <?php elseif (2 == $displayData->playerKey && SermondistributorHelper::checkString($players)): ?>
 	<div class="uk-width-1-1 uk-margin"><div class="uk-panel"><?php echo $players; ?></div></div>
+<?php elseif (3 == $displayData->playerKey && SermondistributorHelper::checkArray($players)): ?>
+	<div class="uk-width-1-1 uk-margin"><div class="uk-panel"><?php echo implode('</div><div class="uk-panel">', $players);  ?></div></div>
 <?php endif; ?>

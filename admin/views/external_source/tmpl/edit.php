@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 53 of this MVC
+	@build			27th November, 2016
+	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		edit.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	

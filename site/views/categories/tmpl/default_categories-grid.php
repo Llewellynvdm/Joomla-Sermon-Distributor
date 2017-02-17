@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 20 of this MVC
+	@build			28th November, 2016
+	@created		5th November, 2015
 	@package		Sermon Distributor
 	@subpackage		default_categories-grid.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	

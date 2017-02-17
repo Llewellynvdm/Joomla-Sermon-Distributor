@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 10 of this MVC
+	@build			27th November, 2016
+	@created		20th November, 2016
 	@package		Sermon Distributor
 	@subpackage		local_listing.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -859,7 +859,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 				foreach ($values as $key => $value)
 				{
 					// Do special action for access.
-					if ('access' == $key && strlen($value) > 0)
+					if ('access' === $key && strlen($value) > 0)
 					{
 						$this->table->$key = $value;
 					}
@@ -943,7 +943,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		}
 
 		// Alter the uniqe field for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			// Automatic handling of other uniqe fields
 			$uniqeFields = $this->getUniqeFields();

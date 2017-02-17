@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		@update number 89 of this MVC
+	@build			16th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -382,15 +382,15 @@ class SermondistributorViewSermons extends JViewLegacy
 			// get model
 			$model = $this->getModel();
 			$results = array_unique($results);
-			$filter = array();
+			$_filter = array();
 			foreach ($results as $link_type)
 			{
 				// Translate the link_type selection
 				$text = $model->selectionTranslation($link_type,'link_type');
 				// Now add the link_type and its text to the options array
-				$filter[] = JHtml::_('select.option', $link_type, JText::_($text));
+				$_filter[] = JHtml::_('select.option', $link_type, JText::_($text));
 			}
-			return $filter;
+			return $_filter;
 		}
 		return false;
 	}
@@ -418,15 +418,15 @@ class SermondistributorViewSermons extends JViewLegacy
 			// get model
 			$model = $this->getModel();
 			$results = array_unique($results);
-			$filter = array();
+			$_filter = array();
 			foreach ($results as $source)
 			{
 				// Translate the source selection
 				$text = $model->selectionTranslation($source,'source');
 				// Now add the source and its text to the options array
-				$filter[] = JHtml::_('select.option', $source, JText::_($text));
+				$_filter[] = JHtml::_('select.option', $source, JText::_($text));
 			}
-			return $filter;
+			return $_filter;
 		}
 		return false;
 	}

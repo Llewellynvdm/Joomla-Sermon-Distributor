@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		@update number 89 of this MVC
+	@build			16th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -243,42 +243,17 @@ class SermondistributorModelSermon extends JModelAdmin
 		{
 			$id = $jinput->get('id', 0, 'INT');
 		}
-		// Determine correct permissions to check.
-		if ($this->getState('sermon.id'))
-		{
-			$id = $this->getState('sermon.id');
-
-			$catid = 0;
-			if (isset($this->getItem($id)->catid))
-			{
-				// set catagory id
-				$catid = $this->getItem($id)->catid;
-
-				// Existing record. Can only edit in selected categories.
-				$form->setFieldAttribute('catid', 'action', 'core.edit');
-
-				// Existing record. Can only edit own items in selected categories.
-				$form->setFieldAttribute('catid', 'action', 'core.edit.own');
-			}
-		}
-		else
-		{
-			// New record. Can only create in selected categories.
-			$form->setFieldAttribute('catid', 'action', 'core.create');
-		}
 
 		$user = JFactory::getUser();
 
 		// Check for existing item.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('sermon.edit.state', 'com_sermondistributor.sermon.' . (int) $id))
-			|| (isset($catid) && $catid != 0 && !$user->authorise('core.edit.state', 'com_sermondistributor.sermons.category.' . (int) $catid))
 			|| ($id == 0 && !$user->authorise('sermon.edit.state', 'com_sermondistributor')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('published', 'disabled', 'true');
-
 			// Disable fields while saving.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
@@ -355,14 +330,8 @@ class SermondistributorModelSermon extends JModelAdmin
 			}
 
 			$user = JFactory::getUser();
-			$allow = $user->authorise('core.delete', 'com_sermondistributor.sermons.category.' . (int) $record->catid);
-
-			if ($allow)
-			{
-				// The record has been set. Check the record permissions.
-				return $user->authorise('sermon.delete', 'com_sermondistributor.sermon.' . (int) $record->id);
-			}
-			return $allow;
+			// The record has been set. Check the record permissions.
+			return $user->authorise('sermon.delete', 'com_sermondistributor.sermon.' . (int) $record->id);
 		}
 		return false;
 	}
@@ -386,15 +355,6 @@ class SermondistributorModelSermon extends JModelAdmin
 			// The record has been set. Check the record permissions.
 			$permission = $user->authorise('sermon.edit.state', 'com_sermondistributor.sermon.' . (int) $recordId);
 			if (!$permission && !is_null($permission))
-			{
-				return false;
-			}
-		}
-		// Check against the category.
-		if (!empty($record->catid))
-		{
-			$catpermission = $user->authorise('core.edit.state', 'com_sermondistributor.sermons.category.' . (int) $record->catid);
-			if (!$catpermission && !is_null($catpermission))
 			{
 				return false;
 			}
@@ -940,7 +900,7 @@ class SermondistributorModelSermon extends JModelAdmin
 				foreach ($values as $key => $value)
 				{
 					// Do special action for access.
-					if ('access' == $key && strlen($value) > 0)
+					if ('access' === $key && strlen($value) > 0)
 					{
 						$this->table->$key = $value;
 					}
@@ -1025,7 +985,7 @@ class SermondistributorModelSermon extends JModelAdmin
 		}
 
 		// Alter the name for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			$origTable = clone $this->getTable();
 			$origTable->load($input->getInt('id'));
@@ -1079,7 +1039,7 @@ class SermondistributorModelSermon extends JModelAdmin
 		}
 
 		// Alter the uniqe field for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			// Automatic handling of other uniqe fields
 			$uniqeFields = $this->getUniqeFields();

@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 26 of this MVC
+	@build			11th April, 2016
+	@created		30th October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -50,7 +50,7 @@ class SermondistributorViewSerieslist extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			JError::raiseError(500, implode("\n", $errors));
+			JError::raiseError(500, implode(PHP_EOL, $errors));
 			return false;
 		}
 		// do a quick build of all the links
@@ -160,7 +160,7 @@ class SermondistributorViewSerieslist extends JViewLegacy
 					if (JFile::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js'))
 					{
 						// load the js.
-						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js');
+						$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit/js/components/'.$name.$size.'.js', 'text/javascript', true);
 					}
 				}
 			}

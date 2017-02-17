@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		@update number 89 of this MVC
+	@build			16th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -195,7 +195,9 @@ class SermondistributorViewSermon extends JViewLegacy
 		$isNew = ($this->item->id < 1);
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERMON_NEW' : 'COM_SERMONDISTRIBUTOR_SERMON_EDIT'));
-		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/sermon.css"); 
+		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/sermon.css");
+		// Add Ajax Token
+		$document->addScriptDeclaration("var token = '".JSession::getFormToken()."';"); 
 
 		// Add the CSS for Footable.
 		$document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable/css/footable.core.min.css');

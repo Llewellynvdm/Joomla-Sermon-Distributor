@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 20 of this MVC
+	@build			17th October, 2016
+	@created		13th July, 2015
 	@package		Sermon Distributor
 	@subpackage		help_document.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -99,7 +99,7 @@ class SermondistributorControllerHelp_document extends JControllerForm
 		{
 			// The record has been set. Check the record permissions.
 			$permission = $user->authorise('help_document.edit', 'com_sermondistributor.help_document.' . (int) $recordId);
-			if (!$permission && !is_null($permission))
+			if (!$permission)
 			{
 				if ($user->authorise('help_document.edit.own', 'com_sermondistributor.help_document.' . $recordId))
 				{

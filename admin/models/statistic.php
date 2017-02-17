@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 8 of this MVC
+	@build			18th November, 2015
+	@created		29th October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -720,7 +720,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 				foreach ($values as $key => $value)
 				{
 					// Do special action for access.
-					if ('access' == $key && strlen($value) > 0)
+					if ('access' === $key && strlen($value) > 0)
 					{
 						$this->table->$key = $value;
 					}
@@ -793,7 +793,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 		}
 
 		// Alter the uniqe field for save as copy
-		if ($input->get('task') == 'save2copy')
+		if ($input->get('task') === 'save2copy')
 		{
 			// Automatic handling of other uniqe fields
 			$uniqeFields = $this->getUniqeFields();

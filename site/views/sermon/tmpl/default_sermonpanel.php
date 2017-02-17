@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 41 of this MVC
+	@build			19th December, 2016
+	@created		10th November, 2015
 	@package		Sermon Distributor
 	@subpackage		default_sermonpanel.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -132,6 +132,6 @@ $this->item->params = $this->params;
 		</div>
 	</div>
 <?php endif; ?>
-<?php if (2 == $this->item->playerKey): ?>
+<?php if (2 == $this->item->playerKey || 3 == $this->item->playerKey): ?>
 	<?php echo JLayoutHelper::render('mediaplayer', $this->item); ?>
 <?php endif; ?>

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		1.4.1
+	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -42,7 +42,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		JResponse::setHeader('Content-Disposition','attachment;filename="getajax.json"');
 		JResponse::setHeader("Access-Control-Allow-Origin", "*");
 		// load the tasks 
-		$this->registerTask('autoUpdateLocalListingExternal', 'ajax');
+		$this->registerTask('theQueue', 'ajax');
 		$this->registerTask('countDownload', 'ajax');
 	}
 
@@ -58,16 +58,16 @@ class SermondistributorControllerAjax extends JControllerLegacy
 			$task = $this->getTask();
 			switch($task)
                         {
-				case 'autoUpdateLocalListingExternal':
+				case 'theQueue':
 					try
 					{
 						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
-						$listingValue = $jinput->get('listing', NULL, 'INT');
-						$targetValue = $jinput->get('target', NULL, 'INT');
+						$listValue = $jinput->get('list', NULL, 'INT');
+						$tarValue = $jinput->get('tar', NULL, 'INT');
 						$typeValue = $jinput->get('type', NULL, 'INT');
-						if($listingValue && $targetValue && $typeValue)
+						if($listValue && $tarValue && $typeValue)
 						{
-							$result = $this->getModel('ajax')->autoUpdateLocalListingExternal($listingValue, $targetValue, $typeValue);
+							$result = $this->getModel('ajax')->theQueue($listValue, $tarValue, $typeValue);
 						}
 						else
 						{

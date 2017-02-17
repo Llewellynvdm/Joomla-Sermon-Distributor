@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		1.4.1
+	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -44,13 +44,14 @@ class SermondistributorModelAjax extends JModelList
 	}
 
 	// Used in sermon
+			
 	/**
 	* 	Check and if a vdm notice is new (per/user)
 	**/
 	public function isNew($notice)
 	{
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, '.md', JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, $fileType = '.md', JPATH_COMPONENT_ADMINISTRATOR);
 		// check if the file is set
 		if (($content = @file_get_contents($path_filename)) !== FALSE)
 		{
@@ -68,7 +69,7 @@ class SermondistributorModelAjax extends JModelList
 	public function isRead($notice)
 	{
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, '.md', JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, $fileType = '.md', JPATH_COMPONENT_ADMINISTRATOR);
 		// set as read if not already set
 		if (($content = @file_get_contents($path_filename)) !== FALSE)
 		{
@@ -90,12 +91,11 @@ class SermondistributorModelAjax extends JModelList
 			return true;
 		}
 		return false;
-	}
-
+	}			
 	/**
-	* 	Auto Update Local Listing External
+	* 	The Queue to Update Local Listing of External Source
 	**/
-	public function autoUpdateLocalListingExternal($id, $target, $typeID)
+	public function theQueue($id, $target, $typeID)
 	{		
 		if (1 == $typeID)
 		{

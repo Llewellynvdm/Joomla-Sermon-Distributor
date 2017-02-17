@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
+	@version		1.4.1
+	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		externalsourcefiles.php
@@ -61,7 +61,8 @@ class JFormFieldExternalsourcefiles extends JFormFieldList
 			$script = array();
 			$buttonName = $this->getAttribute('name');
 			// get the input from url
-			$jinput = JFactory::getApplication()->input;
+			$app = JFactory::getApplication();
+			$jinput = $app->input;
 			// get the view name & id
 			$values = $jinput->getArray(array(
 				'id' => 'int',
@@ -78,7 +79,7 @@ class JFormFieldExternalsourcefiles extends JFormFieldList
 			}
 			$user = JFactory::getUser();
 			// only add if user allowed to create 
-			if ($user->authorise('core.create', 'com_sermondistributor'))
+			if ($user->authorise('core.create', 'com_sermondistributor') && $app->isAdmin()) // TODO for now only in admin area.
 			{
 				// build Create button
 				$buttonNamee = trim($buttonName);
@@ -91,7 +92,7 @@ class JFormFieldExternalsourcefiles extends JFormFieldList
 					<span class="icon-new icon-white"></span></a>';
 			}
 			// only add if user allowed to edit 
-			if (($buttonName == '' || $buttonName == '')  && $user->authorise('core.edit', 'com_sermondistributor'))
+			if (($buttonName === '' || $buttonName === '')  && $user->authorise('core.edit', 'com_sermondistributor') && $app->isAdmin()) // TODO for now only in admin area.
 			{
 				// build edit button
 				$buttonNamee = trim($buttonName);
@@ -149,7 +150,7 @@ class JFormFieldExternalsourcefiles extends JFormFieldList
 	public function getOptions()
 	{
 		// set the default
-		$options[] = JHtml::_('select.option', '', JText::_('The local listing of the Manual External Source folder/s is empty.'));
+		$options[] = JHtml::_('select.option', '', JText::_('COM_SERMONDISTRIBUTOR_THE_LOCAL_LISTING_OF_THE_MANUAL_EXTERNAL_SOURCE_FOLDERS_IS_EMPTY'));
 		$selection = SermondistributorHelper::getExternalSourceLink('manual', 2, false, 'select');
 		if (SermondistributorHelper::checkArray($selection))
 		{

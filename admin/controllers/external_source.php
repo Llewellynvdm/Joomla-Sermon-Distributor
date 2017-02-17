@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 53 of this MVC
+	@build			27th November, 2016
+	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		external_source.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -241,7 +241,7 @@ class SermondistributorControllerExternal_source extends JControllerForm
 		{
 			// The record has been set. Check the record permissions.
 			$permission = $user->authorise('external_source.edit', 'com_sermondistributor.external_source.' . (int) $recordId);
-			if (!$permission && !is_null($permission))
+			if (!$permission)
 			{
 				if ($user->authorise('external_source.edit.own', 'com_sermondistributor.external_source.' . $recordId))
 				{

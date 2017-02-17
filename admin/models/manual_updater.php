@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.0
-	@build			4th December, 2016
-	@created		22nd October, 2015
+	@version		@update number 44 of this MVC
+	@build			27th November, 2016
+	@created		4th November, 2016
 	@package		Sermon Distributor
 	@subpackage		manual_updater.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -115,19 +115,22 @@ class SermondistributorModelManual_updater extends JModelList
 		$basic = new FOFEncryptAes($basickey, 128);
 
 		// Convert the parameter fields into objects.
-		foreach ($items as $nr => &$item)
+		if (SermondistributorHelper::checkArray($items))
 		{
-			// Always create a slug for sef URL's
-			$item->slug = (isset($item->alias)) ? $item->id.':'.$item->alias : $item->id;
-			if (SermondistributorHelper::checkString($item->filetypes))
+			foreach ($items as $nr => &$item)
 			{
-				// Decode filetypes
-				$item->filetypes = json_decode($item->filetypes, true);
-			}
-			if (!empty($item->oauthtoken) && $basickey && !is_numeric($item->oauthtoken) && $item->oauthtoken === base64_encode(base64_decode($item->oauthtoken, true)))
-			{
-				// Decode oauthtoken
-				$item->oauthtoken = rtrim($basic->decryptString($item->oauthtoken), "\0");
+				// Always create a slug for sef URL's
+				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+				if (SermondistributorHelper::checkJson($item->filetypes))
+				{
+					// Decode filetypes
+					$item->filetypes = json_decode($item->filetypes, true);
+				}
+				if (!empty($item->oauthtoken) && $basickey && !is_numeric($item->oauthtoken) && $item->oauthtoken === base64_encode(base64_decode($item->oauthtoken, true)))
+				{
+					// Decode oauthtoken
+					$item->oauthtoken = rtrim($basic->decryptString($item->oauthtoken), "\0");
+				}
 			}
 		} 
 

@@ -14,7 +14,7 @@
 	@build			17th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
-	@subpackage		files_fullwidth.php
+	@subpackage		htmlfive.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
@@ -25,33 +25,11 @@
 
 // No direct access to this file
 
-defined('_JEXEC') or die('Restricted access');
+defined('JPATH_BASE') or die('Restricted access');
 
-$form = $displayData->getForm();
 
-$fields = $displayData->get('fields') ?: array(
-	'link_type',
-	'note_link_directed',
-	'note_link_encrypted',
-	'source',
-	'build',
-	'note_manual_externalsource',
-	'note_auto_externalsource',
-	'manual_files',
-	'local_files',
-	'url'
-);
 
 ?>
-<div class="form-vertical">
-<?php foreach($fields as $field): ?>
-    <div class="control-group">
-        <div class="control-label">
-            <?php echo $form->getLabel($field); ?>
-        </div>
-        <div class="controls">
-            <?php echo $form->getInput($field); ?>
-        </div>
-    </div>
-<?php endforeach; ?>
-</div>
+<audio controls style="width: 400px;">
+	<source src="<?php echo $displayData; ?>" type="audio/mpeg">
+</audio>
