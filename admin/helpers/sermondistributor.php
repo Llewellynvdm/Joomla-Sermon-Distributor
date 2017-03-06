@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			17th February, 2017
+	@build			28th February, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -1899,10 +1899,13 @@ abstract class SermondistributorHelper
 		return $string;
 	}
 
-	public static function safeString($string, $type = 'L', $spacer = '_')
+	public static function safeString($string, $type = 'L', $spacer = '_', $replaceNumbers = true)
 	{
-		// remove all numbers and replace with english text version (works well only up to millions)
-                $string = self::replaceNumbers($string);
+		if ($replaceNumbers === true)
+		{
+			// remove all numbers and replace with english text version (works well only up to millions)
+			$string = self::replaceNumbers($string);
+		}
 		// 0nly continue if we have a string
                 if (self::checkString($string))
                 {
