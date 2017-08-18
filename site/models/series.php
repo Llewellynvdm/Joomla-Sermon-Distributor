@@ -109,6 +109,7 @@ class SermondistributorModelSeries extends JModelList
 		{
 			return false;
 		}
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
@@ -293,6 +294,7 @@ class SermondistributorModelSeries extends JModelList
 		{
 			return false;
 		}
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
@@ -362,6 +364,7 @@ class SermondistributorModelSeries extends JModelList
 		{
 			return false;
 		}
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
@@ -436,6 +439,7 @@ class SermondistributorModelSeries extends JModelList
 			return false;
 		}
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 

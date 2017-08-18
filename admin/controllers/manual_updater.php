@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 44 of this MVC
-	@build			27th November, 2016
+	@version		@update number 45 of this MVC
+	@build			7th July, 2017
 	@created		4th November, 2016
 	@package		Sermon Distributor
 	@subpackage		manual_updater.php

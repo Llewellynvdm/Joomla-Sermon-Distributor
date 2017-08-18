@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			28th February, 2017
+	@build			17th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		router.php
@@ -139,7 +139,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				elseif ($segments[$count-1])
 				{
-					$id = $this->getVar('preachers', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('preacher', $segments[$count-1], 'alias', 'id');
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -154,7 +154,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				elseif ($segments[$count-1])
 				{
-					$id = $this->getVar('preacher', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('sermon', $segments[$count-1], 'alias', 'id');
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -184,7 +184,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				elseif ($segments[$count-1])
 				{
-					$id = $this->getVar('category', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('sermon', $segments[$count-1], 'alias', 'id');
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -199,7 +199,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				elseif ($segments[$count-1])
 				{
-					$id = $this->getVar('serieslist', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('series', $segments[$count-1], 'alias', 'id');
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -214,7 +214,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				elseif ($segments[$count-1])
 				{
-					$id = $this->getVar('series', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('sermon', $segments[$count-1], 'alias', 'id');
 					if($id)
 					{
 						$vars['id'] = $id;

@@ -77,7 +77,9 @@ class SermondistributorModelCategories extends JModelList
 			array('id','name','alias','description','hits','language','params')));
 		$query->from($db->quoteName('#__categories', 'a'));
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
+		// Get where a.published is 1
 		$query->where('a.published = 1');
+		// Get where a.extension is "com_sermondistributor.sermons"
 		$query->where('a.extension = "com_sermondistributor.sermons"');
 		$query->order('a.title ASC');
 
@@ -167,6 +169,7 @@ class SermondistributorModelCategories extends JModelList
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'b'));
 		$query->where('b.catid = ' . $db->quote($id));
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
+		// Get where b.published is 1
 		$query->where('b.published = 1');
 
 		// Reset the query using our newly populated query object.

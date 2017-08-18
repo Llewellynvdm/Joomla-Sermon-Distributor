@@ -77,6 +77,7 @@ class SermondistributorModelPreachers extends JModelList
 			array('id','asset_id','name','alias','icon','email','website','description','hits','ordering')));
 		$query->from($db->quoteName('#__sermondistributor_preacher', 'a'));
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
@@ -91,16 +92,7 @@ class SermondistributorModelPreachers extends JModelList
 	 */
 	public function getItems()
 	{
-		$user = JFactory::getUser();
-		// check if this user has permission to access item
-		if (!$user->authorise('site.preachers.access', 'com_sermondistributor'))
-		{
-			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_PREACHERS'), 'error');
-			// redirect away to the home page if no access allowed.
-			$app->redirect(JURI::root());
-			return false;
-		}  
+		$user = JFactory::getUser();  
 		// load parent items
 		$items = parent::getItems();
 
@@ -161,6 +153,7 @@ class SermondistributorModelPreachers extends JModelList
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'b'));
 		$query->where('b.preacher = ' . $db->quote($id));
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
+		// Get where b.published is 1
 		$query->where('b.published = 1');
 
 		// Reset the query using our newly populated query object.

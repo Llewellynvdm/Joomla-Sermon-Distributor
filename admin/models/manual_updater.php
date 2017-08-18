@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 44 of this MVC
-	@build			27th November, 2016
+	@version		@update number 45 of this MVC
+	@build			7th July, 2017
 	@created		4th November, 2016
 	@package		Sermon Distributor
 	@subpackage		manual_updater.php
@@ -78,7 +78,9 @@ class SermondistributorModelManual_updater extends JModelList
 			array('a.id','a.description','a.externalsources','a.build','a.update_method','a.update_timer','a.filetypes','a.oauthtoken','a.permissiontype','a.dropboxoptions','a.sharedurl','a.folder'),
 			array('id','description','externalsources','build','update_method','update_timer','filetypes','oauthtoken','permissiontype','dropboxoptions','sharedurl','folder')));
 		$query->from($db->quoteName('#__sermondistributor_external_source', 'a'));
+		// Get where a.update_method is 1
 		$query->where('a.update_method = 1');
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.description ASC');
 

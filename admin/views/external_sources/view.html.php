@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 53 of this MVC
-	@build			27th November, 2016
+	@version		@update number 55 of this MVC
+	@build			17th July, 2017
 	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -149,7 +149,7 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 			{
 				JToolBarHelper::custom('external_sources.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-                }
+                } 
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('external_source.import'))
 		{

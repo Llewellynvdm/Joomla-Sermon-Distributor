@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 10 of this MVC
-	@build			27th November, 2016
+	@version		@update number 11 of this MVC
+	@build			31st March, 2017
 	@created		20th November, 2016
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -58,7 +58,8 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 <div id="sermondistributor_loader" style="display: none;">
 <form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='.(int) $this->item->id.$this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
-	<?php echo JLayoutHelper::render('local_listing.details_above', $this); ?><div class="form-horizontal">
+	<?php echo JLayoutHelper::render('local_listing.details_above', $this); ?>
+<div class="form-horizontal">
 
 	<?php echo JHtml::_('bootstrap.startTabSet', 'local_listingTab', array('active' => 'details')); ?>
 
@@ -116,56 +117,12 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 		<input type="hidden" name="task" value="local_listing.edit" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
+	</div>
 </div>
 </form>
 </div>
 
 <script type="text/javascript">
-
-// #jform_build listeners for build_vvvvvwx function
-jQuery('#jform_build').on('keyup',function()
-{
-	var build_vvvvvwx = jQuery("#jform_build").val();
-	vvvvvwx(build_vvvvvwx);
-
-});
-jQuery('#adminForm').on('change', '#jform_build',function (e)
-{
-	e.preventDefault();
-	var build_vvvvvwx = jQuery("#jform_build").val();
-	vvvvvwx(build_vvvvvwx);
-
-});
-
-// #jform_build listeners for build_vvvvvwy function
-jQuery('#jform_build').on('keyup',function()
-{
-	var build_vvvvvwy = jQuery("#jform_build").val();
-	vvvvvwy(build_vvvvvwy);
-
-});
-jQuery('#adminForm').on('change', '#jform_build',function (e)
-{
-	e.preventDefault();
-	var build_vvvvvwy = jQuery("#jform_build").val();
-	vvvvvwy(build_vvvvvwy);
-
-});
-
-// #jform_build listeners for build_vvvvvwz function
-jQuery('#jform_build').on('keyup',function()
-{
-	var build_vvvvvwz = jQuery("#jform_build").val();
-	vvvvvwz(build_vvvvvwz);
-
-});
-jQuery('#adminForm').on('change', '#jform_build',function (e)
-{
-	e.preventDefault();
-	var build_vvvvvwz = jQuery("#jform_build").val();
-	vvvvvwz(build_vvvvvwz);
-
-});
 
 
 jQuery('input.form-field-repeatable').on('value-update', function(e, value){

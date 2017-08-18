@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		@update number 20 of this MVC
-	@build			17th October, 2016
+	@build			18th October, 2016
 	@created		13th July, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -149,7 +149,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			{
 				JToolBarHelper::custom('help_documents.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-                }
+                } 
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('help_document.import'))
 		{

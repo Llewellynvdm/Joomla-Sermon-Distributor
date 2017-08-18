@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		@update number 20 of this MVC
-	@build			17th October, 2016
+	@build			18th October, 2016
 	@created		13th July, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 44 of this MVC
-	@build			27th November, 2016
+	@version		@update number 45 of this MVC
+	@build			7th July, 2017
 	@created		4th November, 2016
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -79,7 +79,7 @@ class SermondistributorViewManual_updater extends JViewLegacy
 		// Load the header checker class.
 		require_once( JPATH_COMPONENT_ADMINISTRATOR.'/helpers/headercheck.php' );
 		// Initialize the header checker.
-		$HeaderCheck = new HeaderCheck;
+		$HeaderCheck = new sermondistributorHeaderCheck;
 
 		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');

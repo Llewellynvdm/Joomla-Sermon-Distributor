@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		@update number 20 of this MVC
-	@build			17th October, 2016
+	@build			18th October, 2016
 	@created		13th July, 2015
 	@package		Sermon Distributor
 	@subpackage		help_documents.php
@@ -107,5 +107,5 @@ class SermondistributorControllerHelp_documents extends JControllerAdmin
 		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=help_documents', false), $message, 'error');
 		return;
-	} 
+	}  
 }

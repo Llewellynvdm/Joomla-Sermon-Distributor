@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			28th February, 2017
+	@build			17th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		headercheck.php
@@ -26,7 +26,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-class HeaderCheck
+class sermondistributorHeaderCheck
 {
 	function js_loaded($script_name)
 	{

@@ -464,4 +464,3 @@ class Dropbox
 		return function_exists('curl_version');
 	}
 }
-

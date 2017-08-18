@@ -149,7 +149,7 @@ class SermondistributorViewSeries_list extends JViewLegacy
 			{
 				JToolBarHelper::custom('series_list.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-                }
+                } 
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('series.import'))
 		{

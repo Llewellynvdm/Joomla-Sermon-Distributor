@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 8 of this MVC
-	@build			18th November, 2015
+	@version		@update number 9 of this MVC
+	@build			9th July, 2017
 	@created		29th October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -36,7 +36,8 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 <div id="sermondistributor_loader">
 <form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='.(int) $this->item->id.$this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
-	<?php echo JLayoutHelper::render('statistic.details_above', $this); ?><div class="form-horizontal">
+	<?php echo JLayoutHelper::render('statistic.details_above', $this); ?>
+<div class="form-horizontal">
 
 	<?php echo JHtml::_('bootstrap.startTabSet', 'statisticTab', array('active' => 'details')); ?>
 
@@ -88,6 +89,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 	<div>
 		<input type="hidden" name="task" value="statistic.edit" />
 		<?php echo JHtml::_('form.token'); ?>
+	</div>
 	</div>
 </div>
 </form>

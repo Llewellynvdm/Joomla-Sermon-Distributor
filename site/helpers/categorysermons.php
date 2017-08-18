@@ -14,7 +14,7 @@
 	@build			17th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
-	@subpackage		details_fullwidth.php
+	@subpackage		categorysermons.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
@@ -24,26 +24,24 @@
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-
 defined('_JEXEC') or die('Restricted access');
 
-$form = $displayData->getForm();
+/**
+ * Sermondistributor Sermon Component Category Tree
+ */
+class SermondistributorSermonsCategories extends JCategories
+{
+	/**
+	 * Class constructor
+	 *
+	 * @param   array  $options  Array of options
+	 *
+	 */
+	public function __construct($options = array())
+	{
+		$options['table'] = '#__sermondistributor_sermon';
+		$options['extension'] = 'com_sermondistributor.sermons';
 
-$fields = $displayData->get('fields') ?: array(
-	'sharedurl',
-	'folder'
-);
-
-?>
-<div class="form-vertical">
-<?php foreach($fields as $field): ?>
-    <div class="control-group">
-        <div class="control-label">
-            <?php echo $form->getLabel($field); ?>
-        </div>
-        <div class="controls">
-            <?php echo $form->getInput($field); ?>
-        </div>
-    </div>
-<?php endforeach; ?>
-</div>
+		parent::__construct($options);
+	}
+}

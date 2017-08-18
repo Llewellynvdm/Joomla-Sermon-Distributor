@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 53 of this MVC
-	@build			27th November, 2016
+	@version		@update number 55 of this MVC
+	@build			17th July, 2017
 	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		default_toolbar.php

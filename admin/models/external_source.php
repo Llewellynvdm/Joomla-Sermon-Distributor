@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 53 of this MVC
-	@build			27th November, 2016
+	@version		@update number 55 of this MVC
+	@build			17th July, 2017
 	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		external_source.php
@@ -352,25 +352,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				$form->setFieldAttribute('build', 'required', 'false');
 			}
 		}
-		// Modify the form based on Edit Folder access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.folder', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.folder', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('folder', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('folder', 'readonly', 'true');
-			// Disable radio button for display.
-			$class = $form->getFieldAttribute('folder', 'class', '');
-			$form->setFieldAttribute('folder', 'class', $class.' disabled no-click');
-			if (!$form->getValue('folder'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('folder', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('folder', 'required', 'false');
-			}
-		}
 		// Modify the form based on Edit Dropboxoptions access controls.
 		if ($id != 0 && (!$user->authorise('external_source.edit.dropboxoptions', 'com_sermondistributor.external_source.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('external_source.edit.dropboxoptions', 'com_sermondistributor')))
@@ -404,6 +385,22 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				$form->setFieldAttribute('update_timer', 'filter', 'unset');
 				// Disable fields while saving.
 				$form->setFieldAttribute('update_timer', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Oauthtoken access controls.
+		if ($id != 0 && (!$user->authorise('external_source.edit.oauthtoken', 'com_sermondistributor.external_source.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('external_source.edit.oauthtoken', 'com_sermondistributor')))
+		{
+			// Disable fields for display.
+			$form->setFieldAttribute('oauthtoken', 'disabled', 'true');
+			// Disable fields for display.
+			$form->setFieldAttribute('oauthtoken', 'readonly', 'true');
+			if (!$form->getValue('oauthtoken'))
+			{
+				// Disable fields while saving.
+				$form->setFieldAttribute('oauthtoken', 'filter', 'unset');
+				// Disable fields while saving.
+				$form->setFieldAttribute('oauthtoken', 'required', 'false');
 			}
 		}
 		// Modify the form based on Edit Permissiontype access controls.
@@ -444,20 +441,23 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				$form->setFieldAttribute('sharedurl', 'required', 'false');
 			}
 		}
-		// Modify the form based on Edit Oauthtoken access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.oauthtoken', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.oauthtoken', 'com_sermondistributor')))
+		// Modify the form based on Edit Folder access controls.
+		if ($id != 0 && (!$user->authorise('external_source.edit.folder', 'com_sermondistributor.external_source.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('external_source.edit.folder', 'com_sermondistributor')))
 		{
 			// Disable fields for display.
-			$form->setFieldAttribute('oauthtoken', 'disabled', 'true');
+			$form->setFieldAttribute('folder', 'disabled', 'true');
 			// Disable fields for display.
-			$form->setFieldAttribute('oauthtoken', 'readonly', 'true');
-			if (!$form->getValue('oauthtoken'))
+			$form->setFieldAttribute('folder', 'readonly', 'true');
+			// Disable radio button for display.
+			$class = $form->getFieldAttribute('folder', 'class', '');
+			$form->setFieldAttribute('folder', 'class', $class.' disabled no-click');
+			if (!$form->getValue('folder'))
 			{
 				// Disable fields while saving.
-				$form->setFieldAttribute('oauthtoken', 'filter', 'unset');
+				$form->setFieldAttribute('folder', 'filter', 'unset');
 				// Disable fields while saving.
-				$form->setFieldAttribute('oauthtoken', 'required', 'false');
+				$form->setFieldAttribute('folder', 'required', 'false');
 			}
 		}
 		// Only load these values if no id is found

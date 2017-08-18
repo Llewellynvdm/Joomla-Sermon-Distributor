@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			28th February, 2017
+	@build			17th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -53,7 +53,10 @@ class SermondistributorViewSermondistributor extends JViewLegacy
 		$this->readme	= $this->get('Readme');
 		$this->wiki	= $this->get('Wiki');
 		$this->noticeboard	= $this->get('Noticeboard');
-
+		
+		// get the manifest details of the component
+		$this->manifest = SermondistributorHelper::manifest();
+		
 		// Set the toolbar
 		$this->addToolBar();
 
@@ -88,15 +91,19 @@ class SermondistributorViewSermondistributor extends JViewLegacy
 	/**
 	 * Method to set up the document properties
 	 *
-	 *
 	 * @return void
 	 */
 	protected function setDocument()
 	{
 		$document = JFactory::getDocument();
-
+		
+		// add dashboard style sheets
 		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/dashboard.css");
-
+		
+		// set page title
 		$document->setTitle(JText::_('COM_SERMONDISTRIBUTOR_DASHBOARD'));
+		
+		// add manifest to page JavaScript
+		$document->addScriptDeclaration("var manifest = jQuery.parseJSON('" . json_encode($this->manifest) . "');", "text/javascript");
 	}
 }

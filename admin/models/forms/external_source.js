@@ -9,8 +9,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 53 of this MVC
-	@build			27th November, 2016
+	@version		@update number 55 of this MVC
+	@build			17th July, 2017
 	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		external_source.js
@@ -86,9 +86,6 @@ jQuery(document).ready(function()
 	var externalsources_vvvvvwv = jQuery("#jform_externalsources").val();
 	var dropboxoptions_vvvvvwv = jQuery("#jform_dropboxoptions input[type='radio']:checked").val();
 	vvvvvwv(permissiontype_vvvvvwv,externalsources_vvvvvwv,dropboxoptions_vvvvvwv);
-
-	var build_vvvvvww = jQuery("#jform_build").val();
-	vvvvvww(build_vvvvvww);
 });
 
 // the vvvvvwe function
@@ -995,42 +992,6 @@ function dropboxoptions_vvvvvwv_SomeFunc(dropboxoptions_vvvvvwv)
 {
 	// set the function logic
 	if (dropboxoptions_vvvvvwv == 2)
-	{
-		return true;
-	}
-	return false;
-}
-
-// the vvvvvww function
-function vvvvvww(build_vvvvvww)
-{
-	if (isSet(build_vvvvvww) && build_vvvvvww.constructor !== Array)
-	{
-		var temp_vvvvvww = build_vvvvvww;
-		var build_vvvvvww = [];
-		build_vvvvvww.push(temp_vvvvvww);
-	}
-	else if (!isSet(build_vvvvvww))
-	{
-		var build_vvvvvww = [];
-	}
-	var build = build_vvvvvww.some(build_vvvvvww_SomeFunc);
-
-
-	// set this function logic
-	if (build)
-	{
-	}
-	else
-	{
-	}
-}
-
-// the vvvvvww Some function
-function build_vvvvvww_SomeFunc(build_vvvvvww)
-{
-	// set the function logic
-	if (build_vvvvvww != '')
 	{
 		return true;
 	}

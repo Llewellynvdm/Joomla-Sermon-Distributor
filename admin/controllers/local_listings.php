@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 10 of this MVC
-	@build			27th November, 2016
+	@version		@update number 11 of this MVC
+	@build			31st March, 2017
 	@created		20th November, 2016
 	@package		Sermon Distributor
 	@subpackage		local_listings.php
@@ -107,5 +107,5 @@ class SermondistributorControllerLocal_listings extends JControllerAdmin
 		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=local_listings', false), $message, 'error');
 		return;
-	} 
+	}  
 }

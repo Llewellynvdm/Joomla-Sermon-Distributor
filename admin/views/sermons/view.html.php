@@ -149,7 +149,7 @@ class SermondistributorViewSermons extends JViewLegacy
 			{
 				JToolBarHelper::custom('sermons.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-                }
+                } 
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('sermon.import'))
 		{

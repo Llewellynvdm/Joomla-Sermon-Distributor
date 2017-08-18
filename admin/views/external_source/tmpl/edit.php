@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 53 of this MVC
-	@build			27th November, 2016
+	@version		@update number 55 of this MVC
+	@build			17th July, 2017
 	@created		3rd November, 2016
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -58,7 +58,8 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 <div id="sermondistributor_loader" style="display: none;">
 <form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='.(int) $this->item->id.$this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
-	<?php echo JLayoutHelper::render('external_source.details_above', $this); ?><div class="form-horizontal">
+	<?php echo JLayoutHelper::render('external_source.details_above', $this); ?>
+<div class="form-horizontal">
 
 	<?php echo JHtml::_('bootstrap.startTabSet', 'external_sourceTab', array('active' => 'details')); ?>
 
@@ -125,6 +126,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 	<div>
 		<input type="hidden" name="task" value="external_source.edit" />
 		<?php echo JHtml::_('form.token'); ?>
+	</div>
 	</div>
 </div>
 
@@ -670,21 +672,6 @@ jQuery('#adminForm').on('change', '#jform_dropboxoptions',function (e)
 	var externalsources_vvvvvwv = jQuery("#jform_externalsources").val();
 	var dropboxoptions_vvvvvwv = jQuery("#jform_dropboxoptions input[type='radio']:checked").val();
 	vvvvvwv(permissiontype_vvvvvwv,externalsources_vvvvvwv,dropboxoptions_vvvvvwv);
-
-});
-
-// #jform_build listeners for build_vvvvvww function
-jQuery('#jform_build').on('keyup',function()
-{
-	var build_vvvvvww = jQuery("#jform_build").val();
-	vvvvvww(build_vvvvvww);
-
-});
-jQuery('#adminForm').on('change', '#jform_build',function (e)
-{
-	e.preventDefault();
-	var build_vvvvvww = jQuery("#jform_build").val();
-	vvvvvww(build_vvvvvww);
 
 });
 

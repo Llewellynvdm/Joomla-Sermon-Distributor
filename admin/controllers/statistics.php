@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 8 of this MVC
-	@build			18th November, 2015
+	@version		@update number 9 of this MVC
+	@build			9th July, 2017
 	@created		29th October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistics.php
@@ -107,5 +107,5 @@ class SermondistributorControllerStatistics extends JControllerAdmin
 		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=statistics', false), $message, 'error');
 		return;
-	} 
+	}  
 }

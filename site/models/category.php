@@ -109,6 +109,7 @@ class SermondistributorModelCategory extends JModelList
 		{
 			return false;
 		}
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
@@ -292,6 +293,7 @@ class SermondistributorModelCategory extends JModelList
 		{
 			return false;
 		}
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.title ASC');
 

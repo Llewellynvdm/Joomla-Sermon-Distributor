@@ -9,8 +9,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 10 of this MVC
-	@build			27th November, 2016
+	@version		@update number 11 of this MVC
+	@build			31st March, 2017
 	@created		20th November, 2016
 	@package		Sermon Distributor
 	@subpackage		local_listing.js
@@ -22,135 +22,7 @@
                                                              
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
-// Initial Script
-jQuery(document).ready(function()
-{
-	var build_vvvvvwx = jQuery("#jform_build").val();
-	vvvvvwx(build_vvvvvwx);
 
-	var build_vvvvvwy = jQuery("#jform_build").val();
-	vvvvvwy(build_vvvvvwy);
-
-	var build_vvvvvwz = jQuery("#jform_build").val();
-	vvvvvwz(build_vvvvvwz);
-});
-
-// the vvvvvwx function
-function vvvvvwx(build_vvvvvwx)
-{
-	if (isSet(build_vvvvvwx) && build_vvvvvwx.constructor !== Array)
-	{
-		var temp_vvvvvwx = build_vvvvvwx;
-		var build_vvvvvwx = [];
-		build_vvvvvwx.push(temp_vvvvvwx);
-	}
-	else if (!isSet(build_vvvvvwx))
-	{
-		var build_vvvvvwx = [];
-	}
-	var build = build_vvvvvwx.some(build_vvvvvwx_SomeFunc);
-
-
-	// set this function logic
-	if (build)
-	{
-	}
-	else
-	{
-	}
-}
-
-// the vvvvvwx Some function
-function build_vvvvvwx_SomeFunc(build_vvvvvwx)
-{
-	// set the function logic
-	if (build_vvvvvwx == 2)
-	{
-		return true;
-	}
-	return false;
-}
-
-// the vvvvvwy function
-function vvvvvwy(build_vvvvvwy)
-{
-	if (isSet(build_vvvvvwy) && build_vvvvvwy.constructor !== Array)
-	{
-		var temp_vvvvvwy = build_vvvvvwy;
-		var build_vvvvvwy = [];
-		build_vvvvvwy.push(temp_vvvvvwy);
-	}
-	else if (!isSet(build_vvvvvwy))
-	{
-		var build_vvvvvwy = [];
-	}
-	var build = build_vvvvvwy.some(build_vvvvvwy_SomeFunc);
-
-
-	// set this function logic
-	if (build)
-	{
-	}
-	else
-	{
-	}
-}
-
-// the vvvvvwy Some function
-function build_vvvvvwy_SomeFunc(build_vvvvvwy)
-{
-	// set the function logic
-	if (build_vvvvvwy == 1)
-	{
-		return true;
-	}
-	return false;
-}
-
-// the vvvvvwz function
-function vvvvvwz(build_vvvvvwz)
-{
-	if (isSet(build_vvvvvwz) && build_vvvvvwz.constructor !== Array)
-	{
-		var temp_vvvvvwz = build_vvvvvwz;
-		var build_vvvvvwz = [];
-		build_vvvvvwz.push(temp_vvvvvwz);
-	}
-	else if (!isSet(build_vvvvvwz))
-	{
-		var build_vvvvvwz = [];
-	}
-	var build = build_vvvvvwz.some(build_vvvvvwz_SomeFunc);
-
-
-	// set this function logic
-	if (build)
-	{
-	}
-	else
-	{
-	}
-}
-
-// the vvvvvwz Some function
-function build_vvvvvwz_SomeFunc(build_vvvvvwz)
-{
-	// set the function logic
-	if (build_vvvvvwz != '')
-	{
-		return true;
-	}
-	return false;
-}
-
-// the isSet function
-function isSet(val)
-{
-	if ((val != undefined) && (val != null) && 0 !== val.length){
-		return true;
-	}
-	return false;
-}
 
 jQuery(document).ready(function()
 {

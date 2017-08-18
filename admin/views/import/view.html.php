@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			28th February, 2017
+	@build			17th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -49,7 +49,8 @@ class SermondistributorViewImport extends JViewLegacy
 		}
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))){
+		if (count($errors = $this->get('Errors')))
+		{
 			JError::raiseError(500, implode('<br />', $errors));
 			return false;
 		}

@@ -77,6 +77,7 @@ class SermondistributorModelSerieslist extends JModelList
 			array('id','asset_id','name','alias','description','icon','hits','ordering')));
 		$query->from($db->quoteName('#__sermondistributor_series', 'a'));
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
+		// Get where a.published is 1
 		$query->where('a.published = 1');
 		$query->order('a.ordering ASC');
 
@@ -161,6 +162,7 @@ class SermondistributorModelSerieslist extends JModelList
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'b'));
 		$query->where('b.series = ' . $db->quote($id));
 		$query->where('b.access IN (' . implode(',', $this->levels) . ')');
+		// Get where b.published is 1
 		$query->where('b.published = 1');
 
 		// Reset the query using our newly populated query object.

@@ -58,7 +58,8 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 <div id="sermondistributor_loader" style="display: none;">
 <form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='.(int) $this->item->id.$this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
-	<?php echo JLayoutHelper::render('preacher.details_above', $this); ?><div class="form-horizontal">
+	<?php echo JLayoutHelper::render('preacher.details_above', $this); ?>
+<div class="form-horizontal">
 
 	<?php echo JHtml::_('bootstrap.startTabSet', 'preacherTab', array('active' => 'details')); ?>
 
@@ -127,6 +128,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 	<div>
 		<input type="hidden" name="task" value="preacher.edit" />
 		<?php echo JHtml::_('form.token'); ?>
+	</div>
 	</div>
 </div>
 </form>

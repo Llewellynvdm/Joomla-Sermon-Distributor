@@ -96,7 +96,7 @@ class SermondistributorViewPreachers extends JViewLegacy
 		// Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
 		// Initialize the header checker.
-		$HeaderCheck = new HeaderCheck;
+		$HeaderCheck = new sermondistributorHeaderCheck;
 
 		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');

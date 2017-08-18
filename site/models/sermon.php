@@ -151,6 +151,7 @@ class SermondistributorModelSermon extends JModelItem
 				$query->join('LEFT', ($db->quoteName('#__categories', 'e')) . ' ON (' . $db->quoteName('a.catid') . ' = ' . $db->quoteName('e.id') . ')');
 				$query->where('a.access IN (' . implode(',', $this->levels) . ')');
 				$query->where('a.id = ' . (int) $pk);
+				// Get where a.published is 1
 				$query->where('a.published = 1');
 				$query->order('a.ordering ASC');
 

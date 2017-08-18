@@ -149,7 +149,7 @@ class SermondistributorViewPreachers extends JViewLegacy
 			{
 				JToolBarHelper::custom('preachers.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-                }
+                } 
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('preacher.import'))
 		{

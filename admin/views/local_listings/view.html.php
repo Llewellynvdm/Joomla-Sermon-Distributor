@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 10 of this MVC
-	@build			27th November, 2016
+	@version		@update number 11 of this MVC
+	@build			31st March, 2017
 	@created		20th November, 2016
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -149,7 +149,7 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 			{
 				JToolBarHelper::custom('local_listings.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-                }
+                } 
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('local_listing.import'))
 		{

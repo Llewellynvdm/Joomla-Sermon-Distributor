@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 8 of this MVC
-	@build			18th November, 2015
+	@version		@update number 9 of this MVC
+	@build			9th July, 2017
 	@created		29th October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -149,7 +149,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 			{
 				JToolBarHelper::custom('statistics.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-                }
+                } 
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('statistic.import'))
 		{
