@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			17th August, 2017
+	@build			20th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php

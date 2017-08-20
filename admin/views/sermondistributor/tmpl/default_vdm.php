@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			17th August, 2017
+	@build			20th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_vdm.php
@@ -27,7 +27,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 ?>
-<img alt="<?php echo JText::_('COM_SERMONDISTRIBUTOR'); ?>" src="components/com_sermondistributor/assets/images/component-300.jpg">
+<img alt="<?php echo JText::_('COM_SERMONDISTRIBUTOR'); ?>" src="components/com_sermondistributor/assets/images/vdm-component.jpg">
 <ul class="list-striped">
 	<li><b><?php echo JText::_('COM_SERMONDISTRIBUTOR_VERSION'); ?>:</b> <?php echo $this->manifest->version; ?>&nbsp;&nbsp;<span class="update-notice"></span></li>
 	<li><b><?php echo JText::_('COM_SERMONDISTRIBUTOR_DATE'); ?>:</b> <?php echo $this->manifest->creationDate; ?></li>

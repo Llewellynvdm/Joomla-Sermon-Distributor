@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			17th August, 2017
+	@build			20th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
@@ -1035,7 +1035,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			$allDone = $db->execute();
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
-				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
+				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>';
 		}
 		// do any updates needed
@@ -1366,7 +1366,7 @@ class com_sermondistributorInstallerScript
 				$app->enqueueMessage('Your Dropbox integration has been moved, and can now be viewed at the new external source view. You will now need an APP token to update your local listing of the Dropbox files. Please review the Wiki tab when creating/editing the external source, or open an issue on github if you experience any more difficulties.', 'Info');
 			}
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
-				<img src="components/com_sermondistributor/assets/images/component-300.jpg"/>
+				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
 				<h3>Upgrade to Version 1.4.1 Was Successful! Let us know if anything is not working as expected.</h3>';
 		}
