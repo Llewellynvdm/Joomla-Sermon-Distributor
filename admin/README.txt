@@ -23,7 +23,7 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 20th August, 2017
++ *Last Build*: 21st August, 2017
 + *Version*: 1.4.1
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,7 +36,7 @@ due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **63322**
++ *Line count*: **63324**
 + *File count*: **441**
 + *Folder count*: **90**
 
@@ -61,6 +61,7 @@ Project duration: **7.4 weeks** or **1.5 months**
 
 ## Donations
 
- If you want to support this project, please consider donating:
- * PayPal: pay@vdm.io
- * Bitcoin: 3H35PYwikEosvcjxHXGPLS1GufZ4b4iFu3
+Come on buy me a coffee :)
+ * PayPal: [paypal.me/payvdm](https://www.paypal.me/payvdm)
+ * Bitcoin: 1FLxiT6wyxgZ3boeviLkYJ1DRpp41uzpxa
+ * Ethereum: 0x243392daa3c9c8bc841fcacf7c7f72541cb16823
