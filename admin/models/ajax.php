@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			21st August, 2017
+	@build			24th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -51,7 +51,7 @@ class SermondistributorModelAjax extends JModelList
 	public function isNew($notice)
 	{
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, $fileType = '.md', JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = SermondistributorHelper::getFilePath('path', 'usernotice', 'md', JFactory::getUser()->username, JPATH_COMPONENT_ADMINISTRATOR);
 		// check if the file is set
 		if (($content = @file_get_contents($path_filename)) !== FALSE)
 		{
@@ -69,7 +69,7 @@ class SermondistributorModelAjax extends JModelList
 	public function isRead($notice)
 	{
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('user', 'notice', JFactory::getUser()->username, $fileType = '.md', JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = SermondistributorHelper::getFilePath('path', 'usernotice', 'md', JFactory::getUser()->username, JPATH_COMPONENT_ADMINISTRATOR);
 		// set as read if not already set
 		if (($content = @file_get_contents($path_filename)) !== FALSE)
 		{

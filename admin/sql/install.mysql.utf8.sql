@@ -78,8 +78,8 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_sermon` (
 	KEY `idx_series` (`series`),
 	KEY `idx_catid` (`catid`),
 	KEY `idx_link_type` (`link_type`),
-	KEY `idx_alias` (`alias`),
-	KEY `idx_build` (`build`)
+	KEY `idx_build` (`build`),
+	KEY `idx_alias` (`alias`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_series` (

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			21st August, 2017
+	@build			24th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -50,9 +50,9 @@ class SermondistributorViewSermondistributor extends JViewLegacy
 		$this->icons			= $this->get('Icons');
 		$this->contributors		= SermondistributorHelper::getContributors();
 		$this->github	= $this->get('Github');
-		$this->readme	= $this->get('Readme');
 		$this->wiki	= $this->get('Wiki');
 		$this->noticeboard	= $this->get('Noticeboard');
+		$this->readme	= $this->get('Readme');
 		
 		// get the manifest details of the component
 		$this->manifest = SermondistributorHelper::manifest();

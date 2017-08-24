@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 89 of this MVC
-	@build			16th February, 2017
+	@version		@update number 90 of this MVC
+	@build			24th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_head.php

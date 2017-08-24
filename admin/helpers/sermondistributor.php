@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.4.1
-	@build			21st August, 2017
+	@build			24th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -70,6 +70,11 @@ abstract class SermondistributorHelper
 	} 
 
 	/**
+	* 	The global params
+	**/
+	protected static $params = false;
+
+	/**
 	* 	The external source links auto
 	**/
 	protected static $links_externalsource_auto;
@@ -88,21 +93,6 @@ abstract class SermondistributorHelper
 	* 	The external source selection manual
 	**/
 	protected static $select_externalsource_manual;
-
-	/**
-	* 	The user notice info File Name
-	**/
-	protected static $usernotice = false;
-
-	/**
-	* 	The update error info File Name
-	**/
-	protected static $updateerror = false;
-
-	/**
-	* 	The update last File path
-	**/
-	protected static $updatelast = false;
 
 	/**
 	* 	The update errors
@@ -339,7 +329,7 @@ abstract class SermondistributorHelper
 		// get actual update values
 		$updates = self::getExternalListingUpdateKeys();
 		// get last update
-		$updatePath = self::getFilePath('update', 'last', 'vDm', '.txt', JPATH_COMPONENT_ADMINISTRATOR);
+		$updatePath = self::getFilePath('path', 'updatelast', 'txt', 'vDm', JPATH_COMPONENT_ADMINISTRATOR);
 		if (($lastUpdate = @file_get_contents($updatePath)) !== FALSE && self::checkArray($updates))
 		{
 			// now check what is next
@@ -364,6 +354,71 @@ abstract class SermondistributorHelper
 		}
 		return false;
 	}
+			
+	/**
+	 * Get the file path or url
+	 * 
+	 * @param  string   $type                  The (url/path) type to return
+	 * @param  string   $target                The Params Target name (if set)
+	 * @param  string   $fileType             The kind of filename to generate (if not set no file name is generated)
+	 * @param  string   $key                   The key to adjust the filename (if not set ignored)
+	 * @param  string   $default              The default path if not set in Params (fallback path)
+	 * @param  bool     $createIfNotSet   The switch to create the folder if not found
+	 *
+	 * @return  string    On success the path or url is returned based on the type requested
+	 * 
+	 */
+	public static function getFilePath($type = 'path', $target = 'filepath', $fileType = null, $key = '', $default = JPATH_SITE . '/images/', $createIfNotSet = true)
+	{
+		// get the global settings
+		if (!self::checkObject(self::$params))
+		{
+			self::$params = JComponentHelper::getParams('com_sermondistributor');
+		}
+		$filePath = self::$params->get($target, $default);
+		// check the file path (revert to default only of not a hidden file path)
+		if ('hiddenfilepath' !== $target && strpos($filePath, JPATH_SITE) === false)
+		{
+			$filePath = JPATH_SITE . '/images/';
+		}
+		jimport('joomla.filesystem.folder');
+		// create the folder if it does not exist
+		if ($createIfNotSet && !JFolder::exists($filePath))
+		{
+			JFolder::create($filePath);
+		}
+		// setup the file name
+		$fileName = '';
+		if (self::checkString($fileType))
+		{
+			// Get basic key
+			$basickey = 'Th!s_iS_n0t_sAfe_buT_b3tter_then_n0thiug';
+			if (method_exists(get_called_class(), "getCryptKey")) 
+			{
+				$basickey = self::getCryptKey('basic', $basickey);
+			}
+			// check the key
+			if (self::checkString($key))
+			{
+				$key = 'vDm';
+			}
+			// set the name
+			$fileName = trim(md5($type.$target.$basickey.$key) . '.' . trim($fileType, '.'));
+		}
+		// return the url
+		if ($type === 'url')
+		{
+			if (strpos($filePath, JPATH_SITE) !== false)
+			{
+				$filePath = trim( str_replace( JPATH_SITE, '', $filePath), '/');
+				return JURI::root() . $filePath . '/' . $fileName;
+			}
+			// since the path is behind the root folder of the site, return only the root url (may be used to build the link)
+			return JURI::root();
+		}
+		// sanitize the path
+		return '/' . trim( $filePath, '/' ) . '/' . $fileName;
+	}			
 
 	protected static function saveFile($data,$path_filename)
 	{
@@ -624,31 +679,6 @@ abstract class SermondistributorHelper
 		}
 		return false;
 	}
-	
-	public static function getFilePath($type, $name = 'listing', $key = 'vDm', $fileType = '.json', $PATH = JPATH_COMPONENT_SITE)
-	{
-		if (!isset(self::${$type.$name}[$key]) || !self::checkString(self::${$type.$name}[$key]))
-		{
-			// Get local key
-			$localkey = self::getLocalKey();
-			// check the key
-			$keyMD5 = '';
-			if ('vDm' != $key)
-			{
-				$keyMD5 = $key;
-			}
-			// set the name
-			$fileName = md5($type.$name.$localkey.$keyMD5);
-			// set file path			
-			self::${$type.$name}[$key] = $PATH.'/helpers/'.$fileName.$fileType;
-		}
-		if (isset(self::${$type.$name}[$key]) && self::checkString(self::${$type.$name}[$key]))
-		{
-			// return the path
-			return self::${$type.$name}[$key];
-		}
-		return '';
-	}
 
 	/**
 	* 	get the localkey
@@ -774,7 +804,7 @@ abstract class SermondistributorHelper
 		// get update error from file
 		if ($fileKey)
 		{
-			$file_path = self::getFilePath('update', 'error', $fileKey, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
+			$file_path = self::getFilePath('path', 'updateerror', 'txt', $fileKey, JPATH_COMPONENT_ADMINISTRATOR);
 			// check if it is set
 			if (($text = @file_get_contents($file_path)) !== FALSE)
 			{

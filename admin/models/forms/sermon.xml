@@ -205,36 +205,13 @@
 			<option value="3">
 				COM_SERMONDISTRIBUTOR_SERMON_URL</option>
 		</field>
-		<!-- Icon Field. Type: Media. (joomla) -->
+		<!-- Note_link_directed Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_link_directed" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_directed" close="true" />
+		<!-- Auto_sermons Field. Type: Hidden. (joomla) -->
 		<field
-			type="media"
-			name="icon"
-			label="COM_SERMONDISTRIBUTOR_SERMON_ICON_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_ICON_DESCRIPTION"
-			directory=""
-		/>
-		<!-- Tags Field. Type: Tag. (joomla) -->
-		<field
-			type="tag"
-			name="tags"
-			mode="ajax"
-			label="COM_SERMONDISTRIBUTOR_SERMON_TAGS_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_TAGS_DESCRIPTION"
-			class="inputbox small"
-			published="true"
-			multiple="true"
-		/>
-		<!-- Local_files Field. Type: Localfiles. (custom) -->
-		<field
-			type="localfiles"
-			name="local_files"
-			label="COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FILES_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FILES_DESCRIPTION"
-			class="list_class"
-			multiple="true"
-			default="0"
-			required="true"
-			button="false"
+			type="hidden"
+			name="auto_sermons"
+			default="1"
 		/>
 		<!-- Description Field. Type: Editor. (joomla) -->
 		<field
@@ -248,71 +225,26 @@
 			buttons="false"
 			filter="safehtml"
 		/>
+		<!-- Icon Field. Type: Media. (joomla) -->
+		<field
+			type="media"
+			name="icon"
+			label="COM_SERMONDISTRIBUTOR_SERMON_ICON_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_ICON_DESCRIPTION"
+			directory=""
+		/>
 		<!-- Note_auto_externalsource Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="note_auto_externalsource" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_auto_externalsource" />
-		<!-- Alias Field. Type: Text. (joomla) -->
+		<!-- Tags Field. Type: Tag. (joomla) -->
 		<field
-			type="text"
-			name="alias"
-			label="COM_SERMONDISTRIBUTOR_SERMON_ALIAS_LABEL"
-			description="JFIELD_ALIAS_DESC"
-			filter="STRING"
-			hint="COM_SERMONDISTRIBUTOR_SERMON_ALIAS_HINT"
-		/>
-		<!-- Not_required Field. Type: Hidden. (joomla) -->
-		<field
-			type="hidden"
-			name="not_required"
-			default="[]"
-		/>
-		<!-- Note_link_directed Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_link_directed" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_directed" close="true" />
-		<!-- Note_manual_externalsource Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_manual_externalsource" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_manual_externalsource" />
-		<!-- Note_link_encrypted Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_link_encrypted" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_encrypted" close="true" />
-		<!-- Manual_files Field. Type: Externalsourcefiles. (custom) -->
-		<field
-			type="externalsourcefiles"
-			name="manual_files"
-			label="COM_SERMONDISTRIBUTOR_SERMON_MANUAL_FILES_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_MANUAL_FILES_DESCRIPTION"
-			class="list_class"
+			type="tag"
+			name="tags"
+			mode="ajax"
+			label="COM_SERMONDISTRIBUTOR_SERMON_TAGS_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_TAGS_DESCRIPTION"
+			class="inputbox small"
+			published="true"
 			multiple="true"
-			default="0"
-			required="true"
-			button="false"
-		/>
-		<!-- Scripture Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="scripture"
-			label="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_LABEL"
-			size="90"
-			maxlength="150"
-			description="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_DESCRIPTION"
-			class="text_area"
-			readonly="false"
-			disabled="false"
-			required="false"
-			filter="STRING"
-			message="Error! Please add some scripture reference here."
-			hint="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_HINT"
-		/>
-		<!-- Url Field. Type: Url. (joomla) -->
-		<field
-			type="url"
-			name="url"
-			label="COM_SERMONDISTRIBUTOR_SERMON_URL_LABEL"
-			size="10"
-			maxlength="50"
-			description="COM_SERMONDISTRIBUTOR_SERMON_URL_DESCRIPTION"
-			class="text_area"
-			required="true"
-			filter="url"
-			validated="url"
-			message="Error! Please add sermon url here."
-			hint="COM_SERMONDISTRIBUTOR_SERMON_URL_HINT"
 		/>
 		<!-- Build Field. Type: List. (joomla) -->
 		<field
@@ -332,11 +264,79 @@
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_SERMON_DYNAMIC_AUTOMATIC_BUILD</option>
 		</field>
-		<!-- Auto_sermons Field. Type: Hidden. (joomla) -->
+		<!-- Note_link_encrypted Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_link_encrypted" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_encrypted" close="true" />
+		<!-- Alias Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="alias"
+			label="COM_SERMONDISTRIBUTOR_SERMON_ALIAS_LABEL"
+			description="JFIELD_ALIAS_DESC"
+			filter="STRING"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_ALIAS_HINT"
+		/>
+		<!-- Local_files Field. Type: Localfiles. (custom) -->
+		<field
+			type="localfiles"
+			name="local_files"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FILES_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FILES_DESCRIPTION"
+			class="list_class"
+			multiple="true"
+			default="0"
+			required="true"
+			button="false"
+		/>
+		<!-- Note_manual_externalsource Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_manual_externalsource" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_manual_externalsource" />
+		<!-- Scripture Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="scripture"
+			label="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_LABEL"
+			size="90"
+			maxlength="150"
+			description="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_DESCRIPTION"
+			class="text_area"
+			readonly="false"
+			disabled="false"
+			required="false"
+			filter="STRING"
+			message="Error! Please add some scripture reference here."
+			hint="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_HINT"
+		/>
+		<!-- Manual_files Field. Type: Externalsourcefiles. (custom) -->
+		<field
+			type="externalsourcefiles"
+			name="manual_files"
+			label="COM_SERMONDISTRIBUTOR_SERMON_MANUAL_FILES_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_MANUAL_FILES_DESCRIPTION"
+			class="list_class"
+			multiple="true"
+			default="0"
+			required="true"
+			button="false"
+		/>
+		<!-- Not_required Field. Type: Hidden. (joomla) -->
 		<field
 			type="hidden"
-			name="auto_sermons"
-			default="1"
+			name="not_required"
+			default="[]"
+		/>
+		<!-- Url Field. Type: Url. (joomla) -->
+		<field
+			type="url"
+			name="url"
+			label="COM_SERMONDISTRIBUTOR_SERMON_URL_LABEL"
+			size="10"
+			maxlength="50"
+			description="COM_SERMONDISTRIBUTOR_SERMON_URL_DESCRIPTION"
+			class="text_area"
+			required="true"
+			filter="url"
+			validated="url"
+			message="Error! Please add sermon url here."
+			hint="COM_SERMONDISTRIBUTOR_SERMON_URL_HINT"
 		/>
 	</fieldset>
 

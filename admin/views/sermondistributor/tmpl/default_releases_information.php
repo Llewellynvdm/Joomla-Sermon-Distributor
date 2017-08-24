@@ -14,7 +14,7 @@
 	@build			24th August, 2017
 	@created		22nd October, 2015
 	@package		Sermon Distributor
-	@subpackage		default_vast_development_method_notice_board.php
+	@subpackage		default_releases_information.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
@@ -27,4 +27,4 @@
 defined('_JEXEC') or die('Restricted access'); 
 
 ?>
-<?php echo $this->noticeboard; ?>
+<?php echo $this->github->tagreleases; ?>
