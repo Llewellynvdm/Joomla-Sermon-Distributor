@@ -4,170 +4,147 @@
 	addfieldpath="/administrator/components/com_sermondistributor/models/fields"
 >
 	<fieldset name="details">
-		<!-- Default Fields. -->
-		<!-- Id Field. Type: Text (joomla) -->
-		<field
-			name="id"
-			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
-			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
-			readonly="true"
-		/>
-		<!-- Date Created Field. Type: Calendar (joomla) -->
-		<field
-			name="created"
-			type="calendar"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_CREATED_DATE_LABEL"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_CREATED_DATE_DESC"
-			size="22"
-
-			format="%Y-%m-%d %H:%M:%S"
-			filter="user_utc"
-		/>
-		<!-- User Created Field. Type: User (joomla) -->
-		<field
-			name="created_by"
-			type="user"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_CREATED_BY_LABEL"
-
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_CREATED_BY_DESC"
-		/>
-		<!-- Published Field. Type: List (joomla) -->
-		<field name="published" type="list" label="JSTATUS"
-			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
-
-			filter="intval" size="1" default="1" >
-			<option value="1">
-				JPUBLISHED</option>
-			<option value="0">
-				JUNPUBLISHED</option>
-			<option value="2">
-				JARCHIVED</option>
-			<option value="-2">
-				JTRASHED</option>
-		</field>
-		<!-- Date Modified Field. Type: Calendar (joomla) -->
-		<field name="modified" type="calendar" class="readonly"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MODIFIED_DATE_LABEL" description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MODIFIED_DATE_DESC"
-			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
-		<!-- User Modified Field. Type: User (joomla) -->
-		<field name="modified_by" type="user"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MODIFIED_BY_LABEL"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MODIFIED_BY_DESC"
-			class="readonly"
-			readonly="true"
-			filter="unset"
-		/>
-		<!-- Ordering Field. Type: Numbers (joomla) -->
-		<field
-			name="ordering"
-			type="number"
-			class="inputbox validate-ordering"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_ORDERING_LABEL"
-			description=""
-			default="0"
-			size="6"
-
-			required="false"
-		/>
-		<!-- Version Field. Type: Text (joomla) -->
-		<field
-			name="version"
-			type="text"
-			class="readonly"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_VERSION_LABEL"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_VERSION_DESC"
-			size="6"
-			readonly="true"
-			filter="unset"
-		/>
-		<!-- Dynamic Fields. -->
-		<!-- Name Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="name"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_LABEL"
-			size="50"
-			maxlength="150"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_DESCRIPTION"
-			class="text_area"
-			required="true"
-			filter="STRING"
-			message="Error! Please add file name here."
-			hint="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_HINT"
-		/>
-		<!-- Build Field. Type: List. (joomla) -->
-		<field
-			type="list"
-			name="build"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_DESCRIPTION"
-			class="list_class"
-			multiple="false"
-			filter="INT"
-			required="true">
-			<!-- Option Set. -->
-			<option value="">
-				COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SELECT_AN_OPTION</option>
-			<option value="1">
-				COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MANUAL_LOCAL_SELECTION</option>
-			<option value="2">
-				COM_SERMONDISTRIBUTOR_LOCAL_LISTING_DYNAMIC_AUTOMATIC_BUILD</option>
-		</field>
-		<!-- Size Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="size"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_LABEL"
-			size="50"
-			maxlength="150"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_DESCRIPTION"
-			class="text_area"
-			required="true"
-			filter="INT"
-			message="Error! Please add file size here."
-			hint="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_HINT"
-		/>
-		<!-- External_source Field. Type: Externalsource. (custom) -->
-		<field
-			type="externalsource"
-			name="external_source"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_DESCRIPTION"
-			class="list_class span12"
-			multiple="false"
-			default="0"
-			required="true"
-			button="true"
-		/>
-		<!-- Key Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="key"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_LABEL"
-			size="50"
-			maxlength="150"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_DESCRIPTION"
-			class="text_area span12"
-			required="true"
-			filter="STRING"
-			message="Error! Please add key here."
-			hint="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_HINT"
-		/>
-		<!-- Url Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="url"
-			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_URL_LABEL"
-			size="256"
-			maxlength="256"
-			description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_URL_DESCRIPTION"
-			class="text_area span12"
-			required="true"
-			filter="STRING"
-			message="Error! Please add shared-URL here."
-			hint="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_URL_HINT"
-		/>
-	</fieldset>
+                <!-- Default Fields.-->
+                <!-- Id Field. Type: Text (joomla)-->
+                <field name="id"
+                       type="text"
+                       class="readonly"
+                       label="JGLOBAL_FIELD_ID_LABEL"
+                       description="JGLOBAL_FIELD_ID_DESC"
+                       size="10"
+                       default="0" />
+                <!-- Date Created Field. Type: Calendar (joomla)-->
+                <field name="created"
+                       type="calendar"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_CREATED_DATE_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_CREATED_DATE_DESC"
+                       size="22"
+                       format="%Y-%m-%d %H:%M:%S"
+                       filter="user_utc" />
+                <!-- User Created Field. Type: User (joomla)-->
+                <field name="created_by"
+                       type="user"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_CREATED_BY_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_CREATED_BY_DESC" />
+                <!-- Published Field. Type: List (joomla)-->
+                <field name="published"
+                       type="list"
+                       label="JSTATUS">
+                        <option value="1">JPUBLISHED</option>
+                        <option value="0">JUNPUBLISHED</option>
+                        <option value="2">JARCHIVED</option>
+                        <option value="-2">JTRASHED</option>
+                </field>
+                <!-- Date Modified Field. Type: Calendar (joomla)-->
+                <field name="modified"
+                       type="calendar"
+                       class="readonly"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MODIFIED_DATE_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MODIFIED_DATE_DESC"
+                       size="22"
+                       readonly="true"
+                       format="%Y-%m-%d %H:%M:%S"
+                       filter="user_utc" />
+                <!-- User Modified Field. Type: User (joomla)-->
+                <field name="modified_by"
+                       type="user"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MODIFIED_BY_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MODIFIED_BY_DESC"
+                       class="readonly"
+                       readonly="true"
+                       filter="unset" />
+                <!-- Ordering Field. Type: Numbers (joomla)-->
+                <field name="ordering"
+                       type="number"
+                       class="inputbox validate-ordering"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_ORDERING_LABEL"
+                       description=""
+                       default="0"
+                       size="6"
+                       required="false" />
+                <!-- Version Field. Type: Text (joomla)-->
+                <field name="version"
+                       type="text"
+                       class="readonly"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_VERSION_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_VERSION_DESC"
+                       size="6"
+                       readonly="true"
+                       filter="unset" />
+                <!-- Dynamic Fields.-->
+                <!-- Name Field. Type: Text. (joomla)-->
+                <field type="text"
+                       name="name"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_LABEL"
+                       size="50"
+                       maxlength="150"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_DESCRIPTION"
+                       class="text_area"
+                       required="true"
+                       filter="STRING"
+                       message="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_MESSAGE"
+                       hint="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_HINT" />
+                <!-- Build Field. Type: List. (joomla)-->
+                <field type="list"
+                       name="build"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_DESCRIPTION"
+                       class="list_class"
+                       multiple="false"
+                       filter="INT"
+                       required="true">
+                        <!-- Option Set.-->
+                        <option value="">COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SELECT_AN_OPTION</option>
+                        <option value="1">COM_SERMONDISTRIBUTOR_LOCAL_LISTING_MANUAL_LOCAL_SELECTION</option>
+                        <option value="2">COM_SERMONDISTRIBUTOR_LOCAL_LISTING_DYNAMIC_AUTOMATIC_BUILD</option>
+                </field>
+                <!-- Size Field. Type: Text. (joomla)-->
+                <field type="text"
+                       name="size"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_LABEL"
+                       size="50"
+                       maxlength="150"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_DESCRIPTION"
+                       class="text_area"
+                       required="true"
+                       filter="INT"
+                       message="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_MESSAGE"
+                       hint="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_HINT" />
+                <!-- External_source Field. Type: Externalsource. (custom)-->
+                <field type="externalsource"
+                       name="external_source"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_DESCRIPTION"
+                       class="list_class span12"
+                       multiple="false"
+                       default="0"
+                       required="true"
+                       button="true" />
+                <!-- Key Field. Type: Text. (joomla)-->
+                <field type="text"
+                       name="key"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_LABEL"
+                       size="50"
+                       maxlength="150"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_DESCRIPTION"
+                       class="text_area span12"
+                       required="true"
+                       filter="STRING"
+                       message="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_MESSAGE"
+                       hint="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_HINT" />
+                <!-- Url Field. Type: Text. (joomla)-->
+                <field type="text"
+                       name="url"
+                       label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_URL_LABEL"
+                       size="256"
+                       maxlength="256"
+                       description="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_URL_DESCRIPTION"
+                       class="text_area span12"
+                       required="true"
+                       filter="STRING"
+                       message="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_URL_MESSAGE"
+                       hint="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_URL_HINT" />
+        </fieldset>
 	
 	<!-- Access Control Fields. -->
 	<fieldset name="accesscontrol">

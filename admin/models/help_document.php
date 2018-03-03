@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 20 of this MVC
-	@build			18th October, 2016
-	@created		13th July, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_document.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -79,7 +79,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 	{
 		if ($item = parent::getItem($pk))
 		{
-			if (!empty($item->params))
+			if (!empty($item->params) && !is_array($item->params))
 			{
 				// Convert the params field to an array.
 				$registry = new Registry;
@@ -558,8 +558,6 @@ class SermondistributorModelHelp_document extends JModelAdmin
 			$this->user 		= JFactory::getUser();
 			$this->table 		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
-			$this->contentType	= new JUcmType;
-			$this->type		= $this->contentType->getTypeByTable($this->tableClassName);
 			$this->canDo		= SermondistributorHelper::getActions('help_document');
 		}
 
@@ -584,7 +582,6 @@ class SermondistributorModelHelp_document extends JModelAdmin
 		}
 
 		$newIds = array();
-
 		// Parent exists so let's proceed
 		while (!empty($pks))
 		{
@@ -594,17 +591,11 @@ class SermondistributorModelHelp_document extends JModelAdmin
 			$this->table->reset();
 
 			// only allow copy if user may edit this item.
-
 			if (!$this->user->authorise('help_document.edit', $contexts[$pk]))
-
 			{
-
 				// Not fatal error
-
 				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-
 				continue;
-
 			}
 
 			// Check that the row actually exists
@@ -614,7 +605,6 @@ class SermondistributorModelHelp_document extends JModelAdmin
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else
@@ -624,7 +614,6 @@ class SermondistributorModelHelp_document extends JModelAdmin
 					continue;
 				}
 			}
-
 			list($this->table->title, $this->table->alias) = $this->_generateNewTitle($this->table->alias, $this->table->title);
 
 			// insert all set values
@@ -707,8 +696,6 @@ class SermondistributorModelHelp_document extends JModelAdmin
 			$this->user		= JFactory::getUser();
 			$this->table		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
-			$this->contentType	= new JUcmType;
-			$this->type		= $this->contentType->getTypeByTable($this->tableClassName);
 			$this->canDo		= SermondistributorHelper::getActions('help_document');
 		}
 
@@ -732,7 +719,6 @@ class SermondistributorModelHelp_document extends JModelAdmin
 			if (!$this->user->authorise('help_document.edit', $contexts[$pk]))
 			{
 				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
 				return false;
 			}
 
@@ -743,7 +729,6 @@ class SermondistributorModelHelp_document extends JModelAdmin
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		route.php
@@ -295,6 +295,47 @@ abstract class SermondistributorHelperRoute
 		}
 
 		if ($item = self::_findItem($needles, 'series'))
+		{
+			$link .= '&Itemid='.$item;
+		}
+
+		return $link;
+	}
+
+	/**
+	* @param int The route of the Api
+	*/
+	public static function getApiRoute($id = 0, $catid = 0)
+	{
+		if ($id > 0)
+		{
+			// Initialize the needel array.
+			$needles = array(
+				'api'  => array((int) $id)
+			);
+			// Create the link
+			$link = 'index.php?option=com_sermondistributor&view=api&id='. $id;
+		}
+		else
+		{
+			// Initialize the needel array.
+			$needles = array();
+			//Create the link but don't add the id.
+			$link = 'index.php?option=com_sermondistributor&view=api';
+		}
+		if ($catid > 1)
+		{
+			$categories = JCategories::getInstance('sermondistributor.api');
+			$category = $categories->get($catid);
+			if ($category)
+			{
+				$needles['category'] = array_reverse($category->getPath());
+				$needles['categories'] = $needles['category'];
+				$link .= '&catid='.$catid;
+			}
+		}
+
+		if ($item = self::_findItem($needles))
 		{
 			$link .= '&Itemid='.$item;
 		}

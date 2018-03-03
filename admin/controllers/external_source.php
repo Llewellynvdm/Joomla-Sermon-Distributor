@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 55 of this MVC
-	@build			17th July, 2017
-	@created		3rd November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -301,10 +301,10 @@ class SermondistributorControllerExternal_source extends JControllerForm
                 {
 			$append .= '&ref='.(string)$ref.'&refid='.(int)$refid;
 		}
-                elseif ($ref)
-                {
+		elseif ($ref)
+		{
 			$append .= '&ref='.(string)$ref;
-                }
+		}
 
 		if ($tmpl)
 		{
@@ -416,11 +416,11 @@ class SermondistributorControllerExternal_source extends JControllerForm
 		$this->ref 		= $this->input->get('ref', 0, 'word');
 		$this->refid 	= $this->input->get('refid', 0, 'int');
 
-                if ($this->ref || $this->refid)
-                {
-                        // to make sure the item is checkedin on redirect
-                        $this->task = 'save';
-                }
+		if ($this->ref || $this->refid)
+		{
+			// to make sure the item is checkedin on redirect
+			$this->task = 'save';
+		}
 
 		$saved = parent::save($key, $urlVar);
 

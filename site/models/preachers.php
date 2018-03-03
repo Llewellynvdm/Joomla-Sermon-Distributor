@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 17 of this MVC
-	@build			11th April, 2016
-	@created		5th November, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -56,15 +56,15 @@ class SermondistributorModelPreachers extends JModelList
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$this->user		= JFactory::getUser();
-		$this->userId		= $this->user->get('id');
-		$this->guest		= $this->user->get('guest');
-                $this->groups		= $this->user->get('groups');
-                $this->authorisedGroups	= $this->user->getAuthorisedGroups();
-		$this->levels		= $this->user->getAuthorisedViewLevels();
-		$this->app		= JFactory::getApplication();
-		$this->input		= $this->app->input;
-		$this->initSet		= true; 
+		$this->user = JFactory::getUser();
+		$this->userId = $this->user->get('id');
+		$this->guest = $this->user->get('guest');
+		$this->groups = $this->user->get('groups');
+		$this->authorisedGroups = $this->user->getAuthorisedGroups();
+		$this->levels = $this->user->getAuthorisedViewLevels();
+		$this->app = JFactory::getApplication();
+		$this->input = $this->app->input;
+		$this->initSet = true; 
 		// Get a db connection.
 		$db = JFactory::getDbo();
 
@@ -92,22 +92,37 @@ class SermondistributorModelPreachers extends JModelList
 	 */
 	public function getItems()
 	{
-		$user = JFactory::getUser();  
+		$user = JFactory::getUser();
+		// check if this user has permission to access item
+		if (!$user->authorise('site.preachers.access', 'com_sermondistributor'))
+		{
+			$app = JFactory::getApplication();
+			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_PREACHERS'), 'error');
+			// redirect away to the home page if no access allowed.
+			$app->redirect(JURI::root());
+			return false;
+		}  
 		// load parent items
 		$items = parent::getItems();
 
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// Convert the parameter fields into objects.
+		// Insure all item fields are adapted where needed.
 		if (SermondistributorHelper::checkArray($items))
 		{
+			// Load the JEvent Dispatcher
+			JPluginHelper::importPlugin('content');
+			$this->_dispatcher = JEventDispatcher::getInstance();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
 				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
-				// Make sure the content prepare plugins fire on description.
-				$item->description = JHtml::_('content.prepare',$item->description);
+				// Make sure the content prepare plugins fire on description
+				$_description = new stdClass();
+				$_description->text =& $item->description; // value must be in text
+				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
+				$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.preachers.description', &$_description, &$this->params, 0));
 				// Checking if description has uikit components that must be loaded.
 				$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
 				// set idPreacherSermonB to the $item object.
@@ -163,6 +178,9 @@ class SermondistributorModelPreachers extends JModelList
 		// check if there was data returned
 		if ($db->getNumRows())
 		{
+			// Load the JEvent Dispatcher
+			JPluginHelper::importPlugin('content');
+			$this->_dispatcher = JEventDispatcher::getInstance();
 			return $db->loadObjectList();
 		}
 		return false;

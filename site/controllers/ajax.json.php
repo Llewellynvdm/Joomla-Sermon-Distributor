@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -54,10 +54,10 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		$token 		= JSession::getFormToken();
 		$call_token	= $jinput->get('token', 0, 'ALNUM');
 		if($token == $call_token)
-                {
+		{
 			$task = $this->getTask();
 			switch($task)
-                        {
+			{
 				case 'theQueue':
 					try
 					{
@@ -139,14 +139,14 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				break;
 			}
 		}
-                else
-                {
+		else
+		{
 			if($callback = $jinput->get('callback', null, 'CMD'))
-                        {
+			{
 				echo $callback."(".json_encode(false).");";
 			}
-                        else
-                        {
+			else
+  			{
 				echo "(".json_encode(false).");";
 			}
 		}

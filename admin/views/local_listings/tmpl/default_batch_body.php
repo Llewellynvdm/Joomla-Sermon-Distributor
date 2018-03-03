@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 11 of this MVC
-	@build			31st March, 2017
-	@created		20th November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_batch_body.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	

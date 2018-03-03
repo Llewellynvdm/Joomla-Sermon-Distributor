@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -30,49 +30,22 @@ defined('_JEXEC') or die('Restricted access');
  * Sermondistributor component helper.
  */
 abstract class SermondistributorHelper
-{
-
-	/**
-	*	The Global Admin Event Method.
-	**/
-	public static function globalEvent($document)
-	{
-		self::loadExternalUpdateAjax($document);
-	} 
-
-	/**
-	* 	Load the External Update Ajax to page
-	**/
-	public static function loadExternalUpdateAjax($document)
-	{
-		$update = self::getNextUpdateValues(); // id, target, type
-		if ($update)
-		{
-			$document->addScriptDeclaration("
-			jQuery(window).load(function() {
-				theQueue(".$update.");
-			});
-			
-			function theQueue(id, target, type) {
-				var getUrl = '".JURI::root()."administrator/index.php?option=com_sermondistributor&task=ajax.theQueue&format=json';
-				if(target > 0 && type > 0 && id > 0){
-					var request = 'token=".JSession::getFormToken()."&tar='+target+'&list='+id+'&type='+type;
-				}
-				return jQuery.ajax({
-					type: 'GET',
-					url: getUrl,
-					dataType: 'jsonp',
-					data: request,
-					jsonp: 'callback'
-				});
-			}");
-		}
-	} 
+{  
 
 	/**
 	* 	The global params
 	**/
 	protected static $params = false;
+
+	/**
+	* 	Update Watcher
+	**/
+	public static $updateWatch = 1;
+
+	/**
+	* 	Update Watcher (if array is only one value)
+	**/
+	public static $updateWatch_ = 0;
 
 	/**
 	* 	The external source links auto
@@ -98,7 +71,7 @@ abstract class SermondistributorHelper
 	* 	The update errors
 	**/
 	protected static $updateErrors = array();
-			
+
 	/**
 	* 	prepare base64 string for url
 	**/
@@ -123,7 +96,7 @@ abstract class SermondistributorHelper
 		}
 		return $string;
 	}
-			
+
 	/**
 	* 	get Download links of a sermon
 	**/
@@ -324,14 +297,24 @@ abstract class SermondistributorHelper
 		return true;
 	}
 
-	protected static function getNextUpdateValues()
+	public static function getNextUpdateValues($asArray = false)
 	{
+		// find the next value
+		$next = false;
 		// get actual update values
 		$updates = self::getExternalListingUpdateKeys();
 		// get last update
 		$updatePath = self::getFilePath('path', 'updatelast', 'txt', 'vDm', JPATH_COMPONENT_ADMINISTRATOR);
 		if (($lastUpdate = @file_get_contents($updatePath)) !== FALSE && self::checkArray($updates))
 		{
+			// is it time to watch
+			if (self::$updateWatch_ > 0)
+			{
+				// increment the watch, as this is the start of new round
+				self::$updateWatch++;
+				// new round has started
+				self::$updateWatch_ = 0;
+			}
 			// now check what is next
 			$lastKey = array_search($lastUpdate, $updates);
 			if (!is_null($lastKey))
@@ -339,35 +322,55 @@ abstract class SermondistributorHelper
 				$nextKey = $lastKey + 1;
 				if (isset($updates[$nextKey]))
 				{
-					self::saveFile($updates[$nextKey],$updatePath);
-					return $updates[$nextKey];
+					$next = $updates[$nextKey];
+				}
+				else
+				{
+					// last item in array, so next round about to start
+					self::$updateWatch_++;
 				}
 			}
 		}
 		// rest and start with the first key
-		if (self::checkArray($updates))
+		if (!$next && self::checkArray($updates))
 		{
 			// save the first set
 			$start = reset($updates);
-			self::saveFile($start,$updatePath);
-			return $start;
+			$next = $start;
 		}
-		return false;
+		// save to file if next is found
+		if ($next)
+		{
+			self::writeFile($updatePath,$next);
+			// convert to array of needed
+			if ($asArray)
+			{
+				if (strpos($next, ',') !== false)
+				{
+					$next = array_map('trim', explode(',', $next));
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		return $next;
 	}
-			
+
 	/**
-	 * Get the file path or url
-	 * 
-	 * @param  string   $type                  The (url/path) type to return
-	 * @param  string   $target                The Params Target name (if set)
-	 * @param  string   $fileType             The kind of filename to generate (if not set no file name is generated)
-	 * @param  string   $key                   The key to adjust the filename (if not set ignored)
-	 * @param  string   $default              The default path if not set in Params (fallback path)
-	 * @param  bool     $createIfNotSet   The switch to create the folder if not found
-	 *
-	 * @return  string    On success the path or url is returned based on the type requested
-	 * 
-	 */
+	*	Get the file path or url
+	* 
+	*	@param  string   $type              The (url/path) type to return
+	*	@param  string   $target            The Params Target name (if set)
+	*	@param  string   $fileType          The kind of filename to generate (if not set no file name is generated)
+	*	@param  string   $key               The key to adjust the filename (if not set ignored)
+	*	@param  string   $default           The default path if not set in Params (fallback path)
+	*	@param  bool     $createIfNotSet    The switch to create the folder if not found
+	*
+	*	@return  string    On success the path or url is returned based on the type requested
+	* 
+	*/
 	public static function getFilePath($type = 'path', $target = 'filepath', $fileType = null, $key = '', $default = JPATH_SITE . '/images/', $createIfNotSet = true)
 	{
 		// get the global settings
@@ -379,7 +382,7 @@ abstract class SermondistributorHelper
 		// check the file path (revert to default only of not a hidden file path)
 		if ('hiddenfilepath' !== $target && strpos($filePath, JPATH_SITE) === false)
 		{
-			$filePath = JPATH_SITE . '/images/';
+			$filePath = $default;
 		}
 		jimport('joomla.filesystem.folder');
 		// create the folder if it does not exist
@@ -389,24 +392,29 @@ abstract class SermondistributorHelper
 		}
 		// setup the file name
 		$fileName = '';
+		// Get basic key
+		$basickey = 'Th!s_iS_n0t_sAfe_buT_b3tter_then_n0thiug';
+		if (method_exists(get_called_class(), "getCryptKey")) 
+		{
+			$basickey = self::getCryptKey('basic', $basickey);
+		}
+		// check the key
+		if (!self::checkString($key))
+		{
+			$key = 'vDm';
+		}
+		// set the file name
 		if (self::checkString($fileType))
 		{
-			// Get basic key
-			$basickey = 'Th!s_iS_n0t_sAfe_buT_b3tter_then_n0thiug';
-			if (method_exists(get_called_class(), "getCryptKey")) 
-			{
-				$basickey = self::getCryptKey('basic', $basickey);
-			}
-			// check the key
-			if (self::checkString($key))
-			{
-				$key = 'vDm';
-			}
 			// set the name
 			$fileName = trim(md5($type.$target.$basickey.$key) . '.' . trim($fileType, '.'));
 		}
+		else
+		{
+			$fileName = trim(md5($type.$target.$basickey.$key)) . '.txt';
+		}
 		// return the url
-		if ($type === 'url')
+		if ('url' === $type)
 		{
 			if (strpos($filePath, JPATH_SITE) !== false)
 			{
@@ -418,18 +426,44 @@ abstract class SermondistributorHelper
 		}
 		// sanitize the path
 		return '/' . trim( $filePath, '/' ) . '/' . $fileName;
-	}			
+	}
 
-	protected static function saveFile($data,$path_filename)
+
+	/**
+	*	Write a file to the server
+	* 
+	*	@param  string   $path    The path and file name where to safe the data
+	*	@param  string   $data    The data to safe
+	*
+	*	@return  bool true   On success
+	* 
+	*/
+	public static function writeFile($path, $data)
 	{
+		$klaar = false;
 		if (self::checkString($data))
 		{
-			$fp = fopen($path_filename, 'w');
-			fwrite($fp, $data);
-			fclose($fp);
-			return true;
+			// open the file
+			$fh = fopen($path, "w");
+			if (!is_resource($fh))
+			{
+				return $klaar;
+			}
+			// write to the file
+			if (fwrite($fh, $data))
+			{
+				// has been done
+				$klaar = true;
+			}
+			// close file.
+			fclose($fh);
 		}
-		return false;
+		return $klaar;
+	}
+
+	protected static function saveFile($data, $path_filename)
+	{
+		return self::writeFile($path_filename, $data);
 	}
 
 	public static function getExternalListingUpdateKeys($id = null, $updateMethod = 2, $returnType = 1)
@@ -837,7 +871,7 @@ abstract class SermondistributorHelper
 			}
 		}
 	}
-			
+
 	/**
 	 *	Change to nice fancy date
 	 */
@@ -895,14 +929,633 @@ abstract class SermondistributorHelper
 		&& ($timestamp <= PHP_INT_MAX)
 		&& ($timestamp >= ~PHP_INT_MAX);
 	}
-			 
+
+
+	/**
+	* 	Workers to load tasks
+	*
+	*	@var array 
+	*/
+	protected static $worker = array();
+
+	/**
+	*	Set a worker dynamic URLs
+	*
+	* 	@var array 
+	*/
+	protected static $workerURL = array();	
+
+	/**
+	*	Set a worker dynamic HEADERs
+	*
+	* 	@var array 
+	*/
+	protected static $workerHEADER = array();
+
+	/**
+	* 	Curl Error Notice
+	*
+	*	@var bool 
+	*/
+	protected static $curlErrorLoaded = false;
+
+	/**
+	* 	Set a worker url
+	* 
+	*	@param  string   $function    The function to target to perform the task
+	*	@param  string   $url            The url of where the task is to be performed
+	*
+	* 	@return  void
+	* 
+	*/
+	public static function setWorkerUrl(&$function, &$url)
+	{
+		// set the URL if found
+		if (self::checkString($url))
+		{
+			// make sure task function url is up
+			self::$workerURL[$function] = $url;
+		}
+	}
+
+	/**
+	* 	Set a worker headers
+	* 
+	*	@param  string   $function    The function to target to perform the task
+	*	@param  array    $headers    The headers needed for these workers/function
+	*
+	* 	@return  void
+	* 
+	*/
+	public static function setWorkerHeaders(&$function, &$headers)
+	{
+		// set the Headers if found
+		if (self::checkArray($headers))
+		{
+			// make sure task function headers are set
+			self::$workerHEADER[$function] = $headers;
+		}
+	}
+
+	/**
+	* 	Set a worker that needs to perform a task
+	* 
+	*	@param  mixed   $data         The data to pass to the task
+	*	@param  string   $function    The function to target to perform the task
+	*	@param  string   $url            The url of where the task is to be performed
+	*	@param  array    $headers    The headers needed for these workers/function
+	*
+	* 	@return  void
+	* 
+	*/
+	public static function setWorker($data, $function, $url = null, $headers = null)
+	{
+		// make sure task function is up
+		if (!isset(self::$worker[$function]))
+		{
+			self::$worker[$function] = array();
+		}
+		// load the task
+		self::$worker[$function][] = self::lock($data);
+		// set the Headers if found
+		if ($headers && !isset(self::$workerHEADER[$function]))
+		{
+			self::setWorkerHeaders($function, $headers);
+		}
+		// set the URL if found
+		if ($url && !isset(self::$workerURL[$function]))
+		{
+			self::setWorkerUrl($function, $url);
+		}
+	}
+
+	/**
+	*	Run set Workers
+	*
+	*	@param  string      $function    The function to target to perform the task
+	*	@param  string      $perTask    The amount of task per worker
+	* 	@param  function   $callback   The option to do a call back when task is completed
+	*	@param  int           $threadSize   The size of the thread
+	*
+	*	@return  bool true   On success
+	*
+	*/
+	public static function runWorker($function, $perTask = 50, $callback = null, $threadSize = 20)
+	{
+		// set task
+		$task = self::lock($function);
+		// build headers
+		$headers = array('VDM-TASK: ' .$task);
+		// build dynamic headers
+		if (isset(self::$workerHEADER[$function]) && self::checkArray(self::$workerHEADER[$function]))
+		{
+			foreach (self::$workerHEADER[$function] as $header)
+			{
+				$headers[] = $header;
+			}
+		}
+		// build worker options
+		$options = array();
+		// make sure worker is up
+		if (isset(self::$worker[$function]) && self::checkArray(self::$worker[$function]))
+		{
+			// this load method is for each
+			if (1 == $perTask)
+			{
+				// working with a string = 1
+				$headers[] = 'VDM-VALUE-TYPE: ' .self::lock(1);
+				// now load the options
+				foreach (self::$worker[$function] as $data)
+				{
+					$options[] = array(CURLOPT_HTTPHEADER => $headers, CURLOPT_POST => 1,  CURLOPT_POSTFIELDS => 'VDM_DATA='. $data);
+				}
+			}
+			// this load method is for bundles 
+			else
+			{
+				// working with an array = 2
+				$headers[] = 'VDM-VALUE-TYPE: ' .self::lock(2);
+				// now load the options
+				$work = array_chunk(self::$worker[$function], $perTask);
+				foreach ($work as $data)
+				{
+					$options[] = array(CURLOPT_HTTPHEADER => $headers, CURLOPT_POST => 1,  CURLOPT_POSTFIELDS => 'VDM_DATA='. implode('___VDM___', $data));
+				}
+			}
+			// relieve worker of task/function
+			self::$worker[$function] = array();
+		}
+		// do the execution
+		if (self::checkArray($options))
+		{
+			if (isset(self::$workerURL[$function]))
+			{
+				$url = self::$workerURL[$function];
+			}
+			else
+			{
+				$url = JURI::root() . '/index.php?option=com_sermondistributor&task=api.worker';
+			}
+			return self::curlMultiExec($url, $options, $callback, $threadSize);
+		}
+		return false;
+	}
+
+	/**
+	*	Do a multi curl execution of tasks
+	*
+	* 	@param  string      $url               The url of where the task is to be performed
+	*  	@param  array       $_options      The array of curl options/headers to set
+	*	@param  function   $callback      The option to do a call back when task is completed
+	*	@param  int           $threadSize   The size of the thread
+	*
+	* 	@return  bool true   On success
+	*
+	*/
+	public static function curlMultiExec(&$url, &$_options, $callback = null, $threadSize = 20)
+	{
+		// make sure we have curl available
+		if (!function_exists('curl_version'))
+		{
+			if (!self::$curlErrorLoaded)
+			{
+				// set the notice
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_HTWOCURL_NOT_FOUNDHTWOPPLEASE_SETUP_CURL_ON_YOUR_SYSTEM_OR_BSERMONDISTRIBUTORB_WILL_NOT_FUNCTION_CORRECTLYP'), 'Error');
+				// load the notice only once
+				self::$curlErrorLoaded = true;
+			}
+			return false;
+		}
+		// make sure we have an url
+		if (self::checkString($url))
+		{
+			// make sure the thread size isn't greater than the # of _options
+			$threadSize = (count($_options) < $threadSize) ? count($_options) : $threadSize;
+			// set the options
+			$options = array();
+			$options[CURLOPT_URL] = $url;
+			$options[CURLOPT_USERAGENT] = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12';
+			$options[CURLOPT_RETURNTRANSFER] = TRUE;
+			$options[CURLOPT_SSL_VERIFYPEER] = FALSE;
+			// start multi threading :)
+			$handle = curl_multi_init();
+			// start the first batch of requests
+			for ($i = 0; $i < $threadSize; $i++)
+			{
+				if (isset($_options[$i]))
+				{
+					$ch = curl_init();
+					foreach ($_options[$i] as $curlopt => $string)
+					{
+						$options[$curlopt] = $string;
+					}
+					curl_setopt_array($ch, $options);
+					curl_multi_add_handle($handle, $ch);
+				}
+			}
+			// we wait for all the calls to finish (should not take long)
+			do {
+				while(($execrun = curl_multi_exec($handle, $working)) == CURLM_CALL_MULTI_PERFORM);
+					if($execrun != CURLM_OK)
+						break;
+				// a request was just completed -- find out which one
+				while($done = curl_multi_info_read($handle))
+				{
+					if (is_callable($callback))
+					{
+						// $info = curl_getinfo($done['handle']);
+						// request successful. process output using the callback function.
+						$output = curl_multi_getcontent($done['handle']);
+						$callback($output);
+					}
+					$key = $i + 1;
+					if(isset($_options[$key]))
+					{
+						// start a new request (it's important to do this before removing the old one)
+						$ch = curl_init(); $i++;
+						// add options
+						foreach ($_options[$key] as $curlopt => $string)
+						{
+							$options[$curlopt] = $string;
+						}
+						curl_setopt_array($ch, $options);
+						curl_multi_add_handle($handle, $ch);
+						// remove options again
+						foreach ($_options[$key] as $curlopt => $string)
+						{
+							unset($options[$curlopt]);
+						}
+					}
+					// remove the curl handle that just completed
+					curl_multi_remove_handle($handle, $done['handle']);
+				}
+				// stop wasting CPU cycles and rest for a couple ms
+				usleep(10000);
+			} while ($working);
+			// close the curl multi thread
+			curl_multi_close($handle);
+			// okay done
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	* 	the locker
+	*
+	*  	@var array 
+	**/
+	protected static $locker = array();
+
+	/**
+	* 	the dynamic replacement salt
+	*
+	*  	@var array 
+	**/
+	protected static $globalSalt = array();
+
+	/**
+	* 	the timer
+	*
+	*  	@var object
+	**/
+	protected static $keytimer;
+
+	/**
+	*	To Lock string
+	*
+	*	@param string  $string       The string/array to lock
+	*	@param string  $key          The custom key to use
+	*	@param int      $salt           The switch to add salt and type of salt
+	*	@param int      $dynamic    The dynamic replacement array of salt build string
+	*	@param int      $urlencode  The switch to control url encoding
+	**/
+	public static function lock($string, $key = null, $salt = 2, $dynamic = null, $urlencode = true)
+	{
+		// get the global settings
+		if (!$key || !self::checkString($key))
+		{
+			// set temp timer
+			$timer = 2;
+			// if we have a timer use it
+			if ($salt > 0)
+			{
+				$timer = $salt;
+			}
+			if (method_exists(get_called_class(), "getCryptKey")) 
+			{
+				$key = self::getCryptKey('basic', self::salt($timer, $dynamic));
+			}
+			else
+			{
+				$key = self::salt($timer, $dynamic);
+			}
+		}
+		// check if we have a salt timer
+		if ($salt > 0)
+		{
+			$key .= self::salt($salt, $dynamic);
+		}
+		// get the locker settings
+		if (!isset(self::$locker[$key]) || !self::checkObject(self::$locker[$key]))
+		{
+			self::$locker[$key] = new FOFEncryptAes($key, 128);
+		}
+		// convert array to string
+		if (self::checkArray($string))
+		{
+			$string = serialize($string);
+		}
+		// prep for url
+		if ($urlencode)
+		{
+			return self::base64_urlencode(self::$locker[$key]->encryptString($string));
+		}
+		return self::$locker[$key]->encryptString($string);
+	}
+
+	/**
+	* 	To un-Lock string
+	*
+	*	@param string  $string       The string to unlock
+	*	@param string  $key          The custom key to use
+	*	@param int      $salt           The switch to add salt and type of salt
+	*	@param int      $dynamic    The dynamic replacement array of salt build string
+	*	@param int      $urlencode  The switch to control url decoding
+	**/
+	public static function unlock($string, $key = null, $salt = 2, $dynamic = null, $urlencode = true)
+	{
+		// get the global settings
+		if (!$key || !self::checkString($key))
+		{
+			// set temp timer
+			$timer = 2;
+			// if we have a timer use it
+			if ($salt > 0)
+			{
+				$timer = $salt;
+			}
+			// get secure key
+			if (method_exists(get_called_class(), "getCryptKey")) 
+			{
+				$key = self::getCryptKey('basic', self::salt($timer, $dynamic));
+			}
+			else
+			{
+				$key = self::salt($timer, $dynamic);
+			}
+		}
+		// check if we have a salt timer
+		if ($salt > 0)
+		{
+			$key .= self::salt($salt, $dynamic);
+		}
+		// get the locker settings
+		if (!isset(self::$locker[$key]) || !self::checkObject(self::$locker[$key]))
+		{
+			self::$locker[$key] = new FOFEncryptAes($key, 128);
+		}
+		// make sure we have real base64
+		if ($urlencode)
+		{
+			$string = self::base64_urldecode($string);
+		}
+		// basic decrypt string.
+		if (!empty($string) && !is_numeric($string) && $string === base64_encode(base64_decode($string, true)))
+		{
+			$string = rtrim(self::$locker[$key]->decryptString($string), "\0");
+			// convert serial string to array
+			if (self::is_serial($string))
+			{
+				$string = unserialize($string);
+			}
+		}
+		return $string;
+	}
+
+	/**
+	* 	The Salt
+	*
+	*	@param int      $type          The type of length the salt should be valid
+	*	@param int      $dynamic    The dynamic replacement array of salt build string
+	**/
+	public static function salt($type = 1, $dynamic = null)
+	{
+		// get dynamic replacement salt
+		$dynamic = self::getDynamicSalt($dynamic);
+		// get the key timer
+		if (!self::checkObject(self::$keytimer))
+		{
+			// load the date time object
+			self::$keytimer = new DateTime;
+			// set the correct time stamp
+			$vdmLocalTime = new DateTimeZone('Africa/Windhoek');
+			self::$keytimer->setTimezone($vdmLocalTime);
+		}
+		// set type
+		if ($type == 2)
+		{
+			// hour
+			$format = 'Y-m-d \o\n ' . self::periodFix(self::$keytimer->format('H'));
+		}
+		elseif ($type == 3)
+		{
+			// day
+			$format = 'Y-m-' . self::periodFix(self::$keytimer->format('d'));
+		}
+		elseif ($type == 4)
+		{
+			// month
+			$format = 'Y-' . self::periodFix(self::$keytimer->format('m'));
+		}
+		else
+		{
+			// minute
+			$format = 'Y-m-d \o\n H:' . self::periodFix(self::$keytimer->format('i'));
+		}
+		// get key
+		if (self::checkArray($dynamic))
+		{
+			return md5(str_replace(array_keys($dynamic), array_values($dynamic), self::$keytimer->format($format) . ' @ VDM.I0'));
+		}
+		return md5(self::$keytimer->format($format) . ' @ VDM.I0');
+	}
+
+	/**
+	*	The function to insure the salt is valid within the given period (third try)
+	*
+	*	@param int $main    The main number
+	*/
+	protected static function periodFix($main)
+	{
+		return round($main / 3) * 3;
+	}
+
+	/**
+	*	Check if a string is serialized
+	*	@param string $string
+	*/
+	public static function is_serial($string)
+	{
+		return (@unserialize($string) !== false);
+	}
+
+	/**
+	*	Get dynamic replacement salt
+	*/
+	public static function getDynamicSalt($dynamic = null)
+	{
+		// load global if not manually set
+		if (!self::checkArray($dynamic))
+		{
+			return self::getGlobalSalt();
+		}
+		// return manual values if set
+		else
+		{
+			return $dynamic;
+		}
+	}
+
+	/**
+	*	The random or dynamic secret salt
+	*/
+	public static function getSecretSalt($string = null, $size = 9)
+	{
+		// set the string
+		if (!$string)
+		{
+			// get random string 
+			$string = self::randomkey($size);
+		}
+		// convert string to array
+		$string = self::safeString($string);
+		// convert string to array
+		$array = str_split($string);
+		// insure only unique values are used
+		$array = array_unique($array);
+		// set the size
+		$size = ($size <= count($array)) ? $size : count($array);
+		// down size the 
+		return array_slice($array, 0, $size);
+	}
+
+	/**
+	*	Get global replacement salt
+	*/
+	public static function getGlobalSalt()
+	{
+		// load from memory if found
+		if (!self::checkArray(self::$globalSalt))
+		{
+			// get the global settings
+			if (!self::checkObject(self::$params))
+			{
+				self::$params = JComponentHelper::getParams('com_sermondistributor');
+			}
+			// check if we have a global dynamic replacement array available (format -->  ' 1->!,3->E,4->A')
+			$tmp = self::$params->get('dynamic_salt', null);
+			if (self::checkString($tmp) && strpos($tmp, ',') !== false && strpos($tmp, '->') !== false)
+			{
+				$salt = array_map('trim', (array) explode(',', $tmp));
+				if (self::checkArray($salt ))
+				{
+					foreach($salt as $replace)
+					{
+						$dynamic = array_map('trim', (array) explode('->', $replace));
+						if (isset($dynamic[0]) && isset($dynamic[1]))
+						{
+							self::$globalSalt[$dynamic[0]] = $dynamic[1];
+						}
+					}
+				}
+			}
+		}
+		// return global if found
+		if (self::checkArray(self::$globalSalt))
+		{
+			return self::$globalSalt;
+		}
+		// return default as fail safe
+		return array('1' => '!', '3' => 'E', '4' => 'A');	
+	}
+
+	/**
+	*	Close public protocol
+	*/
+	public static function closePublicProtocol($id, $public)
+	{
+		// get secret salt
+		$secretSalt = self::getSecretSalt(self::salt(1,array('4' => 'R','1' => 'E','2' => 'G','7' => 'J','8' => 'A')));
+		// get the key
+		$key = self::salt(1, $secretSalt);
+		// get secret salt
+		$secret = self::getSecretSalt();
+		// set the secret
+		$close['SECRET'] = self::lock($secret, $key, 1, array('1' => 's', '3' => 'R', '4' => 'D'));
+		// get the key
+		$key = self::salt(1, $secret);
+		// get the public key
+		$close['PUBLIC'] = self::lock($public, $key, 1, array('1' => '!', '3' => 'E', '4' => 'A'));
+		// get secret salt
+		$secretSalt = self::getSecretSalt($public);
+		// get the key
+		$key = self::salt(1, $secretSalt);
+		// get the ID
+		$close['ID'] = self::unlock($id, $key, 1, array('1' => 'i', '3' => 'e', '4' => 'B'));
+		// return closed values
+		return $close;
+	}
+
+	/**
+	*	Open public protocol
+	*/
+	public static function openPublicProtocol($SECRET, $ID, $PUBLIC)
+	{
+		// get secret salt
+		$secretSalt = self::getSecretSalt(self::salt(1,array('4' => 'R','1' => 'E','2' => 'G','7' => 'J','8' => 'A')));
+		// get the key
+		$key = self::salt(1, $secretSalt);
+		// get the $SECRET
+		$SECRET = self::unlock($SECRET, $key, 1, array('1' => 's', '3' => 'R', '4' => 'D'));
+		// get the key
+		$key = self::salt(1, $SECRET);
+		// get the public key
+		$open['public'] = self::unlock($PUBLIC, $key, 1, array('1' => '!', '3' => 'E', '4' => 'A'));
+		// get secret salt
+		$secretSalt = self::getSecretSalt($open['public']);
+		// get the key
+		$key = self::salt(1, $secretSalt);
+		// get the ID
+		$open['id'] = self::unlock($ID, $key, 1, array('1' => 'i', '3' => 'e', '4' => 'B'));
+		// return opened values
+		return $open;
+	}
 	/**
 	*	Load the Component xml manifest.
 	**/
-        public static function manifest()
+	public static function manifest()
 	{
-                $manifestUrl = JPATH_ADMINISTRATOR."/components/com_sermondistributor/sermondistributor.xml";
-                return simplexml_load_file($manifestUrl);
+		$manifestUrl = JPATH_ADMINISTRATOR."/components/com_sermondistributor/sermondistributor.xml";
+		return simplexml_load_file($manifestUrl);
+	}
+	
+	/**
+	*	Joomla version object
+	**/	
+	protected static $JVersion;
+	
+	/**
+	*	set/get Joomla version
+	**/
+	public static function jVersion()
+	{
+		// check if set
+		if (!self::checkObject(self::$JVersion))
+		{
+			self::$JVersion = new JVersion();
+		}
+		return self::$JVersion;
 	}
 
 	/**
@@ -917,22 +1570,22 @@ abstract class SermondistributorHelper
 		// get all Contributors (max 20)
 		$searchArray = range('0','20');
 		foreach($searchArray as $nr)
-                {
+ 		{
 			if ((NULL !== $params->get("showContributor".$nr)) && ($params->get("showContributor".$nr) == 1 || $params->get("showContributor".$nr) == 3))
-                        {
+			{
 				// set link based of selected option
 				if($params->get("useContributor".$nr) == 1)
-                                {
+         		{
 					$link_front = '<a href="mailto:'.$params->get("emailContributor".$nr).'" target="_blank">';
 					$link_back = '</a>';
 				}
-                                elseif($params->get("useContributor".$nr) == 2)
-                                {
+				elseif($params->get("useContributor".$nr) == 2)
+				{
 					$link_front = '<a href="'.$params->get("linkContributor".$nr).'" target="_blank">';
 					$link_back = '</a>';
 				}
-                                else
-                                {
+				else
+				{
 					$link_front = '';
 					$link_back = '';
 				}
@@ -1020,10 +1673,10 @@ abstract class SermondistributorHelper
 	**/
 	public static function addSubmenu($submenu)
 	{
-                // load user for access menus
-                $user = JFactory::getUser();
-                // load the submenus to sidebar
-                JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_DASHBOARD'), 'index.php?option=com_sermondistributor&view=sermondistributor', $submenu === 'sermondistributor');
+		// load user for access menus
+		$user = JFactory::getUser();
+		// load the submenus to sidebar
+		JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_DASHBOARD'), 'index.php?option=com_sermondistributor&view=sermondistributor', $submenu === 'sermondistributor');
 		if ($user->authorise('preacher.access', 'com_sermondistributor') && $user->authorise('preacher.submenu', 'com_sermondistributor'))
 		{
 			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_PREACHERS'), 'index.php?option=com_sermondistributor&view=preachers', $submenu === 'preachers');
@@ -1430,9 +2083,9 @@ abstract class SermondistributorHelper
 
 	public static function jsonToString($value, $sperator = ", ", $table = null)
 	{
-                // check if string is JSON
-                $result = json_decode($value, true);
-                if (json_last_error() === JSON_ERROR_NONE)
+		// check if string is JSON
+		$result = json_decode($value, true);
+		if (json_last_error() === JSON_ERROR_NONE)
 		{
 			// is JSON
 			if (self::checkArray($result))
@@ -1454,15 +2107,15 @@ abstract class SermondistributorHelper
 				}
 				return (string) implode($sperator,$result);
 			}
-                        return (string) json_decode($value);
-                }
-                return $value;
-        }
+			return (string) json_decode($value);
+		}
+		return $value;
+	}
 
 	public static function isPublished($id,$type)
 	{
 		if ($type == 'raw')
-                {
+		{
 			$type = 'item';
 		}
 		$db = JFactory::getDbo();
@@ -1475,7 +2128,7 @@ abstract class SermondistributorHelper
 		$db->execute();
 		$found = $db->getNumRows();
 		if($found)
-                {
+		{
 			return true;
 		}
 		return false;
@@ -1492,33 +2145,33 @@ abstract class SermondistributorHelper
 		$db->execute();
 		$found = $db->getNumRows();
 		if($found)
-                {
+  		{
 			return $db->loadResult();
 		}
 		return $id;
 	}
 
-        /**
+	/**
 	*	Get the actions permissions
 	**/
-        public static function getActions($view,&$record = null,$views = null)
+	public static function getActions($view,&$record = null,$views = null)
 	{
 		jimport('joomla.access.access');
 
 		$user	= JFactory::getUser();
 		$result	= new JObject;
 		$view	= self::safeString($view);
-                if (self::checkString($views))
-                {
+		if (self::checkString($views))
+		{
 			$views = self::safeString($views);
-                }
+ 		}
 		// get all actions from component
 		$actions = JAccess::getActions('com_sermondistributor', 'component');
-                // set acctions only set in component settiongs
-                $componentActions = array('core.admin','core.manage','core.options','core.export');
+		// set acctions only set in component settiongs
+		$componentActions = array('core.admin','core.manage','core.options','core.export');
 		// loop the actions and set the permissions
 		foreach ($actions as $action)
-                {
+		{
 			// set to use component default
 			$fallback= true;
 			if (self::checkObject($record) && isset($record->id) && $record->id > 0 && !in_array($action->name,$componentActions))
@@ -1597,17 +2250,17 @@ abstract class SermondistributorHelper
 				}
 				elseif (self::checkString($views) && isset($record->catid) && $record->catid > 0)
 				{
-                                        // make sure we use the core. action check for the categories
-                                        if (strpos($action->name,$view) !== false && strpos($action->name,'core.') === false ) {
-                                                $coreCheck		= explode('.',$action->name);
-                                                $coreCheck[0]	= 'core';
-                                                $categoryCheck	= implode('.',$coreCheck);
-                                        }
-                                        else
-                                        {
-                                                $categoryCheck = $action->name;
-                                        }
-                                        // The record has a category. Check the category permissions.
+					// make sure we use the core. action check for the categories
+					if (strpos($action->name,$view) !== false && strpos($action->name,'core.') === false ) {
+						$coreCheck		= explode('.',$action->name);
+						$coreCheck[0]	= 'core';
+						$categoryCheck	= implode('.',$coreCheck);
+					}
+					else
+					{
+						$categoryCheck = $action->name;
+					}
+					// The record has a category. Check the category permissions.
 					$catpermission = $user->authorise($categoryCheck, 'com_sermondistributor.'.$views.'.category.' . (int) $record->catid);
 					if (!$catpermission && !is_null($catpermission))
 					{
@@ -1693,20 +2346,43 @@ abstract class SermondistributorHelper
 	/**
 	*	Get any component's model
 	**/
-	public static function getModel($name, $path = JPATH_COMPONENT_ADMINISTRATOR, $component = 'sermondistributor')
+	public static function getModel($name, $path = JPATH_COMPONENT_ADMINISTRATOR, $component = 'Sermondistributor', $config = array())
 	{
+		// fix the name
+		$name = self::safeString($name);
+		// full path
+		$fullPath = $path . '/models';
+		// set prefix
+		$prefix = $component.'Model';
 		// load the model file
-		JModelLegacy::addIncludePath( $path . '/models' );
+		JModelLegacy::addIncludePath($fullPath, $prefix);
 		// get instance
-		$model = JModelLegacy::getInstance( $name, $component.'Model' );
-		// if model not found
+		$model = JModelLegacy::getInstance($name, $prefix, $config);
+		// if model not found (strange)
 		if ($model == false)
 		{
-			// build class name
-			$class = $prefix.$name;
-			// initilize the model
-			new $class();
-			$model = JModelLegacy::getInstance($name, $prefix);
+			jimport('joomla.filesystem.file');
+			// get file path
+			$filePath = $path.'/'.$name.'.php';
+			$fullPath = $fullPath.'/'.$name.'.php';
+			// check if it exists
+			if (JFile::exists($filePath))
+			{
+				// get the file
+				require_once $filePath;
+			}
+			elseif (JFile::exists($fullPath))
+			{
+				// get the file
+				require_once $fullPath;
+			}
+			// build class names
+			$modelClass = $prefix.$name;
+			if (class_exists($modelClass))
+			{
+				// initialize the model
+				return new $modelClass($config);
+			}
 		}
 		return $model;
 	}
@@ -1897,6 +2573,31 @@ abstract class SermondistributorHelper
 		}
 		return false;
 	}
+	
+	/**
+	*	Check if we are connected
+	*	Thanks https://stackoverflow.com/a/4860432/1429677
+	*
+	*	@returns bool true on success
+	**/
+	public static function isConnected()
+	{
+		// If example.com is down, then probably the whole internet is down, since IANA maintains the domain. Right?
+		$connected = @fsockopen("www.example.com", 80); 
+                // website, port  (try 80 or 443)
+		if ($connected)
+		{
+			//action when connected
+			$is_conn = true;
+			fclose($connected);
+		}
+		else
+		{
+			//action in connection failure
+			$is_conn = false;
+		}
+		return $is_conn;
+	}
 
 	public static function mergeArrays($arrays)
 	{
@@ -1963,8 +2664,8 @@ abstract class SermondistributorHelper
 			$string = self::replaceNumbers($string);
 		}
 		// 0nly continue if we have a string
-                if (self::checkString($string))
-                {
+		if (self::checkString($string))
+		{
 			// create file name without the extention that is safe
 			if ($type === 'filename')
 			{
@@ -1987,12 +2688,12 @@ abstract class SermondistributorHelper
 			$string = preg_replace("/[^A-Za-z ]/", '', $string);
 			// select final adaptations
 			if ($type === 'L' || $type === 'strtolower')
-                        {
-                                // replace white space with underscore
-                                $string = preg_replace('/\s+/', $spacer, $string);
-                                // default is to return lower
-                                return strtolower($string);
-                        }
+			{
+				// replace white space with underscore
+				$string = preg_replace('/\s+/', $spacer, $string);
+				// default is to return lower
+				return strtolower($string);
+			}
 			elseif ($type === 'W')
 			{
 				// return a string with all first letter of each word uppercase(no undersocre)
@@ -2013,21 +2714,21 @@ abstract class SermondistributorHelper
 				// return a string with all the uppercase(no undersocre)
 				return strtoupper($string);
 			}
-                        elseif ($type === 'U' || $type === 'strtoupper')
-                        {
-                                // replace white space with underscore
-                                $string = preg_replace('/\s+/', $spacer, $string);
-                                // return all upper
-                                return strtoupper($string);
-                        }
-                        elseif ($type === 'F' || $type === 'ucfirst')
-                        {
-                                // replace white space with underscore
-                                $string = preg_replace('/\s+/', $spacer, $string);
-                                // return with first caracter to upper
-                                return ucfirst(strtolower($string));
-                        }
-                        elseif ($type === 'cA' || $type === 'cAmel' || $type === 'camelcase')
+			elseif ($type === 'U' || $type === 'strtoupper')
+			{
+					// replace white space with underscore
+					$string = preg_replace('/\s+/', $spacer, $string);
+					// return all upper
+					return strtoupper($string);
+			}
+			elseif ($type === 'F' || $type === 'ucfirst')
+			{
+					// replace white space with underscore
+					$string = preg_replace('/\s+/', $spacer, $string);
+					// return with first caracter to upper
+					return ucfirst(strtolower($string));
+			}
+			elseif ($type === 'cA' || $type === 'cAmel' || $type === 'camelcase')
 			{
 				// convert all words to first letter uppercase
 				$string = ucwords(strtolower($string));
@@ -2036,14 +2737,14 @@ abstract class SermondistributorHelper
 				// now return first letter lowercase
 				return lcfirst($string);
 			}
-                        // return string
-                        return $string;
-                }
-                // not a string
-                return '';
+			// return string
+			return $string;
+		}
+		// not a string
+		return '';
 	}
 
-        public static function htmlEscape($var, $charset = 'UTF-8', $shorten = false, $length = 40)
+	public static function htmlEscape($var, $charset = 'UTF-8', $shorten = false, $length = 40)
 	{
 		if (self::checkString($var))
 		{
@@ -2054,11 +2755,11 @@ abstract class SermondistributorHelper
                                 return self::shorten($string,$length);
 			}
 			return $string;
-                }
+		}
 		else
 		{
 			return '';
-                }
+		}
 	}
 
 	public static function replaceNumbers($string)

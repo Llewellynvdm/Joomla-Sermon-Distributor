@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 48 of this MVC
-	@build			28th November, 2016
-	@created		8th November, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -73,7 +73,7 @@ defined('_JEXEC') or die('Restricted access');
 	</div>
 <?php endif; ?>
 
-<?php if (isset($this->items) && sermondistributorHelper::checkArray($this->items) && count($this->items) > 4): ?>
+<?php if (isset($this->items) && isset($this->pagination) && isset($this->pagination->pagesTotal) && $this->pagination->pagesTotal > 1): ?>
 <form name="adminForm" method="post">
 	<div class="pagination">
 		<?php if ($this->params->def('show_pagination_results', 1)) : ?>

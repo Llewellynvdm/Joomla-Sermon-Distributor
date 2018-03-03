@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
@@ -914,6 +914,8 @@ class com_sermondistributorInstallerScript
 	 */
 	function postflight($type, $parent)
 	{
+		// get application
+		$app = JFactory::getApplication();
 		// set the default component settings
 		if ($type == 'install')
 		{
@@ -986,9 +988,9 @@ class com_sermondistributorInstallerScript
 			$external_source->type_title = 'Sermondistributor External_source';
 			$external_source->type_alias = 'com_sermondistributor.external_source';
 			$external_source->table = '{"special": {"dbtable": "#__sermondistributor_external_source","key": "id","type": "External_source","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
-			$external_source->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","dropboxoptions":"dropboxoptions","update_timer":"update_timer","oauthtoken":"oauthtoken","permissiontype":"permissiontype","not_required":"not_required"}}';
+			$external_source->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","update_timer":"update_timer","dropboxoptions":"dropboxoptions","permissiontype":"permissiontype","oauthtoken":"oauthtoken","not_required":"not_required"}}';
 			$external_source->router = 'SermondistributorHelperRoute::getExternal_sourceRoute';
-			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","externalsources","update_method","build","dropboxoptions","update_timer","not_required"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","externalsources","update_method","build","update_timer","dropboxoptions","not_required"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Set the object into the content types table.
 			$external_source_Inserted = $db->insertObject('#__content_types', $external_source);
@@ -1018,11 +1020,25 @@ class com_sermondistributorInstallerScript
 			$help_document_Inserted = $db->insertObject('#__content_types', $help_document);
 
 
+			// Install the global extenstion assets permission.
+			$query = $db->getQuery(true);
+			// Field to update.
+			$fields = array(
+				$db->quoteName('rules') . ' = ' . $db->quote('{"site.preachers.access":{"1":1},"site.preacher.access":{"1":1},"site.categories.access":{"1":1},"site.category.access":{"1":1},"site.serieslist.access":{"1":1},"site.series.access":{"1":1},"site.sermon.access":{"1":1}}'),
+			);
+			// Condition.
+			$conditions = array(
+				$db->quoteName('name') . ' = ' . $db->quote('com_sermondistributor')
+			);
+			$query->update($db->quoteName('#__assets'))->set($fields)->where($conditions);
+			$db->setQuery($query);
+			$allDone = $db->execute();
+
 			// Install the global extenstion params.
 			$query = $db->getQuery(true);
 			// Field to update.
 			$fields = array(
-				$db->quoteName('params') . ' = ' . $db->quote('{"autorName":"Llewellyn van der Merwe","autorEmail":"joomla@vdm.io","player":"1","add_to_button":"0","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"0","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"0","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"1","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","max_execution_time":"500","check_in":"-1 day","save_history":"1","history_limit":"10","uikit_load":"1","uikit_min":"","uikit_style":""}'),
+				$db->quoteName('params') . ' = ' . $db->quote('{"autorName":"Llewellyn van der Merwe","autorEmail":"joomla@vdm.io","player":"1","add_to_button":"0","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"0","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"0","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"1","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","max_execution_time":"500","check_in":"-1 day","save_history":"1","history_limit":"10","uikit_version":"2","uikit_load":"1","uikit_min":"","uikit_style":""}'),
 			);
 			// Condition.
 			$conditions = array(
@@ -1193,9 +1209,9 @@ class com_sermondistributorInstallerScript
 			$external_source->type_title = 'Sermondistributor External_source';
 			$external_source->type_alias = 'com_sermondistributor.external_source';
 			$external_source->table = '{"special": {"dbtable": "#__sermondistributor_external_source","key": "id","type": "External_source","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
-			$external_source->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","dropboxoptions":"dropboxoptions","update_timer":"update_timer","oauthtoken":"oauthtoken","permissiontype":"permissiontype","not_required":"not_required"}}';
+			$external_source->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","update_timer":"update_timer","dropboxoptions":"dropboxoptions","permissiontype":"permissiontype","oauthtoken":"oauthtoken","not_required":"not_required"}}';
 			$external_source->router = 'SermondistributorHelperRoute::getExternal_sourceRoute';
-			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","externalsources","update_method","build","dropboxoptions","update_timer","not_required"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","externalsources","update_method","build","update_timer","dropboxoptions","not_required"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Check if external_source type is already in content_type DB.
 			$external_source_id = null;
@@ -1366,7 +1382,7 @@ class com_sermondistributorInstallerScript
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 1.4.1 Was Successful! Let us know if anything is not working as expected.</h3>';
+				<h3>Upgrade to Version 2.0.0 Was Successful! Let us know if anything is not working as expected.</h3>';
 		}
 	}
 }

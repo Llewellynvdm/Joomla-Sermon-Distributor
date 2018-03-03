@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 17 of this MVC
-	@build			11th April, 2016
-	@created		5th November, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -48,7 +48,7 @@ $heading = ($this->params->get('page_heading')) ? $this->params->get('page_headi
 	</div>
 <?php endif; ?>
 
-<?php if (isset($this->items) && sermondistributorHelper::checkArray($this->items) && count($this->items) > 4): ?>
+<?php if (isset($this->items) && isset($this->pagination) && isset($this->pagination->pagesTotal) && $this->pagination->pagesTotal > 1): ?>
 <form name="adminForm" method="post">
 	<div class="pagination">
 		<?php if ($this->params->def('show_pagination_results', 1)) : ?>

@@ -9,9 +9,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 55 of this MVC
-	@build			17th July, 2017
-	@created		3rd November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.js
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -86,6 +86,9 @@ jQuery(document).ready(function()
 	var externalsources_vvvvvwv = jQuery("#jform_externalsources").val();
 	var dropboxoptions_vvvvvwv = jQuery("#jform_dropboxoptions input[type='radio']:checked").val();
 	vvvvvwv(permissiontype_vvvvvwv,externalsources_vvvvvwv,dropboxoptions_vvvvvwv);
+
+	var update_method_vvvvvww = jQuery("#jform_update_method input[type='radio']:checked").val();
+	vvvvvww(update_method_vvvvvww);
 });
 
 // the vvvvvwe function
@@ -996,6 +999,20 @@ function dropboxoptions_vvvvvwv_SomeFunc(dropboxoptions_vvvvvwv)
 		return true;
 	}
 	return false;
+}
+
+// the vvvvvww function
+function vvvvvww(update_method_vvvvvww)
+{
+	// set the function logic
+	if (update_method_vvvvvww == 2)
+	{
+		jQuery('.apicronjob_note').closest('.control-group').show();
+	}
+	else
+	{
+		jQuery('.apicronjob_note').closest('.control-group').hide();
+	}
 }
 
 // update required fields

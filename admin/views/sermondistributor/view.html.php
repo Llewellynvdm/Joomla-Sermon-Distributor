@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -40,25 +40,25 @@ class SermondistributorViewSermondistributor extends JViewLegacy
 	 */
 	function display($tpl = null)
 	{
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-                {
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		};
 		// Assign data to the view
 		$this->icons			= $this->get('Icons');
 		$this->contributors		= SermondistributorHelper::getContributors();
-		$this->github	= $this->get('Github');
-		$this->wiki	= $this->get('Wiki');
-		$this->noticeboard	= $this->get('Noticeboard');
-		$this->readme	= $this->get('Readme');
+		$this->github = $this->get('Github');
+		$this->wiki = $this->get('Wiki');
+		$this->noticeboard = $this->get('Noticeboard');
+		$this->readme = $this->get('Readme');
 		
 		// get the manifest details of the component
 		$this->manifest = SermondistributorHelper::manifest();
 		
 		// Set the toolbar
 		$this->addToolBar();
+		
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new Exception(implode("\n", $errors), 500);
+		}
 
 		// Display the template
 		parent::display($tpl);
@@ -75,15 +75,15 @@ class SermondistributorViewSermondistributor extends JViewLegacy
 		$canDo = SermondistributorHelper::getActions('sermondistributor');
 		JToolBarHelper::title(JText::_('COM_SERMONDISTRIBUTOR_DASHBOARD'), 'grid-2');
 
-                // set help url for this view if found
-                $help_url = SermondistributorHelper::getHelpUrl('sermondistributor');
-                if (SermondistributorHelper::checkString($help_url))
-                {
+		// set help url for this view if found
+		$help_url = SermondistributorHelper::getHelpUrl('sermondistributor');
+		if (SermondistributorHelper::checkString($help_url))
+		{
 			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
-                }
+		}
 
 		if ($canDo->get('core.admin') || $canDo->get('core.options'))
-                {
+		{
 			JToolBarHelper::preferences('com_sermondistributor');
 		}
 	}

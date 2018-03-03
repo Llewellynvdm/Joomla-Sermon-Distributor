@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 9 of this MVC
-	@build			9th July, 2017
-	@created		29th October, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -79,7 +79,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	{
 		if ($item = parent::getItem($pk))
 		{
-			if (!empty($item->params))
+			if (!empty($item->params) && !is_array($item->params))
 			{
 				// Convert the params field to an array.
 				$registry = new Registry;
@@ -518,8 +518,6 @@ class SermondistributorModelStatistic extends JModelAdmin
 			$this->user 		= JFactory::getUser();
 			$this->table 		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
-			$this->contentType	= new JUcmType;
-			$this->type		= $this->contentType->getTypeByTable($this->tableClassName);
 			$this->canDo		= SermondistributorHelper::getActions('statistic');
 		}
 
@@ -544,7 +542,6 @@ class SermondistributorModelStatistic extends JModelAdmin
 		}
 
 		$newIds = array();
-
 		// Parent exists so let's proceed
 		while (!empty($pks))
 		{
@@ -554,17 +551,11 @@ class SermondistributorModelStatistic extends JModelAdmin
 			$this->table->reset();
 
 			// only allow copy if user may edit this item.
-
 			if (!$this->user->authorise('statistic.edit', $contexts[$pk]))
-
 			{
-
 				// Not fatal error
-
 				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-
 				continue;
-
 			}
 
 			// Check that the row actually exists
@@ -574,7 +565,6 @@ class SermondistributorModelStatistic extends JModelAdmin
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else
@@ -585,7 +575,11 @@ class SermondistributorModelStatistic extends JModelAdmin
 				}
 			}
 
-			$this->table->filename = $this->generateUniqe('filename',$this->table->filename);
+			// Only for strings
+			if (SermondistributorHelper::checkString($this->table->filename) && !is_numeric($this->table->filename))
+			{
+				$this->table->filename = $this->generateUniqe('filename',$this->table->filename);
+			}
 
 			// insert all set values
 			if (SermondistributorHelper::checkArray($values))
@@ -667,8 +661,6 @@ class SermondistributorModelStatistic extends JModelAdmin
 			$this->user		= JFactory::getUser();
 			$this->table		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
-			$this->contentType	= new JUcmType;
-			$this->type		= $this->contentType->getTypeByTable($this->tableClassName);
 			$this->canDo		= SermondistributorHelper::getActions('statistic');
 		}
 
@@ -692,7 +684,6 @@ class SermondistributorModelStatistic extends JModelAdmin
 			if (!$this->user->authorise('statistic.edit', $contexts[$pk]))
 			{
 				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
 				return false;
 			}
 
@@ -703,7 +694,6 @@ class SermondistributorModelStatistic extends JModelAdmin
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else

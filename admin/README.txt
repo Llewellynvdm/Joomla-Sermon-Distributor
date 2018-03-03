@@ -1,4 +1,4 @@
-# Sermon Distributor (1.4.1)
+# Sermon Distributor (2.0.x)
 
  ![Sermon Distributor image](https://raw.githubusercontent.com/SermonDistributor/Joomla-3-Component/master/admin/assets/images/vdm-component.jpg "The Sermon Distributor")
 
@@ -23,32 +23,32 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 24th August, 2017
-+ *Version*: 1.4.1
++ *Last Build*: 3rd March, 2018
++ *Version*: 2.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Build Time :hourglass:
 
-**177 Hours** or **22 Eight Hour Days** (actual time the author saved -
+**180 Hours** or **23 Eight Hour Days** (actual time the author saved -
 due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder))
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **63481**
-+ *File count*: **443**
-+ *Folder count*: **90**
++ *Line count*: **64404**
++ *File count*: **451**
++ *Folder count*: **93**
 
-**117 Hours** or **15 Eight Hour Days** (the actual time the author spent)
+**118 Hours** or **14 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
-> **debugging @44hours** = codingtime / 4;
-> **planning @25hours** = codingtime / 7;
+> **debugging @45hours** = codingtime / 4;
+> **planning @26hours** = codingtime / 7;
 > **mapping @18hours** = codingtime / 10;
 > **office @30hours** = codingtime / 6;)
 
-**294 Hours** or **37 Eight Hour Days**
+**298 Hours** or **37 Eight Hour Days**
 (a total of the realistic time frame for this project)
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
@@ -63,5 +63,5 @@ Project duration: **7.4 weeks** or **1.5 months**
 
 Come on buy me a coffee :)
  * PayPal: [paypal.me/payvdm](https://www.paypal.me/payvdm)
- * Bitcoin: 1FLxiT6wyxgZ3boeviLkYJ1DRpp41uzpxa
- * Ethereum: 0x243392daa3c9c8bc841fcacf7c7f72541cb16823
+ * Bitcoin: 18vURxYpPFjvNk8BnUy1ovCAyQmY3MzkSf
+ * Ethereum: 0x9548144662b47327c954f3e214edb96662d51218

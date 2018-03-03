@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 20 of this MVC
-	@build			28th November, 2016
-	@created		5th November, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categories.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -56,15 +56,15 @@ class SermondistributorModelCategories extends JModelList
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$this->user		= JFactory::getUser();
-		$this->userId		= $this->user->get('id');
-		$this->guest		= $this->user->get('guest');
-                $this->groups		= $this->user->get('groups');
-                $this->authorisedGroups	= $this->user->getAuthorisedGroups();
-		$this->levels		= $this->user->getAuthorisedViewLevels();
-		$this->app		= JFactory::getApplication();
-		$this->input		= $this->app->input;
-		$this->initSet		= true; 
+		$this->user = JFactory::getUser();
+		$this->userId = $this->user->get('id');
+		$this->guest = $this->user->get('guest');
+		$this->groups = $this->user->get('groups');
+		$this->authorisedGroups = $this->user->getAuthorisedGroups();
+		$this->levels = $this->user->getAuthorisedViewLevels();
+		$this->app = JFactory::getApplication();
+		$this->input = $this->app->input;
+		$this->initSet = true; 
 		// Get a db connection.
 		$db = JFactory::getDbo();
 
@@ -110,9 +110,12 @@ class SermondistributorModelCategories extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// Convert the parameter fields into objects.
+		// Insure all item fields are adapted where needed.
 		if (SermondistributorHelper::checkArray($items))
 		{
+	// Load the JEvent Dispatcher
+	JPluginHelper::importPlugin('content');
+	$this->_dispatcher = JEventDispatcher::getInstance();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
@@ -179,6 +182,9 @@ class SermondistributorModelCategories extends JModelList
 		// check if there was data returned
 		if ($db->getNumRows())
 		{
+	// Load the JEvent Dispatcher
+	JPluginHelper::importPlugin('content');
+	$this->_dispatcher = JEventDispatcher::getInstance();
 			return $db->loadObjectList();
 		}
 		return false;

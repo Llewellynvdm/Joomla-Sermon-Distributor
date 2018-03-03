@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -42,12 +42,12 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		JResponse::setHeader('Content-Disposition','attachment;filename="getajax.json"');
 		JResponse::setHeader("Access-Control-Allow-Origin", "*");
 		// load the tasks 
-		$this->registerTask('theQueue', 'ajax');
-		$this->registerTask('updateLocalListingExternal', 'ajax');
 		$this->registerTask('isNew', 'ajax');
 		$this->registerTask('isRead', 'ajax');
 		$this->registerTask('getBuildTable', 'ajax');
 		$this->registerTask('getSourceStatus', 'ajax');
+		$this->registerTask('getCronPath', 'ajax');
+		$this->registerTask('updateLocalListingExternal', 'ajax');
 	}
 
 	public function ajax()
@@ -58,91 +58,10 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		$token 		= JSession::getFormToken();
 		$call_token	= $jinput->get('token', 0, 'ALNUM');
 		if($token == $call_token)
-                {
+		{
 			$task = $this->getTask();
 			switch($task)
-                        {
-				case 'theQueue':
-					try
-					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
-						$listValue = $jinput->get('list', NULL, 'INT');
-						$tarValue = $jinput->get('tar', NULL, 'INT');
-						$typeValue = $jinput->get('type', NULL, 'INT');
-						if($listValue && $tarValue && $typeValue)
-						{
-							$result = $this->getModel('ajax')->theQueue($listValue, $tarValue, $typeValue);
-						}
-						else
-						{
-							$result = false;
-						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
-						{
-							echo $callback . "(".json_encode($result).");";
-						}
-						elseif($returnRaw)
-						{
-							echo json_encode($result);
-						}
-						else
-						{
-							echo "(".json_encode($result).");";
-						}
-					}
-					catch(Exception $e)
-					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
-						{
-							echo $callback."(".json_encode($e).");";
-						}
-						else
-						{
-							echo "(".json_encode($e).");";
-						}
-					}
-				break;
-				case 'updateLocalListingExternal':
-					try
-					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
-						$idValue = $jinput->get('id', NULL, 'INT');
-						$targetValue = $jinput->get('target', NULL, 'INT');
-						$typeValue = $jinput->get('type', NULL, 'INT');
-						$sleutelValue = $jinput->get('sleutel', NULL, 'CMD');
-						if($idValue && $targetValue && $typeValue && $sleutelValue && $user->id != 0)
-						{
-							$result = $this->getModel('ajax')->updateLocalListingExternal($idValue, $targetValue, $typeValue, $sleutelValue);
-						}
-						else
-						{
-							$result = false;
-						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
-						{
-							echo $callback . "(".json_encode($result).");";
-						}
-						elseif($returnRaw)
-						{
-							echo json_encode($result);
-						}
-						else
-						{
-							echo "(".json_encode($result).");";
-						}
-					}
-					catch(Exception $e)
-					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
-						{
-							echo $callback."(".json_encode($e).");";
-						}
-						else
-						{
-							echo "(".json_encode($e).");";
-						}
-					}
-				break;
+			{
 				case 'isNew':
 					try
 					{
@@ -296,16 +215,95 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						}
 					}
 				break;
+				case 'getCronPath':
+					try
+					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$getTypeValue = $jinput->get('getType', NULL, 'WORD');
+						if($getTypeValue && $user->id != 0)
+						{
+							$result = $this->getModel('ajax')->getCronPath($getTypeValue);
+						}
+						else
+						{
+							$result = false;
+						}
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
+						}
+						else
+						{
+							echo "(".json_encode($result).");";
+						}
+					}
+					catch(Exception $e)
+					{
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback."(".json_encode($e).");";
+						}
+						else
+						{
+							echo "(".json_encode($e).");";
+						}
+					}
+				break;
+				case 'updateLocalListingExternal':
+					try
+					{
+						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
+						$idValue = $jinput->get('id', NULL, 'INT');
+						$targetValue = $jinput->get('target', NULL, 'INT');
+						$typeValue = $jinput->get('type', NULL, 'INT');
+						$sleutelValue = $jinput->get('sleutel', NULL, 'CMD');
+						if($idValue && $targetValue && $typeValue && $sleutelValue && $user->id != 0)
+						{
+							$result = $this->getModel('ajax')->updateLocalListingExternal($idValue, $targetValue, $typeValue, $sleutelValue);
+						}
+						else
+						{
+							$result = false;
+						}
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback . "(".json_encode($result).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($result);
+						}
+						else
+						{
+							echo "(".json_encode($result).");";
+						}
+					}
+					catch(Exception $e)
+					{
+						if($callback = $jinput->get('callback', null, 'CMD'))
+						{
+							echo $callback."(".json_encode($e).");";
+						}
+						else
+						{
+							echo "(".json_encode($e).");";
+						}
+					}
+				break;
 			}
 		}
-                else
-                {
+		else
+		{
 			if($callback = $jinput->get('callback', null, 'CMD'))
-                        {
+			{
 				echo $callback."(".json_encode(false).");";
 			}
-                        else
-                        {
+			else
+			{
 				echo "(".json_encode(false).");";
 			}
 		}

@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons_fullwidth.php
@@ -31,10 +31,10 @@ defined('_JEXEC') or die('Restricted access');
 $items	= $displayData->vwcsermons;
 $user	= JFactory::getUser();
 $id	= $displayData->item->id;
-$edit	= "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
-$ref	= ($id) ? "&ref=series&refid=".$id : "";
-$new	= "index.php?option=com_sermondistributor&view=sermon&layout=edit".$ref;
-$can	= SermondistributorHelper::getActions('sermon');
+$edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
+$ref = ($id) ? "&ref=series&refid=".$id : "";
+$new = "index.php?option=com_sermondistributor&view=sermon&layout=edit".$ref;
+$can = SermondistributorHelper::getActions('sermon');
 
 ?>
 <div class="form-vertical">
@@ -120,26 +120,26 @@ $can	= SermondistributorHelper::getActions('sermon');
 		</td>
 		<?php if ($item->published == 1):?>
 			<td class="center"  data-value="1">
-				<span class="status-metro status-published" title="<?php echo JText::_('PUBLISHED');  ?>">
-					<?php echo JText::_('PUBLISHED'); ?>
+				<span class="status-metro status-published" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_PUBLISHED');  ?>">
+					<?php echo JText::_('COM_SERMONDISTRIBUTOR_PUBLISHED'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == 0):?>
 			<td class="center"  data-value="2">
-				<span class="status-metro status-inactive" title="<?php echo JText::_('INACTIVE');  ?>">
-					<?php echo JText::_('INACTIVE'); ?>
+				<span class="status-metro status-inactive" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_INACTIVE');  ?>">
+					<?php echo JText::_('COM_SERMONDISTRIBUTOR_INACTIVE'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == 2):?>
 			<td class="center"  data-value="3">
-				<span class="status-metro status-archived" title="<?php echo JText::_('ARCHIVED');  ?>">
-					<?php echo JText::_('ARCHIVED'); ?>
+				<span class="status-metro status-archived" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_ARCHIVED');  ?>">
+					<?php echo JText::_('COM_SERMONDISTRIBUTOR_ARCHIVED'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == -2):?>
 			<td class="center"  data-value="4">
-				<span class="status-metro status-trashed" title="<?php echo JText::_('ARCHIVED');  ?>">
-					<?php echo JText::_('ARCHIVED'); ?>
+				<span class="status-metro status-trashed" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_TRASHED');  ?>">
+					<?php echo JText::_('COM_SERMONDISTRIBUTOR_TRASHED'); ?>
 				</span>
 			</td>
 		<?php endif; ?>

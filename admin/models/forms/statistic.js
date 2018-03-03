@@ -9,9 +9,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 9 of this MVC
-	@build			9th July, 2017
-	@created		29th October, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.js
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	

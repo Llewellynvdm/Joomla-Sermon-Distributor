@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 90 of this MVC
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -46,39 +46,38 @@ class SermondistributorViewSermons extends JViewLegacy
 			SermondistributorHelper::addSubmenu('sermons');
 		}
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-                {
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
-
 		// Assign data to the view
-		$this->items 		= $this->get('Items');
-		$this->pagination 	= $this->get('Pagination');
-		$this->state		= $this->get('State');
-		$this->user 		= JFactory::getUser();
-		$this->listOrder	= $this->escape($this->state->get('list.ordering'));
-		$this->listDirn		= $this->escape($this->state->get('list.direction'));
-		$this->saveOrder	= $this->listOrder == 'ordering';
-                // get global action permissions
-		$this->canDo		= SermondistributorHelper::getActions('sermon');
-		$this->canEdit		= $this->canDo->get('sermon.edit');
-		$this->canState		= $this->canDo->get('sermon.edit.state');
-		$this->canCreate	= $this->canDo->get('sermon.create');
-		$this->canDelete	= $this->canDo->get('sermon.delete');
-		$this->canBatch	= $this->canDo->get('core.batch');
+		$this->items = $this->get('Items');
+		$this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+		$this->user = JFactory::getUser();
+		$this->listOrder = $this->escape($this->state->get('list.ordering'));
+		$this->listDirn = $this->escape($this->state->get('list.direction'));
+		$this->saveOrder = $this->listOrder == 'ordering';
+		// get global action permissions
+		$this->canDo = SermondistributorHelper::getActions('sermon');
+		$this->canEdit = $this->canDo->get('sermon.edit');
+		$this->canState = $this->canDo->get('sermon.edit.state');
+		$this->canCreate = $this->canDo->get('sermon.create');
+		$this->canDelete = $this->canDo->get('sermon.delete');
+		$this->canBatch = $this->canDo->get('core.batch');
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
 			$this->sidebar = JHtmlSidebar::render();
-                        // load the batch html
-                        if ($this->canCreate && $this->canEdit && $this->canState)
-                        {
-                                $this->batchDisplay = JHtmlBatch_::render();
-                        }
+			// load the batch html
+			if ($this->canCreate && $this->canEdit && $this->canState)
+			{
+				$this->batchDisplay = JHtmlBatch_::render();
+			}
+		}
+		
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new Exception(implode("\n", $errors), 500);
 		}
 
 		// Display the template
@@ -95,96 +94,96 @@ class SermondistributorViewSermons extends JViewLegacy
 	{
 		JToolBarHelper::title(JText::_('COM_SERMONDISTRIBUTOR_SERMONS'), 'book');
 		JHtmlSidebar::setAction('index.php?option=com_sermondistributor&view=sermons');
-                JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
+		JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
 
 		if ($this->canCreate)
-                {
+		{
 			JToolBarHelper::addNew('sermon.add');
 		}
 
-                // Only load if there are items
-                if (SermondistributorHelper::checkArray($this->items))
+		// Only load if there are items
+		if (SermondistributorHelper::checkArray($this->items))
 		{
-                        if ($this->canEdit)
-                        {
-                            JToolBarHelper::editList('sermon.edit');
-                        }
+			if ($this->canEdit)
+			{
+				JToolBarHelper::editList('sermon.edit');
+			}
 
-                        if ($this->canState)
-                        {
-                            JToolBarHelper::publishList('sermons.publish');
-                            JToolBarHelper::unpublishList('sermons.unpublish');
-                            JToolBarHelper::archiveList('sermons.archive');
+			if ($this->canState)
+			{
+				JToolBarHelper::publishList('sermons.publish');
+				JToolBarHelper::unpublishList('sermons.unpublish');
+				JToolBarHelper::archiveList('sermons.archive');
 
-                            if ($this->canDo->get('core.admin'))
-                            {
-                                JToolBarHelper::checkin('sermons.checkin');
-                            }
-                        }
+				if ($this->canDo->get('core.admin'))
+				{
+					JToolBarHelper::checkin('sermons.checkin');
+				}
+			}
 
-                        // Add a batch button
-                        if ($this->canBatch && $this->canCreate && $this->canEdit && $this->canState)
-                        {
-                                // Get the toolbar object instance
-                                $bar = JToolBar::getInstance('toolbar');
-                                // set the batch button name
-                                $title = JText::_('JTOOLBAR_BATCH');
-                                // Instantiate a new JLayoutFile instance and render the batch button
-                                $layout = new JLayoutFile('joomla.toolbar.batch');
-                                // add the button to the page
-                                $dhtml = $layout->render(array('title' => $title));
-                                $bar->appendButton('Custom', $dhtml, 'batch');
-                        } 
+			// Add a batch button
+			if ($this->canBatch && $this->canCreate && $this->canEdit && $this->canState)
+			{
+				// Get the toolbar object instance
+				$bar = JToolBar::getInstance('toolbar');
+				// set the batch button name
+				$title = JText::_('JTOOLBAR_BATCH');
+				// Instantiate a new JLayoutFile instance and render the batch button
+				$layout = new JLayoutFile('joomla.toolbar.batch');
+				// add the button to the page
+				$dhtml = $layout->render(array('title' => $title));
+				$bar->appendButton('Custom', $dhtml, 'batch');
+			} 
 
-                        if ($this->state->get('filter.published') == -2 && ($this->canState && $this->canDelete))
-                        {
-                            JToolbarHelper::deleteList('', 'sermons.delete', 'JTOOLBAR_EMPTY_TRASH');
-                        }
-                        elseif ($this->canState && $this->canDelete)
-                        {
-                                JToolbarHelper::trash('sermons.trash');
-                        }
+			if ($this->state->get('filter.published') == -2 && ($this->canState && $this->canDelete))
+			{
+				JToolbarHelper::deleteList('', 'sermons.delete', 'JTOOLBAR_EMPTY_TRASH');
+			}
+			elseif ($this->canState && $this->canDelete)
+			{
+				JToolbarHelper::trash('sermons.trash');
+			}
 
 			if ($this->canDo->get('core.export') && $this->canDo->get('sermon.export'))
 			{
 				JToolBarHelper::custom('sermons.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-                } 
+		} 
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('sermon.import'))
 		{
 			JToolBarHelper::custom('sermons.importData', 'upload', '', 'COM_SERMONDISTRIBUTOR_IMPORT_DATA', false);
 		}
 
-                // set help url for this view if found
-                $help_url = SermondistributorHelper::getHelpUrl('sermons');
-                if (SermondistributorHelper::checkString($help_url))
-                {
-                        JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
-                }
+		// set help url for this view if found
+		$help_url = SermondistributorHelper::getHelpUrl('sermons');
+		if (SermondistributorHelper::checkString($help_url))
+		{
+				JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
+		}
 
-                // add the options comp button
-                if ($this->canDo->get('core.admin') || $this->canDo->get('core.options'))
-                {
-                        JToolBarHelper::preferences('com_sermondistributor');
-                }
+		// add the options comp button
+		if ($this->canDo->get('core.admin') || $this->canDo->get('core.options'))
+		{
+			JToolBarHelper::preferences('com_sermondistributor');
+		}
 
-                if ($this->canState)
-                {
+		if ($this->canState)
+		{
 			JHtmlSidebar::addFilter(
 				JText::_('JOPTION_SELECT_PUBLISHED'),
 				'filter_published',
 				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
 			);
-                        // only load if batch allowed
-                        if ($this->canBatch)
-                        {
-                            JHtmlBatch_::addListSelection(
-                                JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_STATE'),
-                                'batch[published]',
-                                JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
-                            );
-                        }
+			// only load if batch allowed
+			if ($this->canBatch)
+			{
+				JHtmlBatch_::addListSelection(
+					JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_STATE'),
+					'batch[published]',
+					JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
+				);
+			}
 		}
 
 		JHtmlSidebar::addFilter(
@@ -196,11 +195,11 @@ class SermondistributorViewSermons extends JViewLegacy
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
 			JHtmlBatch_::addListSelection(
-                                JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_ACCESS'),
-                                'batch[access]',
-                                JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
+				JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_ACCESS'),
+				'batch[access]',
+				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
 			);
-                } 
+		}
 
 		// Category Filter.
 		JHtmlSidebar::addFilter(
@@ -315,12 +314,15 @@ class SermondistributorViewSermons extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_SERMONDISTRIBUTOR_SERMONS'));
-		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/sermons.css");
+		if (!isset($this->document))
+		{
+			$this->document = JFactory::getDocument();
+		}
+		$this->document->setTitle(JText::_('COM_SERMONDISTRIBUTOR_SERMONS'));
+		$this->document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/sermons.css", (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 	}
 
-        /**
+	/**
 	 * Escapes a value for output in a view script.
 	 *
 	 * @param   mixed  $var  The output to escape.
@@ -331,10 +333,10 @@ class SermondistributorViewSermons extends JViewLegacy
 	{
 		if(strlen($var) > 50)
 		{
-                        // use the helper htmlEscape method instead and shorten the string
+			// use the helper htmlEscape method instead and shorten the string
 			return SermondistributorHelper::htmlEscape($var, $this->_charset, true);
 		}
-                // use the helper htmlEscape method instead.
+		// use the helper htmlEscape method instead.
 		return SermondistributorHelper::htmlEscape($var, $this->_charset);
 	}
 
@@ -357,7 +359,7 @@ class SermondistributorViewSermons extends JViewLegacy
 			'a.source' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL'),
 			'a.id' => JText::_('JGRID_HEADING_ID')
 		);
-	} 
+	}
 
 	protected function getTheLink_typeSelections()
 	{

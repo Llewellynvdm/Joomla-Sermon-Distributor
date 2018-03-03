@@ -4,214 +4,191 @@
 	addfieldpath="/administrator/components/com_sermondistributor/models/fields"
 >
 	<fieldset name="details">
-		<!-- Default Fields. -->
-		<!-- Id Field. Type: Text (joomla) -->
-		<field
-			name="id"
-			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
-			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
-			readonly="true"
-		/>
-		<!-- Date Created Field. Type: Calendar (joomla) -->
-		<field
-			name="created"
-			type="calendar"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_CREATED_DATE_LABEL"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_CREATED_DATE_DESC"
-			size="22"
-
-			format="%Y-%m-%d %H:%M:%S"
-			filter="user_utc"
-		/>
-		<!-- User Created Field. Type: User (joomla) -->
-		<field
-			name="created_by"
-			type="user"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_CREATED_BY_LABEL"
-
-			description="COM_SERMONDISTRIBUTOR_PREACHER_CREATED_BY_DESC"
-		/>
-		<!-- Published Field. Type: List (joomla) -->
-		<field name="published" type="list" label="JSTATUS"
-			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
-
-			filter="intval" size="1" default="1" >
-			<option value="1">
-				JPUBLISHED</option>
-			<option value="0">
-				JUNPUBLISHED</option>
-			<option value="2">
-				JARCHIVED</option>
-			<option value="-2">
-				JTRASHED</option>
-		</field>
-		<!-- Date Modified Field. Type: Calendar (joomla) -->
-		<field name="modified" type="calendar" class="readonly"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_MODIFIED_DATE_LABEL" description="COM_SERMONDISTRIBUTOR_PREACHER_MODIFIED_DATE_DESC"
-			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
-		<!-- User Modified Field. Type: User (joomla) -->
-		<field name="modified_by" type="user"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_MODIFIED_BY_LABEL"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_MODIFIED_BY_DESC"
-			class="readonly"
-			readonly="true"
-			filter="unset"
-		/>
-		<!-- Access Field. Type: Accesslevel (joomla) -->
-		<field name="access"
-			type="accesslevel"
-			label="JFIELD_ACCESS_LABEL"
-			description="JFIELD_ACCESS_DESC"
-			default="1"
-
-			required="false"
-		/>
-		<!-- Ordering Field. Type: Numbers (joomla) -->
-		<field
-			name="ordering"
-			type="number"
-			class="inputbox validate-ordering"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_ORDERING_LABEL"
-			description=""
-			default="0"
-			size="6"
-
-			required="false"
-		/>
-		<!-- Version Field. Type: Text (joomla) -->
-		<field
-			name="version"
-			type="text"
-			class="readonly"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_VERSION_LABEL"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_VERSION_DESC"
-			size="6"
-			readonly="true"
-			filter="unset"
-		/>
-		<!-- Metakey Field. Type: Textarea (joomla) -->
-		<field
-			name="metakey"
-			type="textarea"
-			label="JFIELD_META_KEYWORDS_LABEL"
-			description="JFIELD_META_KEYWORDS_DESC"
-			rows="3"
-			cols="30"
-		/>
-		<!-- Metadesc Field. Type: Textarea (joomla) -->
-		<field
-			name="metadesc"
-			type="textarea"
-			label="JFIELD_META_DESCRIPTION_LABEL"
-			description="JFIELD_META_DESCRIPTION_DESC"
-			rows="3"
-			cols="30"
-		/>
-		<!-- Dynamic Fields. -->
-		<!-- Name Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="name"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_NAME_LABEL"
-			size="40"
-			maxlength="150"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_NAME_DESCRIPTION"
-			class="text_area"
-			readonly="false"
-			disabled="false"
-			required="true"
-			filter="STRING"
-			message="Error! Please add name here."
-			hint="COM_SERMONDISTRIBUTOR_PREACHER_NAME_HINT"
-		/>
-		<!-- Description Field. Type: Editor. (joomla) -->
-		<field
-			type="editor"
-			name="description"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_DESCRIPTION_LABEL"
-			width="100%"
-			height="500"
-			cols="13"
-			rows="50"
-			buttons="false"
-			filter="safehtml"
-		/>
-		<!-- Alias Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="alias"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_ALIAS_LABEL"
-			description="JFIELD_ALIAS_DESC"
-			filter="STRING"
-			hint="COM_SERMONDISTRIBUTOR_PREACHER_ALIAS_HINT"
-		/>
-		<!-- Email Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="email"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_LABEL"
-			size="10"
-			maxlength="50"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_DESCRIPTION"
-			class="text_area"
-			required="false"
-			filter="STRING"
-			validate="email"
-			message="Error! Please add email address here."
-			hint="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_HINT"
-		/>
-		<!-- Website Field. Type: Url. (joomla) -->
-		<field
-			type="url"
-			name="website"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_LABEL"
-			size="60"
-			maxlength="150"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_DESCRIPTION"
-			class="text_area"
-			filter="url"
-			validated="url"
-			message="Error! Please add website here."
-			hint="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_HINT"
-		/>
-		<!-- Icon Field. Type: Media. (joomla) -->
-		<field
-			type="media"
-			name="icon"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_ICON_LABEL"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_ICON_DESCRIPTION"
-			directory=""
-		/>
-	</fieldset>
-
-	<!-- Metadata Fields. -->
-	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-		<fieldset name="vdmmetadata"
-			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-			<!-- Robots Field. Type: List (joomla) -->
-			<field name="robots"
-				type="list"
-				label="JFIELD_METADATA_ROBOTS_LABEL"
-				description="JFIELD_METADATA_ROBOTS_DESC" >
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
-				<option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
-				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
-				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
-			</field>
-			<!-- Author Field. Type: Text (joomla) -->
-			<field name="author"
-				type="text"
-				label="JAUTHOR" description="JFIELD_METADATA_AUTHOR_DESC"
-				size="20"
-			/>
-			<!-- Rights Field. Type: Textarea (joomla) -->
-			<field name="rights" type="textarea" label="JFIELD_META_RIGHTS_LABEL"
-				description="JFIELD_META_RIGHTS_DESC" required="false" filter="string"
-				cols="30" rows="2"
-			/>
-		</fieldset>
-	</fields>
+                <!-- Default Fields.-->
+                <!-- Id Field. Type: Text (joomla)-->
+                <field name="id"
+                       type="text"
+                       class="readonly"
+                       label="JGLOBAL_FIELD_ID_LABEL"
+                       description="JGLOBAL_FIELD_ID_DESC"
+                       size="10"
+                       default="0" />
+                <!-- Date Created Field. Type: Calendar (joomla)-->
+                <field name="created"
+                       type="calendar"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_CREATED_DATE_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_CREATED_DATE_DESC"
+                       size="22"
+                       format="%Y-%m-%d %H:%M:%S"
+                       filter="user_utc" />
+                <!-- User Created Field. Type: User (joomla)-->
+                <field name="created_by"
+                       type="user"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_CREATED_BY_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_CREATED_BY_DESC" />
+                <!-- Published Field. Type: List (joomla)-->
+                <field name="published"
+                       type="list"
+                       label="JSTATUS">
+                        <option value="1">JPUBLISHED</option>
+                        <option value="0">JUNPUBLISHED</option>
+                        <option value="2">JARCHIVED</option>
+                        <option value="-2">JTRASHED</option>
+                </field>
+                <!-- Date Modified Field. Type: Calendar (joomla)-->
+                <field name="modified"
+                       type="calendar"
+                       class="readonly"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_MODIFIED_DATE_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_MODIFIED_DATE_DESC"
+                       size="22"
+                       readonly="true"
+                       format="%Y-%m-%d %H:%M:%S"
+                       filter="user_utc" />
+                <!-- User Modified Field. Type: User (joomla)-->
+                <field name="modified_by"
+                       type="user"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_MODIFIED_BY_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_MODIFIED_BY_DESC"
+                       class="readonly"
+                       readonly="true"
+                       filter="unset" />
+                <!-- Access Field. Type: Accesslevel (joomla)-->
+                <field name="access"
+                       type="accesslevel"
+                       label="JFIELD_ACCESS_LABEL"
+                       description="JFIELD_ACCESS_DESC"
+                       default="1"
+                       required="false" />
+                <!-- Ordering Field. Type: Numbers (joomla)-->
+                <field name="ordering"
+                       type="number"
+                       class="inputbox validate-ordering"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_ORDERING_LABEL"
+                       description=""
+                       default="0"
+                       size="6"
+                       required="false" />
+                <!-- Version Field. Type: Text (joomla)-->
+                <field name="version"
+                       type="text"
+                       class="readonly"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_VERSION_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_VERSION_DESC"
+                       size="6"
+                       readonly="true"
+                       filter="unset" />
+                <!-- Metakey Field. Type: Textarea (joomla)-->
+                <field name="metakey"
+                       type="textarea"
+                       label="JFIELD_META_KEYWORDS_LABEL"
+                       description="JFIELD_META_KEYWORDS_DESC"
+                       rows="3"
+                       cols="30" />
+                <!-- Metadesc Field. Type: Textarea (joomla)-->
+                <field name="metadesc"
+                       type="textarea"
+                       label="JFIELD_META_DESCRIPTION_LABEL"
+                       description="JFIELD_META_DESCRIPTION_DESC"
+                       rows="3"
+                       cols="30" />
+                <!-- Dynamic Fields.-->
+                <!-- Name Field. Type: Text. (joomla)-->
+                <field type="text"
+                       name="name"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_NAME_LABEL"
+                       size="40"
+                       maxlength="150"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_NAME_DESCRIPTION"
+                       class="text_area"
+                       readonly="false"
+                       disabled="false"
+                       required="true"
+                       filter="STRING"
+                       message="COM_SERMONDISTRIBUTOR_PREACHER_NAME_MESSAGE"
+                       hint="COM_SERMONDISTRIBUTOR_PREACHER_NAME_HINT" />
+                <!-- Description Field. Type: Editor. (joomla)-->
+                <field type="editor"
+                       name="description"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_DESCRIPTION_LABEL"
+                       width="100%"
+                       height="500"
+                       cols="13"
+                       rows="50"
+                       buttons="false"
+                       filter="safehtml" />
+                <!-- Alias Field. Type: Text. (joomla)-->
+                <field type="text"
+                       name="alias"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_ALIAS_LABEL"
+                       description="JFIELD_ALIAS_DESC"
+                       filter="STRING"
+                       hint="COM_SERMONDISTRIBUTOR_PREACHER_ALIAS_HINT" />
+                <!-- Email Field. Type: Text. (joomla)-->
+                <field type="text"
+                       name="email"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_LABEL"
+                       size="10"
+                       maxlength="50"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_DESCRIPTION"
+                       class="text_area"
+                       required="false"
+                       filter="STRING"
+                       validate="email"
+                       message="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_MESSAGE"
+                       hint="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_HINT" />
+                <!-- Website Field. Type: Url. (joomla)-->
+                <field type="url"
+                       name="website"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_LABEL"
+                       size="60"
+                       maxlength="150"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_DESCRIPTION"
+                       class="text_area"
+                       filter="url"
+                       validated="url"
+                       message="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_MESSAGE"
+                       hint="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_HINT" />
+                <!-- Icon Field. Type: Media. (joomla)-->
+                <field type="media"
+                       name="icon"
+                       label="COM_SERMONDISTRIBUTOR_PREACHER_ICON_LABEL"
+                       description="COM_SERMONDISTRIBUTOR_PREACHER_ICON_DESCRIPTION"
+                       directory="" />
+                <!-- Metadata Fields-->
+                <fields name="metadata"
+                        label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+                        <fieldset name="vdmmetadata"
+                                  label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+                                <!-- Robots Field. Type: List (joomla)-->
+                                <field name="robots"
+                                       type="list"
+                                       label="JFIELD_METADATA_ROBOTS_LABEL"
+                                       description="JFIELD_METADATA_ROBOTS_DESC">
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                        <option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
+                                        <option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
+                                        <option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
+                                        <option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+                                </field>
+                                <!-- Author Field. Type: Text (joomla)-->
+                                <field name="author"
+                                       type="text"
+                                       label="JAUTHOR"
+                                       description="JFIELD_METADATA_AUTHOR_DESC"
+                                       size="20" />
+                                <!-- Rights Field. Type: Textarea (joomla)-->
+                                <field name="rights"
+                                       type="textarea"
+                                       label="JFIELD_META_RIGHTS_LABEL"
+                                       description="JFIELD_META_RIGHTS_DESC"
+                                       required="false"
+                                       filter="string"
+                                       cols="30"
+                                       rows="2" />
+                        </fieldset>
+                </fields>
+        </fieldset>
 	
 	<!-- Access Control Fields. -->
 	<fieldset name="accesscontrol">

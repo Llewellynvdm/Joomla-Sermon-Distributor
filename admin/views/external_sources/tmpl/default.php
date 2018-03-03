@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 55 of this MVC
-	@build			17th July, 2017
-	@created		3rd November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	

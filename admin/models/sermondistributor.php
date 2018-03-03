@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -37,11 +37,11 @@ class SermondistributorModelSermondistributor extends JModelList
 {
 	public function getIcons()
 	{
-                // load user for access menus
-                $user = JFactory::getUser();
-                // reset icon array
+		// load user for access menus
+		$user = JFactory::getUser();
+		// reset icon array
 		$icons  = array();
-                // view groups array
+		// view groups array
 		$viewGroups = array(
 			'main' => array('png.preacher.add', 'png.preachers', 'png.sermon.add', 'png.sermons', 'png.sermons.catid', 'png.series.add', 'png.series_list', 'png.statistics', 'png.external_source.add', 'png.external_sources', 'png.manual_updater', 'png.local_listings', 'png.help_documents')
 		);
@@ -90,92 +90,92 @@ class SermondistributorModelSermondistributor extends JModelList
 			'help_documents.submenu' => 'help_document.submenu',
 			'help_documents.dashboard_list' => 'help_document.dashboard_list');
 		foreach($viewGroups as $group => $views)
-                {
+		{
 			$i = 0;
 			if (SermondistributorHelper::checkArray($views))
-                        {
+			{
 				foreach($views as $view)
 				{
 					$add = false;
 					if (strpos($view,'.') !== false)
-                                        {
-                                                $dwd = explode('.', $view);
-                                                if (count($dwd) == 3)
-                                                {
-                                                        list($type, $name, $action) = $dwd;
-                                                }
-                                                elseif (count($dwd) == 2)
-                                                {
-                                                        list($type, $name) = $dwd;
-                                                        $action = false;
-                                                }
-                                                if ($action)
-                                                {
-                                                        $viewName = $name;
-                                                        switch($action)
-                                                        {
-                                                                case 'add':
-                                                                        $url 	='index.php?option=com_sermondistributor&view='.$name.'&layout=edit';
-                                                                        $image 	= $name.'_'.$action.'.'.$type;
-                                                                        $alt 	= $name.'&nbsp;'.$action;
-                                                                        $name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_ADD';
-                                                                        $add	= true;
-                                                                break;
-                                                                default:
-                                                                        $url 	= 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.'.$name;
-                                                                        $image 	= $name.'_'.$action.'.'.$type;
-                                                                        $alt 	= $name.'&nbsp;'.$action;
-                                                                        $name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_'.SermondistributorHelper::safeString($action,'U');
-                                                                break;
-                                                        }
-                                                }
-                                                else
-                                                {
-                                                        $viewName 	= $name;
-                                                        $alt 		= $name;
-                                                        $url 		= 'index.php?option=com_sermondistributor&view='.$name;
-                                                        $image 		= $name.'.'.$type;
-                                                        $name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U');
-                                                        $hover		= false;
-                                                }
-                                        }
-                                        else
-                                        {
-                                                $viewName 	= $view;
-                                                $alt 		= $view;
-                                                $url 		= 'index.php?option=com_sermondistributor&view='.$view;
-                                                $image 		= $view.'.png';
-                                                $name 		= ucwords($view).'<br /><br />';
-                                                $hover		= false;
-                                        }
-                                        // first make sure the view access is set
-                                        if (SermondistributorHelper::checkArray($viewAccess))
-                                        {
+					{
+							$dwd = explode('.', $view);
+							if (count($dwd) == 3)
+							{
+								list($type, $name, $action) = $dwd;
+							}
+							elseif (count($dwd) == 2)
+							{
+								list($type, $name) = $dwd;
+								$action = false;
+							}
+							if ($action)
+							{
+								$viewName = $name;
+								switch($action)
+								{
+									case 'add':
+										$url 	='index.php?option=com_sermondistributor&view='.$name.'&layout=edit';
+										$image 	= $name.'_'.$action.'.'.$type;
+										$alt 	= $name.'&nbsp;'.$action;
+										$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_ADD';
+										$add	= true;
+									break;
+									default:
+										$url 	= 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.'.$name;
+										$image 	= $name.'_'.$action.'.'.$type;
+										$alt 	= $name.'&nbsp;'.$action;
+										$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_'.SermondistributorHelper::safeString($action,'U');
+									break;
+								}
+							}
+							else
+							{
+								$viewName 	= $name;
+								$alt 		= $name;
+								$url 		= 'index.php?option=com_sermondistributor&view='.$name;
+								$image 		= $name.'.'.$type;
+								$name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U');
+								$hover		= false;
+							}
+					}
+					else
+					{
+						$viewName 	= $view;
+						$alt 		= $view;
+						$url 		= 'index.php?option=com_sermondistributor&view='.$view;
+						$image 		= $view.'.png';
+						$name 		= ucwords($view).'<br /><br />';
+						$hover		= false;
+					}
+					// first make sure the view access is set
+					if (SermondistributorHelper::checkArray($viewAccess))
+					{
 						// setup some defaults
 						$dashboard_add = false;
 						$dashboard_list = false;
-                                                $accessTo = '';
-                                                $accessAdd = '';
-                                                // acces checking start
-                                                $accessCreate = (isset($viewAccess[$viewName.'.create'])) ? SermondistributorHelper::checkString($viewAccess[$viewName.'.create']):false;
-                                                $accessAccess = (isset($viewAccess[$viewName.'.access'])) ? SermondistributorHelper::checkString($viewAccess[$viewName.'.access']):false;
+						$accessTo = '';
+						$accessAdd = '';
+						// acces checking start
+						$accessCreate = (isset($viewAccess[$viewName.'.create'])) ? SermondistributorHelper::checkString($viewAccess[$viewName.'.create']):false;
+						$accessAccess = (isset($viewAccess[$viewName.'.access'])) ? SermondistributorHelper::checkString($viewAccess[$viewName.'.access']):false;
 						// set main controllers
 						$accessDashboard_add = (isset($viewAccess[$viewName.'.dashboard_add'])) ? SermondistributorHelper::checkString($viewAccess[$viewName.'.dashboard_add']):false;
 						$accessDashboard_list = (isset($viewAccess[$viewName.'.dashboard_list'])) ? SermondistributorHelper::checkString($viewAccess[$viewName.'.dashboard_list']):false;
-                                                // check for adding access
-                                                if ($add && $accessCreate)
-                                                {
-                                                        $accessAdd = $viewAccess[$viewName.'.create'];
-                                                }
-                                                elseif ($add)
-                                                {
-                                                        $accessAdd = 'core.create';
-                                                }
-                                                // check if acces to view is set
-                                                if ($accessAccess)
-                                                {
-                                                        $accessTo = $viewAccess[$viewName.'.access'];
-                                                }
+						// check for adding access
+						if ($add && $accessCreate)
+						{
+							$accessAdd = $viewAccess[$viewName.'.create'];
+						}
+						elseif ($add)
+						{
+							$accessAdd = 'core.create';
+						}
+						// check if acces to view is set
+						if ($accessAccess)
+						{
+							$accessTo = $viewAccess[$viewName.'.access'];
+						}
 						// set main access controllers
 						if ($accessDashboard_add)
 						{
@@ -185,71 +185,71 @@ class SermondistributorModelSermondistributor extends JModelList
 						{
 							$dashboard_list = $user->authorise($viewAccess[$viewName.'.dashboard_list'], 'com_sermondistributor');
 						}
-                                                if (SermondistributorHelper::checkString($accessAdd) && SermondistributorHelper::checkString($accessTo))
-                                                {
-                                                        // check access
-                                                        if($user->authorise($accessAdd, 'com_sermondistributor') && $user->authorise($accessTo, 'com_sermondistributor') && $dashboard_add)
-                                                        {
-                                                                $icons[$group][$i]              = new StdClass;
-                                                                $icons[$group][$i]->url 	= $url;
-                                                                $icons[$group][$i]->name 	= $name;
-                                                                $icons[$group][$i]->image 	= $image;
-                                                                $icons[$group][$i]->alt 	= $alt;
-                                                        }
-                                                }
-                                                elseif (SermondistributorHelper::checkString($accessTo))
-                                                {
-                                                        // check access
-                                                        if($user->authorise($accessTo, 'com_sermondistributor') && $dashboard_list)
-                                                        {
-                                                                $icons[$group][$i]              = new StdClass;
-                                                                $icons[$group][$i]->url 	= $url;
-                                                                $icons[$group][$i]->name 	= $name;
-                                                                $icons[$group][$i]->image 	= $image;
-                                                                $icons[$group][$i]->alt 	= $alt;
-                                                        }
-                                                }
-                                                elseif (SermondistributorHelper::checkString($accessAdd))
-                                                {
-                                                        // check access
-                                                        if($user->authorise($accessAdd, 'com_sermondistributor') && $dashboard_add)
-                                                        {
-                                                                $icons[$group][$i]              = new StdClass;
-                                                                $icons[$group][$i]->url 	= $url;
-                                                                $icons[$group][$i]->name 	= $name;
-                                                                $icons[$group][$i]->image 	= $image;
-                                                                $icons[$group][$i]->alt 	= $alt;
-                                                        }
-                                                }
-                                                else
-                                                {
-                                                        $icons[$group][$i]              = new StdClass;
-                                                        $icons[$group][$i]->url 	= $url;
-                                                        $icons[$group][$i]->name 	= $name;
-                                                        $icons[$group][$i]->image 	= $image;
-                                                        $icons[$group][$i]->alt 	= $alt;
-                                                }
-                                        }
-                                        else
-                                        {
-                                                $icons[$group][$i]              = new StdClass;
-                                                $icons[$group][$i]->url 	= $url;
-                                                $icons[$group][$i]->name 	= $name;
-                                                $icons[$group][$i]->image 	= $image;
-                                                $icons[$group][$i]->alt 	= $alt;
-                                        }
-                                        $i++;
-                                }
-                        }
-                        else
-                        {
-                                $icons[$group][$i] = false;
+						if (SermondistributorHelper::checkString($accessAdd) && SermondistributorHelper::checkString($accessTo))
+						{
+							// check access
+							if($user->authorise($accessAdd, 'com_sermondistributor') && $user->authorise($accessTo, 'com_sermondistributor') && $dashboard_add)
+							{
+								$icons[$group][$i]              = new StdClass;
+								$icons[$group][$i]->url 	= $url;
+								$icons[$group][$i]->name 	= $name;
+								$icons[$group][$i]->image 	= $image;
+								$icons[$group][$i]->alt 	= $alt;
+							}
+						}
+						elseif (SermondistributorHelper::checkString($accessTo))
+						{
+							// check access
+							if($user->authorise($accessTo, 'com_sermondistributor') && $dashboard_list)
+							{
+								$icons[$group][$i]              = new StdClass;
+								$icons[$group][$i]->url 	= $url;
+								$icons[$group][$i]->name 	= $name;
+								$icons[$group][$i]->image 	= $image;
+								$icons[$group][$i]->alt 	= $alt;
+							}
+						}
+						elseif (SermondistributorHelper::checkString($accessAdd))
+						{
+							// check access
+							if($user->authorise($accessAdd, 'com_sermondistributor') && $dashboard_add)
+							{
+								$icons[$group][$i]              = new StdClass;
+								$icons[$group][$i]->url 	= $url;
+								$icons[$group][$i]->name 	= $name;
+								$icons[$group][$i]->image 	= $image;
+								$icons[$group][$i]->alt 	= $alt;
+							}
+						}
+						else
+						{
+							$icons[$group][$i]              = new StdClass;
+							$icons[$group][$i]->url 	= $url;
+							$icons[$group][$i]->name 	= $name;
+							$icons[$group][$i]->image 	= $image;
+							$icons[$group][$i]->alt 	= $alt;
+						}
+					}
+					else
+					{
+						$icons[$group][$i]              = new StdClass;
+						$icons[$group][$i]->url 	= $url;
+						$icons[$group][$i]->name 	= $name;
+						$icons[$group][$i]->image 	= $image;
+						$icons[$group][$i]->alt 	= $alt;
+					}
+					$i++;
+				}
+			}
+			else
+			{
+					$icons[$group][$i] = false;
 			}
 		}
 		return $icons;
 	}
 
-			
+
 	public function getGithub()
 	{
 		// load jquery (not sure why... but else the timeago breaks)
@@ -270,7 +270,7 @@ class SermondistributorModelSermondistributor extends JModelList
 					jQuery("#openissues")
             				.append("<h3><a href=\"" + issue.html_url + "\" target=\"_blank\">" + issue.title + "</a></h3>")
 					.append("<img alt=\"@" + issue.user.login + "\" style=\"vertical-align: baseline;\" src=\"" + issue.user.avatar_url +"&amp;s=60\" width=\"30\" height=\"30\"> ")
-            				.append("<em><a href=\"" + issue.user.html_url + "\" target=\"_blank\">" + issue.user.login + "</a> '.JText::_('COM_SERMONDISTRIBUTOR_OPENED_THIS').' <a href=\"" + issue.html_url + "\" target=\"_blank\">'.JText::_('COM_SERMONDISTRIBUTOR_ISSUE').'-" + issue.number + "</a> (" + timeago + ")</em>")
+            				.append("<em><a href=\"" + issue.user.html_url + "\" target=\"_blank\">" + issue.user.login + "</a> '.JText::_('COM_SERMONDISTRIBUTOR_OPENED_THIS').' <a href=\"" + issue.html_url + "\" target=\"_blank\">'.JText::_('COM_SERMONDISTRIBUTOR_ISSUE').'-" + issue.number + "</a> (" + timeago + ")</em> ")
             				.append(marked(issue.body))
             				.append("<a href=\"" + issue.html_url + "\" target=\"_blank\"><span class=\'icon-new-tab\'></span>'.JText::_('COM_SERMONDISTRIBUTOR_RESPOND_TO_THIS_ISSUE_ON_GITHUB').'</a>...<hr />");
     				});
@@ -292,9 +292,21 @@ class SermondistributorModelSermondistributor extends JModelList
 				// set the update notice while we are at it
 				var activeVersion = tagreleases[0].tag_name.substring(1);
 				if (activeVersion === manifest.version) {
+					// local version is in sync with latest release
 					jQuery(".update-notice").html("<small><span style=\'color:green;\'><span class=\'icon-shield\'></span>'.JText::_('COM_SERMONDISTRIBUTOR_UP_TO_DATE').'</span></small>");
 				} else {
-					jQuery(".update-notice").html("<small><span style=\'color:red;\'><span class=\'icon-warning-circle\'></span>'.JText::_('COM_SERMONDISTRIBUTOR_OUT_OF_DATE').'</span></small>");
+					// split versions in to array
+					var activeVersionArray = activeVersion.split(".");
+					var localVersionArray = manifest.version.split(".");					
+					if ((+localVersionArray[0] > +activeVersionArray[0]) || 
+					(+localVersionArray[0] == +activeVersionArray[0] && +localVersionArray[1] > +activeVersionArray[1]) || 
+					(+localVersionArray[0] == +activeVersionArray[0] && +localVersionArray[1] == +activeVersionArray[1] && +localVersionArray[2] > +activeVersionArray[2])) {
+						// local version head latest release
+						jQuery(".update-notice").html("<small><span style=\'color:#F7B033;\'><span class=\'icon-wrench\'></span>'.JText::_('COM_SERMONDISTRIBUTOR_BETA_RELEASE').'</span></small>");
+					} else {
+						// local version behind latest release
+						jQuery(".update-notice").html("<small><span style=\'color:red;\'><span class=\'icon-warning-circle\'></span>'.JText::_('COM_SERMONDISTRIBUTOR_OUT_OF_DATE').'</span></small>");
+					}
 				}
 				// set the taged releases
 				jQuery("#tagreleases").html("");
@@ -329,8 +341,8 @@ class SermondistributorModelSermondistributor extends JModelList
 				'closedissues' => $create.'<div id="closedissues">'.JText::_('COM_SERMONDISTRIBUTOR_A_FEW_CLOSED_ISSUES_FROM_GITHUB_IS_LOADING').'.<span class="loading-dots">.</span></small></div>'.$moreclosed,
 				'tagreleases' => '<div id="tagreleases">'.JText::_('COM_SERMONDISTRIBUTOR_LAST_FEW_RELEASES_FROM_GITHUB_IS_LOADING').'.<span class="loading-dots">.</span></small></div>'.$viewissues
 		);
-	}			
-			
+	}
+
 	public function getWiki()
 	{
 		$document = JFactory::getDocument();
@@ -349,8 +361,8 @@ class SermondistributorModelSermondistributor extends JModelList
 		return '<div id="wiki-md"><small>'.JText::_('COM_SERMONDISTRIBUTOR_THE_WIKI_IS_LOADING').'.<span class="loading-dots">.</span></small></div>';
 	}
 
-				 
-			
+	 
+
 	public function getNoticeboard()
 	{
 		// get the document to load the scripts
@@ -367,7 +379,7 @@ class SermondistributorModelSermondistributor extends JModelList
 					getIS(1,board).done(function(result) {
 						if (result){
 							jQuery("#cpanel_tabTabs a").each(function() {
-								if (this.href.indexOf("#vast_development_method") >= 0) {
+								if (this.href.indexOf("#vast_development_method") >= 0 || this.href.indexOf("#notice_board") >= 0) {
 									var textVDM = jQuery(this).text();
 									jQuery(this).html("<span class=\"label label-important vdm-new-notice\">1</span> "+textVDM);
 									jQuery(this).attr("id","vdm-new-notice");
@@ -422,8 +434,8 @@ class SermondistributorModelSermondistributor extends JModelList
 		});');
 
 		return '<div id="noticeboard-md">'.JText::_('COM_SERMONDISTRIBUTOR_THE_NOTICE_BOARD_IS_LOADING').'.<span class="loading-dots">.</span></small></div>';
-	}			
-			
+	}
+
 	public function getReadme()
 	{
 		$document = JFactory::getDocument();
@@ -440,5 +452,5 @@ class SermondistributorModelSermondistributor extends JModelList
 		});');
 
 		return '<div id="readme-md"><small>'.JText::_('COM_SERMONDISTRIBUTOR_THE_README_IS_LOADING').'.<span class="loading-dots">.</span></small></div>';
-	}			
+	}
 }

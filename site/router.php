@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		router.php
@@ -82,11 +82,11 @@ class SermondistributorRouter extends JComponentRouterBase
 			return $segments;
 		}
 
-		if (isset($view) && isset($query['id']) && ($view === 'preachers' || $view === 'preacher' || $view === 'categories' || $view === 'category' || $view === 'serieslist' || $view === 'series' || $view === 'sermon'))
+		if (isset($view) && isset($query['id']) && ($view === 'preachers' || $view === 'preacher' || $view === 'categories' || $view === 'category' || $view === 'serieslist' || $view === 'series' || $view === 'sermon' || $view === 'api'))
 		{
 			if ($mId != (int) $query['id'] || $mView != $view)
 			{
-				if (($view === 'preachers' || $view === 'preacher' || $view === 'categories' || $view === 'category' || $view === 'serieslist' || $view === 'series' || $view === 'sermon'))
+				if (($view === 'preachers' || $view === 'preacher' || $view === 'categories' || $view === 'category' || $view === 'serieslist' || $view === 'series' || $view === 'sermon' || $view === 'api'))
 				{
 					$segments[] = $view;
 					$id = explode(':', $query['id']);
@@ -154,7 +154,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				elseif ($segments[$count-1])
 				{
-					$id = $this->getVar('sermon', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('preacher', $segments[$count-1], 'alias', 'id');
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -184,7 +184,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				elseif ($segments[$count-1])
 				{
-					$id = $this->getVar('sermon', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('category', $segments[$count-1], 'alias', 'id', true);
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -214,7 +214,7 @@ class SermondistributorRouter extends JComponentRouterBase
 				}
 				elseif ($segments[$count-1])
 				{
-					$id = $this->getVar('sermon', $segments[$count-1], 'alias', 'id');
+					$id = $this->getVar('series', $segments[$count-1], 'alias', 'id');
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -230,6 +230,21 @@ class SermondistributorRouter extends JComponentRouterBase
 				elseif ($segments[$count-1])
 				{
 					$id = $this->getVar('sermon', $segments[$count-1], 'alias', 'id');
+					if($id)
+					{
+						$vars['id'] = $id;
+					}
+				}
+				break;
+			case 'api':
+				$vars['view'] = 'api';
+				if (is_numeric($segments[$count-1]))
+				{
+					$vars['id'] = (int) $segments[$count-1];
+				}
+				elseif ($segments[$count-1])
+				{
+					$id = $this->getVar('external_source', $segments[$count-1], 'alias', 'id');
 					if($id)
 					{
 						$vars['id'] = $id;
@@ -324,7 +339,7 @@ function SermondistributorBuildRoute(&$query)
 
 function SermondistributorParseRoute($segments)
 {
-	$router = new ContentRouter;
+	$router = new SermondistributorRouter;
 
 	return $router->parse($segments);
 }

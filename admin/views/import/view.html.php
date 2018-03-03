@@ -10,8 +10,8 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.4.1
-	@build			24th August, 2017
+	@version		2.0.x
+	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -41,18 +41,11 @@ class SermondistributorViewImport extends JViewLegacy
 	protected $dataType;
 
 	public function display($tpl = null)
-	{
+	{		
 		if ($this->getLayout() !== 'modal')
 		{
 			// Include helper submenu
 			SermondistributorHelper::addSubmenu('import');
-		}
-
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
 		}
 
 		$paths = new stdClass;
@@ -83,6 +76,12 @@ class SermondistributorViewImport extends JViewLegacy
 			// clear the data type
 			$session->clear('dataType');
 		}
+		
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new Exception(implode("\n", $errors), 500);
+		}
 
 		// Display the template
 		parent::display($tpl);
@@ -102,10 +101,10 @@ class SermondistributorViewImport extends JViewLegacy
 		}
 
 		// set help url for this view if found
-                $help_url = SermondistributorHelper::getHelpUrl('import');
-                if (SermondistributorHelper::checkString($help_url))
-                {
-                       JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
-                }
+		$help_url = SermondistributorHelper::getHelpUrl('import');
+		if (SermondistributorHelper::checkString($help_url))
+		{
+			   JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
+		}
 	}
 }

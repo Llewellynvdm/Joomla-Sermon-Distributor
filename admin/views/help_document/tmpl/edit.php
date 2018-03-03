@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 20 of this MVC
-	@build			18th October, 2016
-	@created		13th July, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -127,21 +127,6 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 
 <script type="text/javascript">
 
-// #jform_location listeners for location_vvvvvww function
-jQuery('#jform_location').on('keyup',function()
-{
-	var location_vvvvvww = jQuery("#jform_location input[type='radio']:checked").val();
-	vvvvvww(location_vvvvvww);
-
-});
-jQuery('#adminForm').on('change', '#jform_location',function (e)
-{
-	e.preventDefault();
-	var location_vvvvvww = jQuery("#jform_location input[type='radio']:checked").val();
-	vvvvvww(location_vvvvvww);
-
-});
-
 // #jform_location listeners for location_vvvvvwx function
 jQuery('#jform_location').on('keyup',function()
 {
@@ -157,18 +142,18 @@ jQuery('#adminForm').on('change', '#jform_location',function (e)
 
 });
 
-// #jform_type listeners for type_vvvvvwy function
-jQuery('#jform_type').on('keyup',function()
+// #jform_location listeners for location_vvvvvwy function
+jQuery('#jform_location').on('keyup',function()
 {
-	var type_vvvvvwy = jQuery("#jform_type").val();
-	vvvvvwy(type_vvvvvwy);
+	var location_vvvvvwy = jQuery("#jform_location input[type='radio']:checked").val();
+	vvvvvwy(location_vvvvvwy);
 
 });
-jQuery('#adminForm').on('change', '#jform_type',function (e)
+jQuery('#adminForm').on('change', '#jform_location',function (e)
 {
 	e.preventDefault();
-	var type_vvvvvwy = jQuery("#jform_type").val();
-	vvvvvwy(type_vvvvvwy);
+	var location_vvvvvwy = jQuery("#jform_location input[type='radio']:checked").val();
+	vvvvvwy(location_vvvvvwy);
 
 });
 
@@ -202,18 +187,33 @@ jQuery('#adminForm').on('change', '#jform_type',function (e)
 
 });
 
-// #jform_target listeners for target_vvvvvxb function
+// #jform_type listeners for type_vvvvvxb function
+jQuery('#jform_type').on('keyup',function()
+{
+	var type_vvvvvxb = jQuery("#jform_type").val();
+	vvvvvxb(type_vvvvvxb);
+
+});
+jQuery('#adminForm').on('change', '#jform_type',function (e)
+{
+	e.preventDefault();
+	var type_vvvvvxb = jQuery("#jform_type").val();
+	vvvvvxb(type_vvvvvxb);
+
+});
+
+// #jform_target listeners for target_vvvvvxc function
 jQuery('#jform_target').on('keyup',function()
 {
-	var target_vvvvvxb = jQuery("#jform_target input[type='radio']:checked").val();
-	vvvvvxb(target_vvvvvxb);
+	var target_vvvvvxc = jQuery("#jform_target input[type='radio']:checked").val();
+	vvvvvxc(target_vvvvvxc);
 
 });
 jQuery('#adminForm').on('change', '#jform_target',function (e)
 {
 	e.preventDefault();
-	var target_vvvvvxb = jQuery("#jform_target input[type='radio']:checked").val();
-	vvvvvxb(target_vvvvvxb);
+	var target_vvvvvxc = jQuery("#jform_target input[type='radio']:checked").val();
+	vvvvvxc(target_vvvvvxc);
 
 });
 

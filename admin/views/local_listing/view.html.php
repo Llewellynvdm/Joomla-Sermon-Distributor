@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 11 of this MVC
-	@build			31st March, 2017
-	@created		20th November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -40,38 +40,37 @@ class SermondistributorViewLocal_listing extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-                {
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
-
 		// Assign the variables
-		$this->form 		= $this->get('Form');
-		$this->item 		= $this->get('Item');
-		$this->script 		= $this->get('Script');
-		$this->state		= $this->get('State');
-                // get action permissions
-		$this->canDo		= SermondistributorHelper::getActions('local_listing',$this->item);
+		$this->form = $this->get('Form');
+		$this->item = $this->get('Item');
+		$this->script = $this->get('Script');
+		$this->state = $this->get('State');
+		// get action permissions
+		$this->canDo = SermondistributorHelper::getActions('local_listing',$this->item);
 		// get input
 		$jinput = JFactory::getApplication()->input;
-		$this->ref 		= $jinput->get('ref', 0, 'word');
-		$this->refid            = $jinput->get('refid', 0, 'int');
-		$this->referral         = '';
+		$this->ref = $jinput->get('ref', 0, 'word');
+		$this->refid = $jinput->get('refid', 0, 'int');
+		$this->referral = '';
 		if ($this->refid)
-                {
-                        // return to the item that refered to this item
-                        $this->referral = '&ref='.(string)$this->ref.'&refid='.(int)$this->refid;
-                }
-                elseif($this->ref)
-                {
-                        // return to the list view that refered to this item
-                        $this->referral = '&ref='.(string)$this->ref;
-                }
+		{
+			// return to the item that refered to this item
+			$this->referral = '&ref='.(string)$this->ref.'&refid='.(int)$this->refid;
+		}
+		elseif($this->ref)
+		{
+			// return to the list view that refered to this item
+			$this->referral = '&ref='.(string)$this->ref;
+		}
 
 		// Set the toolbar
 		$this->addToolBar();
+		
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new Exception(implode("\n", $errors), 500);
+		}
 
 		// Display the template
 		parent::display($tpl);
@@ -164,7 +163,7 @@ class SermondistributorViewLocal_listing extends JViewLegacy
 		}
 	}
 
-        /**
+	/**
 	 * Escapes a value for output in a view script.
 	 *
 	 * @param   mixed  $var  The output to escape.
@@ -178,7 +177,7 @@ class SermondistributorViewLocal_listing extends JViewLegacy
     		// use the helper htmlEscape method instead and shorten the string
 			return SermondistributorHelper::htmlEscape($var, $this->_charset, true, 30);
 		}
-                // use the helper htmlEscape method instead.
+		// use the helper htmlEscape method instead.
 		return SermondistributorHelper::htmlEscape($var, $this->_charset);
 	}
 
@@ -190,17 +189,20 @@ class SermondistributorViewLocal_listing extends JViewLegacy
 	protected function setDocument()
 	{
 		$isNew = ($this->item->id < 1);
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NEW' : 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EDIT'));
-		$document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/local_listing.css");
+		if (!isset($this->document))
+		{
+			$this->document = JFactory::getDocument();
+		}
+		$this->document->setTitle(JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NEW' : 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EDIT'));
+		$this->document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/local_listing.css", (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 		// Add Ajax Token
-		$document->addScriptDeclaration("var token = '".JSession::getFormToken()."';"); 
-		$document->addScript(JURI::root() . $this->script);
-		$document->addScript(JURI::root() . "administrator/components/com_sermondistributor/views/local_listing/submitbutton.js"); 
+		$this->document->addScriptDeclaration("var token = '".JSession::getFormToken()."';"); 
+		$this->document->addScript(JURI::root() . $this->script, (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+		$this->document->addScript(JURI::root() . "administrator/components/com_sermondistributor/views/local_listing/submitbutton.js", (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript'); 
 		// add JavaScripts
-		$document->addScript( JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit.min.js' );
+		$this->document->addScript( JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit.min.js' );
 		// add the style sheets
-		$document->addStyleSheet( JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit.gradient.min.css' );
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit.gradient.min.css' );
 		JText::script('view not acceptable. Error');
 	}
 }

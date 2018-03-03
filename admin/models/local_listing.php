@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 11 of this MVC
-	@build			31st March, 2017
-	@created		20th November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		local_listing.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -111,7 +111,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 	{
 		if ($item = parent::getItem($pk))
 		{
-			if (!empty($item->params))
+			if (!empty($item->params) && !is_array($item->params))
 			{
 				// Convert the params field to an array.
 				$registry = new Registry;
@@ -127,14 +127,14 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 				$item->metadata = $registry->toArray();
 			}
 
-			// Get the basic encription.
+			// Get the basic encryption.
 			$basickey = SermondistributorHelper::getCryptKey('basic');
-			// Get the encription object.
+			// Get the encryption object.
 			$basic = new FOFEncryptAes($basickey, 128);
 
 			if (!empty($item->url) && $basickey && !is_numeric($item->url) && $item->url === base64_encode(base64_decode($item->url, true)))
 			{
-				// basic decript data url.
+				// basic decrypt data url.
 				$item->url = rtrim($basic->decryptString($item->url), "\0");
 			}
 			
@@ -657,8 +657,6 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$this->user 		= JFactory::getUser();
 			$this->table 		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
-			$this->contentType	= new JUcmType;
-			$this->type		= $this->contentType->getTypeByTable($this->tableClassName);
 			$this->canDo		= SermondistributorHelper::getActions('local_listing');
 		}
 
@@ -683,7 +681,6 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		}
 
 		$newIds = array();
-
 		// Parent exists so let's proceed
 		while (!empty($pks))
 		{
@@ -693,17 +690,11 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$this->table->reset();
 
 			// only allow copy if user may edit this item.
-
 			if (!$this->user->authorise('local_listing.edit', $contexts[$pk]))
-
 			{
-
 				// Not fatal error
-
 				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-
 				continue;
-
 			}
 
 			// Check that the row actually exists
@@ -713,7 +704,6 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else
@@ -724,7 +714,11 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 				}
 			}
 
-			$this->table->name = $this->generateUniqe('name',$this->table->name);
+			// Only for strings
+			if (SermondistributorHelper::checkString($this->table->name) && !is_numeric($this->table->name))
+			{
+				$this->table->name = $this->generateUniqe('name',$this->table->name);
+			}
 
 			// insert all set values
 			if (SermondistributorHelper::checkArray($values))
@@ -806,8 +800,6 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$this->user		= JFactory::getUser();
 			$this->table		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
-			$this->contentType	= new JUcmType;
-			$this->type		= $this->contentType->getTypeByTable($this->tableClassName);
 			$this->canDo		= SermondistributorHelper::getActions('local_listing');
 		}
 
@@ -831,7 +823,6 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			if (!$this->user->authorise('local_listing.edit', $contexts[$pk]))
 			{
 				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
 				return false;
 			}
 
@@ -842,7 +833,6 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else
@@ -923,12 +913,12 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$data['metadata'] = (string) $metadata;
 		} 
 
-		// Get the basic encription key.
+		// Get the basic encryption key.
 		$basickey = SermondistributorHelper::getCryptKey('basic');
-		// Get the encription object
+		// Get the encryption object
 		$basic = new FOFEncryptAes($basickey, 128);
 
-		// Encript data url.
+		// Encrypt data url.
 		if (isset($data['url']) && $basickey)
 		{
 			$data['url'] = $basic->encryptString($data['url']);

@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 45 of this MVC
-	@build			7th July, 2017
-	@created		4th November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		manual_updater.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -34,16 +34,16 @@ jimport('joomla.application.component.modellist');
  */
 class SermondistributorModelManual_updater extends JModelList
 {
-        /**
+	/**
 	 * Model user data.
 	 *
-	 * @var        strings
+	 * @var  strings
 	 */
-        protected $user;
-        protected $userId;
-        protected $guest;
-        protected $groups;
-        protected $levels;
+	protected $user;
+	protected $userId;
+	protected $guest;
+	protected $groups;
+	protected $levels;
 	protected $app;
 	protected $input;
 	protected $uikitComp;
@@ -55,16 +55,16 @@ class SermondistributorModelManual_updater extends JModelList
 	 */
 	protected function getListQuery()
 	{
-                // Get the current user for authorisation checks
-		$this->user		= JFactory::getUser();
-		$this->userId		= $this->user->get('id');
-		$this->guest		= $this->user->get('guest');
-                $this->groups		= $this->user->get('groups');
-                $this->authorisedGroups	= $this->user->getAuthorisedGroups();
-		$this->levels		= $this->user->getAuthorisedViewLevels();
-		$this->app		= JFactory::getApplication();
-		$this->input		= $this->app->input;
-		$this->initSet		= true; 
+		// Get the current user for authorisation checks
+		$this->user = JFactory::getUser();
+		$this->userId = $this->user->get('id');
+		$this->guest = $this->user->get('guest');
+		$this->groups = $this->user->get('groups');
+		$this->authorisedGroups	= $this->user->getAuthorisedGroups();
+		$this->levels = $this->user->getAuthorisedViewLevels();
+		$this->app = JFactory::getApplication();
+		$this->input = $this->app->input;
+		$this->initSet = true; 
 		// Make sure all records load, since no pagination allowed.
 		$this->setState('list.limit', 0);
 		// Get a db connection.
@@ -95,28 +95,28 @@ class SermondistributorModelManual_updater extends JModelList
 	 */
 	public function getItems()
 	{
-                $user = JFactory::getUser();
-                // check if this user has permission to access items
-                if (!$user->authorise('manual_updater.access', 'com_sermondistributor'))
-                {
+		$user = JFactory::getUser();
+		// check if this user has permission to access items
+		if (!$user->authorise('manual_updater.access', 'com_sermondistributor'))
+		{
 			$app = JFactory::getApplication();
 			$app->enqueueMessage(JText::_('Not authorised!'), 'error');
 			// redirect away if not a correct (TODO for now we go to default view)
 			$app->redirect('index.php?option=com_sermondistributor');
 			return false;
-                } 
+		} 
 		// load parent items
 		$items = parent::getItems();
 
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// Get the basic encription.
+		// Get the basic encryption.
 		$basickey = SermondistributorHelper::getCryptKey('basic');
-		// Get the encription object.
+		// Get the encryption object.
 		$basic = new FOFEncryptAes($basickey, 128);
 
-		// Convert the parameter fields into objects.
+		// Insure all item fields are adapted where needed.
 		if (SermondistributorHelper::checkArray($items))
 		{
 			foreach ($items as $nr => &$item)

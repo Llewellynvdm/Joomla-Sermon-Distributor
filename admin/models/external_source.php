@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 55 of this MVC
-	@build			17th July, 2017
-	@created		3rd November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -153,7 +153,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 	{
 		if ($item = parent::getItem($pk))
 		{
-			if (!empty($item->params))
+			if (!empty($item->params) && !is_array($item->params))
 			{
 				// Convert the params field to an array.
 				$registry = new Registry;
@@ -175,14 +175,14 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				$item->filetypes = json_decode($item->filetypes);
 			}
 
-			// Get the basic encription.
+			// Get the basic encryption.
 			$basickey = SermondistributorHelper::getCryptKey('basic');
-			// Get the encription object.
+			// Get the encryption object.
 			$basic = new FOFEncryptAes($basickey, 128);
 
 			if (!empty($item->oauthtoken) && $basickey && !is_numeric($item->oauthtoken) && $item->oauthtoken === base64_encode(base64_decode($item->oauthtoken, true)))
 			{
-				// basic decript data oauthtoken.
+				// basic decrypt data oauthtoken.
 				$item->oauthtoken = rtrim($basic->decryptString($item->oauthtoken), "\0");
 			}
 			
@@ -268,197 +268,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			$form->setFieldAttribute('created', 'disabled', 'true');
 			// Disable fields while saving.
 			$form->setFieldAttribute('created', 'filter', 'unset');
-		}
-		// Modify the form based on Edit Description access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.description', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.description', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('description', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('description', 'readonly', 'true');
-			if (!$form->getValue('description'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('description', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('description', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Externalsources access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.externalsources', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.externalsources', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('externalsources', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('externalsources', 'readonly', 'true');
-			if (!$form->getValue('externalsources'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('externalsources', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('externalsources', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Update Method access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.update_method', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.update_method', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('update_method', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('update_method', 'readonly', 'true');
-			// Disable radio button for display.
-			$class = $form->getFieldAttribute('update_method', 'class', '');
-			$form->setFieldAttribute('update_method', 'class', $class.' disabled no-click');
-			if (!$form->getValue('update_method'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('update_method', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('update_method', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Filetypes access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.filetypes', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.filetypes', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('filetypes', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('filetypes', 'readonly', 'true');
-			if (!$form->getValue('filetypes'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('filetypes', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('filetypes', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Build access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.build', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.build', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('build', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('build', 'readonly', 'true');
-			if (!$form->getValue('build'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('build', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('build', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Dropboxoptions access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.dropboxoptions', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.dropboxoptions', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('dropboxoptions', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('dropboxoptions', 'readonly', 'true');
-			// Disable radio button for display.
-			$class = $form->getFieldAttribute('dropboxoptions', 'class', '');
-			$form->setFieldAttribute('dropboxoptions', 'class', $class.' disabled no-click');
-			if (!$form->getValue('dropboxoptions'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('dropboxoptions', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('dropboxoptions', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Update Timer access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.update_timer', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.update_timer', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('update_timer', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('update_timer', 'readonly', 'true');
-			if (!$form->getValue('update_timer'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('update_timer', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('update_timer', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Oauthtoken access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.oauthtoken', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.oauthtoken', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('oauthtoken', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('oauthtoken', 'readonly', 'true');
-			if (!$form->getValue('oauthtoken'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('oauthtoken', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('oauthtoken', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Permissiontype access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.permissiontype', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.permissiontype', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('permissiontype', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('permissiontype', 'readonly', 'true');
-			// Disable radio button for display.
-			$class = $form->getFieldAttribute('permissiontype', 'class', '');
-			$form->setFieldAttribute('permissiontype', 'class', $class.' disabled no-click');
-			if (!$form->getValue('permissiontype'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('permissiontype', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('permissiontype', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Sharedurl access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.sharedurl', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.sharedurl', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('sharedurl', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('sharedurl', 'readonly', 'true');
-			// Disable radio button for display.
-			$class = $form->getFieldAttribute('sharedurl', 'class', '');
-			$form->setFieldAttribute('sharedurl', 'class', $class.' disabled no-click');
-			if (!$form->getValue('sharedurl'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('sharedurl', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('sharedurl', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Folder access controls.
-		if ($id != 0 && (!$user->authorise('external_source.edit.folder', 'com_sermondistributor.external_source.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('external_source.edit.folder', 'com_sermondistributor')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('folder', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('folder', 'readonly', 'true');
-			// Disable radio button for display.
-			$class = $form->getFieldAttribute('folder', 'class', '');
-			$form->setFieldAttribute('folder', 'class', $class.' disabled no-click');
-			if (!$form->getValue('folder'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('folder', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('folder', 'required', 'false');
-			}
 		}
 		// Only load these values if no id is found
 		if (0 == $id)
@@ -836,8 +645,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			$this->user 		= JFactory::getUser();
 			$this->table 		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
-			$this->contentType	= new JUcmType;
-			$this->type		= $this->contentType->getTypeByTable($this->tableClassName);
 			$this->canDo		= SermondistributorHelper::getActions('external_source');
 		}
 
@@ -862,7 +669,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 		}
 
 		$newIds = array();
-
 		// Parent exists so let's proceed
 		while (!empty($pks))
 		{
@@ -872,17 +678,11 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			$this->table->reset();
 
 			// only allow copy if user may edit this item.
-
 			if (!$this->user->authorise('external_source.edit', $contexts[$pk]))
-
 			{
-
 				// Not fatal error
-
 				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-
 				continue;
-
 			}
 
 			// Check that the row actually exists
@@ -892,7 +692,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else
@@ -903,7 +702,11 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				}
 			}
 
-			$this->table->description = $this->generateUniqe('description',$this->table->description);
+			// Only for strings
+			if (SermondistributorHelper::checkString($this->table->description) && !is_numeric($this->table->description))
+			{
+				$this->table->description = $this->generateUniqe('description',$this->table->description);
+			}
 
 			// insert all set values
 			if (SermondistributorHelper::checkArray($values))
@@ -985,8 +788,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			$this->user		= JFactory::getUser();
 			$this->table		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
-			$this->contentType	= new JUcmType;
-			$this->type		= $this->contentType->getTypeByTable($this->tableClassName);
 			$this->canDo		= SermondistributorHelper::getActions('external_source');
 		}
 
@@ -1010,7 +811,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			if (!$this->user->authorise('external_source.edit', $contexts[$pk]))
 			{
 				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
 				return false;
 			}
 
@@ -1021,7 +821,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else
@@ -1108,12 +907,12 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			$data['filetypes'] = (string) json_encode($data['filetypes']);
 		}
 
-		// Get the basic encription key.
+		// Get the basic encryption key.
 		$basickey = SermondistributorHelper::getCryptKey('basic');
-		// Get the encription object
+		// Get the encryption object
 		$basic = new FOFEncryptAes($basickey, 128);
 
-		// Encript data oauthtoken.
+		// Encrypt data oauthtoken.
 		if (isset($data['oauthtoken']) && $basickey)
 		{
 			$data['oauthtoken'] = $basic->encryptString($data['oauthtoken']);

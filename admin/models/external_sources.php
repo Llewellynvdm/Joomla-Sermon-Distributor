@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 55 of this MVC
-	@build			17th July, 2017
-	@created		3rd November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_sources.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -368,9 +368,9 @@ class SermondistributorModelExternal_sources extends JModelList
 			{
 				$items = $db->loadObjectList();
 
-				// Get the basic encription key.
+				// Get the basic encryption key.
 				$basickey = SermondistributorHelper::getCryptKey('basic');
-				// Get the encription object.
+				// Get the encryption object.
 				$basic = new FOFEncryptAes($basickey, 128);
 
 				// set values to display correctly.

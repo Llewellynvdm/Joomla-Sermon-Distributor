@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 42 of this MVC
-	@build			21st November, 2016
-	@created		8th November, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preacher.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -56,15 +56,15 @@ class SermondistributorModelPreacher extends JModelList
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$this->user		= JFactory::getUser();
-		$this->userId		= $this->user->get('id');
-		$this->guest		= $this->user->get('guest');
-                $this->groups		= $this->user->get('groups');
-                $this->authorisedGroups	= $this->user->getAuthorisedGroups();
-		$this->levels		= $this->user->getAuthorisedViewLevels();
-		$this->app		= JFactory::getApplication();
-		$this->input		= $this->app->input;
-		$this->initSet		= true; 
+		$this->user = JFactory::getUser();
+		$this->userId = $this->user->get('id');
+		$this->guest = $this->user->get('guest');
+		$this->groups = $this->user->get('groups');
+		$this->authorisedGroups = $this->user->getAuthorisedGroups();
+		$this->levels = $this->user->getAuthorisedViewLevels();
+		$this->app = JFactory::getApplication();
+		$this->input = $this->app->input;
+		$this->initSet = true; 
 		// Get a db connection.
 		$db = JFactory::getDbo();
 
@@ -140,9 +140,12 @@ class SermondistributorModelPreacher extends JModelList
 		// Get the global params
 		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
 
-		// Convert the parameter fields into objects.
+		// Insure all item fields are adapted where needed.
 		if (SermondistributorHelper::checkArray($items))
 		{
+			// Load the JEvent Dispatcher
+			JPluginHelper::importPlugin('content');
+			$this->_dispatcher = JEventDispatcher::getInstance();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
@@ -157,8 +160,11 @@ class SermondistributorModelPreacher extends JModelList
 					// Decode manual_files
 					$item->manual_files = json_decode($item->manual_files, true);
 				}
-				// Make sure the content prepare plugins fire on description.
-				$item->description = JHtml::_('content.prepare',$item->description);
+				// Make sure the content prepare plugins fire on description
+				$_description = new stdClass();
+				$_description->text =& $item->description; // value must be in text
+				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
+				$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.preacher.description', &$_description, &$this->params, 0));
 				// Checking if description has uikit components that must be loaded.
 				$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
 				// set idSermonStatisticE to the $item object.
@@ -243,6 +249,9 @@ class SermondistributorModelPreacher extends JModelList
 		// check if there was data returned
 		if ($db->getNumRows())
 		{
+			// Load the JEvent Dispatcher
+			JPluginHelper::importPlugin('content');
+			$this->_dispatcher = JEventDispatcher::getInstance();
 			return $db->loadObjectList();
 		}
 		return false;
@@ -307,8 +316,14 @@ class SermondistributorModelPreacher extends JModelList
 		{
 			return false;
 		}
-		// Make sure the content prepare plugins fire on description.
-		$data->description = JHtml::_('content.prepare',$data->description);
+	// Load the JEvent Dispatcher
+	JPluginHelper::importPlugin('content');
+	$this->_dispatcher = JEventDispatcher::getInstance();
+		// Make sure the content prepare plugins fire on description
+		$_description = new stdClass();
+		$_description->text =& $data->description; // value must be in text
+		// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
+		$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.preacher.description', &$_description, &$this->params, 0));
 		// Checking if description has uikit components that must be loaded.
 		$this->uikitComp = SermondistributorHelper::getUikitComp($data->description,$this->uikitComp);
 
@@ -377,9 +392,12 @@ class SermondistributorModelPreacher extends JModelList
 			return false;
 		}
 
-		// Convert the parameter fields into objects.
+		// Insure all item fields are adapted where needed.
 		if (SermondistributorHelper::checkArray($items))
 		{
+	// Load the JEvent Dispatcher
+	JPluginHelper::importPlugin('content');
+	$this->_dispatcher = JEventDispatcher::getInstance();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
@@ -452,9 +470,12 @@ class SermondistributorModelPreacher extends JModelList
 			return false;
 		}
 
-		// Convert the parameter fields into objects.
+		// Insure all item fields are adapted where needed.
 		if (SermondistributorHelper::checkArray($items))
 		{
+	// Load the JEvent Dispatcher
+	JPluginHelper::importPlugin('content');
+	$this->_dispatcher = JEventDispatcher::getInstance();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's

@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 55 of this MVC
-	@build			17th July, 2017
-	@created		3rd November, 2016
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -672,6 +672,21 @@ jQuery('#adminForm').on('change', '#jform_dropboxoptions',function (e)
 	var externalsources_vvvvvwv = jQuery("#jform_externalsources").val();
 	var dropboxoptions_vvvvvwv = jQuery("#jform_dropboxoptions input[type='radio']:checked").val();
 	vvvvvwv(permissiontype_vvvvvwv,externalsources_vvvvvwv,dropboxoptions_vvvvvwv);
+
+});
+
+// #jform_update_method listeners for update_method_vvvvvww function
+jQuery('#jform_update_method').on('keyup',function()
+{
+	var update_method_vvvvvww = jQuery("#jform_update_method input[type='radio']:checked").val();
+	vvvvvww(update_method_vvvvvww);
+
+});
+jQuery('#adminForm').on('change', '#jform_update_method',function (e)
+{
+	e.preventDefault();
+	var update_method_vvvvvww = jQuery("#jform_update_method input[type='radio']:checked").val();
+	vvvvvww(update_method_vvvvvww);
 
 });
 

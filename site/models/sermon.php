@@ -10,9 +10,9 @@
                                                         |_| 				
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		@update number 41 of this MVC
-	@build			19th December, 2016
-	@created		10th November, 2015
+	@version		2.0.x
+	@build			3rd March, 2018
+	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
@@ -71,10 +71,10 @@ class SermondistributorModelSermon extends JModelItem
 	 */
 	protected function populateState()
 	{
-		$this->app	= JFactory::getApplication();
-		$this->input 	= $this->app->input;
+		$this->app = JFactory::getApplication();
+		$this->input = $this->app->input;
 		// Get the itme main id
-		$id		= $this->input->getInt('id', null);
+		$id = $this->input->getInt('id', null);
 		$this->setState('sermon.id', $id);
 
 		// Load the parameters.
@@ -92,7 +92,7 @@ class SermondistributorModelSermon extends JModelItem
 	 */
 	public function getItem($pk = null)
 	{
-		$this->user		= JFactory::getUser();
+		$this->user = JFactory::getUser();
 		// check if this user has permission to access item
 		if (!$this->user->authorise('site.sermon.access', 'com_sermondistributor'))
 		{
@@ -102,12 +102,12 @@ class SermondistributorModelSermon extends JModelItem
 			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
 		}
-		$this->userId		= $this->user->get('id');
-		$this->guest		= $this->user->get('guest');
-                $this->groups		= $this->user->get('groups');
-                $this->authorisedGroups	= $this->user->getAuthorisedGroups();
-		$this->levels		= $this->user->getAuthorisedViewLevels();
-		$this->initSet		= true;
+		$this->userId = $this->user->get('id');
+		$this->guest = $this->user->get('guest');
+		$this->groups = $this->user->get('groups');
+		$this->authorisedGroups = $this->user->getAuthorisedGroups();
+		$this->levels = $this->user->getAuthorisedViewLevels();
+		$this->initSet = true;
 
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('sermon.id');
 		
@@ -168,6 +168,9 @@ class SermondistributorModelSermon extends JModelItem
 					$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 					return false;
 				}
+			// Load the JEvent Dispatcher
+			JPluginHelper::importPlugin('content');
+			$this->_dispatcher = JEventDispatcher::getInstance();
 				if (SermondistributorHelper::checkJson($data->local_files))
 				{
 					// Decode local_files
@@ -178,8 +181,11 @@ class SermondistributorModelSermon extends JModelItem
 					// Decode manual_files
 					$data->manual_files = json_decode($data->manual_files, true);
 				}
-				// Make sure the content prepare plugins fire on description.
-				$data->description = JHtml::_('content.prepare',$data->description);
+				// Make sure the content prepare plugins fire on description
+				$_description = new stdClass();
+				$_description->text =& $data->description; // value must be in text
+				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
+				$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.sermon.description', &$_description, &$this->params, 0));
 				// Checking if description has uikit components that must be loaded.
 				$this->uikitComp = SermondistributorHelper::getUikitComp($data->description,$this->uikitComp);
 				// set the global sermon value.
@@ -288,6 +294,9 @@ class SermondistributorModelSermon extends JModelItem
 		// check if there was data returned
 		if ($db->getNumRows())
 		{
+			// Load the JEvent Dispatcher
+			JPluginHelper::importPlugin('content');
+			$this->_dispatcher = JEventDispatcher::getInstance();
 			return $db->loadObjectList();
 		}
 		return false;
