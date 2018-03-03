@@ -100,10 +100,12 @@ if (isset($displayData->download_links) && count($displayData->download_links))
 }
 
 ?>
-<?php if (1 == $displayData->playerKey && SermondistributorHelper::checkArray($players)): ?>
-	<li><?php echo implode('',$players); ?></li>
-<?php elseif (2 == $displayData->playerKey && SermondistributorHelper::checkString($players)): ?>
-	<div class="uk-width-1-1 uk-margin"><div class="uk-panel"><?php echo $players; ?></div></div>
-<?php elseif (3 == $displayData->playerKey && SermondistributorHelper::checkArray($players)): ?>
-	<div class="uk-width-1-1 uk-margin"><div class="uk-panel"><?php echo implode('</div><div class="uk-panel">', $players);  ?></div></div>
+<?php if (JFactory::getApplication()->client->browser): ?>
+	<?php if (1 == $displayData->playerKey && SermondistributorHelper::checkArray($players)): ?>
+		<li><?php echo implode('',$players); ?></li>
+	<?php elseif (2 == $displayData->playerKey && SermondistributorHelper::checkString($players)): ?>
+		<div class="uk-width-1-1 uk-margin"><div class="uk-panel"><?php echo $players; ?></div></div>
+	<?php elseif (3 == $displayData->playerKey && SermondistributorHelper::checkArray($players)): ?>
+		<div class="uk-width-1-1 uk-margin"><div class="uk-panel"><?php echo implode('</div><div class="uk-panel">', $players);  ?></div></div>
+	<?php endif; ?>
 <?php endif; ?>

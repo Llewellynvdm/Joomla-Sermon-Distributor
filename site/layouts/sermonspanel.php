@@ -115,13 +115,13 @@ switch ($style)
 				<li><?php echo JText::_('COM_SERMONDISTRIBUTOR_SERIES'); ?>: <a href="<?php echo $displayData->series_link; ?>" data-uk-tooltip title="<?php echo $displayData->series_name; ?>"><?php echo $displayData->series_name; ?></a></li>
 			<?php endif; ?>
 		</ul>
-	<?php elseif (($displayData->params->get($displayData->viewKey.'_sermons_desc') && ($displayData->desc || $displayData->short_description)) && (($displayData->params->get($displayData->viewKey.'_sermons_open') || ($displayData->params->get('add_to_dropbox') && isset($displayData->dropbox_buttons))) || ($displayData->params->get($displayData->viewKey.'_sermons_downloads') && isset($displayData->download_links)))): ?>
+	<?php elseif (($displayData->params->get($displayData->viewKey.'_sermons_desc') && ($displayData->desc || $displayData->short_description)) && (($displayData->params->get($displayData->viewKey.'_sermons_open') || ($displayData->params->get('add_to_button') && isset($displayData->dropbox_buttons))) || ($displayData->params->get($displayData->viewKey.'_sermons_downloads') && isset($displayData->download_links)))): ?>
 		<hr />
 	<?php endif; ?>
-	<?php if (($displayData->params->get($displayData->viewKey.'_sermons_open') || ($displayData->params->get('add_to_dropbox') && isset($displayData->dropbox_buttons))) && ($displayData->params->get($displayData->viewKey.'_sermons_downloads') && isset($displayData->download_links))): ?>
+	<?php if (($displayData->params->get($displayData->viewKey.'_sermons_open') || ($displayData->params->get('add_to_button') && isset($displayData->dropbox_buttons))) && ($displayData->params->get($displayData->viewKey.'_sermons_downloads') && isset($displayData->download_links))): ?>
 		<?php echo JLayoutHelper::render('opensermonbutton', $displayData); ?>
 		<?php echo JLayoutHelper::render('downloadsermonbutton', $displayData); ?>
-	<?php elseif ($displayData->params->get($displayData->viewKey.'_sermons_open') || ($displayData->params->get('add_to_dropbox') && isset($displayData->dropbox_buttons))): ?>
+	<?php elseif ($displayData->params->get($displayData->viewKey.'_sermons_open') || ($displayData->params->get('add_to_button') && isset($displayData->dropbox_buttons))): ?>
 		<?php echo JLayoutHelper::render('opensermonbutton', $displayData); ?>
 	<?php endif; ?>
 </div>

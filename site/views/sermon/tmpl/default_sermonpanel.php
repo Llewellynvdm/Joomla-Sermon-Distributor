@@ -111,7 +111,7 @@ $this->item->params = $this->params;
 				<?php if ($this->params->get('sermon_downloads')): ?>
 					<li><?php echo JLayoutHelper::render('downloadsermonbutton', $this->item); ?></li>
 				<?php endif; ?>
-				<?php if ($this->params->get('add_to_dropbox') && isset($this->item->dropbox_buttons)): ?>
+				<?php if ($this->params->get('add_to_button') && isset($this->item->dropbox_buttons)): ?>
 					<li><?php echo JLayoutHelper::render('addtodropboxbutton', $this->item); ?></li>
 				<?php endif; ?>
 				<?php if (1 == $this->item->playerKey): ?>

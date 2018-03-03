@@ -56,6 +56,7 @@ class SermondistributorControllerDownload extends JControllerLegacy
 				case 'file':
 					$keys = SermondistributorHelper::base64_urldecode($jinput->get('key', NULL, 'STRING'));
 					$enUrl = SermondistributorHelper::base64_urldecode($jinput->get('link', NULL, 'STRING'));
+					$infoKey = SermondistributorHelper::base64_urldecode($jinput->get('info', NULL, 'STRING'));
 					$filename = $jinput->get('filename', NULL, 'CMD');
 					if((base64_encode(base64_decode($enUrl, true)) === $enUrl) && (base64_encode(base64_decode($keys, true)) === $keys) && $filename)
 					{
@@ -70,7 +71,11 @@ class SermondistributorControllerDownload extends JControllerLegacy
 							$localkey = SermondistributorHelper::getLocalKey();
 							$opener = new FOFEncryptAes($localkey, 128);
 							$link = rtrim($opener->decryptString($enUrl), "\0");
-							$info = $this->getContentInfo($link);
+							// check if we have local listing info
+							if (!$info = SermondistributorHelper::getFileInfo($infoKey))
+							{
+								$info = $this->getContentInfo($link);
+							}
 							// set headers
 							$app = JFactory::getApplication();
 							$app->setHeader('Accept-ranges', 'bytes', true);
@@ -122,7 +127,6 @@ class SermondistributorControllerDownload extends JControllerLegacy
 	
 	protected function getContentInfo($url)
 	{
-		// we first try the curl option
 		if ($this->_isCurl())
 		{
 			$ch = curl_init($url);

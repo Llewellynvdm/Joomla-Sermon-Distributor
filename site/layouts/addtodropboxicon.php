@@ -30,7 +30,7 @@ defined('JPATH_BASE') or die('Restricted access');
 
 
 ?>
-<?php if ($displayData->params->get('add_to_dropbox') && isset($displayData->dropbox_buttons)): ?>
+<?php if ($displayData->params->get('add_to_button') && isset($displayData->dropbox_buttons)): ?>
 	<?php if (count($displayData->dropbox_buttons) == 1): ?>
 		<?php foreach ($displayData->dropbox_buttons as $filename => $link): ?>
 			<a class="uk-icon-hover uk-icon-dropbox" target="_blank"<?php echo $displayData->onclick_drobox[$filename]; ?> href="<?php echo $link; ?>" data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SAVE_TO_YOUR_DROPBOX'); ?>"></a>

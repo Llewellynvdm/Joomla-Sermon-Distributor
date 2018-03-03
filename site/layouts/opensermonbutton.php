@@ -30,7 +30,7 @@ defined('JPATH_BASE') or die('Restricted access');
 
 
 ?>
-<?php if ($displayData->params->get($displayData->viewKey.'_sermons_open') && $displayData->params->get('add_to_dropbox') && isset($displayData->dropbox_buttons)): ?>
+<?php if ($displayData->params->get($displayData->viewKey.'_sermons_open') && $displayData->params->get('add_to_button') && isset($displayData->dropbox_buttons)): ?>
 	<div class="uk-button-group uk-width-1-1">
 		<a class="uk-button uk-margin-small-bottom uk-width-4-5 uk-button-primary" href="<?php echo $displayData->link; ?>" title="<?php echo $displayData->name; ?>">
 			<i class="uk-icon-check"></i> <?php echo JText::_('COM_SERMONDISTRIBUTOR_OPEN'); ?>
@@ -70,7 +70,7 @@ defined('JPATH_BASE') or die('Restricted access');
 			<span data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_DOWNLOAD_COUNTER_TOTAL'); ?>">(<?php echo $displayData->statisticTotal; ?>)</span>
 		<?php endif; ?>
 	</a>
-<?php elseif ($displayData->params->get('add_to_dropbox') && isset($displayData->dropbox_buttons)): ?>
+<?php elseif ($displayData->params->get('add_to_button') && isset($displayData->dropbox_buttons)): ?>
 	<?php if (count($displayData->dropbox_buttons) == 1): ?>
 		<?php foreach ($displayData->dropbox_buttons as $filename => $link): ?>
 			<a class="uk-button uk-margin-small-bottom uk-width-1-1" target="_blank"<?php echo $displayData->onclick_drobox[$filename]; ?> href="<?php echo $link; ?>" data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SAVE_TO_YOUR_DROPBOX'); ?>"><i class="uk-icon-dropbox"></i> <?php echo JText::_('COM_SERMONDISTRIBUTOR_DROPBOX'); ?></a>
