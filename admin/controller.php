@@ -1,17 +1,16 @@
 <?php
-/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
-    __      __       _     _____                 _                                  _     __  __      _   _               _
-    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
-     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
-      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
-       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
-        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
-/-------------------------------------------------------------------------------------------------------------------------------/
+/*-------------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+ ____                                                  ____                 __               __               __
+/\  _`\                                               /\  _`\   __         /\ \__         __/\ \             /\ \__
+\ \,\L\_\     __   _ __    ___ ___     ___     ___    \ \ \/\ \/\_\    ____\ \ ,_\  _ __ /\_\ \ \____  __  __\ \ ,_\   ___   _ __
+ \/_\__ \   /'__`\/\`'__\/' __` __`\  / __`\ /' _ `\   \ \ \ \ \/\ \  /',__\\ \ \/ /\`'__\/\ \ \ '__`\/\ \/\ \\ \ \/  / __`\/\`'__\
+   /\ \L\ \/\  __/\ \ \/ /\ \/\ \/\ \/\ \L\ \/\ \/\ \   \ \ \_\ \ \ \/\__, `\\ \ \_\ \ \/ \ \ \ \ \L\ \ \ \_\ \\ \ \_/\ \L\ \ \ \/
+   \ `\____\ \____\\ \_\ \ \_\ \_\ \_\ \____/\ \_\ \_\   \ \____/\ \_\/\____/ \ \__\\ \_\  \ \_\ \_,__/\ \____/ \ \__\ \____/\ \_\
+    \/_____/\/____/ \/_/  \/_/\/_/\/_/\/___/  \/_/\/_/    \/___/  \/_/\/___/   \/__/ \/_/   \/_/\/___/  \/___/   \/__/\/___/  \/_/
+
+/------------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		2.0.x
-	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		controller.php
@@ -21,7 +20,7 @@
 	
 	A sermon distributor that links to Dropbox. 
                                                              
-/-----------------------------------------------------------------------------------------------------------------------------*/
+/----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -35,6 +34,23 @@ jimport('joomla.application.component.controller');
 class SermondistributorController extends JControllerLegacy
 {
 	/**
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 * Recognized key values include 'name', 'default_task', 'model_path', and
+	 * 'view_path' (this list is not meant to be comprehensive).
+	 *
+	 * @since   3.0
+	 */
+	public function __construct($config = array())
+	{
+		// set the default view
+		$config['default_view'] = 'sermondistributor';
+
+		parent::__construct($config);
+	}
+
+	/**
 	 * display task
 	 *
 	 * @return void
@@ -42,7 +58,7 @@ class SermondistributorController extends JControllerLegacy
 	function display($cachable = false, $urlparams = false)
 	{
 		// set default view if not set
-		$view   = $this->input->getCmd('view', 'Sermondistributor');
+		$view   = $this->input->getCmd('view', 'sermondistributor');
 		$data	= $this->getViewRelation($view);
 		$layout	= $this->input->get('layout', null, 'WORD');
 		$id    	= $this->input->getInt('id');

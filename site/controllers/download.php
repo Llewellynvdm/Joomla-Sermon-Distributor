@@ -1,17 +1,16 @@
 <?php
-/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
-    __      __       _     _____                 _                                  _     __  __      _   _               _
-    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
-     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
-      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
-       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
-        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
-/-------------------------------------------------------------------------------------------------------------------------------/
+/*-------------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+ ____                                                  ____                 __               __               __
+/\  _`\                                               /\  _`\   __         /\ \__         __/\ \             /\ \__
+\ \,\L\_\     __   _ __    ___ ___     ___     ___    \ \ \/\ \/\_\    ____\ \ ,_\  _ __ /\_\ \ \____  __  __\ \ ,_\   ___   _ __
+ \/_\__ \   /'__`\/\`'__\/' __` __`\  / __`\ /' _ `\   \ \ \ \ \/\ \  /',__\\ \ \/ /\`'__\/\ \ \ '__`\/\ \/\ \\ \ \/  / __`\/\`'__\
+   /\ \L\ \/\  __/\ \ \/ /\ \/\ \/\ \/\ \L\ \/\ \/\ \   \ \ \_\ \ \ \/\__, `\\ \ \_\ \ \/ \ \ \ \ \L\ \ \ \_\ \\ \ \_/\ \L\ \ \ \/
+   \ `\____\ \____\\ \_\ \ \_\ \_\ \_\ \____/\ \_\ \_\   \ \____/\ \_\/\____/ \ \__\\ \_\  \ \_\ \_,__/\ \____/ \ \__\ \____/\ \_\
+    \/_____/\/____/ \/_/  \/_/\/_/\/_/\/___/  \/_/\/_/    \/___/  \/_/\/___/   \/__/ \/_/   \/_/\/___/  \/___/   \/__/\/___/  \/_/
+
+/------------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		2.0.x
-	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		download.php
@@ -21,7 +20,7 @@
 	
 	A sermon distributor that links to Dropbox. 
                                                              
-/-----------------------------------------------------------------------------------------------------------------------------*/
+/----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -49,10 +48,10 @@ class SermondistributorControllerDownload extends JControllerLegacy
 		$token 		= JSession::getFormToken();
 		$call_token	= $jinput->get('token', 0, 'ALNUM');
 		if($token == $call_token)
-                {
+		{
 			$task = $this->getTask();
 			switch($task)
-                        {
+			{
 				case 'file':
 					$keys = SermondistributorHelper::base64_urldecode($jinput->get('key', NULL, 'STRING'));
 					$enUrl = SermondistributorHelper::base64_urldecode($jinput->get('link', NULL, 'STRING'));
@@ -104,16 +103,16 @@ class SermondistributorControllerDownload extends JControllerLegacy
 							$app->setHeader('Content-Name', '"'.$name.'"', true);
 							$app->setHeader('Content-Version', '1.0', true);
 							$app->setHeader('Content-Vendor', '"'.$vendor.'"', true);
-							$app->setHeader('Content-URL', '"'.JUri::getInstance().'"', true);							
+							$app->setHeader('Content-URL', '"'.JUri::getInstance().'"', true);
 							$app->setHeader('etag', md5($enUrl), true);
 							$app->setHeader('Pragma', 'public', true);
-							$app->setHeader('cache-control', 'max-age=0', true);
+							$app->setHeader('cache-control', 'must-revalidate, post-check=0, pre-check=0', true);
 							$app->setHeader('x-robots-tag', 'noindex, nofollow, noimageindex', true);
 							$app->setHeader('x-content-security-policy', 'referrer no-referrer', true);
 							$app->setHeader('x-webkit-csp', 'referrer no-referrer', true);
 							$app->setHeader('x-content-security-policy', 'referrer no-referrer', true);
 							// get the file
-							readfile($link); 
+							readfile($link);
 							$app->sendHeaders();
 							$app->close();
 							jexit();

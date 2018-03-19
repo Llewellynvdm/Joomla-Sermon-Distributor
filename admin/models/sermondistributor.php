@@ -1,17 +1,16 @@
 <?php
-/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
-    __      __       _     _____                 _                                  _     __  __      _   _               _
-    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
-     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
-      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
-       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
-        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
-/-------------------------------------------------------------------------------------------------------------------------------/
+/*-------------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+ ____                                                  ____                 __               __               __
+/\  _`\                                               /\  _`\   __         /\ \__         __/\ \             /\ \__
+\ \,\L\_\     __   _ __    ___ ___     ___     ___    \ \ \/\ \/\_\    ____\ \ ,_\  _ __ /\_\ \ \____  __  __\ \ ,_\   ___   _ __
+ \/_\__ \   /'__`\/\`'__\/' __` __`\  / __`\ /' _ `\   \ \ \ \ \/\ \  /',__\\ \ \/ /\`'__\/\ \ \ '__`\/\ \/\ \\ \ \/  / __`\/\`'__\
+   /\ \L\ \/\  __/\ \ \/ /\ \/\ \/\ \/\ \L\ \/\ \/\ \   \ \ \_\ \ \ \/\__, `\\ \ \_\ \ \/ \ \ \ \ \L\ \ \ \_\ \\ \ \_/\ \L\ \ \ \/
+   \ `\____\ \____\\ \_\ \ \_\ \_\ \_\ \____/\ \_\ \_\   \ \____/\ \_\/\____/ \ \__\\ \_\  \ \_\ \_,__/\ \____/ \ \__\ \____/\ \_\
+    \/_____/\/____/ \/_/  \/_/\/_/\/_/\/___/  \/_/\/_/    \/___/  \/_/\/___/   \/__/ \/_/   \/_/\/___/  \/___/   \/__/\/___/  \/_/
+
+/------------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		2.0.x
-	@build			3rd March, 2018
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -21,7 +20,7 @@
 	
 	A sermon distributor that links to Dropbox. 
                                                              
-/-----------------------------------------------------------------------------------------------------------------------------*/
+/----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -89,6 +88,7 @@ class SermondistributorModelSermondistributor extends JModelList
 			'help_document.access' => 'help_document.access',
 			'help_documents.submenu' => 'help_document.submenu',
 			'help_documents.dashboard_list' => 'help_document.dashboard_list');
+		// loop over the $views
 		foreach($viewGroups as $group => $views)
 		{
 			$i = 0;
@@ -97,47 +97,62 @@ class SermondistributorModelSermondistributor extends JModelList
 				foreach($views as $view)
 				{
 					$add = false;
-					if (strpos($view,'.') !== false)
+					// external views (links)
+					if (strpos($view,'||') !== false)
 					{
-							$dwd = explode('.', $view);
-							if (count($dwd) == 3)
+						$dwd = explode('||', $view);
+						if (count($dwd) == 3)
+						{
+							list($type, $name, $url) = $dwd;
+							$viewName 	= $name;
+							$alt 		= $name;
+							$url 		= $url;
+							$image 		= $name.'.'.$type;
+							$name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U');
+						}
+					}
+					// internal views
+					elseif (strpos($view,'.') !== false)
+					{
+						$dwd = explode('.', $view);
+						if (count($dwd) == 3)
+						{
+							list($type, $name, $action) = $dwd;
+						}
+						elseif (count($dwd) == 2)
+						{
+							list($type, $name) = $dwd;
+							$action = false;
+						}
+						if ($action)
+						{
+							$viewName = $name;
+							switch($action)
 							{
-								list($type, $name, $action) = $dwd;
+								case 'add':
+									$url 	= 'index.php?option=com_sermondistributor&view='.$name.'&layout=edit';
+									$image 	= $name.'_'.$action.'.'.$type;
+									$alt 	= $name.'&nbsp;'.$action;
+									$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_ADD';
+									$add	= true;
+								break;
+								default:
+									$url 	= 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.'.$name;
+									$image 	= $name.'_'.$action.'.'.$type;
+									$alt 	= $name.'&nbsp;'.$action;
+									$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_'.SermondistributorHelper::safeString($action,'U');
+								break;
 							}
-							elseif (count($dwd) == 2)
-							{
-								list($type, $name) = $dwd;
-								$action = false;
-							}
-							if ($action)
-							{
-								$viewName = $name;
-								switch($action)
-								{
-									case 'add':
-										$url 	='index.php?option=com_sermondistributor&view='.$name.'&layout=edit';
-										$image 	= $name.'_'.$action.'.'.$type;
-										$alt 	= $name.'&nbsp;'.$action;
-										$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_ADD';
-										$add	= true;
-									break;
-									default:
-										$url 	= 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.'.$name;
-										$image 	= $name.'_'.$action.'.'.$type;
-										$alt 	= $name.'&nbsp;'.$action;
-										$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_'.SermondistributorHelper::safeString($action,'U');
-									break;
-								}
-							}
-							else
-							{
-								$viewName 	= $name;
-								$alt 		= $name;
-								$url 		= 'index.php?option=com_sermondistributor&view='.$name;
-								$image 		= $name.'.'.$type;
-								$name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U');
-								$hover		= false;
-							}
+						}
+						else
+						{
+							$viewName 	= $name;
+							$alt 		= $name;
+							$url 		= 'index.php?option=com_sermondistributor&view='.$name;
+							$image 		= $name.'.'.$type;
+							$name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U');
+							$hover		= false;
+						}
 					}
 					else
 					{
@@ -190,7 +205,7 @@ class SermondistributorModelSermondistributor extends JModelList
 							// check access
 							if($user->authorise($accessAdd, 'com_sermondistributor') && $user->authorise($accessTo, 'com_sermondistributor') && $dashboard_add)
 							{
-								$icons[$group][$i]              = new StdClass;
+								$icons[$group][$i]			= new StdClass;
 								$icons[$group][$i]->url 	= $url;
 								$icons[$group][$i]->name 	= $name;
 								$icons[$group][$i]->image 	= $image;
@@ -202,7 +217,7 @@ class SermondistributorModelSermondistributor extends JModelList
 							// check access
 							if($user->authorise($accessTo, 'com_sermondistributor') && $dashboard_list)
 							{
-								$icons[$group][$i]              = new StdClass;
+								$icons[$group][$i]			= new StdClass;
 								$icons[$group][$i]->url 	= $url;
 								$icons[$group][$i]->name 	= $name;
 								$icons[$group][$i]->image 	= $image;
@@ -214,7 +229,7 @@ class SermondistributorModelSermondistributor extends JModelList
 							// check access
 							if($user->authorise($accessAdd, 'com_sermondistributor') && $dashboard_add)
 							{
-								$icons[$group][$i]              = new StdClass;
+								$icons[$group][$i]			= new StdClass;
 								$icons[$group][$i]->url 	= $url;
 								$icons[$group][$i]->name 	= $name;
 								$icons[$group][$i]->image 	= $image;
@@ -223,7 +238,7 @@ class SermondistributorModelSermondistributor extends JModelList
 						}
 						else
 						{
-							$icons[$group][$i]              = new StdClass;
+							$icons[$group][$i]			= new StdClass;
 							$icons[$group][$i]->url 	= $url;
 							$icons[$group][$i]->name 	= $name;
 							$icons[$group][$i]->image 	= $image;
@@ -232,7 +247,7 @@ class SermondistributorModelSermondistributor extends JModelList
 					}
 					else
 					{
-						$icons[$group][$i]              = new StdClass;
+						$icons[$group][$i]			= new StdClass;
 						$icons[$group][$i]->url 	= $url;
 						$icons[$group][$i]->name 	= $name;
 						$icons[$group][$i]->image 	= $image;

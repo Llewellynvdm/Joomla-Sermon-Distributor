@@ -10,97 +10,142 @@
 		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR"
 			addrulepath="/administrator/components/com_sermondistributor/models/rules"
 			addfieldpath="/administrator/components/com_sermondistributor/models/fields">
-	<!--  List_series_display Field. Type: Radio. (joomla) -->
-	<field type="radio"
-               name="list_series_display"
-               label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DISPLAY_LABEL"
-               description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DISPLAY_DESCRIPTION"
-               class="btn-group btn-group-yesno"
-               default="2">
-                <!-- Option Set.-->
-                <option value="1">COM_SERMONDISTRIBUTOR_CONFIG_TABLE</option>
-                <option value="2">COM_SERMONDISTRIBUTOR_CONFIG_GRID</option>
-                <option value="3">COM_SERMONDISTRIBUTOR_CONFIG_LIST</option>
-        </field>			
-	<!--  List_series_list_style Field. Type: List. (joomla) -->
-	<field type="list"
-               name="list_series_list_style"
-               label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_LIST_STYLE_LABEL"
-               description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_LIST_STYLE_DESCRIPTION"
-               class="list_class"
-               multiple="false"
-               filter="INT"
-               default="0">
-                <!-- Option Set.-->
-                <option value="0">COM_SERMONDISTRIBUTOR_CONFIG_PLAIN</option>
-                <option value="1">COM_SERMONDISTRIBUTOR_CONFIG_LINES</option>
-                <option value="2">COM_SERMONDISTRIBUTOR_CONFIG_STRIPED</option>
-                <option value="3">COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
-        </field>			
-	<!--  List_series_table_color Field. Type: List. (joomla) -->
-	<field type="list"
-               name="list_series_table_color"
-               label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_TABLE_COLOR_LABEL"
-               description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_TABLE_COLOR_DESCRIPTION"
-               class="list_class"
-               multiple="false"
-               filter="INT"
-               default="0">
-                <!-- Option Set.-->
-                <option value="0">COM_SERMONDISTRIBUTOR_CONFIG_BLUE</option>
-                <option value="1">COM_SERMONDISTRIBUTOR_CONFIG_RED</option>
-                <option value="2">COM_SERMONDISTRIBUTOR_CONFIG_PURPLE</option>
-                <option value="3">COM_SERMONDISTRIBUTOR_CONFIG_GREEN</option>
-                <option value="4">COM_SERMONDISTRIBUTOR_CONFIG_DARK_BLUE</option>
-                <option value="5">COM_SERMONDISTRIBUTOR_CONFIG_LEGACY</option>
-                <option value="6">COM_SERMONDISTRIBUTOR_CONFIG_UIKIT</option>
-                <option value="7">COM_SERMONDISTRIBUTOR_CONFIG_CUSTOM</option>
-                <option value="8">COM_SERMONDISTRIBUTOR_CONFIG_NONE</option>
-        </field>			
-	<!--  List_series_icon Field. Type: Radio. (joomla) -->
-	<field type="radio"
-               name="list_series_icon"
-               label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_ICON_LABEL"
-               description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_ICON_DESCRIPTION"
-               class="btn-group btn-group-yesno"
-               default="1">
-                <!-- Option Set.-->
-                <option value="1">COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
-                <option value="0">COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
-        </field>			
-	<!--  List_series_desc Field. Type: Radio. (joomla) -->
-	<field type="radio"
-               name="list_series_desc"
-               label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DESC_LABEL"
-               description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DESC_DESCRIPTION"
-               class="btn-group btn-group-yesno"
-               default="1">
-                <!-- Option Set.-->
-                <option value="1">COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
-                <option value="0">COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
-        </field>			
-	<!--  List_series_sermon_count Field. Type: Radio. (joomla) -->
-	<field type="radio"
-               name="list_series_sermon_count"
-               label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_SERMON_COUNT_LABEL"
-               description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_SERMON_COUNT_DESCRIPTION"
-               class="btn-group btn-group-yesno"
-               default="1">
-                <!-- Option Set.-->
-                <option value="1">COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
-                <option value="0">COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
-        </field>			
-	<!--  List_series_hits Field. Type: Radio. (joomla) -->
-	<field type="radio"
-               name="list_series_hits"
-               label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_HITS_LABEL"
-               description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_HITS_DESCRIPTION"
-               class="btn-group btn-group-yesno"
-               default="1">
-                <!-- Option Set.-->
-                <option value="1">COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
-                <option value="0">COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
-        </field>
+		<!-- List_series_display Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="list_series_display"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DISPLAY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DISPLAY_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_TABLE</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_GRID</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_LIST</option>
+		</field>			
+		<!-- List_series_list_style Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="list_series_list_style"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_LIST_STYLE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_LIST_STYLE_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="string"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_PLAIN</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_LINES</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_STRIPED</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
+		</field>			
+		<!-- List_series_table_color Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="list_series_table_color"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_TABLE_COLOR_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_TABLE_COLOR_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="string"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_BLUE</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_RED</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_PURPLE</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_GREEN</option>
+			<option value="4">
+				COM_SERMONDISTRIBUTOR_CONFIG_DARK_BLUE</option>
+			<option value="5">
+				COM_SERMONDISTRIBUTOR_CONFIG_LEGACY</option>
+			<option value="6">
+				COM_SERMONDISTRIBUTOR_CONFIG_UIKIT</option>
+			<option value="7">
+				COM_SERMONDISTRIBUTOR_CONFIG_CUSTOM</option>
+			<option value="8">
+				COM_SERMONDISTRIBUTOR_CONFIG_NONE</option>
+		</field>			
+		<!-- List_series_icon Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="list_series_icon"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_ICON_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_ICON_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- List_series_desc Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="list_series_desc"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DESC_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_DESC_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- List_series_sermon_count Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="list_series_sermon_count"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_SERMON_COUNT_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_SERMON_COUNT_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- List_series_hits Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="list_series_hits"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_HITS_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_LIST_SERIES_HITS_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>
 		</fieldset>
 	</fields>
 </metadata>
