@@ -39,7 +39,8 @@ class JFormFieldSermon extends JFormFieldList
 	 *
 	 * @var		string
 	 */
-	public $type = 'sermon'; 
+	public $type = 'sermon';
+
 	/**
 	 * Override to add new button
 	 *

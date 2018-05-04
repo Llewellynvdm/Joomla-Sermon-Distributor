@@ -222,6 +222,7 @@
 			required="true"
 			filter="url"
 			validated="url"
+			scheme="http,https"
 			message="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_MESSAGE"
 			hint="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_HINT"
 		/>

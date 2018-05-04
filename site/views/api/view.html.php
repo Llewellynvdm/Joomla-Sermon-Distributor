@@ -44,6 +44,8 @@ class SermondistributorViewApi extends JViewLegacy
 		$this->user = JFactory::getUser();
 		// Initialise variables.
 		$this->items = $this->get('Items');
+				// do not load the display
+				jexit('Access Denied!');
 
 		// Set the toolbar
 		$this->addToolBar();

@@ -39,7 +39,8 @@ class JFormFieldExternalsource extends JFormFieldList
 	 *
 	 * @var		string
 	 */
-	public $type = 'externalsource'; 
+	public $type = 'externalsource';
+
 	/**
 	 * Override to add new button
 	 *

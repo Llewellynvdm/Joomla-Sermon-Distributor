@@ -125,7 +125,19 @@ class SermondistributorControllerApi extends JControllerForm
 			$model->setExternalUpdate();
 		} while (SermondistributorHelper::$updateWatch == 1);  // only do one round
 		// run the workers
-		SermondistributorHelper::runWorker('theQueue', 2);
+		if (SermondistributorHelper::runWorker('theQueue', 2))
+		{
+			// not success
+			echo 1;
+			// clear session
+			JFactory::getApplication()->getSession()->destroy();
+			jexit();
+		}
+		// not success
+		echo 0;
+		// clear session
+		JFactory::getApplication()->getSession()->destroy();
+		jexit();
 	}
 
 	protected function getApiUser()

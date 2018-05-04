@@ -50,7 +50,7 @@ abstract class SermondistributorHelper
 	* 	The external source links auto
 	**/
 	protected static $links_externalsource_auto;
-	
+
 	/**
 	* 	The external source links manual
 	**/
@@ -60,7 +60,7 @@ abstract class SermondistributorHelper
 	* 	The external source selection auto
 	**/
 	protected static $select_externalsource_auto;
-	
+
 	/**
 	* 	The external source selection manual
 	**/
@@ -361,17 +361,17 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Get the file path or url
-	* 
-	*	@param  string   $type              The (url/path) type to return
-	*	@param  string   $target            The Params Target name (if set)
-	*	@param  string   $fileType          The kind of filename to generate (if not set no file name is generated)
-	*	@param  string   $key               The key to adjust the filename (if not set ignored)
-	*	@param  string   $default           The default path if not set in Params (fallback path)
-	*	@param  bool     $createIfNotSet    The switch to create the folder if not found
+	* Get the file path or url
 	*
-	*	@return  string    On success the path or url is returned based on the type requested
-	* 
+	* @param  string   $type              The (url/path) type to return
+	* @param  string   $target            The Params Target name (if set)
+	* @param  string   $fileType          The kind of filename to generate (if not set no file name is generated)
+	* @param  string   $key               The key to adjust the filename (if not set ignored)
+	* @param  string   $default           The default path if not set in Params (fallback path)
+	* @param  bool     $createIfNotSet    The switch to create the folder if not found
+	*
+	* @return  string    On success the path or url is returned based on the type requested
+	*
 	*/
 	public static function getFilePath($type = 'path', $target = 'filepath', $fileType = null, $key = '', $default = JPATH_SITE . '/images/', $createIfNotSet = true)
 	{
@@ -432,13 +432,13 @@ abstract class SermondistributorHelper
 
 
 	/**
-	*	Write a file to the server
-	* 
-	*	@param  string   $path    The path and file name where to safe the data
-	*	@param  string   $data    The data to safe
+	* Write a file to the server
 	*
-	*	@return  bool true   On success
-	* 
+	* @param  string   $path    The path and file name where to safe the data
+	* @param  string   $data    The data to safe
+	*
+	* @return  bool true   On success
+	*
 	*/
 	public static function writeFile($path, $data)
 	{
@@ -549,7 +549,7 @@ abstract class SermondistributorHelper
 		}
 		return false;
 	}
-	
+
 	public static function getExternalSourceLink($type, $return = 7, $get = false, $target = 'links')
 	{
 		// make sure all defaults are set
@@ -1692,7 +1692,7 @@ abstract class SermondistributorHelper
 		}
 		return 'application/octet-stream';
 	}
-	
+
 	protected static function getDownloadFileName(&$sermon, $file, $type)
 	{
 		// first get file name and file type
@@ -1898,7 +1898,7 @@ abstract class SermondistributorHelper
 		}
 		return false;
 	}
-	
+
 	public static function getUpdateError($id, $fileKey = null)
 	{
 		// get update error from file
@@ -1922,7 +1922,7 @@ abstract class SermondistributorHelper
 		}
 		return JText::_('COM_SERMONDISTRIBUTOR_UNKNOWN_ERROR_HAS_OCCURRED');
 	}
-	
+
 	protected static function setUpdateError($id, $errorArray)
 	{
 		if (self::checkArray($errorArray) && $id > 0)
@@ -2024,6 +2024,23 @@ abstract class SermondistributorHelper
 	*	@var bool 
 	*/
 	protected static $curlErrorLoaded = false;
+
+	/**
+	* 	check if a worker has more work
+	* 
+	*	@param  string   $function    The function to target to perform the task
+	*
+	* 	@return  bool
+	* 
+	*/
+	public static function hasWork(&$function)
+	{
+		if (isset(self::$worker[$function]) && self::checkArray(self::$worker[$function]))
+		{
+			return count( (array) self::$worker[$function]);
+		}
+		return false;
+	}
 
 	/**
 	* 	Set a worker url
@@ -2327,8 +2344,8 @@ abstract class SermondistributorHelper
 		{
 			self::$locker[$key] = new FOFEncryptAes($key, 128);
 		}
-		// convert array to string
-		if (self::checkArray($string))
+		// convert array or object to string
+		if (self::checkArray($string) || self::checkObject($string))
 		{
 			$string = serialize($string);
 		}
@@ -3059,6 +3076,19 @@ abstract class SermondistributorHelper
 		return false;
 	}
 
+	/**
+	 * Get a Variable 
+	 *
+	 * @param   string   $table        The table from which to get the variable
+	 * @param   string   $where        The value where
+	 * @param   string   $whereString  The target/field string where/name
+	 * @param   string   $what         The return field
+	 * @param   string   $operator     The operator between $whereString/field and $where/value
+	 * @param   string   $main         The component in which the table is found
+	 *
+	 * @return  mix string/int/float
+	 *
+	 */
 	public static function getVar($table, $where = null, $whereString = 'user', $what = 'id', $operator = '=', $main = 'sermondistributor')
 	{
 		if(!$where)
@@ -3099,6 +3129,20 @@ abstract class SermondistributorHelper
 		return false;
 	}
 
+	/**
+	 * Get array of variables
+	 *
+	 * @param   string   $table        The table from which to get the variables
+	 * @param   string   $where        The value where
+	 * @param   string   $whereString  The target/field string where/name
+	 * @param   string   $what         The return field
+	 * @param   string   $operator     The operator between $whereString/field and $where/value
+	 * @param   string   $main         The component in which the table is found
+	 * @param   bool     $unique       The switch to return a unique array
+	 *
+	 * @return  array
+	 *
+	 */
 	public static function getVars($table, $where = null, $whereString = 'user', $what = 'id', $operator = 'IN', $main = 'sermondistributor', $unique = true)
 	{
 		if(!$where)
@@ -3147,8 +3191,15 @@ abstract class SermondistributorHelper
 		return false;
 	}
 
-	public static function jsonToString($value, $sperator = ", ", $table = null)
+	public static function jsonToString($value, $sperator = ", ", $table = null, $id = 'id', $name = 'name')
 	{
+		// do some table foot work
+		$external = false;
+		if (strpos($table, '#__') !== false)
+		{
+			$external = true;
+			$table = str_replace('#__', '', $table);
+		}
 		// check if string is JSON
 		$result = json_decode($value, true);
 		if (json_last_error() === JSON_ERROR_NONE)
@@ -3161,9 +3212,19 @@ abstract class SermondistributorHelper
 					$names = array();
 					foreach ($result as $val)
 					{
-						if ($name = self::getVar($table, $val, 'id', 'name'))
+						if ($external)
 						{
-							$names[] = $name;
+							if ($name = self::getVar(null, $val, $id, $name, '=', $table))
+							{
+								$names[] = $name;
+							}
+						}
+						else
+						{
+							if ($name = self::getVar($table, $val, $id, $name))
+							{
+								$names[] = $name;
+							}
 						}
 					}
 					if (self::checkArray($names))
@@ -3567,28 +3628,141 @@ abstract class SermondistributorHelper
 		return JAccess::getAssetRules(0);
 	}
 
+	/**
+	 * xmlAppend
+	 *
+	 * @param   SimpleXMLElement   $xml      The XML element reference in which to inject a comment
+	 * @param   mixed              $node     A SimpleXMLElement node to append to the XML element reference, or a stdClass object containing a comment attribute to be injected before the XML node and a fieldXML attribute containing a SimpleXMLElement
+	 *
+	 * @return  null
+	 *
+	 */
+	public static function xmlAppend(&$xml, $node)
+	{
+		if (!$node)
+		{
+			// element was not returned
+			return;
+		}
+		switch (get_class($node))
+		{
+			case 'stdClass':
+				if (property_exists($node, 'comment'))
+				{
+					self::xmlComment($xml, $node->comment);
+				}
+				if (property_exists($node, 'fieldXML'))
+				{
+					self::xmlAppend($xml, $node->fieldXML);
+				}
+				break;
+			case 'SimpleXMLElement':
+				$domXML = dom_import_simplexml($xml);
+				$domNode = dom_import_simplexml($node);
+				$domXML->appendChild($domXML->ownerDocument->importNode($domNode, true));
+				$xml = simplexml_import_dom($domXML);
+				break;
+		}
+	}
+
+	/**
+	 * xmlComment
+	 *
+	 * @param   SimpleXMLElement   $xml        The XML element reference in which to inject a comment
+	 * @param   string             $comment    The comment to inject
+	 *
+	 * @return  null
+	 *
+	 */
+	public static function xmlComment(&$xml, $comment)
+	{
+		$domXML = dom_import_simplexml($xml);
+		$domComment = new DOMComment($comment);
+		$nodeTarget = $domXML->ownerDocument->importNode($domComment, true);
+		$domXML->appendChild($nodeTarget);
+		$xml = simplexml_import_dom($domXML);
+	}
+
+	/**
+	 * xmlAddAttributes
+	 *
+	 * @param   SimpleXMLElement   $xml          The XML element reference in which to inject a comment
+	 * @param   array              $attributes   The attributes to apply to the XML element
+	 *
+	 * @return  null
+	 *
+	 */
+	public static function xmlAddAttributes(&$xml, $attributes = array())
+	{
+		foreach ($attributes as $key => $value)
+		{
+			$xml->addAttribute($key, $value);
+		}
+	}
+
+	/**
+	 * xmlAddOptions
+	 *
+	 * @param   SimpleXMLElement   $xml          The XML element reference in which to inject a comment
+	 * @param   array              $options      The options to apply to the XML element
+	 *
+	 * @return  void
+	 *
+	 */
+	public static function xmlAddOptions(&$xml, $options = array())
+	{
+		foreach ($options as $key => $value)
+		{
+			$addOption = $xml->addChild('option');
+			$addOption->addAttribute('value', $key);
+			$addOption[] = $value;
+		}
+	}
+
+	/**
+	 * Render Bool Button
+	 *
+	 * @param   array   $args   All the args for the button
+	 *                             0) name
+	 *                             1) additional (options class) // not used at this time
+	 *                             2) default
+	 *                             3) yes (name)
+	 *                             4) no (name)
+	 *
+	 * @return  string    The input html of the button
+	 *
+	 */
 	public static function renderBoolButton()
 	{
 		$args = func_get_args();
+		// check if there is additional button class
+		$additional = isset($args[1]) ? (string) $args[1] : ''; // not used at this time
+		// start the xml
+		$buttonXML = new SimpleXMLElement('<field/>');
+		// button attributes
+		$buttonAttributes = array(
+			'type' => 'radio',
+			'name' => isset($args[0]) ? self::htmlEscape($args[0]) : 'bool_button',
+			'label' => isset($args[0]) ? self::safeString(self::htmlEscape($args[0]), 'Ww') : 'Bool Button', // not seen anyway
+			'class' => 'btn-group',
+			'filter' => 'INT',
+			'default' => isset($args[2]) ? (int) $args[2] : 0);
+		// load the haskey attributes
+		self::xmlAddAttributes($buttonXML, $buttonAttributes);
+		// set the button options
+		$buttonOptions = array(
+			'1' => isset($args[3]) ? self::htmlEscape($args[3]) : 'JYES',
+			'0' => isset($args[4]) ? self::htmlEscape($args[4]) : 'JNO');
+		// load the button options
+		self::xmlAddOptions($buttonXML, $buttonOptions);
 
 		// get the radio element
 		$button = JFormHelper::loadFieldType('radio');
 
-		// setup the properties
-		$name	 	= self::htmlEscape($args[0]);
-		$additional = isset($args[1]) ? (string) $args[1] : '';
-		$value		= $args[2];
-		$yes 	 	= isset($args[3]) ? self::htmlEscape($args[3]) : 'JYES';
-		$no 	 	= isset($args[4]) ? self::htmlEscape($args[4]) : 'JNO';
-
-		// prepare the xml
-		$element = new SimpleXMLElement('<field name="'.$name.'" type="radio" class="btn-group"><option '.$additional.' value="0">'.$no.'</option><option '.$additional.' value="1">'.$yes.'</option></field>');
-
 		// run
-		$button->setup($element, $value);
+		$button->setup($buttonXML, $buttonAttributes['default']);
 
 		return $button->input;
-
 	}
 
 	/**

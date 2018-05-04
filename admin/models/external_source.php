@@ -168,12 +168,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				$item->metadata = $registry->toArray();
 			}
 
-			if (!empty($item->filetypes))
-			{
-				// JSON Decode filetypes.
-				$item->filetypes = json_decode($item->filetypes);
-			}
-
 			// Get the basic encryption.
 			$basickey = SermondistributorHelper::getCryptKey('basic');
 			// Get the encryption object.
@@ -183,6 +177,12 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			{
 				// basic decrypt data oauthtoken.
 				$item->oauthtoken = rtrim($basic->decryptString($item->oauthtoken), "\0");
+			}
+
+			if (!empty($item->filetypes))
+			{
+				// JSON Decode filetypes.
+				$item->filetypes = json_decode($item->filetypes);
 			}
 			
 			if (!empty($item->id))
@@ -971,9 +971,9 @@ class SermondistributorModelExternal_source extends JModelAdmin
 	}
 
 	/**
-	* Method to change the title & alias.
+	* Method to change the title
 	*
-	* @param   string   $title        The title.
+	* @param   string   $title   The title.
 	*
 	* @return	array  Contains the modified title and alias.
 	*
