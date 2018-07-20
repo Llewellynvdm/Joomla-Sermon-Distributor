@@ -266,11 +266,11 @@ class SermondistributorModelSermon extends JModelItem
 	} 
 
 	/**
-	* Method to get an array of Statistic Objects.
-	*
-	* @return mixed  An array of Statistic Objects on success, false on failure.
-	*
-	*/
+	 * Method to get an array of Statistic Objects.
+	 *
+	 * @return mixed  An array of Statistic Objects on success, false on failure.
+	 *
+	 */
 	public function getIdSermonStatisticEbbd_D($id)
 	{
 		// Get a db connection.
@@ -303,11 +303,11 @@ class SermondistributorModelSermon extends JModelItem
 
 
 	/**
-	* Get the uikit needed components
-	*
-	* @return mixed  An array of objects on success.
-	*
-	*/
+	 * Get the uikit needed components
+	 *
+	 * @return mixed  An array of objects on success.
+	 *
+	 */
 	public function getUikitComp()
 	{
 		if (isset($this->uikitComp) && SermondistributorHelper::checkArray($this->uikitComp))

@@ -37,8 +37,8 @@ abstract class SermondistributorHelperRoute
 	protected static $lookup;
 
 	/**
-	* @param int The route of the Sermon
-	*/
+	 * @param int The route of the Sermon
+	 */
 	public static function getSermonRoute($id = 0, $catid = 0)
 	{
 		if ($id > 0)
@@ -78,8 +78,8 @@ abstract class SermondistributorHelperRoute
 	}
 
 	/**
-	* @param int The route of the Preachers
-	*/
+	 * @param int The route of the Preachers
+	 */
 	public static function getPreachersRoute($id = 0, $catid = 0)
 	{
 		if ($id > 0)
@@ -119,8 +119,8 @@ abstract class SermondistributorHelperRoute
 	}
 
 	/**
-	* @param int The route of the Preacher
-	*/
+	 * @param int The route of the Preacher
+	 */
 	public static function getPreacherRoute($id = 0, $catid = 0)
 	{
 		if ($id > 0)
@@ -160,8 +160,8 @@ abstract class SermondistributorHelperRoute
 	}
 
 	/**
-	* @param int The route of the Categories
-	*/
+	 * @param int The route of the Categories
+	 */
 	public static function getCategoriesRoute($id = 0)
 	{
 		if ($id > 0)
@@ -190,8 +190,8 @@ abstract class SermondistributorHelperRoute
 	}
 
 	/**
-	* @param int The route of the Category
-	*/
+	 * @param int The route of the Category
+	 */
 	public static function getCategoryRoute($id = 0)
 	{
 		if ($id > 0)
@@ -220,8 +220,8 @@ abstract class SermondistributorHelperRoute
 	}
 
 	/**
-	* @param int The route of the Serieslist
-	*/
+	 * @param int The route of the Serieslist
+	 */
 	public static function getSerieslistRoute($id = 0, $catid = 0)
 	{
 		if ($id > 0)
@@ -261,8 +261,8 @@ abstract class SermondistributorHelperRoute
 	}
 
 	/**
-	* @param int The route of the Series
-	*/
+	 * @param int The route of the Series
+	 */
 	public static function getSeriesRoute($id = 0, $catid = 0)
 	{
 		if ($id > 0)
@@ -302,8 +302,8 @@ abstract class SermondistributorHelperRoute
 	}
 
 	/**
-	* @param int The route of the Api
-	*/
+	 * @param int The route of the Api
+	 */
 	public static function getApiRoute($id = 0, $catid = 0)
 	{
 		if ($id > 0)

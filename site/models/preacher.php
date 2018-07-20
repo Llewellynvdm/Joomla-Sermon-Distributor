@@ -221,11 +221,11 @@ class SermondistributorModelPreacher extends JModelList
 	} 
 
 	/**
-	* Method to get an array of Statistic Objects.
-	*
-	* @return mixed  An array of Statistic Objects on success, false on failure.
-	*
-	*/
+	 * Method to get an array of Statistic Objects.
+	 *
+	 * @return mixed  An array of Statistic Objects on success, false on failure.
+	 *
+	 */
 	public function getIdSermonStatisticFcff_E($id)
 	{
 		// Get a db connection.
@@ -258,23 +258,23 @@ class SermondistributorModelPreacher extends JModelList
 
 
 	/**
-	* Custom Method
-	*
-	* @return mixed  item data object on success, false on failure.
-	*
-	*/
+	 * Custom Method
+	 *
+	 * @return mixed  item data object on success, false on failure.
+	 *
+	 */
 	public function getPreacher()
 	{
 
 		if (!isset($this->initSet) || !$this->initSet)
 		{
-			$this->user		= JFactory::getUser();
-			$this->userId		= $this->user->get('id');
-			$this->guest		= $this->user->get('guest');
-			$this->groups		= $this->user->get('groups');
-			$this->authorisedGroups	= $this->user->getAuthorisedGroups();
-			$this->levels		= $this->user->getAuthorisedViewLevels();
-			$this->initSet		= true;
+			$this->user = JFactory::getUser();
+			$this->userId = $this->user->get('id');
+			$this->guest = $this->user->get('guest');
+			$this->groups = $this->user->get('groups');
+			$this->authorisedGroups = $this->user->getAuthorisedGroups();
+			$this->levels = $this->user->getAuthorisedViewLevels();
+			$this->initSet = true;
 		}
 		// Get a db connection.
 		$db = JFactory::getDbo();
@@ -332,23 +332,23 @@ class SermondistributorModelPreacher extends JModelList
 
 
 	/**
-	* Custom Method
-	*
-	* @return mixed  An array of objects on success, false on failure.
-	*
-	*/
+	 * Custom Method
+	 *
+	 * @return mixed  An array of objects on success, false on failure.
+	 *
+	 */
 	public function getNumberDownloads()
 	{
 
 		if (!isset($this->initSet) || !$this->initSet)
 		{
-			$this->user		= JFactory::getUser();
-			$this->userId		= $this->user->get('id');
-			$this->guest		= $this->user->get('guest');
-			$this->groups		= $this->user->get('groups');
-			$this->authorisedGroups	= $this->user->getAuthorisedGroups();
-			$this->levels		= $this->user->getAuthorisedViewLevels();
-			$this->initSet		= true;
+			$this->user = JFactory::getUser();
+			$this->userId = $this->user->get('id');
+			$this->guest = $this->user->get('guest');
+			$this->groups = $this->user->get('groups');
+			$this->authorisedGroups = $this->user->getAuthorisedGroups();
+			$this->levels = $this->user->getAuthorisedViewLevels();
+			$this->initSet = true;
 		}
 
 		// Get the global params
@@ -409,23 +409,23 @@ class SermondistributorModelPreacher extends JModelList
 
 
 	/**
-	* Custom Method
-	*
-	* @return mixed  An array of objects on success, false on failure.
-	*
-	*/
+	 * Custom Method
+	 *
+	 * @return mixed  An array of objects on success, false on failure.
+	 *
+	 */
 	public function getNumberSermons()
 	{
 
 		if (!isset($this->initSet) || !$this->initSet)
 		{
-			$this->user		= JFactory::getUser();
-			$this->userId		= $this->user->get('id');
-			$this->guest		= $this->user->get('guest');
-			$this->groups		= $this->user->get('groups');
-			$this->authorisedGroups	= $this->user->getAuthorisedGroups();
-			$this->levels		= $this->user->getAuthorisedViewLevels();
-			$this->initSet		= true;
+			$this->user = JFactory::getUser();
+			$this->userId = $this->user->get('id');
+			$this->guest = $this->user->get('guest');
+			$this->groups = $this->user->get('groups');
+			$this->authorisedGroups = $this->user->getAuthorisedGroups();
+			$this->levels = $this->user->getAuthorisedViewLevels();
+			$this->initSet = true;
 		}
 
 		// Get the global params
@@ -487,11 +487,11 @@ class SermondistributorModelPreacher extends JModelList
 
 
 	/**
-	* Get the uikit needed components
-	*
-	* @return mixed  An array of objects on success.
-	*
-	*/
+	 * Get the uikit needed components
+	 *
+	 * @return mixed  An array of objects on success.
+	 *
+	 */
 	public function getUikitComp()
 	{
 		if (isset($this->uikitComp) && SermondistributorHelper::checkArray($this->uikitComp))

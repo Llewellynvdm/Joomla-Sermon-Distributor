@@ -109,11 +109,9 @@ class SermondistributorModelPreachers extends JModelList
 		// set values to display correctly.
 		if (SermondistributorHelper::checkArray($items))
 		{
-			// get user object.
-			$user = JFactory::getUser();
 			foreach ($items as $nr => &$item)
 			{
-				$access = ($user->authorise('preacher.access', 'com_sermondistributor.preacher.' . (int) $item->id) && $user->authorise('preacher.access', 'com_sermondistributor'));
+				$access = (JFactory::getUser()->authorise('preacher.access', 'com_sermondistributor.preacher.' . (int) $item->id) && JFactory::getUser()->authorise('preacher.access', 'com_sermondistributor'));
 				if (!$access)
 				{
 					unset($items[$nr]);
@@ -199,10 +197,10 @@ class SermondistributorModelPreachers extends JModelList
 	}
 
 	/**
-	* Method to get list export data.
-	*
-	* @return mixed  An array of data items on success, false on failure.
-	*/
+	 * Method to get list export data.
+	 *
+	 * @return mixed  An array of data items on success, false on failure.
+	 */
 	public function getExportData($pks)
 	{
 		// setup the query
@@ -242,11 +240,9 @@ class SermondistributorModelPreachers extends JModelList
 				// set values to display correctly.
 				if (SermondistributorHelper::checkArray($items))
 				{
-					// get user object.
-					$user = JFactory::getUser();
 					foreach ($items as $nr => &$item)
 					{
-						$access = ($user->authorise('preacher.access', 'com_sermondistributor.preacher.' . (int) $item->id) && $user->authorise('preacher.access', 'com_sermondistributor'));
+						$access = (JFactory::getUser()->authorise('preacher.access', 'com_sermondistributor.preacher.' . (int) $item->id) && JFactory::getUser()->authorise('preacher.access', 'com_sermondistributor'));
 						if (!$access)
 						{
 							unset($items[$nr]);
@@ -320,16 +316,16 @@ class SermondistributorModelPreachers extends JModelList
 	}
 
 	/**
-	* Build an SQL query to checkin all items left checked out longer then a set time.
-	*
-	* @return  a bool
-	*
-	*/
+	 * Build an SQL query to checkin all items left checked out longer then a set time.
+	 *
+	 * @return  a bool
+	 *
+	 */
 	protected function checkInNow()
 	{
 		// Get set check in time
 		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');
-		
+
 		if ($time)
 		{
 

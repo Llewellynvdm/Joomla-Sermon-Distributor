@@ -2680,8 +2680,8 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Load the Component Help URLs.
-	**/
+	 *	Load the Component Help URLs.
+	 **/
 	public static function getHelpUrl($view)
 	{
 		$user	= JFactory::getUser();
@@ -2718,15 +2718,15 @@ abstract class SermondistributorHelper
 						// set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
-						break;
+							break;
 						// set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
-						break;
+							break;
 						// set Link
 						case 3:
 							return $help->url;
-						break;
+							break;
 					}
 				}
 			}
@@ -2735,16 +2735,16 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Get the Article Link.
-	**/
+	 *	Get the Article Link.
+	 **/
 	protected static function loadArticleLink($id)
 	{
 		return JURI::root().'index.php?option=com_content&view=article&id='.$id.'&tmpl=component&layout=modal';
 	}
 
 	/**
-	*	Get the Help Text Link.
-	**/
+	 *	Get the Help Text Link.
+	 **/
 	protected static function loadHelpTextLink($id)
 	{
 		$token = JSession::getFormToken();
@@ -2797,8 +2797,8 @@ abstract class SermondistributorHelper
 	} 
 
 	/**
-	* 	UIKIT Component Classes
-	**/
+	 *  UIKIT Component Classes
+	 **/
 	public static $uk_components = array(
 			'data-uk-grid' => array(
 				'grid' ),
@@ -2852,15 +2852,15 @@ abstract class SermondistributorHelper
 			'upload-drop' => array(
 				'upload', 'form-file' )
 			);
-	
+
 	/**
-	* 	Add UIKIT Components
-	**/
+	 *  Add UIKIT Components
+	 **/
 	public static $uikit = false;
 
 	/**
-	* 	Get UIKIT Components
-	**/
+	 *  Get UIKIT Components
+	 **/
 	public static function getUikitComp($content,$classes = array())
 	{
 		if (strpos($content,'class="uk-') !== false)
@@ -2890,7 +2890,7 @@ abstract class SermondistributorHelper
 				}
 				return $temp;
 			}
-		}	
+		}
 		if (self::checkArray($classes))
 		{
 			return $classes;
@@ -2926,19 +2926,19 @@ abstract class SermondistributorHelper
 		{
 			$subjectTab = 'Sheet1';
 		}
-		
-		// make sure the file is loaded		
+
+		// make sure the file is loaded
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
-		
+
 		// Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
-		
+
 		// Set document properties
 		$objPHPExcel->getProperties()->setCreator($creator)
-									 ->setCompany('Vast Development Method')
-									 ->setLastModifiedBy($modified)
-									 ->setTitle($title)
-									 ->setSubject($subjectTab);
+			->setCompany('Vast Development Method')
+			->setLastModifiedBy($modified)
+			->setTitle($title)
+			->setSubject($subjectTab);
 		if (!$description)
 		{
 			$objPHPExcel->getProperties()->setDescription($description);
@@ -2951,7 +2951,7 @@ abstract class SermondistributorHelper
 		{
 			$objPHPExcel->getProperties()->setCategory($category);
 		}
-		
+
 		// Some styles
 		$headerStyles = array(
 			'font'  => array(
@@ -2973,7 +2973,7 @@ abstract class SermondistributorHelper
 				'size'  => 11,
 				'name'  => 'Verdana'
 		));
-		
+
 		// Add some data
 		if (self::checkArray($rows))
 		{
@@ -3000,43 +3000,43 @@ abstract class SermondistributorHelper
 		{
 			return false;
 		}
-		
+
 		// Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($subjectTab);
-		
+
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
-		
+
 		// Redirect output to a client's web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'.$fileName.'.xls"');
 		header('Cache-Control: max-age=0');
 		// If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
-		
+
 		// If you're serving to IE over SSL, then the following may be needed
 		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
 		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
 		header ('Pragma: public'); // HTTP/1.0
-		
+
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 		jexit();
 	}
-	
+
 	/**
-	* Get CSV Headers
-	*/
+	 * Get CSV Headers
+	 */
 	public static function getFileHeaders($dataType)
-	{		
-		// make sure these files are loaded		
+	{
+		// make sure these files are loaded
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		JLoader::import('ChunkReadFilter', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/PHPExcel/Reader');
 		// get session object
-		$session	= JFactory::getSession();
-		$package	= $session->get('package', null);
-		$package	= json_decode($package, true);
+		$session = JFactory::getSession();
+		$package = $session->get('package', null);
+		$package = json_decode($package, true);
 		// set the headers
 		if(isset($package['dir']))
 		{
@@ -3613,7 +3613,7 @@ abstract class SermondistributorHelper
 					}
 				}
 				// check if there are any view values remaining
-				if (count($_result))
+				if (count((array)$_result))
 				{
 					$_result = json_encode($_result);
 					$_result = array($_result);
@@ -3807,7 +3807,7 @@ abstract class SermondistributorHelper
 	**/
 	public static function checkArray($array, $removeEmptyString = false)
 	{
-		if (isset($array) && is_array($array) && count($array) > 0)
+		if (isset($array) && is_array($array) && count((array)$array) > 0)
 		{
 			// also make sure the empty strings are removed
 			if ($removeEmptyString)
@@ -3910,7 +3910,7 @@ abstract class SermondistributorHelper
 		{
 			$initial = strlen($string);
 			$words = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
-			$words_count = count($words);
+			$words_count = count((array)$words);
 
 			$word_length = 0;
 			$last_word = 0;

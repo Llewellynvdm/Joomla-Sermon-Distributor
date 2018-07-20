@@ -117,11 +117,9 @@ class SermondistributorModelExternal_sources extends JModelList
 		// set values to display correctly.
 		if (SermondistributorHelper::checkArray($items))
 		{
-			// get user object.
-			$user = JFactory::getUser();
 			foreach ($items as $nr => &$item)
 			{
-				$access = ($user->authorise('external_source.access', 'com_sermondistributor.external_source.' . (int) $item->id) && $user->authorise('external_source.access', 'com_sermondistributor'));
+				$access = (JFactory::getUser()->authorise('external_source.access', 'com_sermondistributor.external_source.' . (int) $item->id) && JFactory::getUser()->authorise('external_source.access', 'com_sermondistributor'));
 				if (!$access)
 				{
 					unset($items[$nr]);
@@ -173,10 +171,10 @@ class SermondistributorModelExternal_sources extends JModelList
 	}
 
 	/**
-	* Method to convert selection values to translatable string.
-	*
-	* @return translatable string
-	*/
+	 * Method to convert selection values to translatable string.
+	 *
+	 * @return translatable string
+	 */
 	public function selectionTranslation($value,$name)
 	{
 		// Array of externalsources language strings
@@ -333,10 +331,10 @@ class SermondistributorModelExternal_sources extends JModelList
 	}
 
 	/**
-	* Method to get list export data.
-	*
-	* @return mixed  An array of data items on success, false on failure.
-	*/
+	 * Method to get list export data.
+	 *
+	 * @return mixed  An array of data items on success, false on failure.
+	 */
 	public function getExportData($pks)
 	{
 		// setup the query
@@ -375,11 +373,9 @@ class SermondistributorModelExternal_sources extends JModelList
 				// set values to display correctly.
 				if (SermondistributorHelper::checkArray($items))
 				{
-					// get user object.
-					$user = JFactory::getUser();
 					foreach ($items as $nr => &$item)
 					{
-						$access = ($user->authorise('external_source.access', 'com_sermondistributor.external_source.' . (int) $item->id) && $user->authorise('external_source.access', 'com_sermondistributor'));
+						$access = (JFactory::getUser()->authorise('external_source.access', 'com_sermondistributor.external_source.' . (int) $item->id) && JFactory::getUser()->authorise('external_source.access', 'com_sermondistributor'));
 						if (!$access)
 						{
 							unset($items[$nr]);
@@ -460,16 +456,16 @@ class SermondistributorModelExternal_sources extends JModelList
 	}
 
 	/**
-	* Build an SQL query to checkin all items left checked out longer then a set time.
-	*
-	* @return  a bool
-	*
-	*/
+	 * Build an SQL query to checkin all items left checked out longer then a set time.
+	 *
+	 * @return  a bool
+	 *
+	 */
 	protected function checkInNow()
 	{
 		// Get set check in time
 		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');
-		
+
 		if ($time)
 		{
 

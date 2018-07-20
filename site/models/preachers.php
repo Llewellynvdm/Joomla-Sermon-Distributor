@@ -147,11 +147,11 @@ class SermondistributorModelPreachers extends JModelList
 	} 
 
 	/**
-	* Method to get an array of Sermon Objects.
-	*
-	* @return mixed  An array of Sermon Objects on success, false on failure.
-	*
-	*/
+	 * Method to get an array of Sermon Objects.
+	 *
+	 * @return mixed  An array of Sermon Objects on success, false on failure.
+	 *
+	 */
 	public function getIdPreacherSermonDcaa_B($id)
 	{
 		// Get a db connection.
@@ -187,11 +187,11 @@ class SermondistributorModelPreachers extends JModelList
 
 
 	/**
-	* Get the uikit needed components
-	*
-	* @return mixed  An array of objects on success.
-	*
-	*/
+	 * Get the uikit needed components
+	 *
+	 * @return mixed  An array of objects on success.
+	 *
+	 */
 	public function getUikitComp()
 	{
 		if (isset($this->uikitComp) && SermondistributorHelper::checkArray($this->uikitComp))

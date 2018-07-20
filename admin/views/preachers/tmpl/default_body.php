@@ -74,19 +74,22 @@ $edit = "index.php?option=com_sermondistributor&view=preachers&task=preacher.edi
 		<?php endif; ?>
 		</td>
 		<td class="nowrap">
-			<?php if ($canDo->get('preacher.edit')): ?>
-				<div class="name">
+			<div class="name">
+				<?php if ($canDo->get('preacher.edit')): ?>
 					<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>"><?php echo $this->escape($item->name); ?></a>
 					<?php if ($item->checked_out): ?>
 						<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'preachers.', $canCheckin); ?>
 					<?php endif; ?>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo $this->escape($item->name); ?></div>
-			<?php endif; ?>
+				<?php else: ?>
+					<?php echo $this->escape($item->name); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="hidden-phone">
-			<?php echo $this->escape($item->description); ?>
+			<div>
+			<?php echo $this->escape($item->description); ?><br />
+			<?php echo $this->escape($item->email); ?>
+			</div>
 		</td>
 		<td class="center">
 		<?php if ($canDo->get('preacher.edit.state')) : ?>

@@ -69,31 +69,31 @@ $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.e
 		$canDo = SermondistributorHelper::getActions('statistic',$item,'statistics');
 	?>
 	<tr>
-		<td class="nowrap">
+		<td>
 			<?php if ($canDo->get('statistic.edit')): ?>
 				<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>&ref=sermon&refid=<?php echo $id; ?>"><?php echo $item->filename; ?></a>
-					<?php if ($item->checked_out): ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'statistics.', $canCheckin); ?>
-					<?php endif; ?>
+				<?php if ($item->checked_out): ?>
+					<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'statistics.', $canCheckin); ?>
+				<?php endif; ?>
 			<?php else: ?>
-				<div class="name"><?php echo $item->filename; ?></div>
+				<?php echo $item->filename; ?>
 			<?php endif; ?>
 		</td>
 		<td>
 			<?php echo $displayData->escape($item->sermon_name); ?>
 		</td>
-		<td class="nowrap">
+		<td>
 			<?php if ($user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
 				<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?>&ref=sermon&refid=<?php echo $id; ?>"><?php echo $displayData->escape($item->preacher_name); ?></a>
 			<?php else: ?>
-				<div class="name"><?php echo $displayData->escape($item->preacher_name); ?></div>
+				<?php echo $displayData->escape($item->preacher_name); ?>
 			<?php endif; ?>
 		</td>
-		<td class="nowrap">
+		<td>
 			<?php if ($user->authorise('series.edit', 'com_sermondistributor.series.' . (int)$item->series)): ?>
 				<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?>&ref=sermon&refid=<?php echo $id; ?>"><?php echo $displayData->escape($item->series_name); ?></a>
 			<?php else: ?>
-				<div class="name"><?php echo $displayData->escape($item->series_name); ?></div>
+				<?php echo $displayData->escape($item->series_name); ?>
 			<?php endif; ?>
 		</td>
 		<td>

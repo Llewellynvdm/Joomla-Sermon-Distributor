@@ -74,43 +74,43 @@ $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.e
 		<?php endif; ?>
 		</td>
 		<td class="nowrap">
-			<?php if ($canDo->get('statistic.edit')): ?>
-				<div class="name">
+			<div class="name">
+				<?php if ($canDo->get('statistic.edit')): ?>
 					<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>"><?php echo $item->filename; ?></a>
 					<?php if ($item->checked_out): ?>
 						<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'statistics.', $canCheckin); ?>
 					<?php endif; ?>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo $item->filename; ?></div>
-			<?php endif; ?>
+				<?php else: ?>
+					<?php echo $item->filename; ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="nowrap">
-			<?php if ($this->user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int)$item->sermon)): ?>
-				<div class="name">
+			<div class="name">
+				<?php if ($this->user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int)$item->sermon)): ?>
 					<a href="index.php?option=com_sermondistributor&view=sermons&task=sermon.edit&id=<?php echo $item->sermon; ?>&ref=statistics"><?php echo $this->escape($item->sermon_name); ?></a>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo $this->escape($item->sermon_name); ?></div>
-			<?php endif; ?>
+				<?php else: ?>
+					<?php echo $this->escape($item->sermon_name); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="nowrap">
-			<?php if ($this->user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
-				<div class="name">
+			<div class="name">
+				<?php if ($this->user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
 					<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?>&ref=statistics"><?php echo $this->escape($item->preacher_name); ?></a>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo $this->escape($item->preacher_name); ?></div>
-			<?php endif; ?>
+				<?php else: ?>
+					<?php echo $this->escape($item->preacher_name); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="nowrap">
-			<?php if ($this->user->authorise('series.edit', 'com_sermondistributor.series.' . (int)$item->series)): ?>
-				<div class="name">
+			<div class="name">
+				<?php if ($this->user->authorise('series.edit', 'com_sermondistributor.series.' . (int)$item->series)): ?>
 					<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?>&ref=statistics"><?php echo $this->escape($item->series_name); ?></a>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo $this->escape($item->series_name); ?></div>
-			<?php endif; ?>
+				<?php else: ?>
+					<?php echo $this->escape($item->series_name); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="hidden-phone">
 			<?php echo $this->escape($item->counter); ?>

@@ -106,10 +106,10 @@ class SermondistributorModelPreacher extends JModelAdmin
 	}
 
 	/**
-	* Method to get list data.
-	*
-	* @return mixed  An array of data items on success, false on failure.
-	*/
+	 * Method to get list data.
+	 *
+	 * @return mixed  An array of data items on success, false on failure.
+	 */
 	public function getVvvsermons()
 	{
 		// Get the user object.
@@ -178,11 +178,9 @@ class SermondistributorModelPreacher extends JModelAdmin
 			// set values to display correctly.
 			if (SermondistributorHelper::checkArray($items))
 			{
-				// get user object.
-				$user = JFactory::getUser();
 				foreach ($items as $nr => &$item)
 				{
-					$access = ($user->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $item->id) && $user->authorise('sermon.access', 'com_sermondistributor'));
+					$access = (JFactory::getUser()->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $item->id) && JFactory::getUser()->authorise('sermon.access', 'com_sermondistributor'));
 					if (!$access)
 					{
 						unset($items[$nr]);
@@ -210,10 +208,10 @@ class SermondistributorModelPreacher extends JModelAdmin
 	}
 
 	/**
-	* Method to convert selection values to translatable string.
-	*
-	* @return translatable string
-	*/
+	 * Method to convert selection values to translatable string.
+	 *
+	 * @return translatable string
+	 */
 	public function selectionTranslationVvvsermons($value,$name)
 	{
 		// Array of link_type language strings
@@ -384,7 +382,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	protected function canEditState($record)
 	{
 		$user = JFactory::getUser();
-		$recordId	= (!empty($record->id)) ? $record->id : 0;
+		$recordId = (!empty($record->id)) ? $record->id : 0;
 
 		if ($recordId)
 		{
@@ -650,7 +648,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	 *
 	 * @return  mixed  An array of new IDs on success, boolean false on failure.
 	 *
-	 * @since	12.2
+	 * @since 12.2
 	 */
 	protected function batchCopy($values, $pks, $contexts)
 	{
@@ -743,7 +741,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 			$this->table->id = 0;
 
 			// TODO: Deal with ordering?
-			// $this->table->ordering	= 1;
+			// $this->table->ordering = 1;
 
 			// Check the row.
 			if (!$this->table->check())
@@ -788,7 +786,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
-	 * @since	12.2
+	 * @since 12.2
 	 */
 	protected function batchMove($values, $pks, $contexts)
 	{
@@ -1018,14 +1016,14 @@ class SermondistributorModelPreacher extends JModelAdmin
 	}
 
 	/**
-	* Method to change the title/s & alias.
-	*
-	* @param   string         $alias        The alias.
-	* @param   string/array   $title        The title.
-	*
-	* @return	array/string  Contains the modified title/s and/or alias.
-	*
-	*/
+	 * Method to change the title/s & alias.
+	 *
+	 * @param   string         $alias        The alias.
+	 * @param   string/array   $title        The title.
+	 *
+	 * @return	array/string  Contains the modified title/s and/or alias.
+	 *
+	 */
 	protected function _generateNewTitle($alias, $title = null)
 	{
 

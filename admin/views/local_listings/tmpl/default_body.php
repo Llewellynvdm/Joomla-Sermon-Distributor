@@ -74,16 +74,16 @@ $edit = "index.php?option=com_sermondistributor&view=local_listings&task=local_l
 		<?php endif; ?>
 		</td>
 		<td class="nowrap">
-			<?php if ($canDo->get('local_listing.edit')): ?>
-				<div class="name">
+			<div class="name">
+				<?php if ($canDo->get('local_listing.edit')): ?>
 					<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>"><?php echo $this->escape($item->name); ?></a>
 					<?php if ($item->checked_out): ?>
 						<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'local_listings.', $canCheckin); ?>
 					<?php endif; ?>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo $this->escape($item->name); ?></div>
-			<?php endif; ?>
+				<?php else: ?>
+					<?php echo $this->escape($item->name); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="hidden-phone">
 			<?php echo JText::_($item->build); ?>
@@ -92,13 +92,13 @@ $edit = "index.php?option=com_sermondistributor&view=local_listings&task=local_l
 			<?php echo $this->escape($item->size); ?>
 		</td>
 		<td class="nowrap">
-			<?php if ($this->user->authorise('external_source.edit', 'com_sermondistributor.external_source.' . (int)$item->external_source)): ?>
-				<div class="name">
+			<div class="name">
+				<?php if ($this->user->authorise('external_source.edit', 'com_sermondistributor.external_source.' . (int)$item->external_source)): ?>
 					<a href="index.php?option=com_sermondistributor&view=external_sources&task=external_source.edit&id=<?php echo $item->external_source; ?>&ref=local_listings"><?php echo $this->escape($item->external_source_description); ?></a>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo $this->escape($item->external_source_description); ?></div>
-			<?php endif; ?>
+				<?php else: ?>
+					<?php echo $this->escape($item->external_source_description); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="hidden-phone">
 			<?php echo $this->escape($item->key); ?>

@@ -325,11 +325,11 @@ class SermondistributorTableSeries extends JTable
 	}
 
 	/**
-	* Generate a valid alias from title / date.
-	* Remains public to be able to check for duplicated alias before saving
-	*
-	* @return  string
-	*/
+	 * Generate a valid alias from title / date.
+	 * Remains public to be able to check for duplicated alias before saving
+	 *
+	 * @return  string
+	 */
 	public function generateAlias()
 	{
 		if (empty($this->alias))

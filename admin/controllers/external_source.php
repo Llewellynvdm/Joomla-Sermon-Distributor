@@ -224,9 +224,9 @@ class SermondistributorControllerExternal_source extends JControllerForm
 	protected function allowEdit($data = array(), $key = 'id')
 	{
 		// get user object.
-		$user		= JFactory::getUser();
+		$user = JFactory::getUser();
 		// get record id.
-		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
+		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
 
 
 		// Access check.

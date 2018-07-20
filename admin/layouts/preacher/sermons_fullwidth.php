@@ -85,30 +85,30 @@ $can = SermondistributorHelper::getActions('sermon');
 		$canDo = SermondistributorHelper::getActions('sermon',$item,'sermons');
 	?>
 	<tr>
-		<td class="nowrap">
+		<td>
 			<?php if ($canDo->get('sermon.edit')): ?>
 				<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>&ref=preacher&refid=<?php echo $id; ?>"><?php echo $displayData->escape($item->name); ?></a>
-					<?php if ($item->checked_out): ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'sermons.', $canCheckin); ?>
-					<?php endif; ?>
+				<?php if ($item->checked_out): ?>
+					<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'sermons.', $canCheckin); ?>
+				<?php endif; ?>
 			<?php else: ?>
-				<div class="name"><?php echo $displayData->escape($item->name); ?></div>
+				<?php echo $displayData->escape($item->name); ?>
 			<?php endif; ?>
 		</td>
 		<td>
 			<?php echo $displayData->escape($item->preacher_name); ?>
 		</td>
-		<td class="nowrap">
+		<td>
 			<?php if ($user->authorise('series.edit', 'com_sermondistributor.series.' . (int)$item->series)): ?>
 				<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?>&ref=preacher&refid=<?php echo $id; ?>"><?php echo $displayData->escape($item->series_name); ?></a>
 			<?php else: ?>
-				<div class="name"><?php echo $displayData->escape($item->series_name); ?></div>
+				<?php echo $displayData->escape($item->series_name); ?>
 			<?php endif; ?>
 		</td>
 		<td>
 			<?php echo $displayData->escape($item->short_description); ?>
 		</td>
-		<td class="nowrap">
+		<td>
 			<?php if ($user->authorise('core.edit', 'com_sermondistributor.sermons.category.' . (int)$item->catid)): ?>
 				<a href="index.php?option=com_categories&task=category.edit&id=<?php echo (int)$item->catid; ?>&extension=com_sermondistributor.sermons"><?php echo $displayData->escape($item->category_title); ?></a>
 			<?php else: ?>

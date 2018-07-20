@@ -221,11 +221,11 @@ class SermondistributorModelCategory extends JModelList
 	} 
 
 	/**
-	* Method to get an array of Statistic Objects.
-	*
-	* @return mixed  An array of Statistic Objects on success, false on failure.
-	*
-	*/
+	 * Method to get an array of Statistic Objects.
+	 *
+	 * @return mixed  An array of Statistic Objects on success, false on failure.
+	 *
+	 */
 	public function getIdSermonStatisticBcea_E($id)
 	{
 		// Get a db connection.
@@ -258,23 +258,23 @@ class SermondistributorModelCategory extends JModelList
 
 
 	/**
-	* Custom Method
-	*
-	* @return mixed  item data object on success, false on failure.
-	*
-	*/
+	 * Custom Method
+	 *
+	 * @return mixed  item data object on success, false on failure.
+	 *
+	 */
 	public function getCategory()
 	{
 
 		if (!isset($this->initSet) || !$this->initSet)
 		{
-			$this->user		= JFactory::getUser();
-			$this->userId		= $this->user->get('id');
-			$this->guest		= $this->user->get('guest');
-			$this->groups		= $this->user->get('groups');
-			$this->authorisedGroups	= $this->user->getAuthorisedGroups();
-			$this->levels		= $this->user->getAuthorisedViewLevels();
-			$this->initSet		= true;
+			$this->user = JFactory::getUser();
+			$this->userId = $this->user->get('id');
+			$this->guest = $this->user->get('guest');
+			$this->groups = $this->user->get('groups');
+			$this->authorisedGroups = $this->user->getAuthorisedGroups();
+			$this->levels = $this->user->getAuthorisedViewLevels();
+			$this->initSet = true;
 		}
 		// Get a db connection.
 		$db = JFactory::getDbo();
@@ -325,11 +325,11 @@ class SermondistributorModelCategory extends JModelList
 	}
 
 	/**
-	* Method to get an array of Sermon Objects.
-	*
-	* @return mixed  An array of Sermon Objects on success, false on failure.
-	*
-	*/
+	 * Method to get an array of Sermon Objects.
+	 *
+	 * @return mixed  An array of Sermon Objects on success, false on failure.
+	 *
+	 */
 	public function getIdCatidSermonFbdf_B($id)
 	{
 		// Get a db connection.
@@ -369,11 +369,11 @@ class SermondistributorModelCategory extends JModelList
 	}
 
 	/**
-	* Method to get an array of Statistic Objects.
-	*
-	* @return mixed  An array of Statistic Objects on success, false on failure.
-	*
-	*/
+	 * Method to get an array of Statistic Objects.
+	 *
+	 * @return mixed  An array of Statistic Objects on success, false on failure.
+	 *
+	 */
 	public function getIdSermonStatisticFbdf_C($id)
 	{
 		// Get a db connection.
@@ -406,11 +406,11 @@ class SermondistributorModelCategory extends JModelList
 
 
 	/**
-	* Get the uikit needed components
-	*
-	* @return mixed  An array of objects on success.
-	*
-	*/
+	 * Get the uikit needed components
+	 *
+	 * @return mixed  An array of objects on success.
+	 *
+	 */
 	public function getUikitComp()
 	{
 		if (isset($this->uikitComp) && SermondistributorHelper::checkArray($this->uikitComp))

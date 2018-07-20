@@ -74,16 +74,16 @@ $edit = "index.php?option=com_sermondistributor&view=series_list&task=series.edi
 		<?php endif; ?>
 		</td>
 		<td class="nowrap">
-			<?php if ($canDo->get('series.edit')): ?>
-				<div class="name">
+			<div class="name">
+				<?php if ($canDo->get('series.edit')): ?>
 					<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>"><?php echo $this->escape($item->name); ?></a>
 					<?php if ($item->checked_out): ?>
 						<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'series_list.', $canCheckin); ?>
 					<?php endif; ?>
-				</div>
-			<?php else: ?>
-				<div class="name"><?php echo $this->escape($item->name); ?></div>
-			<?php endif; ?>
+				<?php else: ?>
+					<?php echo $this->escape($item->name); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="hidden-phone">
 			<?php echo $this->escape($item->description); ?>
