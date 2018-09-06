@@ -26,8 +26,8 @@
 defined('JPATH_BASE') or die;
 
 JHtmlBehavior::core();
-$divWrapper 	= range(1,120,2);
-$counter 		= 0;
+$divWrapper = range(1,120,2);
+$counter = 0;
 ?>
 <?php if ($displayData->ListSelection) : ?>
 <div class="row-fluid">

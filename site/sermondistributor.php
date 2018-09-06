@@ -24,6 +24,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+JHtml::_('behavior.tabstate');
 
 // Set the component css/js
 $document = JFactory::getDocument();
@@ -31,18 +32,14 @@ $document->addStyleSheet('components/com_sermondistributor/assets/css/site.css')
 $document->addScript('components/com_sermondistributor/assets/js/site.js');
 
 // Require helper files
-JLoader::register('SermondistributorHelper', dirname(__FILE__) . '/helpers/sermondistributor.php'); 
-JLoader::register('SermondistributorHelperRoute', dirname(__FILE__) . '/helpers/route.php'); 
-
-// import joomla controller library
-jimport('joomla.application.component.controller');
+JLoader::register('SermondistributorHelper', __DIR__ . '/helpers/sermondistributor.php'); 
+JLoader::register('SermondistributorHelperRoute', __DIR__ . '/helpers/route.php'); 
 
 // Get an instance of the controller prefixed by Sermondistributor
 $controller = JControllerLegacy::getInstance('Sermondistributor');
 
 // Perform the request task
-$jinput = JFactory::getApplication()->input;
-$controller->execute($jinput->get('task', null, 'CMD'));
+$controller->execute(JFactory::getApplication()->input->get('task'));
 
 // Redirect if set by the controller
 $controller->redirect();

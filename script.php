@@ -26,8 +26,6 @@
 defined('_JEXEC') or die('Restricted access');
 
 JHTML::_('behavior.modal');
-jimport('joomla.installer.installer');
-jimport('joomla.installer.helper');
 
 /**
  * Script File of Sermondistributor Component
@@ -82,7 +80,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Preacher items
 			$preacher_done = $db->execute();
-			if ($preacher_done);
+			if ($preacher_done)
 			{
 				// If succesfully remove Preacher add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__content_type</b> table'));
@@ -97,7 +95,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Preacher items
 			$preacher_done = $db->execute();
-			if ($preacher_done);
+			if ($preacher_done)
 			{
 				// If succesfully remove Preacher add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -112,7 +110,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Preacher items
 			$preacher_done = $db->execute();
-			if ($preacher_done);
+			if ($preacher_done)
 			{
 				// If succesfully remove Preacher add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -168,7 +166,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Sermon items
 			$sermon_done = $db->execute();
-			if ($sermon_done);
+			if ($sermon_done)
 			{
 				// If succesfully remove Sermon add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__content_type</b> table'));
@@ -183,7 +181,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Sermon items
 			$sermon_done = $db->execute();
-			if ($sermon_done);
+			if ($sermon_done)
 			{
 				// If succesfully remove Sermon add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -198,7 +196,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Sermon items
 			$sermon_done = $db->execute();
-			if ($sermon_done);
+			if ($sermon_done)
 			{
 				// If succesfully remove Sermon add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -254,7 +252,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Sermon catid items
 			$sermon_catid_done = $db->execute();
-			if ($sermon_catid_done);
+			if ($sermon_catid_done)
 			{
 				// If succesfully remove Sermon catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__content_type</b> table'));
@@ -269,7 +267,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Sermon catid items
 			$sermon_catid_done = $db->execute();
-			if ($sermon_catid_done);
+			if ($sermon_catid_done)
 			{
 				// If succesfully remove Sermon catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -284,7 +282,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Sermon catid items
 			$sermon_catid_done = $db->execute();
-			if ($sermon_catid_done);
+			if ($sermon_catid_done)
 			{
 				// If succesfully remove Sermon catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -340,7 +338,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Series items
 			$series_done = $db->execute();
-			if ($series_done);
+			if ($series_done)
 			{
 				// If succesfully remove Series add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__content_type</b> table'));
@@ -355,7 +353,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Series items
 			$series_done = $db->execute();
-			if ($series_done);
+			if ($series_done)
 			{
 				// If succesfully remove Series add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -370,7 +368,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Series items
 			$series_done = $db->execute();
-			if ($series_done);
+			if ($series_done)
 			{
 				// If succesfully remove Series add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -426,7 +424,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Statistic items
 			$statistic_done = $db->execute();
-			if ($statistic_done);
+			if ($statistic_done)
 			{
 				// If succesfully remove Statistic add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__content_type</b> table'));
@@ -441,7 +439,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Statistic items
 			$statistic_done = $db->execute();
-			if ($statistic_done);
+			if ($statistic_done)
 			{
 				// If succesfully remove Statistic add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -456,7 +454,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Statistic items
 			$statistic_done = $db->execute();
-			if ($statistic_done);
+			if ($statistic_done)
 			{
 				// If succesfully remove Statistic add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -512,7 +510,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove External_source items
 			$external_source_done = $db->execute();
-			if ($external_source_done);
+			if ($external_source_done)
 			{
 				// If succesfully remove External_source add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__content_type</b> table'));
@@ -527,7 +525,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove External_source items
 			$external_source_done = $db->execute();
-			if ($external_source_done);
+			if ($external_source_done)
 			{
 				// If succesfully remove External_source add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -542,7 +540,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove External_source items
 			$external_source_done = $db->execute();
-			if ($external_source_done);
+			if ($external_source_done)
 			{
 				// If succesfully remove External_source add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -598,7 +596,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Local_listing items
 			$local_listing_done = $db->execute();
-			if ($local_listing_done);
+			if ($local_listing_done)
 			{
 				// If succesfully remove Local_listing add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__content_type</b> table'));
@@ -613,7 +611,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Local_listing items
 			$local_listing_done = $db->execute();
-			if ($local_listing_done);
+			if ($local_listing_done)
 			{
 				// If succesfully remove Local_listing add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -628,7 +626,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Local_listing items
 			$local_listing_done = $db->execute();
-			if ($local_listing_done);
+			if ($local_listing_done)
 			{
 				// If succesfully remove Local_listing add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -684,7 +682,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
-			if ($help_document_done);
+			if ($help_document_done)
 			{
 				// If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__content_type</b> table'));
@@ -699,7 +697,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
-			if ($help_document_done);
+			if ($help_document_done)
 			{
 				// If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -714,7 +712,7 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
-			if ($help_document_done);
+			if ($help_document_done)
 			{
 				// If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -758,7 +756,7 @@ class com_sermondistributorInstallerScript
 		$query->where($sermondistributor_condition);
 		$db->setQuery($query);
 		$help_document_done = $db->execute();
-		if ($help_document_done);
+		if ($help_document_done)
 		{
 			// If succesfully remove sermondistributor add queued success message.
 			$app->enqueueMessage(JText::_('All related items was removed from the <b>#__assets</b> table'));

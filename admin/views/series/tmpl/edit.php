@@ -55,7 +55,7 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 	});
 </script>
 <div id="sermondistributor_loader" style="display: none;">
-<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='.(int) $this->item->id.$this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
+<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='. (int) $this->item->id . $this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
 	<?php echo JLayoutHelper::render('series.details_above', $this); ?>
 <div class="form-horizontal">
@@ -89,6 +89,10 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
 	<?php endif; ?>
+
+	<?php $this->ignore_fieldsets = array('details','metadata','vdmmetadata','accesscontrol'); ?>
+	<?php $this->tab_name = 'seriesTab'; ?>
+	<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
 	<?php if ($this->canDo->get('series.delete') || $this->canDo->get('series.edit.created_by') || $this->canDo->get('series.edit.state') || $this->canDo->get('series.edit.created')) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'seriesTab', 'publishing', JText::_('COM_SERMONDISTRIBUTOR_SERIES_PUBLISHING', true)); ?>

@@ -23,14 +23,24 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-
 defined('_JEXEC') or die('Restricted access');
 
 // set the defaults
-$items	= $displayData->vwbstastics;
-$user	= JFactory::getUser();
-$id	= $displayData->item->id;
+$items = $displayData->vwbstastics;
+$user = JFactory::getUser();
+$id = $displayData->item->id;
+// set the edit URL
 $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.edit";
+// set a return value
+$return = ($id) ? "index.php?option=com_sermondistributor&view=sermon&layout=edit&id=" . $id : "";
+// check for a return value
+$jinput = JFactory::getApplication()->input;
+if ($_return = $jinput->get('return', null, 'base64'))
+{
+	$return .= "&return=" . $_return;
+}
+// set the referral values
+$ref = ($id) ? "&ref=sermon&refid=" . $id . "&return=" . urlencode(base64_encode($return)) : "";
 
 ?>
 <div class="form-vertical">
@@ -71,7 +81,7 @@ $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.e
 	<tr>
 		<td>
 			<?php if ($canDo->get('statistic.edit')): ?>
-				<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>&ref=sermon&refid=<?php echo $id; ?>"><?php echo $item->filename; ?></a>
+				<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?><?php echo $ref; ?>"><?php echo $item->filename; ?></a>
 				<?php if ($item->checked_out): ?>
 					<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'statistics.', $canCheckin); ?>
 				<?php endif; ?>
@@ -84,14 +94,14 @@ $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.e
 		</td>
 		<td>
 			<?php if ($user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
-				<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?>&ref=sermon&refid=<?php echo $id; ?>"><?php echo $displayData->escape($item->preacher_name); ?></a>
+				<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?><?php echo $ref; ?>"><?php echo $displayData->escape($item->preacher_name); ?></a>
 			<?php else: ?>
 				<?php echo $displayData->escape($item->preacher_name); ?>
 			<?php endif; ?>
 		</td>
 		<td>
 			<?php if ($user->authorise('series.edit', 'com_sermondistributor.series.' . (int)$item->series)): ?>
-				<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?>&ref=sermon&refid=<?php echo $id; ?>"><?php echo $displayData->escape($item->series_name); ?></a>
+				<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?><?php echo $ref; ?>"><?php echo $displayData->escape($item->series_name); ?></a>
 			<?php else: ?>
 				<?php echo $displayData->escape($item->series_name); ?>
 			<?php endif; ?>

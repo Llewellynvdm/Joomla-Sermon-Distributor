@@ -27,9 +27,6 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\Registry\Registry;
 
-// import Joomla table library
-jimport('joomla.database.table');
-
 /**
  * Preachers Table class
  */

@@ -25,9 +25,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// import the Joomla modellist library
-jimport('joomla.application.component.modellist');
-
 /**
  * Sermondistributor Model for Manual_updater
  */
@@ -122,11 +119,13 @@ class SermondistributorModelManual_updater extends JModelList
 			{
 				// Always create a slug for sef URL's
 				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+				// Check if we can decode filetypes
 				if (SermondistributorHelper::checkJson($item->filetypes))
 				{
 					// Decode filetypes
 					$item->filetypes = json_decode($item->filetypes, true);
 				}
+				// Check if we can decode oauthtoken
 				if (!empty($item->oauthtoken) && $basickey && !is_numeric($item->oauthtoken) && $item->oauthtoken === base64_encode(base64_decode($item->oauthtoken, true)))
 				{
 					// Decode oauthtoken
@@ -138,7 +137,6 @@ class SermondistributorModelManual_updater extends JModelList
 		// return items
 		return $items;
 	}
-
 
 	/**
 	 * Get the uikit needed components

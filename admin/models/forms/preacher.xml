@@ -142,6 +142,7 @@
 			class="text_area"
 			filter="url"
 			validated="url"
+			scheme="http,https"
 			message="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_MESSAGE"
 			hint="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_HINT"
 		/>

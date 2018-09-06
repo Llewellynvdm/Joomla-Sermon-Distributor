@@ -25,9 +25,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// import Joomla modelitem library
-jimport('joomla.application.component.modelitem');
-
 /**
  * Sermondistributor Sermon Model
  */
@@ -170,21 +167,25 @@ class SermondistributorModelSermon extends JModelItem
 			// Load the JEvent Dispatcher
 			JPluginHelper::importPlugin('content');
 			$this->_dispatcher = JEventDispatcher::getInstance();
+				// Check if we can decode local_files
 				if (SermondistributorHelper::checkJson($data->local_files))
 				{
 					// Decode local_files
 					$data->local_files = json_decode($data->local_files, true);
 				}
+				// Check if we can decode manual_files
 				if (SermondistributorHelper::checkJson($data->manual_files))
 				{
 					// Decode manual_files
 					$data->manual_files = json_decode($data->manual_files, true);
 				}
+				// Check if item has params, or pass whole item.
+				$params = (isset($data->params) && SermondistributorHelper::checkJson($data->params)) ? json_decode($data->params) : $data;
 				// Make sure the content prepare plugins fire on description
 				$_description = new stdClass();
 				$_description->text =& $data->description; // value must be in text
 				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
-				$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.sermon.description', &$_description, &$this->params, 0));
+				$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.sermon.description', &$_description, &$params, 0));
 				// Checking if description has uikit components that must be loaded.
 				$this->uikitComp = SermondistributorHelper::getUikitComp($data->description,$this->uikitComp);
 				// set the global sermon value.
@@ -293,9 +294,6 @@ class SermondistributorModelSermon extends JModelItem
 		// check if there was data returned
 		if ($db->getNumRows())
 		{
-			// Load the JEvent Dispatcher
-			JPluginHelper::importPlugin('content');
-			$this->_dispatcher = JEventDispatcher::getInstance();
 			return $db->loadObjectList();
 		}
 		return false;

@@ -33,7 +33,7 @@ JHtml::_('behavior.keepalive');
 $componentParams = JComponentHelper::getParams('com_sermondistributor');
 ?>
 <div id="sermondistributor_loader">
-<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='.(int) $this->item->id.$this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
+<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='. (int) $this->item->id . $this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
 	<?php echo JLayoutHelper::render('statistic.details_above', $this); ?>
 <div class="form-horizontal">
@@ -50,6 +50,10 @@ $componentParams = JComponentHelper::getParams('com_sermondistributor');
 			</div>
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
+
+	<?php $this->ignore_fieldsets = array('details','metadata','vdmmetadata','accesscontrol'); ?>
+	<?php $this->tab_name = 'statisticTab'; ?>
+	<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
 	<?php if ($this->canDo->get('statistic.delete') || $this->canDo->get('statistic.edit.created_by') || $this->canDo->get('statistic.edit.state') || $this->canDo->get('statistic.edit.created')) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'statisticTab', 'publishing', JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PUBLISHING', true)); ?>

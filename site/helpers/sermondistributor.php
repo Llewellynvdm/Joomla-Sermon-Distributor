@@ -373,8 +373,13 @@ abstract class SermondistributorHelper
 	* @return  string    On success the path or url is returned based on the type requested
 	*
 	*/
-	public static function getFilePath($type = 'path', $target = 'filepath', $fileType = null, $key = '', $default = JPATH_SITE . '/images/', $createIfNotSet = true)
+	public static function getFilePath($type = 'path', $target = 'filepath', $fileType = null, $key = '', $default = '', $createIfNotSet = true)
 	{
+		// make sure to always have a string/path
+		if(!self::checkString($default))
+		{
+			$default = JPATH_SITE . '/images/';
+		}
 		// get the global settings
 		if (!self::checkObject(self::$params))
 		{
@@ -2284,34 +2289,37 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* 	the locker
+	* the locker
 	*
-	*  	@var array 
+	* @var array 
 	**/
 	protected static $locker = array();
 
 	/**
-	* 	the dynamic replacement salt
+	* the dynamic replacement salt
 	*
-	*  	@var array 
+	* @var array 
 	**/
 	protected static $globalSalt = array();
 
 	/**
-	* 	the timer
+	* the timer
 	*
-	*  	@var object
+	* @var object
 	**/
 	protected static $keytimer;
 
 	/**
-	*	To Lock string
+	* To Lock string
 	*
-	*	@param string  $string       The string/array to lock
-	*	@param string  $key          The custom key to use
-	*	@param int      $salt           The switch to add salt and type of salt
-	*	@param int      $dynamic    The dynamic replacement array of salt build string
-	*	@param int      $urlencode  The switch to control url encoding
+	* @param string   $string     The string/array to lock
+	* @param string   $key        The custom key to use
+	* @param int      $salt       The switch to add salt and type of salt
+	* @param int      $dynamic    The dynamic replacement array of salt build string
+	* @param int      $urlencode  The switch to control url encoding
+	*
+	* @return string    Encrypted String
+	*
 	**/
 	public static function lock($string, $key = null, $salt = 2, $dynamic = null, $urlencode = true)
 	{
@@ -2325,13 +2333,13 @@ abstract class SermondistributorHelper
 			{
 				$timer = $salt;
 			}
+			// set the default key
+			$key = self::salt($timer, $dynamic);
+			// try getting the system key
 			if (method_exists(get_called_class(), "getCryptKey")) 
 			{
-				$key = self::getCryptKey('basic', self::salt($timer, $dynamic));
-			}
-			else
-			{
-				$key = self::salt($timer, $dynamic);
+				// try getting the medium key first the fall back to basic, and then default
+				$key = self::getCryptKey('medium', self::getCryptKey('basic', $key));
 			}
 		}
 		// check if we have a salt timer
@@ -2350,7 +2358,7 @@ abstract class SermondistributorHelper
 			$string = serialize($string);
 		}
 		// prep for url
-		if ($urlencode)
+		if ($urlencode && method_exists(get_called_class(), "base64_urlencode"))
 		{
 			return self::base64_urlencode(self::$locker[$key]->encryptString($string));
 		}
@@ -2358,13 +2366,16 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* 	To un-Lock string
+	* To un-Lock string
 	*
-	*	@param string  $string       The string to unlock
-	*	@param string  $key          The custom key to use
-	*	@param int      $salt           The switch to add salt and type of salt
-	*	@param int      $dynamic    The dynamic replacement array of salt build string
-	*	@param int      $urlencode  The switch to control url decoding
+	* @param string  $string       The string to unlock
+	* @param string  $key          The custom key to use
+	* @param int      $salt           The switch to add salt and type of salt
+	* @param int      $dynamic    The dynamic replacement array of salt build string
+	* @param int      $urlencode  The switch to control url decoding
+	*
+	* @return string    Decrypted String
+	*
 	**/
 	public static function unlock($string, $key = null, $salt = 2, $dynamic = null, $urlencode = true)
 	{
@@ -2378,14 +2389,13 @@ abstract class SermondistributorHelper
 			{
 				$timer = $salt;
 			}
-			// get secure key
+			// set the default key
+			$key = self::salt($timer, $dynamic);
+			// try getting the system key
 			if (method_exists(get_called_class(), "getCryptKey")) 
 			{
-				$key = self::getCryptKey('basic', self::salt($timer, $dynamic));
-			}
-			else
-			{
-				$key = self::salt($timer, $dynamic);
+				// try getting the medium key first the fall back to basic, and then default
+				$key = self::getCryptKey('medium', self::getCryptKey('basic', $key));
 			}
 		}
 		// check if we have a salt timer
@@ -2399,7 +2409,7 @@ abstract class SermondistributorHelper
 			self::$locker[$key] = new FOFEncryptAes($key, 128);
 		}
 		// make sure we have real base64
-		if ($urlencode)
+		if ($urlencode && method_exists(get_called_class(), "base64_urldecode"))
 		{
 			$string = self::base64_urldecode($string);
 		}
@@ -2417,10 +2427,13 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* 	The Salt
+	* The Salt
 	*
-	*	@param int      $type          The type of length the salt should be valid
-	*	@param int      $dynamic    The dynamic replacement array of salt build string
+	* @param int   $type      The type of length the salt should be valid
+	* @param int   $dynamic   The dynamic replacement array of salt build string
+	*
+	* @return string
+	*
 	**/
 	public static function salt($type = 1, $dynamic = null)
 	{
@@ -2465,9 +2478,9 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	The function to insure the salt is valid within the given period (third try)
+	* The function to insure the salt is valid within the given period (third try)
 	*
-	*	@param int $main    The main number
+	* @param int $main    The main number
 	*/
 	protected static function periodFix($main)
 	{
@@ -2475,8 +2488,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Check if a string is serialized
-	*	@param string $string
+	* Check if a string is serialized
+	*
+	* @param  string   $string
+	*
+	* @return Boolean
+	*
 	*/
 	public static function is_serial($string)
 	{
@@ -2484,7 +2501,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Get dynamic replacement salt
+	* Get dynamic replacement salt
 	*/
 	public static function getDynamicSalt($dynamic = null)
 	{
@@ -2501,7 +2518,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	The random or dynamic secret salt
+	* The random or dynamic secret salt
 	*/
 	public static function getSecretSalt($string = null, $size = 9)
 	{
@@ -2524,7 +2541,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Get global replacement salt
+	* Get global replacement salt
 	*/
 	public static function getGlobalSalt()
 	{
@@ -2564,7 +2581,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Close public protocol
+	* Close public protocol
 	*/
 	public static function closePublicProtocol($id, $public)
 	{
@@ -2591,7 +2608,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Open public protocol
+	* Open public protocol
 	*/
 	public static function openPublicProtocol($SECRET, $ID, $PUBLIC)
 	{
@@ -2638,16 +2655,16 @@ abstract class SermondistributorHelper
 					{
 						if ($external)
 						{
-							if ($name = self::getVar(null, $val, $id, $name, '=', $table))
+							if ($_name = self::getVar(null, $val, $id, $name, '=', $table))
 							{
-								$names[] = $name;
+								$names[] = $_name;
 							}
 						}
 						else
 						{
-							if ($name = self::getVar($table, $val, $id, $name))
+							if ($_name = self::getVar($table, $val, $id, $name))
 							{
-								$names[] = $name;
+								$names[] = $_name;
 							}
 						}
 					}
@@ -3052,9 +3069,49 @@ abstract class SermondistributorHelper
 	}
 
 	/**
+	 * get the field object
+	 *
+	 * @param   array      $attributes   The array of attributes
+	 * @param   string     $default      The default of the field
+	 * @param   array      $options      The options to apply to the XML element
+	 *
+	 * @return  object
+	 *
+	 */
+	public static function getFieldObject($attributes, $default = '', $options = null)
+	{
+		// make sure we have attributes and a type value
+		if (self::checkArray($attributes) && isset($attributes['type']))
+		{
+			// make sure the form helper class is loaded
+			if (!method_exists('JFormHelper', 'loadFieldType'))
+			{
+				jimport('joomla.form.form');
+			}
+			// get field type
+			$field = JFormHelper::loadFieldType($attributes['type'],true);
+			// start field xml
+			$XML = new SimpleXMLElement('<field/>');
+			// load the attributes
+			self::xmlAddAttributes($XML, $attributes);
+			// check if we have options
+			if (self::checkArray($options))
+			{
+				// load the options
+				self::xmlAddOptions($XML, $options);
+			}
+			// setup the field
+			$field->setup($XML, $default);
+			// return the field object
+			return $field;
+		}
+		return false;
+	}
+
+	/**
 	 * Render Bool Button
 	 *
-	 * @param   array    $args   All the args for the button
+	 * @param   array   $args   All the args for the button
 	 *                             0) name
 	 *                             1) additional (options class) // not used at this time
 	 *                             2) default
@@ -3069,8 +3126,6 @@ abstract class SermondistributorHelper
 		$args = func_get_args();
 		// check if there is additional button class
 		$additional = isset($args[1]) ? (string) $args[1] : ''; // not used at this time
-		// start the xml
-		$buttonXML = new SimpleXMLElement('<field/>');
 		// button attributes
 		$buttonAttributes = array(
 			'type' => 'radio',
@@ -3079,22 +3134,12 @@ abstract class SermondistributorHelper
 			'class' => 'btn-group',
 			'filter' => 'INT',
 			'default' => isset($args[2]) ? (int) $args[2] : 0);
-		// load the haskey attributes
-		self::xmlAddAttributes($buttonXML, $buttonAttributes);
 		// set the button options
 		$buttonOptions = array(
 			'1' => isset($args[3]) ? self::htmlEscape($args[3]) : 'JYES',
 			'0' => isset($args[4]) ? self::htmlEscape($args[4]) : 'JNO');
-		// load the button options
-		self::xmlAddOptions($buttonXML, $buttonOptions);
-
-		// get the radio element
-		$button = JFormHelper::loadFieldType('radio');
-
-		// run
-		$button->setup($buttonXML, $buttonAttributes['default']);
-
-		return $button->input;
+		// return the input
+		return self::getFieldObject($buttonAttributes, $buttonAttributes['default'], $buttonOptions)->input;
 	}
 
 	/**
@@ -3725,7 +3770,7 @@ abstract class SermondistributorHelper
 	*
 	*	@returns string on success
 	**/
-	public static function safeString($string, $type = 'L', $spacer = '_', $replaceNumbers = true)
+	public static function safeString($string, $type = 'L', $spacer = '_', $replaceNumbers = true, $keepOnlyCharacters = true)
 	{
 		if ($replaceNumbers === true)
 		{
@@ -3754,7 +3799,16 @@ abstract class SermondistributorHelper
 			$string = trim($string);
 			$string = preg_replace('/'.$spacer.'+/', ' ', $string);
 			$string = preg_replace('/\s+/', ' ', $string);
-			$string = preg_replace("/[^A-Za-z ]/", '', $string);
+			// remove all and keep only characters
+			if ($keepOnlyCharacters)
+			{
+				$string = preg_replace("/[^A-Za-z ]/", '', $string);
+			}
+			// keep both numbers and characters
+			else
+			{
+				$string = preg_replace("/[^A-Za-z0-9 ]/", '', $string);
+			}
 			// select final adaptations
 			if ($type === 'L' || $type === 'strtolower')
 			{

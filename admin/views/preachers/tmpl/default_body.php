@@ -87,7 +87,7 @@ $edit = "index.php?option=com_sermondistributor&view=preachers&task=preacher.edi
 		</td>
 		<td class="hidden-phone">
 			<div>
-			<?php echo $this->escape($item->description); ?><br />
+			<?php echo $this->escape($item->description); ?>
 			<?php echo $this->escape($item->email); ?>
 			</div>
 		</td>

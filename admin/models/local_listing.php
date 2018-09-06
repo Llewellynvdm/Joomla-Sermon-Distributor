@@ -27,9 +27,6 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\Registry\Registry;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
-
 /**
  * Sermondistributor Local_listing Model
  */
@@ -62,6 +59,9 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 	 */
 	public function getTable($type = 'local_listing', $prefix = 'SermondistributorTable', $config = array())
 	{
+		// add table path for when model gets used from other component
+		$this->addTablePath(JPATH_ADMINISTRATOR . '/components/com_sermondistributor/tables');
+		// get instance of the table
 		return JTable::getInstance($type, $prefix, $config);
 	}
 
@@ -152,15 +152,18 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 	 *
 	 * @param   array    $data      Data for the form.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array    $options   Optional array of options for the form creation.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
 	 * @since   1.6
 	 */
-	public function getForm($data = array(), $loadData = true)
+	public function getForm($data = array(), $loadData = true, $options = array('control' => 'jform'))
 	{
+		// set load data option
+		$options['load_data'] = $loadData;
 		// Get the form.
-		$form = $this->loadForm('com_sermondistributor.local_listing', 'local_listing', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_sermondistributor.local_listing', 'local_listing', $options);
 
 		if (empty($form))
 		{
@@ -228,6 +231,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$form->setFieldAttribute('name', 'disabled', 'true');
 			// Disable fields for display.
 			$form->setFieldAttribute('name', 'readonly', 'true');
+			// If there is no value continue.
 			if (!$form->getValue('name'))
 			{
 				// Disable fields while saving.
@@ -244,6 +248,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$form->setFieldAttribute('build', 'disabled', 'true');
 			// Disable fields for display.
 			$form->setFieldAttribute('build', 'readonly', 'true');
+			// If there is no value continue.
 			if (!$form->getValue('build'))
 			{
 				// Disable fields while saving.
@@ -260,6 +265,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$form->setFieldAttribute('size', 'disabled', 'true');
 			// Disable fields for display.
 			$form->setFieldAttribute('size', 'readonly', 'true');
+			// If there is no value continue.
 			if (!$form->getValue('size'))
 			{
 				// Disable fields while saving.
@@ -276,6 +282,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$form->setFieldAttribute('external_source', 'disabled', 'true');
 			// Disable fields for display.
 			$form->setFieldAttribute('external_source', 'readonly', 'true');
+			// If there is no value continue.
 			if (!$form->getValue('external_source'))
 			{
 				// Disable fields while saving.
@@ -292,6 +299,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$form->setFieldAttribute('key', 'disabled', 'true');
 			// Disable fields for display.
 			$form->setFieldAttribute('key', 'readonly', 'true');
+			// If there is no value continue.
 			if (!$form->getValue('key'))
 			{
 				// Disable fields while saving.
@@ -308,6 +316,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$form->setFieldAttribute('url', 'disabled', 'true');
 			// Disable fields for display.
 			$form->setFieldAttribute('url', 'readonly', 'true');
+			// If there is no value continue.
 			if (!$form->getValue('url'))
 			{
 				// Disable fields while saving.
@@ -319,17 +328,20 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		// Only load these values if no id is found
 		if (0 == $id)
 		{
-			// Set redirected field name
-			$redirectedField = $jinput->get('ref', null, 'STRING');
-			// Set redirected field value
-			$redirectedValue = $jinput->get('refid', 0, 'INT');
+			// Set redirected view name
+			$redirectedView = $jinput->get('ref', null, 'STRING');
+			// Set field name (or fall back to view name)
+			$redirectedField = $jinput->get('field', $redirectedView, 'STRING');
+			// Set redirected view id
+			$redirectedId = $jinput->get('refid', 0, 'INT');
+			// Set field id (or fall back to redirected view id)
+			$redirectedValue = $jinput->get('field_id', $redirectedId, 'INT');
 			if (0 != $redirectedValue && $redirectedField)
 			{
 				// Now set the local-redirected field default value
 				$form->setValue($redirectedField, null, $redirectedValue);
 			}
 		}
-
 		return $form;
 	}
 

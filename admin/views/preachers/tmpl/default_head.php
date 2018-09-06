@@ -46,7 +46,7 @@ defined('_JEXEC') or die('Restricted access');
 			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_PREACHER_NAME_LABEL', 'name', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap hidden-phone" >
-			<?php echo JHtml::_('grid.sort', 'PREACHERS_PREACHER_DETAILS', 'description', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_PREACHERS_PREACHER_DETAILS', 'description', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<?php if ($this->canState): ?>
 		<th width="10" class="nowrap center" >

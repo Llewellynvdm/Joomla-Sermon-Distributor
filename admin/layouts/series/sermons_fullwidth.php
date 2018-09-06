@@ -23,16 +23,27 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-
 defined('_JEXEC') or die('Restricted access');
 
 // set the defaults
-$items	= $displayData->vwcsermons;
-$user	= JFactory::getUser();
-$id	= $displayData->item->id;
+$items = $displayData->vwcsermons;
+$user = JFactory::getUser();
+$id = $displayData->item->id;
+// set the edit URL
 $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
-$ref = ($id) ? "&ref=series&refid=".$id : "";
+// set a return value
+$return = ($id) ? "index.php?option=com_sermondistributor&view=series&layout=edit&id=" . $id : "";
+// check for a return value
+$jinput = JFactory::getApplication()->input;
+if ($_return = $jinput->get('return', null, 'base64'))
+{
+	$return .= "&return=" . $_return;
+}
+// set the referral values
+$ref = ($id) ? "&ref=series&refid=" . $id . "&return=" . urlencode(base64_encode($return)) : "";
+// set the create new URL
 $new = "index.php?option=com_sermondistributor&view=sermon&layout=edit".$ref;
+// load the action object
 $can = SermondistributorHelper::getActions('sermon');
 
 ?>
@@ -83,7 +94,7 @@ $can = SermondistributorHelper::getActions('sermon');
 	<tr>
 		<td>
 			<?php if ($canDo->get('sermon.edit')): ?>
-				<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>&ref=series&refid=<?php echo $id; ?>"><?php echo $displayData->escape($item->name); ?></a>
+				<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?><?php echo $ref; ?>"><?php echo $displayData->escape($item->name); ?></a>
 				<?php if ($item->checked_out): ?>
 					<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'sermons.', $canCheckin); ?>
 				<?php endif; ?>
@@ -93,7 +104,7 @@ $can = SermondistributorHelper::getActions('sermon');
 		</td>
 		<td>
 			<?php if ($user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
-				<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?>&ref=series&refid=<?php echo $id; ?>"><?php echo $displayData->escape($item->preacher_name); ?></a>
+				<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?><?php echo $ref; ?>"><?php echo $displayData->escape($item->preacher_name); ?></a>
 			<?php else: ?>
 				<?php echo $displayData->escape($item->preacher_name); ?>
 			<?php endif; ?>

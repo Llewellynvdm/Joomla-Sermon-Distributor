@@ -25,9 +25,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
 /**
  * Sermondistributor View class for the Api
  */
@@ -81,10 +78,10 @@ class SermondistributorViewApi extends JViewLegacy
 		$size = $this->params->get('uikit_min');
 
 		// Load uikit version.
-		$uikitVersion = $this->params->get('uikit_version', 2);
+		$this->uikitVersion = $this->params->get('uikit_version', 2);
 
 		// Use Uikit Version 2
-		if (2 == $uikitVersion)
+		if (2 == $this->uikitVersion)
 		{
 			// Set css style.
 			$style = $this->params->get('uikit_style');
@@ -101,7 +98,7 @@ class SermondistributorViewApi extends JViewLegacy
 			}
 		}
 		// Use Uikit Version 3
-		elseif (3 == $uikitVersion)
+		elseif (3 == $this->uikitVersion)
 		{
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)

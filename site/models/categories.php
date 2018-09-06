@@ -25,9 +25,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// import the Joomla modellist library
-jimport('joomla.application.component.modellist');
-
 /**
  * Sermondistributor Model for Categories
  */
@@ -112,9 +109,6 @@ class SermondistributorModelCategories extends JModelList
 		// Insure all item fields are adapted where needed.
 		if (SermondistributorHelper::checkArray($items))
 		{
-	// Load the JEvent Dispatcher
-	JPluginHelper::importPlugin('content');
-	$this->_dispatcher = JEventDispatcher::getInstance();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
@@ -181,9 +175,6 @@ class SermondistributorModelCategories extends JModelList
 		// check if there was data returned
 		if ($db->getNumRows())
 		{
-	// Load the JEvent Dispatcher
-	JPluginHelper::importPlugin('content');
-	$this->_dispatcher = JEventDispatcher::getInstance();
 			return $db->loadObjectList();
 		}
 		return false;
