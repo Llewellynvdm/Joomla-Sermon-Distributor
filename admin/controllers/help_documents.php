@@ -115,5 +115,5 @@ class SermondistributorControllerHelp_documents extends JControllerAdmin
 		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=help_documents', false), $message, 'error');
 		return;
-	}  
+	}
 }

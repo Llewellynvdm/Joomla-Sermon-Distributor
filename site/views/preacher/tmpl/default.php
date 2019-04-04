@@ -23,10 +23,11 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 
 ?>
- <?php if ($this->preacher): ?>
+<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor'); ?>" method="post" name="adminForm" id="adminForm">
+<?php if ($this->preacher): ?>
 	<?php if ($this->params->get('preacher_display') == 1) : ?>
 		<div class="uk-grid" data-uk-grid-match="{target:'.uk-panel'}"><?php echo $this->loadTemplate('preacherpanel'); ?></div>
 	<?php elseif ($this->params->get('preacher_display') == 2) : ?>
@@ -74,12 +75,13 @@ defined('_JEXEC') or die('Restricted access');
 
 
 <?php if (isset($this->items) && isset($this->pagination) && isset($this->pagination->pagesTotal) && $this->pagination->pagesTotal > 1): ?>
-<form name="adminForm" method="post">
 	<div class="pagination">
 		<?php if ($this->params->def('show_pagination_results', 1)) : ?>
 			<p class="counter pull-right"> <?php echo $this->pagination->getPagesCounter(); ?> <?php echo $this->pagination->getLimitBox(); ?></p>
 		<?php endif; ?>
 		<?php echo $this->pagination->getPagesLinks(); ?>
 	</div>
+<?php endif; ?><?php echo $this->toolbar->render(); ?>
+<input type="hidden" name="task" value="" />
+<?php echo JHtml::_('form.token'); ?>
 </form>
-<?php endif; ?> <?php echo $this->toolbar->render(); ?>

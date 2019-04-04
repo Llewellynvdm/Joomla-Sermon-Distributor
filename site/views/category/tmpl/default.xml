@@ -18,6 +18,7 @@
 			label="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_REQUEST_ID_LABEL"
 			extension="com_sermondistributor.sermons"
 			required="false"
+			default=""
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_REQUEST_ID_DESCRIPTION"
 			class="inputbox"
 		/>

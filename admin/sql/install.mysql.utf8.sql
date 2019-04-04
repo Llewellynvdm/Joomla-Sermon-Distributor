@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_preacher` (
 	`icon` CHAR(64) NOT NULL DEFAULT '',
 	`name` VARCHAR(255) NOT NULL DEFAULT '',
 	`website` VARCHAR(255) NOT NULL DEFAULT '',
-	`params` text NOT NULL DEFAULT '',
+	`params` text NOT NULL,
 	`published` TINYINT(3) NOT NULL DEFAULT 1,
 	`created_by` INT(10) unsigned NOT NULL DEFAULT 0,
 	`modified_by` INT(10) unsigned NOT NULL DEFAULT 0,
@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_preacher` (
 	`hits` INT(10) unsigned NOT NULL DEFAULT 0,
 	`access` INT(10) unsigned NOT NULL DEFAULT 0,
 	`ordering` INT(11) NOT NULL DEFAULT 0,
-	`metakey` TEXT NOT NULL DEFAULT '',
-	`metadesc` TEXT NOT NULL DEFAULT '',
-	`metadata` TEXT NOT NULL DEFAULT '',
+	`metakey` TEXT NOT NULL,
+	`metadesc` TEXT NOT NULL,
+	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_preacher` (
 	KEY `idx_state` (`published`),
 	KEY `idx_name` (`name`),
 	KEY `idx_alias` (`alias`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_sermon` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_sermon` (
 	`short_description` VARCHAR(255) NOT NULL DEFAULT '',
 	`source` TINYINT(1) NOT NULL DEFAULT 0,
 	`url` VARCHAR(255) NOT NULL DEFAULT '',
-	`params` text NOT NULL DEFAULT '',
+	`params` text NOT NULL,
 	`published` TINYINT(3) NOT NULL DEFAULT 1,
 	`created_by` INT(10) unsigned NOT NULL DEFAULT 0,
 	`modified_by` INT(10) unsigned NOT NULL DEFAULT 0,
@@ -64,9 +64,9 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_sermon` (
 	`hits` INT(10) unsigned NOT NULL DEFAULT 0,
 	`access` INT(10) unsigned NOT NULL DEFAULT 0,
 	`ordering` INT(11) NOT NULL DEFAULT 0,
-	`metakey` TEXT NOT NULL DEFAULT '',
-	`metadesc` TEXT NOT NULL DEFAULT '',
-	`metadata` TEXT NOT NULL DEFAULT '',
+	`metakey` TEXT NOT NULL,
+	`metadesc` TEXT NOT NULL,
+	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_sermon` (
 	KEY `idx_link_type` (`link_type`),
 	KEY `idx_alias` (`alias`),
 	KEY `idx_build` (`build`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_series` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_series` (
 	`icon` CHAR(64) NOT NULL DEFAULT '',
 	`name` VARCHAR(255) NOT NULL DEFAULT '',
 	`scripture` VARCHAR(255) NOT NULL DEFAULT '',
-	`params` text NOT NULL DEFAULT '',
+	`params` text NOT NULL,
 	`published` TINYINT(3) NOT NULL DEFAULT 1,
 	`created_by` INT(10) unsigned NOT NULL DEFAULT 0,
 	`modified_by` INT(10) unsigned NOT NULL DEFAULT 0,
@@ -102,9 +102,9 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_series` (
 	`hits` INT(10) unsigned NOT NULL DEFAULT 0,
 	`access` INT(10) unsigned NOT NULL DEFAULT 0,
 	`ordering` INT(11) NOT NULL DEFAULT 0,
-	`metakey` TEXT NOT NULL DEFAULT '',
-	`metadesc` TEXT NOT NULL DEFAULT '',
-	`metadata` TEXT NOT NULL DEFAULT '',
+	`metakey` TEXT NOT NULL,
+	`metadesc` TEXT NOT NULL,
+	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_series` (
 	KEY `idx_state` (`published`),
 	KEY `idx_name` (`name`),
 	KEY `idx_alias` (`alias`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_statistic` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_statistic` (
 	`preacher` INT(11) NOT NULL DEFAULT 0,
 	`series` INT(11) NOT NULL DEFAULT 0,
 	`sermon` INT(11) NOT NULL DEFAULT 0,
-	`params` text NOT NULL DEFAULT '',
+	`params` text NOT NULL,
 	`published` TINYINT(3) NOT NULL DEFAULT 1,
 	`created_by` INT(10) unsigned NOT NULL DEFAULT 0,
 	`modified_by` INT(10) unsigned NOT NULL DEFAULT 0,
@@ -135,9 +135,9 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_statistic` (
 	`hits` INT(10) unsigned NOT NULL DEFAULT 0,
 	`access` INT(10) unsigned NOT NULL DEFAULT 0,
 	`ordering` INT(11) NOT NULL DEFAULT 0,
-	`metakey` TEXT NOT NULL DEFAULT '',
-	`metadesc` TEXT NOT NULL DEFAULT '',
-	`metadata` TEXT NOT NULL DEFAULT '',
+	`metakey` TEXT NOT NULL,
+	`metadesc` TEXT NOT NULL,
+	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_statistic` (
 	KEY `idx_sermon` (`sermon`),
 	KEY `idx_preacher` (`preacher`),
 	KEY `idx_series` (`series`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_external_source` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_external_source` (
 	`sharedurl` TEXT NOT NULL,
 	`update_method` TINYINT NOT NULL DEFAULT 0,
 	`update_timer` INT(1) NOT NULL DEFAULT 0,
-	`params` text NOT NULL DEFAULT '',
+	`params` text NOT NULL,
 	`published` TINYINT(3) NOT NULL DEFAULT 1,
 	`created_by` INT(10) unsigned NOT NULL DEFAULT 0,
 	`modified_by` INT(10) unsigned NOT NULL DEFAULT 0,
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_external_source` (
 	KEY `idx_build` (`build`),
 	KEY `idx_dropboxoptions` (`dropboxoptions`),
 	KEY `idx_permissiontype` (`permissiontype`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_local_listing` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_local_listing` (
 	`name` VARCHAR(255) NOT NULL DEFAULT '',
 	`size` INT(50) NOT NULL DEFAULT 0,
 	`url` TEXT NOT NULL,
-	`params` text NOT NULL DEFAULT '',
+	`params` text NOT NULL,
 	`published` TINYINT(3) NOT NULL DEFAULT 1,
 	`created_by` INT(10) unsigned NOT NULL DEFAULT 0,
 	`modified_by` INT(10) unsigned NOT NULL DEFAULT 0,
@@ -217,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_local_listing` (
 	KEY `idx_name` (`name`),
 	KEY `idx_build` (`build`),
 	KEY `idx_key` (`key`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_help_document` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -234,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_help_document` (
 	`title` CHAR(64) NOT NULL DEFAULT '',
 	`type` TINYINT(1) NOT NULL DEFAULT 0,
 	`url` VARCHAR(255) NOT NULL DEFAULT '',
-	`params` text NOT NULL DEFAULT '',
+	`params` text NOT NULL,
 	`published` TINYINT(3) NOT NULL DEFAULT 1,
 	`created_by` INT(10) unsigned NOT NULL DEFAULT 0,
 	`modified_by` INT(10) unsigned NOT NULL DEFAULT 0,
@@ -246,9 +246,9 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_help_document` (
 	`hits` INT(10) unsigned NOT NULL DEFAULT 0,
 	`access` INT(10) unsigned NOT NULL DEFAULT 0,
 	`ordering` INT(11) NOT NULL DEFAULT 0,
-	`metakey` TEXT NOT NULL DEFAULT '',
-	`metadesc` TEXT NOT NULL DEFAULT '',
-	`metadata` TEXT NOT NULL DEFAULT '',
+	`metakey` TEXT NOT NULL,
+	`metadesc` TEXT NOT NULL,
+	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_help_document` (
 	KEY `idx_article` (`article`),
 	KEY `idx_target` (`target`),
 	KEY `idx_alias` (`alias`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 
 

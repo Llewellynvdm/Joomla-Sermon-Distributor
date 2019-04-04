@@ -23,11 +23,11 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 
 ?>
- 
+
 <div class="uk-alert uk-alert-danger" data-uk-alert>
     <h2><?php echo JText::_('COM_SERMONDISTRIBUTOR_WHAT_ARE_YOU_DOING_HERE'); ?></h2>
     <p><?php echo JText::_('COM_SERMONDISTRIBUTOR_YOU_ARE_BEING_WATCHED'); ?></p>
-</div> 
+</div>

@@ -50,7 +50,7 @@ class SermondistributorTableLocal_listing extends JTable
 		parent::__construct('#__sermondistributor_local_listing', 'id', $db);
 
 		// Adding History Options
-		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.local_listing')); 
+		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.local_listing'));
 	}	
  
 	public function bind($array, $ignore = '')
@@ -233,7 +233,7 @@ class SermondistributorTableLocal_listing extends JTable
 		{
 			// asset alread set so use saved rules
 			$assetId = (int) $db->loadResult();
-			return JAccess::getAssetRules($assetId);
+			return JAccess::getAssetRules($assetId); // (TODO) instead of keeping inherited Allowed it becomes Allowed.
 		}
 		// try again
 		elseif ($try)

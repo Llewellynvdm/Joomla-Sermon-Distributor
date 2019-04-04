@@ -44,9 +44,9 @@ class JFormFieldExternalsourcefiles extends JFormFieldList
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return	array		An array of JHtml options.
+	 * @return	array    An array of JHtml options.
 	 */
-	public function getOptions()
+	protected function getOptions()
 	{
 		// set the default
 		$options[] = JHtml::_('select.option', '', JText::_('COM_SERMONDISTRIBUTOR_THE_LOCAL_LISTING_OF_THE_MANUAL_EXTERNAL_SOURCE_FOLDERS_IS_EMPTY'));

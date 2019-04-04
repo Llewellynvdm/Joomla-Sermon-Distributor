@@ -264,7 +264,7 @@ class SermondistributorModelSermon extends JModelItem
 		}
 
 		return $this->_item[$pk];
-	} 
+	}
 
 	/**
 	 * Method to get an array of Statistic Objects.
@@ -313,5 +313,5 @@ class SermondistributorModelSermon extends JModelItem
 			return $this->uikitComp;
 		}
 		return false;
-	}  
+	}
 }

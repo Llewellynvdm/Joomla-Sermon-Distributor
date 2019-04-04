@@ -23,13 +23,14 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 
 // Set the heading of the page
 $heading = ($this->params->get('page_heading')) ? $this->params->get('page_heading'):(isset($this->menu->title)) ? $this->menu->title:'';
 
 ?>
- <?php if ($this->params->get('show_page_heading')): ?>
+<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor'); ?>" method="post" name="adminForm" id="adminForm">
+<?php if ($this->params->get('show_page_heading')): ?>
 	<h1 class="uk-text-primary"><?php echo $heading; ?></h1>
 <?php endif; ?>
 <?php if ($this->items): ?>
@@ -48,12 +49,13 @@ $heading = ($this->params->get('page_heading')) ? $this->params->get('page_headi
 <?php endif; ?>
 
 <?php if (isset($this->items) && isset($this->pagination) && isset($this->pagination->pagesTotal) && $this->pagination->pagesTotal > 1): ?>
-<form name="adminForm" method="post">
 	<div class="pagination">
 		<?php if ($this->params->def('show_pagination_results', 1)) : ?>
 			<p class="counter pull-right"> <?php echo $this->pagination->getPagesCounter(); ?> <?php echo $this->pagination->getLimitBox(); ?></p>
 		<?php endif; ?>
 		<?php echo $this->pagination->getPagesLinks(); ?>
 	</div>
+<?php endif; ?>
+<input type="hidden" name="task" value="" />
+<?php echo JHtml::_('form.token'); ?>
 </form>
-<?php endif; ?> 

@@ -108,7 +108,7 @@ class SermondistributorModelLocal_listings extends JModelList
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
-	{ 
+	{
 		// check in items
 		$this->checkInNow();
 
@@ -128,7 +128,7 @@ class SermondistributorModelLocal_listings extends JModelList
 				}
 
 			}
-		} 
+		}
 
 		// set selection value to a translatable value
 		if (SermondistributorHelper::checkArray($items))
@@ -139,7 +139,7 @@ class SermondistributorModelLocal_listings extends JModelList
 				$item->build = $this->selectionTranslation($item->build, 'build');
 			}
 		}
- 
+
         
 		// return items
 		return $items;
@@ -339,7 +339,7 @@ class SermondistributorModelLocal_listings extends JModelList
 			return $headers;
 		}
 		return false;
-	} 
+	}
 	
 	/**
 	 * Method to get a store id based on model configuration state.

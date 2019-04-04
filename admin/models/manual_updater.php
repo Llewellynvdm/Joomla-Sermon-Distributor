@@ -100,7 +100,7 @@ class SermondistributorModelManual_updater extends JModelList
 			// redirect away if not a correct (TODO for now we go to default view)
 			$app->redirect('index.php?option=com_sermondistributor');
 			return false;
-		} 
+		}
 		// load parent items
 		$items = parent::getItems();
 
@@ -132,7 +132,7 @@ class SermondistributorModelManual_updater extends JModelList
 					$item->oauthtoken = rtrim($basic->decryptString($item->oauthtoken), "\0");
 				}
 			}
-		} 
+		}
 
 		// return items
 		return $items;
@@ -151,5 +151,5 @@ class SermondistributorModelManual_updater extends JModelList
 			return $this->uikitComp;
 		}
 		return false;
-	}  
+	}
 }

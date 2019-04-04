@@ -50,7 +50,7 @@ class SermondistributorTableSeries extends JTable
 		parent::__construct('#__sermondistributor_series', 'id', $db);
 
 		// Adding History Options
-		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.series')); 
+		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.series'));
 	}	
  
 	public function bind($array, $ignore = '')
@@ -233,7 +233,7 @@ class SermondistributorTableSeries extends JTable
 		{
 			// asset alread set so use saved rules
 			$assetId = (int) $db->loadResult();
-			return JAccess::getAssetRules($assetId);
+			return JAccess::getAssetRules($assetId); // (TODO) instead of keeping inherited Allowed it becomes Allowed.
 		}
 		// try again
 		elseif ($try)

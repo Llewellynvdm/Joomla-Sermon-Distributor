@@ -64,6 +64,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		parent::display($tpl);
 	}
 
+
 	 /**
 	 * Increment the hit counter for the sermon.
 	 *
@@ -80,7 +81,7 @@ class SermondistributorViewSermon extends JViewLegacy
 
 			// Fields to update.
 			$fields = array(
-			    $db->quoteName('hits') . ' = '.$db->quoteName('hits').' + 1'
+			    $db->quoteName('hits') . ' = ' . $db->quoteName('hits') . ' + 1'
 			);
 
 			// Conditions for which records should be updated.
@@ -96,6 +97,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		return false;
 	}
 
+
 	/**
 	 * Prepares the document
 	 */
@@ -107,7 +109,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		// Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
 		// Initialize the header checker.
-		$HeaderCheck = new sermondistributorHeaderCheck; 
+		$HeaderCheck = new sermondistributorHeaderCheck;
 
 		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');
@@ -197,7 +199,7 @@ class SermondistributorViewSermon extends JViewLegacy
 			{
 				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 			}
-		}   
+		}
 		// load the meta description
 		if (isset($this->item->metadesc) && $this->item->metadesc)
 		{
@@ -241,7 +243,7 @@ class SermondistributorViewSermon extends JViewLegacy
 					$this->document->setMetadata($k, $v);
 				}
 			}
-		} 
+		}
 		// set the player key for the sermon view
 		$this->item->playerKey = (int) $this->params->get('player', 1);
 		if (1 == $this->item->playerKey)
@@ -268,7 +270,7 @@ class SermondistributorViewSermon extends JViewLegacy
 			}
 		} 
 		// add the document default css file
-		$this->document->addStyleSheet(JURI::root(true) .'/components/com_sermondistributor/assets/css/sermon.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css'); 
+		$this->document->addStyleSheet(JURI::root(true) .'/components/com_sermondistributor/assets/css/sermon.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 	}
 
 	/**

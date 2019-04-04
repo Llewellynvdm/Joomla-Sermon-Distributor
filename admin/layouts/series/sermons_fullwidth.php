@@ -39,10 +39,18 @@ if ($_return = $jinput->get('return', null, 'base64'))
 {
 	$return .= "&return=" . $_return;
 }
-// set the referral values
-$ref = ($id) ? "&ref=series&refid=" . $id . "&return=" . urlencode(base64_encode($return)) : "";
+// check if return value was set
+if (SermondistributorHelper::checkString($return))
+{
+	// set the referral values
+	$ref = ($id) ? "&ref=series&refid=" . $id . "&return=" . urlencode(base64_encode($return)) : "&return=" . urlencode(base64_encode($return));
+}
+else
+{
+	$ref = ($id) ? "&ref=series&refid=" . $id : "";
+}
 // set the create new URL
-$new = "index.php?option=com_sermondistributor&view=sermon&layout=edit".$ref;
+$new = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit" . $ref;
 // load the action object
 $can = SermondistributorHelper::getActions('sermon');
 

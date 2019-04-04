@@ -50,6 +50,8 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 		$this->listOrder = $this->escape($this->state->get('list.ordering'));
 		$this->listDirn = $this->escape($this->state->get('list.direction'));
 		$this->saveOrder = $this->listOrder == 'ordering';
+		// set the return here value
+		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
 		$this->canDo = SermondistributorHelper::getActions('local_listing');
 		$this->canEdit = $this->canDo->get('local_listing.edit');
@@ -129,7 +131,7 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 				// add the button to the page
 				$dhtml = $layout->render(array('title' => $title));
 				$bar->appendButton('Custom', $dhtml, 'batch');
-			} 
+			}
 
 			if ($this->state->get('filter.published') == -2 && ($this->canState && $this->canDelete))
 			{
@@ -144,7 +146,7 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 			{
 				JToolBarHelper::custom('local_listings.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-		} 
+		}
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('local_listing.import'))
 		{
@@ -195,7 +197,7 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 				'batch[access]',
 				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
 			);
-		} 
+		}
 
 		// Set Build Selection
 		$this->buildOptions = $this->getTheBuildSelections();
@@ -220,7 +222,7 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 		}
 
 		// Set External Source Description Selection
-		$this->external_sourceDescriptionOptions = JFormHelper::loadFieldType('Externalsource')->getOptions();
+		$this->external_sourceDescriptionOptions = JFormHelper::loadFieldType('Externalsource')->options;
 		if ($this->external_sourceDescriptionOptions)
 		{
 			// External Source Description Filter

@@ -124,7 +124,7 @@ class SermondistributorModelSermons extends JModelList
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
-	{ 
+	{
 		// check in items
 		$this->checkInNow();
 
@@ -144,7 +144,7 @@ class SermondistributorModelSermons extends JModelList
 				}
 
 			}
-		} 
+		}
 
 		// set selection value to a translatable value
 		if (SermondistributorHelper::checkArray($items))
@@ -157,7 +157,7 @@ class SermondistributorModelSermons extends JModelList
 				$item->source = $this->selectionTranslation($item->source, 'source');
 			}
 		}
- 
+
         
 		// return items
 		return $items;
@@ -420,7 +420,7 @@ class SermondistributorModelSermons extends JModelList
 			return $headers;
 		}
 		return false;
-	} 
+	}
 	
 	/**
 	 * Method to get a store id based on model configuration state.

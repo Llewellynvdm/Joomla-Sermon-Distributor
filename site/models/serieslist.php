@@ -97,7 +97,7 @@ class SermondistributorModelSerieslist extends JModelList
 			// redirect away to the default view if no access allowed.
 			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
-		}  
+		}
 		// load parent items
 		$items = parent::getItems();
 
@@ -126,7 +126,7 @@ class SermondistributorModelSerieslist extends JModelList
 				// set idSeriesSermonB to the $item object.
 				$item->idSeriesSermonB = $this->getIdSeriesSermonBcae_B($item->id);
 			}
-		} 
+		}
 
 
 		if (SermondistributorHelper::checkArray($items))
@@ -143,7 +143,7 @@ class SermondistributorModelSerieslist extends JModelList
 
 		// return items
 		return $items;
-	} 
+	}
 
 	/**
 	 * Method to get an array of Sermon Objects.
@@ -195,5 +195,5 @@ class SermondistributorModelSerieslist extends JModelList
 			return $this->uikitComp;
 		}
 		return false;
-	}  
+	}
 }

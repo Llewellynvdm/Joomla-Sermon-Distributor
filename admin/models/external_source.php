@@ -193,7 +193,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 		}
 
 		return $item;
-	} 
+	}
 
 	/**
 	 * Method to get the record form.
@@ -482,7 +482,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			}
 		}
 		return parent::validate($form, $data, $group);
-	} 
+	}
 
 	/**
 	 * Method to get the unique fields of this table.
@@ -772,7 +772,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	} 
+	}
 
 	/**
 	 * Batch move items to a new category
@@ -904,7 +904,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			$metadata = new JRegistry;
 			$metadata->loadArray($data['metadata']);
 			$data['metadata'] = (string) $metadata;
-		} 
+		}
 
 		// Set the filetypes string to JSON string.
 		if (isset($data['filetypes']))

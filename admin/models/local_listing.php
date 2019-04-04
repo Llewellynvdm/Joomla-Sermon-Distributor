@@ -145,7 +145,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		}
 
 		return $item;
-	} 
+	}
 
 	/**
 	 * Method to get the record form.
@@ -500,7 +500,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		}
 
 		return $data;
-	} 
+	}
 
 	/**
 	 * Method to get the unique fields of this table.
@@ -790,7 +790,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	} 
+	}
 
 	/**
 	 * Batch move items to a new category
@@ -922,7 +922,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$metadata = new JRegistry;
 			$metadata->loadArray($data['metadata']);
 			$data['metadata'] = (string) $metadata;
-		} 
+		}
 
 		// Get the basic encryption key.
 		$basickey = SermondistributorHelper::getCryptKey('basic');

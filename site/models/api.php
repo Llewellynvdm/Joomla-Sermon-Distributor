@@ -88,7 +88,7 @@ class SermondistributorModelApi extends JModelList
 	 */
 	public function getItems()
 	{
-		$user = JFactory::getUser();  
+		$user = JFactory::getUser();
 		// load parent items
 		$items = parent::getItems();
 
@@ -103,11 +103,11 @@ class SermondistributorModelApi extends JModelList
 				// Always create a slug for sef URL's
 				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
 			}
-		} 
+		}
 
 		// return items
 		return $items;
-	} 
+	}
 
 	/**
 	 * Get the uikit needed components
@@ -122,7 +122,7 @@ class SermondistributorModelApi extends JModelList
 			return $this->uikitComp;
 		}
 		return false;
-	} 
+	}
 
 	/**
 	* 	Run External Update
@@ -657,5 +657,5 @@ class SermondistributorModelApi extends JModelList
 				$this->uniqeValueArray['sermon']['alias'][$alias] = $alias;
 			}
 		}
-	} 
+	}
 }

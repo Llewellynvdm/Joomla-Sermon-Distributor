@@ -49,8 +49,10 @@ abstract class SermondistributorHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'sermon'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=sermon';
 		}
 		if ($catid > 1)
@@ -90,8 +92,10 @@ abstract class SermondistributorHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'preachers'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=preachers';
 		}
 		if ($catid > 1)
@@ -131,8 +135,10 @@ abstract class SermondistributorHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'preacher'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=preacher';
 		}
 		if ($catid > 1)
@@ -172,8 +178,10 @@ abstract class SermondistributorHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'categories'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=categories';
 		}
 
@@ -202,8 +210,10 @@ abstract class SermondistributorHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'category'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=category';
 		}
 
@@ -232,8 +242,10 @@ abstract class SermondistributorHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'serieslist'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=serieslist';
 		}
 		if ($catid > 1)
@@ -273,8 +285,10 @@ abstract class SermondistributorHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'series'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=series';
 		}
 		if ($catid > 1)
@@ -314,8 +328,10 @@ abstract class SermondistributorHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'api'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_sermondistributor&view=api';
 		}
 		if ($catid > 1)
@@ -423,8 +439,8 @@ abstract class SermondistributorHelperRoute
 			}
 		}
 		return $link;
-	}	
-	
+	}
+
 	protected static function _findItem($needles = null,$type = null)
 	{
 		$app      = JFactory::getApplication();
@@ -472,6 +488,10 @@ abstract class SermondistributorHelperRoute
 							self::$lookup[$language][$view][$item->query['id']] = $item->id;
 						}
 					}
+					else
+					{
+						self::$lookup[$language][$view][0] = $item->id;
+					}
 				}
 			}
 		}
@@ -482,17 +502,24 @@ abstract class SermondistributorHelperRoute
 			{
 				if (isset(self::$lookup[$language][$view]))
 				{
-					foreach ($ids as $id)
+					if (SermondistributorHelper::checkArray($ids))
 					{
-						if (isset(self::$lookup[$language][$view][(int) $id]))
+						foreach ($ids as $id)
 						{
-							return self::$lookup[$language][$view][(int) $id];
+							if (isset(self::$lookup[$language][$view][(int) $id]))
+							{
+								return self::$lookup[$language][$view][(int) $id];
+							}
 						}
+					}
+					elseif (isset(self::$lookup[$language][$view][0]))
+					{
+						return self::$lookup[$language][$view][0];
 					}
 				}
 			}
 		}
-		
+
 		if ($type)
 		{
 			// Check if the global menu item has been set.

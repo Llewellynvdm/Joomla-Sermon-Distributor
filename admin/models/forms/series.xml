@@ -138,6 +138,7 @@
 			label="COM_SERMONDISTRIBUTOR_SERIES_SCRIPTURE_LABEL"
 			size="90"
 			maxlength="150"
+			default=""
 			description="COM_SERMONDISTRIBUTOR_SERIES_SCRIPTURE_DESCRIPTION"
 			class="text_area"
 			readonly="false"

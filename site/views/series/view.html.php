@@ -90,6 +90,7 @@ class SermondistributorViewSeries extends JViewLegacy
 		parent::display($tpl);
 	}
 
+
 	 /**
 	 * Increment the hit counter for the series.
 	 *
@@ -106,7 +107,7 @@ class SermondistributorViewSeries extends JViewLegacy
 
 			// Fields to update.
 			$fields = array(
-			    $db->quoteName('hits') . ' = '.$db->quoteName('hits').' + 1'
+			    $db->quoteName('hits') . ' = ' . $db->quoteName('hits') . ' + 1'
 			);
 
 			// Conditions for which records should be updated.
@@ -122,6 +123,7 @@ class SermondistributorViewSeries extends JViewLegacy
 		return false;
 	}
 
+
 	/**
 	 * Prepares the document
 	 */
@@ -133,7 +135,7 @@ class SermondistributorViewSeries extends JViewLegacy
 		// Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
 		// Initialize the header checker.
-		$HeaderCheck = new sermondistributorHeaderCheck; 
+		$HeaderCheck = new sermondistributorHeaderCheck;
 
 		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');
@@ -222,7 +224,7 @@ class SermondistributorViewSeries extends JViewLegacy
 			{
 				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 			}
-		}  
+		}
 
 		// Add the CSS for Footable.
 		$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable-v2/css/footable.core.min.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
@@ -242,7 +244,7 @@ class SermondistributorViewSeries extends JViewLegacy
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.sort.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.filter.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.paginate.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript'); 
+		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.paginate.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 		// load the meta description
 		if (isset($this->series->metadesc) && $this->series->metadesc)
 		{
@@ -286,9 +288,9 @@ class SermondistributorViewSeries extends JViewLegacy
 					$this->document->setMetadata($k, $v);
 				}
 			}
-		} 
+		}
 		// add the document default css file
-		$this->document->addStyleSheet(JURI::root(true) .'/components/com_sermondistributor/assets/css/series.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css'); 
+		$this->document->addStyleSheet(JURI::root(true) .'/components/com_sermondistributor/assets/css/series.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 	}
 
 	/**

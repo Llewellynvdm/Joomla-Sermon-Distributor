@@ -127,7 +127,8 @@
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_DESCRIPTION"
 			class="list_class"
 			multiple="false"
-			required="true">
+			required="true"
+			default="">
 			<!-- Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SELECT_AN_OPTION</option>
@@ -154,6 +155,7 @@
 			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_LABEL"
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_DESCRIPTION"
 			class="btn-group"
+			default=""
 			required="true">
 			<!-- Option Set. -->
 			<option value="1">
@@ -169,6 +171,7 @@
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_DESCRIPTION"
 			class="list_class"
 			multiple="false"
+			default=""
 			required="true"
 			button="false"
 		/>
@@ -180,6 +183,7 @@
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_DESCRIPTION"
 			class="list_class"
 			multiple="false"
+			default=""
 			required="true"
 			button="false"
 		/>
@@ -217,6 +221,7 @@
 			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_LABEL"
 			size="60"
 			maxlength="150"
+			default=""
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_DESCRIPTION"
 			class="text_area"
 			required="true"
@@ -233,6 +238,7 @@
 			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TARGET_LABEL"
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TARGET_DESCRIPTION"
 			class="btn-group"
+			default=""
 			required="true">
 			<!-- Option Set. -->
 			<option value="1">

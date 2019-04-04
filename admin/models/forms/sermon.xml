@@ -162,6 +162,7 @@
 			label="COM_SERMONDISTRIBUTOR_SERMON_CATID_LABEL"
 			extension="com_sermondistributor.sermons"
 			required="false"
+			default=""
 			description="COM_SERMONDISTRIBUTOR_SERMON_CATID_DESCRIPTION"
 			class="inputbox"
 		/>
@@ -189,7 +190,8 @@
 			class="list_class"
 			multiple="false"
 			filter="INT"
-			required="true">
+			required="true"
+			default="">
 			<!-- Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_SERMON_SELECT_SOURCE</option>
@@ -267,7 +269,8 @@
 			class="list_class"
 			multiple="false"
 			filter="INT"
-			required="true">
+			required="true"
+			default="">
 			<!-- Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_SERMON_SELECT_AN_OPTION</option>
@@ -309,6 +312,7 @@
 			label="COM_SERMONDISTRIBUTOR_SERMON_URL_LABEL"
 			size="10"
 			maxlength="50"
+			default=""
 			description="COM_SERMONDISTRIBUTOR_SERMON_URL_DESCRIPTION"
 			class="text_area"
 			required="true"
@@ -324,6 +328,7 @@
 			label="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_LABEL"
 			size="90"
 			maxlength="150"
+			default=""
 			description="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_DESCRIPTION"
 			class="text_area"
 			readonly="false"

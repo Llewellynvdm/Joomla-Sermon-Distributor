@@ -50,7 +50,7 @@ class SermondistributorTableHelp_document extends JTable
 		parent::__construct('#__sermondistributor_help_document', 'id', $db);
 
 		// Adding History Options
-		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.help_document')); 
+		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.help_document'));
 	}	
  
 	public function bind($array, $ignore = '')
@@ -233,7 +233,7 @@ class SermondistributorTableHelp_document extends JTable
 		{
 			// asset alread set so use saved rules
 			$assetId = (int) $db->loadResult();
-			return JAccess::getAssetRules($assetId);
+			return JAccess::getAssetRules($assetId); // (TODO) instead of keeping inherited Allowed it becomes Allowed.
 		}
 		// try again
 		elseif ($try)

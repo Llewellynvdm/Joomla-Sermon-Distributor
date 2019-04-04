@@ -53,7 +53,7 @@ class SermondistributorTableSermon extends JTable
 		JTableObserverTags::createObserver($this, array('typeAlias' => 'com_sermondistributor.sermon'));
 
 		// Adding History Options
-		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.sermon')); 
+		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_sermondistributor.sermon'));
 	}	
  
 	public function bind($array, $ignore = '')
@@ -236,7 +236,7 @@ class SermondistributorTableSermon extends JTable
 		{
 			// asset alread set so use saved rules
 			$assetId = (int) $db->loadResult();
-			return JAccess::getAssetRules($assetId);
+			return JAccess::getAssetRules($assetId); // (TODO) instead of keeping inherited Allowed it becomes Allowed.
 		}
 		// try again
 		elseif ($try)

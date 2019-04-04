@@ -100,7 +100,8 @@
 			class="list_class"
 			multiple="false"
 			filter="INT"
-			required="true">
+			required="true"
+			default="">
 			<!-- Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SELECT_AN_OPTION</option>

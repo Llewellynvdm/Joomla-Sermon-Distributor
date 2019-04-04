@@ -257,6 +257,7 @@ function vvvvvwj(update_method_vvvvvwj)
 	if (update_method_vvvvvwj == 2)
 	{
 		jQuery('#jform_update_timer').closest('.control-group').show();
+		// add required attribute to update_timer field
 		if (jform_vvvvvwjvwd_required)
 		{
 			updateFieldRequired('update_timer',0);
@@ -265,11 +266,11 @@ function vvvvvwj(update_method_vvvvvwj)
 			jQuery('#jform_update_timer').addClass('required');
 			jform_vvvvvwjvwd_required = false;
 		}
-
 	}
 	else
 	{
 		jQuery('#jform_update_timer').closest('.control-group').hide();
+		// remove required attribute from update_timer field
 		if (!jform_vvvvvwjvwd_required)
 		{
 			updateFieldRequired('update_timer',1);
@@ -389,6 +390,7 @@ function vvvvvwm(externalsources_vvvvvwm,update_method_vvvvvwm)
 	if (externalsources && update_method)
 	{
 		jQuery('#jform_oauthtoken').closest('.control-group').show();
+		// add required attribute to oauthtoken field
 		if (jform_vvvvvwmvwe_required)
 		{
 			updateFieldRequired('oauthtoken',0);
@@ -397,11 +399,11 @@ function vvvvvwm(externalsources_vvvvvwm,update_method_vvvvvwm)
 			jQuery('#jform_oauthtoken').addClass('required');
 			jform_vvvvvwmvwe_required = false;
 		}
-
 	}
 	else
 	{
 		jQuery('#jform_oauthtoken').closest('.control-group').hide();
+		// remove required attribute from oauthtoken field
 		if (!jform_vvvvvwmvwe_required)
 		{
 			updateFieldRequired('oauthtoken',1);

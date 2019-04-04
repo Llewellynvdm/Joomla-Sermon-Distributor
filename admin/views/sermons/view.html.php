@@ -50,6 +50,8 @@ class SermondistributorViewSermons extends JViewLegacy
 		$this->listOrder = $this->escape($this->state->get('list.ordering'));
 		$this->listDirn = $this->escape($this->state->get('list.direction'));
 		$this->saveOrder = $this->listOrder == 'ordering';
+		// set the return here value
+		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
 		$this->canDo = SermondistributorHelper::getActions('sermon');
 		$this->canEdit = $this->canDo->get('sermon.edit');
@@ -129,7 +131,7 @@ class SermondistributorViewSermons extends JViewLegacy
 				// add the button to the page
 				$dhtml = $layout->render(array('title' => $title));
 				$bar->appendButton('Custom', $dhtml, 'batch');
-			} 
+			}
 
 			if ($this->state->get('filter.published') == -2 && ($this->canState && $this->canDelete))
 			{
@@ -144,7 +146,7 @@ class SermondistributorViewSermons extends JViewLegacy
 			{
 				JToolBarHelper::custom('sermons.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-		} 
+		}
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('sermon.import'))
 		{
@@ -212,10 +214,10 @@ class SermondistributorViewSermons extends JViewLegacy
 				'batch[category]',
 				JHtml::_('select.options', JHtml::_('category.options', 'com_sermondistributor.sermons'), 'value', 'text')
 			);
-		} 
+		}
 
 		// Set Preacher Name Selection
-		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->getOptions();
+		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->options;
 		if ($this->preacherNameOptions)
 		{
 			// Preacher Name Filter
@@ -237,7 +239,7 @@ class SermondistributorViewSermons extends JViewLegacy
 		}
 
 		// Set Series Name Selection
-		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->getOptions();
+		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->options;
 		if ($this->seriesNameOptions)
 		{
 			// Series Name Filter

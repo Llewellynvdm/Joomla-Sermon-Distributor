@@ -39,8 +39,16 @@ if ($_return = $jinput->get('return', null, 'base64'))
 {
 	$return .= "&return=" . $_return;
 }
-// set the referral values
-$ref = ($id) ? "&ref=sermon&refid=" . $id . "&return=" . urlencode(base64_encode($return)) : "";
+// check if return value was set
+if (SermondistributorHelper::checkString($return))
+{
+	// set the referral values
+	$ref = ($id) ? "&ref=sermon&refid=" . $id . "&return=" . urlencode(base64_encode($return)) : "&return=" . urlencode(base64_encode($return));
+}
+else
+{
+	$ref = ($id) ? "&ref=sermon&refid=" . $id : "";
+}
 
 ?>
 <div class="form-vertical">

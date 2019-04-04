@@ -108,7 +108,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 		}
 
 		return $item;
-	} 
+	}
 
 	/**
 	 * Method to get the record form.
@@ -395,7 +395,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 			}
 		}
 		return parent::validate($form, $data, $group);
-	} 
+	}
 
 	/**
 	 * Method to get the unique fields of this table.
@@ -680,7 +680,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	} 
+	}
 
 	/**
 	 * Batch move items to a new category
@@ -812,7 +812,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 			$metadata = new JRegistry;
 			$metadata->loadArray($data['metadata']);
 			$data['metadata'] = (string) $metadata;
-		} 
+		}
 
 		// Set the groups string to JSON string.
 		if (isset($data['groups']))

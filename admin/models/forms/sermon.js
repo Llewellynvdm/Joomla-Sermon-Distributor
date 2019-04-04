@@ -79,6 +79,7 @@ function vvvvvvv(source_vvvvvvv)
 	if (source)
 	{
 		jQuery('#jform_build').closest('.control-group').show();
+		// add required attribute to build field
 		if (jform_vvvvvvvvvw_required)
 		{
 			updateFieldRequired('build',0);
@@ -87,11 +88,11 @@ function vvvvvvv(source_vvvvvvv)
 			jQuery('#jform_build').addClass('required');
 			jform_vvvvvvvvvw_required = false;
 		}
-
 	}
 	else
 	{
 		jQuery('#jform_build').closest('.control-group').hide();
+		// remove required attribute from build field
 		if (!jform_vvvvvvvvvw_required)
 		{
 			updateFieldRequired('build',1);
@@ -207,6 +208,7 @@ function vvvvvvy(source_vvvvvvy,build_vvvvvvy)
 	if (source && build)
 	{
 		jQuery('#jform_manual_files').closest('.control-group').show();
+		// add required attribute to manual_files field
 		if (jform_vvvvvvyvvx_required)
 		{
 			updateFieldRequired('manual_files',0);
@@ -215,12 +217,12 @@ function vvvvvvy(source_vvvvvvy,build_vvvvvvy)
 			jQuery('#jform_manual_files').addClass('required');
 			jform_vvvvvvyvvx_required = false;
 		}
-
 		jQuery('.note_manual_externalsource').closest('.control-group').show();
 	}
 	else
 	{
 		jQuery('#jform_manual_files').closest('.control-group').hide();
+		// remove required attribute from manual_files field
 		if (!jform_vvvvvvyvvx_required)
 		{
 			updateFieldRequired('manual_files',1);
@@ -287,6 +289,7 @@ function vvvvvvz(build_vvvvvvz,source_vvvvvvz)
 	if (build && source)
 	{
 		jQuery('#jform_manual_files').closest('.control-group').show();
+		// add required attribute to manual_files field
 		if (jform_vvvvvvzvvy_required)
 		{
 			updateFieldRequired('manual_files',0);
@@ -295,12 +298,12 @@ function vvvvvvz(build_vvvvvvz,source_vvvvvvz)
 			jQuery('#jform_manual_files').addClass('required');
 			jform_vvvvvvzvvy_required = false;
 		}
-
 		jQuery('.note_manual_externalsource').closest('.control-group').show();
 	}
 	else
 	{
 		jQuery('#jform_manual_files').closest('.control-group').hide();
+		// remove required attribute from manual_files field
 		if (!jform_vvvvvvzvvy_required)
 		{
 			updateFieldRequired('manual_files',1);
@@ -355,6 +358,7 @@ function vvvvvwa(source_vvvvvwa)
 	if (source)
 	{
 		jQuery('#jform_local_files').closest('.control-group').show();
+		// add required attribute to local_files field
 		if (jform_vvvvvwavvz_required)
 		{
 			updateFieldRequired('local_files',0);
@@ -363,11 +367,11 @@ function vvvvvwa(source_vvvvvwa)
 			jQuery('#jform_local_files').addClass('required');
 			jform_vvvvvwavvz_required = false;
 		}
-
 	}
 	else
 	{
 		jQuery('#jform_local_files').closest('.control-group').hide();
+		// remove required attribute from local_files field
 		if (!jform_vvvvvwavvz_required)
 		{
 			updateFieldRequired('local_files',1);
@@ -410,6 +414,7 @@ function vvvvvwb(source_vvvvvwb)
 	if (source)
 	{
 		jQuery('#jform_url').closest('.control-group').show();
+		// add required attribute to url field
 		if (jform_vvvvvwbvwa_required)
 		{
 			updateFieldRequired('url',0);
@@ -418,11 +423,11 @@ function vvvvvwb(source_vvvvvwb)
 			jQuery('#jform_url').addClass('required');
 			jform_vvvvvwbvwa_required = false;
 		}
-
 	}
 	else
 	{
 		jQuery('#jform_url').closest('.control-group').hide();
+		// remove required attribute from url field
 		if (!jform_vvvvvwbvwa_required)
 		{
 			updateFieldRequired('url',1);

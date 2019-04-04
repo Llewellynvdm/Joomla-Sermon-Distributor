@@ -94,7 +94,7 @@ $edit = "index.php?option=com_sermondistributor&view=local_listings&task=local_l
 		<td class="nowrap">
 			<div class="name">
 				<?php if ($this->user->authorise('external_source.edit', 'com_sermondistributor.external_source.' . (int)$item->external_source)): ?>
-					<a href="index.php?option=com_sermondistributor&view=external_sources&task=external_source.edit&id=<?php echo $item->external_source; ?>&ref=local_listings"><?php echo $this->escape($item->external_source_description); ?></a>
+					<a href="index.php?option=com_sermondistributor&view=external_sources&task=external_source.edit&id=<?php echo $item->external_source; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->escape($item->external_source_description); ?></a>
 				<?php else: ?>
 					<?php echo $this->escape($item->external_source_description); ?>
 				<?php endif; ?>

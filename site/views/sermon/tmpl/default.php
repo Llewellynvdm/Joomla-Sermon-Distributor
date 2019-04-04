@@ -23,10 +23,10 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 
 ?>
- 
+
 <?php if ($this->item): ?>
 	<?php if ($this->params->get('sermon_display') == 1) : ?>
 		<div class="uk-grid" data-uk-grid-match="{target:'.uk-panel'}"><?php echo $this->loadTemplate('sermonpanel'); ?></div>
@@ -69,4 +69,4 @@ defined('_JEXEC') or die('Restricted access');
 		<a href="" class="uk-alert-close uk-close"></a>
 		<p><?php echo JText::_('COM_SERMONDISTRIBUTOR_NO_SERMON_WAS_FOUND'); ?></p>
 	</div>
-<?php endif; ?> <?php echo $this->toolbar->render(); ?> 
+<?php endif; ?><?php echo $this->toolbar->render(); ?>

@@ -88,7 +88,7 @@ $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.e
 		<td class="nowrap">
 			<div class="name">
 				<?php if ($this->user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int)$item->sermon)): ?>
-					<a href="index.php?option=com_sermondistributor&view=sermons&task=sermon.edit&id=<?php echo $item->sermon; ?>&ref=statistics"><?php echo $this->escape($item->sermon_name); ?></a>
+					<a href="index.php?option=com_sermondistributor&view=sermons&task=sermon.edit&id=<?php echo $item->sermon; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->escape($item->sermon_name); ?></a>
 				<?php else: ?>
 					<?php echo $this->escape($item->sermon_name); ?>
 				<?php endif; ?>
@@ -97,7 +97,7 @@ $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.e
 		<td class="nowrap">
 			<div class="name">
 				<?php if ($this->user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
-					<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?>&ref=statistics"><?php echo $this->escape($item->preacher_name); ?></a>
+					<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->escape($item->preacher_name); ?></a>
 				<?php else: ?>
 					<?php echo $this->escape($item->preacher_name); ?>
 				<?php endif; ?>
@@ -106,7 +106,7 @@ $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.e
 		<td class="nowrap">
 			<div class="name">
 				<?php if ($this->user->authorise('series.edit', 'com_sermondistributor.series.' . (int)$item->series)): ?>
-					<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?>&ref=statistics"><?php echo $this->escape($item->series_name); ?></a>
+					<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->escape($item->series_name); ?></a>
 				<?php else: ?>
 					<?php echo $this->escape($item->series_name); ?>
 				<?php endif; ?>

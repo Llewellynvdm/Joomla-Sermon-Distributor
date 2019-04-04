@@ -117,6 +117,7 @@
 			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_UPDATE_METHOD_LABEL"
 			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_UPDATE_METHOD_DESCRIPTION"
 			class="btn-group btn-group-yesno"
+			default=""
 			required="true">
 			<!-- Option Set. -->
 			<option value="1">
@@ -202,7 +203,8 @@
 			class="list_class"
 			multiple="false"
 			filter="INT"
-			required="true">
+			required="true"
+			default="">
 			<!-- Option Set. -->
 			<option value="">
 				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_SELECT_AN_OPTION</option>
@@ -225,6 +227,7 @@
 			name="folder"
 			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_FOLDER_LABEL"
 			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_FOLDER_DESCRIPTION"
+			default=""
 			id="folder"
 			class="folders"
 			select="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_FOLDER_SELECT"
@@ -302,6 +305,7 @@
 			name="sharedurl"
 			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_SHAREDURL_LABEL"
 			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_SHAREDURL_DESCRIPTION"
+			default=""
 			id="sharedurl"
 			class="sharedurls"
 			select="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_SHAREDURL_SELECT"
@@ -316,6 +320,7 @@
 						label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_TSHAREDURL_LABEL"
 						size="40"
 						maxlength="120"
+						default=""
 						description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_TSHAREDURL_DESCRIPTION"
 						class="text_area span12"
 						required="false"
@@ -336,6 +341,7 @@
 			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_OAUTHTOKEN_LABEL"
 			size="250"
 			maxlength="250"
+			default=""
 			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_OAUTHTOKEN_DESCRIPTION"
 			class="text_area"
 			required="true"
