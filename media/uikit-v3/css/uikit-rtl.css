@@ -1,4 +1,4 @@
-/*! UIkit 3.0.0-rc.16 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
+/*! UIkit 3.1.2 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
 /* ========================================================================
    Component: Base
  ========================================================================== */
@@ -10,7 +10,7 @@
  */
 html {
   /* 1 */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 16px;
   font-weight: normal;
   line-height: 1.5;
@@ -58,15 +58,15 @@ a:hover,
 /* Text-level semantics
  ========================================================================== */
 /*
- * 1. Remove the bottom border in Chrome 57-.
- * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ * 1. Add an underline text decoration in Safari, Edge and IE.
+ * 2. Add `dotted` style in Safari.
+ * Note: The shorthand declaration `underline dotted` is not supported in Safari, Edge and IE.
  */
 abbr[title] {
   /* 1 */
-  border-bottom: none;
-  /* 2 */
   text-decoration: underline;
-  text-decoration: underline dotted;
+  /* 2 */
+  -webkit-text-decoration-style: dotted;
 }
 /*
  * Add the correct font weight in Chrome, Edge, and Safari.
@@ -161,7 +161,6 @@ video {
  * 3. Corrects responsive `max-width` behavior if padding and border are used.
  * 4. Exclude SVGs for IE11 because they don't preserve their aspect ratio.
  */
-audio,
 canvas,
 img,
 video {
@@ -239,9 +238,14 @@ h4,
 h5,
 .uk-h5,
 h6,
-.uk-h6 {
+.uk-h6,
+.uk-heading-small,
+.uk-heading-medium,
+.uk-heading-large,
+.uk-heading-xlarge,
+.uk-heading-2xlarge {
   margin: 0 0 20px 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-weight: normal;
   color: #333;
   text-transform: none;
@@ -258,7 +262,12 @@ h6,
 * + h5,
 * + .uk-h5,
 * + h6,
-* + .uk-h6 {
+* + .uk-h6,
+* + .uk-heading-small,
+* + .uk-heading-medium,
+* + .uk-heading-large,
+* + .uk-heading-xlarge,
+* + .uk-heading-2xlarge {
   margin-top: 40px;
 }
 /*
@@ -410,11 +419,6 @@ pre code {
 }
 /* Selection pseudo-element
  ========================================================================== */
-::-moz-selection {
-  background: #39f;
-  color: #fff;
-  text-shadow: none;
-}
 ::selection {
   background: #39f;
   color: #fff;
@@ -448,17 +452,23 @@ template {
 /*
  * Breakpoints
  */
-.var-media-s::before {
+.uk-breakpoint-s::before {
   content: '640px';
 }
-.var-media-m::before {
+.uk-breakpoint-m::before {
   content: '960px';
 }
-.var-media-l::before {
+.uk-breakpoint-l::before {
   content: '1200px';
 }
-.var-media-xl::before {
+.uk-breakpoint-xl::before {
   content: '1600px';
+}
+:root {
+  --uk-breakpoint-s: 640px;
+  --uk-breakpoint-m: 960px;
+  --uk-breakpoint-l: 1200px;
+  --uk-breakpoint-xl: 1600px;
 }
 /* ========================================================================
    Component: Link
@@ -509,50 +519,74 @@ a.uk-link-reset:hover,
 /* ========================================================================
    Component: Heading
  ========================================================================== */
-/* Primary
- ========================================================================== */
-.uk-heading-primary {
-  font-size: 3rem;
+.uk-heading-small {
+  font-size: 2.6rem;
   line-height: 1.2;
 }
-/* Tablet landscape and bigger */
-@media (min-width: 960px) {
-  .uk-heading-primary {
-    font-size: 3.375rem;
-  }
-}
-/* Desktop and bigger */
-@media (min-width: 1200px) {
-  .uk-heading-primary {
-    font-size: 3.75rem;
-    line-height: 1.1;
-  }
-}
-/* Hero
- ========================================================================== */
-.uk-heading-hero {
-  font-size: 4rem;
+.uk-heading-medium {
+  font-size: 2.8875rem;
   line-height: 1.1;
 }
-/* Tablet landscape and bigger */
+.uk-heading-large {
+  font-size: 3.4rem;
+  line-height: 1.1;
+}
+.uk-heading-xlarge {
+  font-size: 4rem;
+  line-height: 1;
+}
+.uk-heading-2xlarge {
+  font-size: 6rem;
+  line-height: 1;
+}
+/* Tablet Landscape and bigger */
 @media (min-width: 960px) {
-  .uk-heading-hero {
+  .uk-heading-small {
+    font-size: 3.25rem;
+  }
+  .uk-heading-medium {
+    font-size: 3.5rem;
+  }
+  .uk-heading-large {
+    font-size: 4rem;
+  }
+  .uk-heading-xlarge {
     font-size: 6rem;
-    line-height: 1;
   }
-}
-/* Desktop and bigger */
-@media (min-width: 1200px) {
-  .uk-heading-hero {
+  .uk-heading-2xlarge {
     font-size: 8rem;
-    line-height: 1;
   }
 }
+/* Laptop and bigger */
+@media (min-width: 1200px) {
+  .uk-heading-medium {
+    font-size: 4rem;
+  }
+  .uk-heading-large {
+    font-size: 6rem;
+  }
+  .uk-heading-xlarge {
+    font-size: 8rem;
+  }
+  .uk-heading-2xlarge {
+    font-size: 11rem;
+  }
+}
+/* Primary
+   Deprecated: Use `uk-heading-medium` instead
+ ========================================================================== */
+/* Tablet landscape and bigger */
+/* Desktop and bigger */
+/* Hero
+   Deprecated: Use `uk-heading-xlarge` instead
+ ========================================================================== */
+/* Tablet landscape and bigger */
+/* Desktop and bigger */
 /* Divider
  ========================================================================== */
 .uk-heading-divider {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: calc(10px + 0.1em);
+  border-bottom: calc(0.2px + 0.05em) solid #e5e5e5;
 }
 /* Bullet
  ========================================================================== */
@@ -573,9 +607,9 @@ a.uk-link-reset:hover,
   top: calc(-0.1 * 1em);
   vertical-align: middle;
   /* 3 */
-  height: 0.9em;
-  margin-left: 10px;
-  border-right: 5px solid #e5e5e5;
+  height: calc(4px + 0.7em);
+  margin-left: calc(5px + 0.2em);
+  border-right: calc(5px + 0.1em) solid #e5e5e5;
 }
 /* Line
  ========================================================================== */
@@ -602,19 +636,19 @@ a.uk-link-reset:hover,
   content: "";
   /* 1 */
   position: absolute;
-  top: calc(50% - (1px / 2));
+  top: calc(50% - (calc(0.2px + 0.05em) / 2));
   /* 2 */
   width: 2000px;
   /* 3 */
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: calc(0.2px + 0.05em) solid #e5e5e5;
 }
 .uk-heading-line > ::before {
   left: 100%;
-  margin-left: 0.6em;
+  margin-left: calc(5px + 0.3em);
 }
 .uk-heading-line > ::after {
   right: 100%;
-  margin-right: 0.6em;
+  margin-right: calc(5px + 0.3em);
 }
 /* ========================================================================
    Component: Divider
@@ -661,10 +695,11 @@ a.uk-link-reset:hover,
 /* Small
  ========================================================================== */
 /*
- * Reset child height, caused by `inline-block`
+ * Fix height of `hr` element not being expanded by child border width.
+ * `height` also needed to reset the child `line-height` caused by `inline-block`
  */
 .uk-divider-small {
-  line-height: 0;
+  height: 1px;
 }
 .uk-divider-small::after {
   content: "";
@@ -673,6 +708,15 @@ a.uk-link-reset:hover,
   max-width: 100%;
   border-top: 1px solid #e5e5e5;
   vertical-align: top;
+}
+/* Vertical
+ ========================================================================== */
+.uk-divider-vertical {
+  width: 1px;
+  height: 100px;
+  margin-right: auto;
+  margin-left: auto;
+  border-right: 1px solid #e5e5e5;
 }
 /* ========================================================================
    Component: List
@@ -741,6 +785,7 @@ a.uk-link-reset:hover,
 }
 /*
  * Bullet
+ * 1. Reset display `table` which causes issues in combination with multi column layouts.
  */
 .uk-list-bullet > li {
   position: relative;
@@ -756,6 +801,8 @@ a.uk-link-reset:hover,
   background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%226%22%20height%3D%226%22%20viewBox%3D%220%200%206%206%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Ccircle%20fill%3D%22%23666%22%20cx%3D%223%22%20cy%3D%223%22%20r%3D%223%22%20%2F%3E%0A%3C%2Fsvg%3E");
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  /* 1 */
+  display: block;
 }
 /* Size modifier
  ========================================================================== */
@@ -1047,10 +1094,10 @@ button.uk-icon:not(:disabled) {
 /*
  * Set the fill and stroke color of all SVG elements to the current text color
  */
-.uk-icon [fill*='#']:not(.uk-preserve) {
+.uk-icon:not(.uk-preserve) [fill*='#']:not(.uk-preserve) {
   fill: currentcolor;
 }
-.uk-icon [stroke*='#']:not(.uk-preserve) {
+.uk-icon:not(.uk-preserve) [stroke*='#']:not(.uk-preserve) {
   stroke: currentcolor;
 }
 /*
@@ -2198,8 +2245,8 @@ select.uk-form-width-xsmall {
  *    unaffected by the padding on different breakpoints. It's important for the size modifiers.
  */
 .uk-container {
-  box-sizing: content-box;
   /* 1 */
+  box-sizing: content-box;
   max-width: 1200px;
   margin-right: auto;
   margin-left: auto;
@@ -2257,6 +2304,89 @@ select.uk-form-width-xsmall {
 }
 .uk-container-expand {
   max-width: none;
+}
+/* Expand modifier
+ ========================================================================== */
+/*
+ * Expand one side only
+ */
+.uk-container-expand-right {
+  margin-right: 0;
+}
+.uk-container-expand-left {
+  margin-left: 0;
+}
+/* Phone landscape and bigger */
+@media (min-width: 640px) {
+  .uk-container-expand-right.uk-container-xsmall,
+  .uk-container-expand-left.uk-container-xsmall {
+    max-width: calc(50% + (750px / 2) - 30px);
+  }
+  .uk-container-expand-right.uk-container-small,
+  .uk-container-expand-left.uk-container-small {
+    max-width: calc(50% + (900px / 2) - 30px);
+  }
+}
+/* Tablet landscape and bigger */
+@media (min-width: 960px) {
+  .uk-container-expand-right,
+  .uk-container-expand-left {
+    max-width: calc(50% + (1200px / 2) - 40px);
+  }
+  .uk-container-expand-right.uk-container-xsmall,
+  .uk-container-expand-left.uk-container-xsmall {
+    max-width: calc(50% + (750px / 2) - 40px);
+  }
+  .uk-container-expand-right.uk-container-small,
+  .uk-container-expand-left.uk-container-small {
+    max-width: calc(50% + (900px / 2) - 40px);
+  }
+  .uk-container-expand-right.uk-container-large,
+  .uk-container-expand-left.uk-container-large {
+    max-width: calc(50% + (1600px / 2) - 40px);
+  }
+}
+/* Item
+ ========================================================================== */
+/*
+ * Utility classes to reset container padding on the left or right side
+ * Note: It has to be negative margin on the item, because it's specific to the item.
+ */
+.uk-container-item-padding-remove-right,
+.uk-container-item-padding-remove-left {
+  width: calc(100% + 15px);
+}
+.uk-container-item-padding-remove-right {
+  margin-right: -15px;
+}
+.uk-container-item-padding-remove-left {
+  margin-left: -15px;
+}
+/* Phone landscape and bigger */
+@media (min-width: 640px) {
+  .uk-container-item-padding-remove-right,
+  .uk-container-item-padding-remove-left {
+    width: calc(100% + 30px);
+  }
+  .uk-container-item-padding-remove-right {
+    margin-right: -30px;
+  }
+  .uk-container-item-padding-remove-left {
+    margin-left: -30px;
+  }
+}
+/* Tablet landscape and bigger */
+@media (min-width: 960px) {
+  .uk-container-item-padding-remove-right,
+  .uk-container-item-padding-remove-left {
+    width: calc(100% + 40px);
+  }
+  .uk-container-item-padding-remove-right {
+    margin-right: -40px;
+  }
+  .uk-container-item-padding-remove-left {
+    margin-left: -40px;
+  }
 }
 /* ========================================================================
    Component: Grid
@@ -3698,6 +3828,9 @@ ul.uk-nav-sub {
 .uk-nav-default .uk-nav-sub a:focus {
   color: #666;
 }
+.uk-nav-default .uk-nav-sub li.uk-active > a {
+  color: #333;
+}
 /* Primary modifier
  ========================================================================== */
 /*
@@ -3738,6 +3871,9 @@ ul.uk-nav-sub {
 .uk-nav-primary .uk-nav-sub a:hover,
 .uk-nav-primary .uk-nav-sub a:focus {
   color: #666;
+}
+.uk-nav-primary .uk-nav-sub li.uk-active > a {
+  color: #333;
 }
 /* Alignment modifier
  ========================================================================== */
@@ -3880,7 +4016,7 @@ ul.uk-nav-sub {
   padding: 0 15px;
   /* 3 */
   font-size: 0.875rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
   text-decoration: none;
 }
@@ -4068,6 +4204,9 @@ ul.uk-nav-sub {
 .uk-navbar-dropdown-nav .uk-nav-sub a:hover,
 .uk-navbar-dropdown-nav .uk-nav-sub a:focus {
   color: #666;
+}
+.uk-navbar-dropdown-nav .uk-nav-sub li.uk-active > a {
+  color: #333;
 }
 /* Dropbar
  ========================================================================== */
@@ -4837,7 +4976,8 @@ ul.uk-nav-sub {
   color: #999;
 }
 .uk-dropdown-nav .uk-nav-sub a:hover,
-.uk-dropdown-nav .uk-nav-sub a:focus {
+.uk-dropdown-nav .uk-nav-sub a:focus,
+.uk-dropdown-nav .uk-nav-sub li.uk-active > a {
   color: #666;
 }
 /* Direction / Alignment modifiers
@@ -5133,6 +5273,7 @@ ul.uk-nav-sub {
  * 5. Responsiveness
  *    Using `vh` for `max-height` to fix image proportions after resize in Safari and Opera
  *    Using `vh` and `vw` to make responsive image work in IE11
+ * 6. Suppress outline on focus
  */
 .uk-lightbox-items > * {
   /* 1 */
@@ -5155,6 +5296,10 @@ ul.uk-nav-sub {
   max-width: 100vw;
   max-height: 100vh;
 }
+/* 6 */
+.uk-slideshow-items > :focus {
+  outline: none;
+}
 .uk-lightbox-items > * > :not(iframe) {
   width: auto;
   height: auto;
@@ -5169,7 +5314,7 @@ ul.uk-nav-sub {
   background: rgba(0, 0, 0, 0.3);
   color: rgba(255, 255, 255, 0.7);
 }
-.uk-lightbox-toolbar * {
+.uk-lightbox-toolbar > * {
   color: rgba(255, 255, 255, 0.7);
 }
 /* Toolbar Icon (Close)
@@ -5253,6 +5398,7 @@ ul.uk-nav-sub {
  * 3. Clip child elements, e.g. for `uk-cover`
  * 4. Optimize animation
  * 5. Disable horizontal panning gestures in IE11 and Edge
+ * 6. Suppress outline on focus
  */
 .uk-slideshow-items > * {
   /* 1 */
@@ -5268,6 +5414,10 @@ ul.uk-nav-sub {
   will-change: transform, opacity;
   /* 5 */
   touch-action: pan-y;
+}
+/* 6 */
+.uk-slideshow-items > :focus {
+  outline: none;
 }
 /*
  * Hide not active items
@@ -5328,6 +5478,7 @@ ul.uk-nav-sub {
  * 1. Let items take content dimensions (0 0 auto)
  * 2. Create position context
  * 3. Disable horizontal panning gestures in IE11 and Edge
+ * 4. Suppress outline on focus
  */
 .uk-slider-items > * {
   /* 1 */
@@ -5336,6 +5487,10 @@ ul.uk-nav-sub {
   position: relative;
   /* 3 */
   touch-action: pan-y;
+}
+/* 4 */
+.uk-slider-items > :focus {
+  outline: none;
 }
 /* ========================================================================
    Component: Sticky
@@ -5390,14 +5545,13 @@ ul.uk-nav-sub {
  * 1. Set position
  * 2. Size and style
  * 3. Allow scrolling
- * 4. Transform
  */
 .uk-offcanvas-bar {
   /* 1 */
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 0;
+  right: -270px;
   /* 2 */
   box-sizing: border-box;
   width: 270px;
@@ -5406,12 +5560,11 @@ ul.uk-nav-sub {
   /* 3 */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  /* 4 */
-  transform: translateX(100%);
 }
 /* Tablet landscape and bigger */
 @media (min-width: 960px) {
   .uk-offcanvas-bar {
+    right: -350px;
     width: 350px;
     padding: 40px 40px;
   }
@@ -5419,27 +5572,39 @@ ul.uk-nav-sub {
 /* Flip modifier */
 .uk-offcanvas-flip .uk-offcanvas-bar {
   right: auto;
-  left: 0;
-  transform: translateX(-100%);
+  left: -270px;
+}
+/* Tablet landscape and bigger */
+@media (min-width: 960px) {
+  .uk-offcanvas-flip .uk-offcanvas-bar {
+    left: -350px;
+  }
 }
 /*
  * Open
  */
 .uk-open > .uk-offcanvas-bar {
-  transform: translateX(0);
+  right: 0;
+}
+.uk-offcanvas-flip .uk-open > .uk-offcanvas-bar {
+  right: auto;
+  left: 0;
 }
 /*
  * Slide Animation (Used in slide and push mode)
  */
 .uk-offcanvas-bar-animation {
-  transition: transform 0.3s ease-out;
+  transition: right 0.3s ease-out;
+}
+.uk-offcanvas-flip .uk-offcanvas-bar-animation {
+  transition-property: left;
 }
 /*
  * Reveal Animation
  * 1. Set position
  * 2. Clip the bar
  * 3. Animation
- * 4. Reset transform
+ * 4. Reset position
  */
 .uk-offcanvas-reveal {
   /* 1 */
@@ -5455,7 +5620,12 @@ ul.uk-nav-sub {
 }
 .uk-offcanvas-reveal .uk-offcanvas-bar {
   /* 4 */
-  transform: translateX(0);
+  right: 0;
+}
+.uk-offcanvas-flip .uk-offcanvas-reveal .uk-offcanvas-bar {
+  /* 4 */
+  right: auto;
+  left: 0;
 }
 .uk-open > .uk-offcanvas-reveal {
   width: 270px;
@@ -5516,7 +5686,7 @@ ul.uk-nav-sub {
 .uk-offcanvas-overlay.uk-open::before {
   opacity: 1;
 }
-/* Container
+/* Prevent scrolling
  ========================================================================== */
 /*
  * Prevent horizontal scrollbar when the content is slide-out
@@ -5526,47 +5696,37 @@ ul.uk-nav-sub {
 .uk-offcanvas-container {
   overflow-x: hidden;
 }
-/*
- * Prevent all scrollbars if overlay is used
- */
-.uk-offcanvas-container-overlay {
-  overflow: hidden;
-}
-/* Content
+/* Container
  ========================================================================== */
 /*
  * Prepare slide-out animation (Used in reveal and push mode)
  * Using `position: left` instead of `transform` because position `fixed` elements like sticky navbars
  * lose their fixed state and behaves like `absolute` within a transformed container
- * Note: JS sets a fixed width and height so the page can slide-out without shrinking
- * 1. Smooth scrolling
+ * 1. Provide a fixed width and prevent shrinking
  */
-.uk-offcanvas-container .uk-offcanvas-content {
+.uk-offcanvas-container {
   position: relative;
   right: 0;
   transition: right 0.3s ease-out;
   /* 1 */
-  -webkit-overflow-scrolling: touch;
-}
-/* Disable scrolling if overlay mode */
-.uk-offcanvas-overlay .uk-offcanvas-content {
-  overflow-y: hidden;
+  box-sizing: border-box;
+  width: 100%;
 }
 /*
  * Activate slide-out animation
  */
-:not(.uk-offcanvas-flip) > .uk-offcanvas-content-animation {
+:not(.uk-offcanvas-flip).uk-offcanvas-container-animation {
   right: 270px;
 }
-.uk-offcanvas-flip > .uk-offcanvas-content-animation {
+.uk-offcanvas-flip.uk-offcanvas-container-animation {
   right: -270px;
 }
 /* Tablet landscape and bigger */
 @media (min-width: 960px) {
-  :not(.uk-offcanvas-flip) > .uk-offcanvas-content-animation {
+  :not(.uk-offcanvas-flip).uk-offcanvas-container-animation {
     right: 350px;
   }
-  .uk-offcanvas-flip > .uk-offcanvas-content-animation {
+  .uk-offcanvas-flip.uk-offcanvas-container-animation {
     right: -350px;
   }
 }
@@ -5624,9 +5784,14 @@ ul.uk-nav-sub {
 .uk-leader-fill.uk-leader-hide::after {
   display: none;
 }
-/* Pass fill character to JS */
-.var-leader-fill::before {
+/*
+ * Pass fill character to JS
+ */
+.uk-leader-fill-content::before {
   content: '.';
+}
+:root {
+  --uk-leader-fill-content: .;
 }
 /* ========================================================================
    Component: Iconnav
@@ -5746,13 +5911,15 @@ ul.uk-nav-sub {
 ========================================================================== */
 .uk-notification-message {
   position: relative;
-  margin-bottom: 10px;
   padding: 15px;
   background: #f8f8f8;
   color: #666;
   font-size: 1.25rem;
   line-height: 1.4;
   cursor: pointer;
+}
+* + .uk-notification-message {
+  margin-top: 10px;
 }
 /* Close
  * Adopts `uk-close`
@@ -6023,13 +6190,7 @@ ul.uk-nav-sub {
   animation-timing-function: ease-out;
   animation-fill-mode: both;
 }
-/* Direction modifier
- ========================================================================== */
-.uk-animation-reverse {
-  animation-direction: reverse;
-  animation-timing-function: ease-in;
-}
-/* Animations for scrollspy
+/* Animations
  ========================================================================== */
 /*
  * Fade
@@ -6106,18 +6267,49 @@ ul.uk-nav-sub {
 .uk-animation-shake {
   animation-name: uk-shake;
 }
+/*
+ * SVG Stroke
+ * The `--uk-animation-stroke` custom property contains the longest path length.
+ * Set it manually or use `uk-svg="stroke-animation: true"` to set it automatically.
+ * All strokes are animated by the same pace and doesn't end simultaneously.
+ * To end simultaneously, `pathLength="1"` could be used, but it's not working in Safari yet.
+ */
+.uk-animation-stroke {
+  animation-name: uk-stroke;
+  stroke-dasharray: var(--uk-animation-stroke);
+  animation-duration: 2s;
+}
+/* Direction modifier
+ ========================================================================== */
+.uk-animation-reverse {
+  animation-direction: reverse;
+  animation-timing-function: ease-in;
+}
 /* Duration modifier
  ========================================================================== */
 .uk-animation-fast {
   animation-duration: 0.1s;
 }
-/* Enable animation only on hover
+/* Toggle (Hover + Focus)
 ========================================================================== */
 /*
- * Note: Firefox and IE needs this because animations are not triggered when switching between display `none` and `block`
+ * The toggle is triggered on touch devices using `:focus` and tabindex
  */
-.uk-animation-toggle:not(:hover):not(.uk-hover) [class*='uk-animation-'] {
+.uk-animation-toggle:not(:hover):not(:focus) [class*='uk-animation-'] {
   animation-name: none;
+}
+/*
+ * 1. Prevent tab highlighting on iOS.
+ */
+.uk-animation-toggle {
+  /* 1 */
+  -webkit-tap-highlight-color: transparent;
+}
+/*
+ * Remove outline for `tabindex`
+ */
+.uk-animation-toggle:focus {
+  outline: none;
 }
 /* Keyframes used by animation classes
  ========================================================================== */
@@ -6359,6 +6551,17 @@ ul.uk-nav-sub {
   }
   90% {
     transform: translateX(1px);
+  }
+}
+/*
+ * Stroke
+ */
+@keyframes uk-stroke {
+  0% {
+    stroke-dashoffset: var(--uk-animation-stroke);
+  }
+  100% {
+    stroke-dashoffset: 0;
   }
 }
 /* ========================================================================
@@ -6958,8 +7161,14 @@ ul.uk-nav-sub {
 .uk-text-muted {
   color: #999 !important;
 }
+.uk-text-emphasis {
+  color: #333 !important;
+}
 .uk-text-primary {
   color: #1e87f0 !important;
+}
+.uk-text-secondary {
+  color: #222 !important;
 }
 .uk-text-success {
   color: #32d296 !important;
@@ -7686,7 +7895,6 @@ iframe.uk-cover {
  * Because `img, `video`, `canvas` and  `audio` are already responsive by default, see Base component
  */
 .uk-preserve-width,
-.uk-preserve-width audio,
 .uk-preserve-width canvas,
 .uk-preserve-width img,
 .uk-preserve-width svg,
@@ -7845,7 +8053,7 @@ iframe.uk-cover {
  */
 .uk-logo {
   font-size: 1.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   color: #666;
   /* 1 */
   text-decoration: none;
@@ -8381,7 +8589,8 @@ iframe.uk-cover {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
-.uk-margin-remove-adjacent + * {
+.uk-margin-remove-adjacent + *,
+.uk-margin-remove-first-child > :first-child {
   margin-top: 0 !important;
 }
 /* Auto
@@ -8514,17 +8723,14 @@ iframe.uk-cover {
 }
 /*
  * Center
- * 1. Fix text wrapping if content is larger than 50% of the container (Not working in Firefox)
- * 2. Fix text wrapping for Firefox
+ * 1. Fix text wrapping if content is larger than 50% of the container.
  */
 .uk-position-center {
   top: 50%;
   right: 50%;
   transform: translate(50%, -50%);
   /* 1 */
-  display: table;
-  /* 2 */
-  width: -moz-max-content;
+  width: max-content;
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -8554,9 +8760,7 @@ iframe.uk-cover {
   right: 50%;
   transform: translateX(50%);
   /* 1 */
-  display: table;
-  /* 2 */
-  width: -moz-max-content;
+  width: max-content;
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -8595,6 +8799,7 @@ iframe.uk-cover {
  * Small
  */
 .uk-position-small {
+  max-width: calc(100% - (15px * 2));
   margin: 15px;
 }
 .uk-position-small.uk-position-center {
@@ -8612,6 +8817,7 @@ iframe.uk-cover {
  * Medium
  */
 .uk-position-medium {
+  max-width: calc(100% - (30px * 2));
   margin: 30px;
 }
 .uk-position-medium.uk-position-center {
@@ -8629,6 +8835,7 @@ iframe.uk-cover {
  * Large
  */
 .uk-position-large {
+  max-width: calc(100% - (30px * 2));
   margin: 30px;
 }
 .uk-position-large.uk-position-center {
@@ -8645,6 +8852,7 @@ iframe.uk-cover {
 /* Desktop and bigger */
 @media (min-width: 1200px) {
   .uk-position-large {
+    max-width: calc(100% - (50px * 2));
     margin: 50px;
   }
   .uk-position-large.uk-position-center {
@@ -8662,67 +8870,72 @@ iframe.uk-cover {
 /* ========================================================================
    Component: Transition
  ========================================================================== */
+/* Toggle (Hover + Focus)
+ ========================================================================== */
 /*
- * Using multiple selectors to exclude `uk-transition-toggle`
- * Note: Transitions don't work with `uk-postion-center-*` classes because they also use `transform`
- *       Just put the transition in an extra `div`
+ * 1. Prevent tab highlighting on iOS.
+ */
+.uk-transition-toggle {
+  /* 1 */
+  -webkit-tap-highlight-color: transparent;
+}
+/*
+ * Remove outline for `tabindex`
+ */
+.uk-transition-toggle:focus {
+  outline: none;
+}
+/* Transitions
+ ========================================================================== */
+/*
+ * The toggle is triggered on touch devices by two methods:
+ * 1. Using `:focus` and tabindex
+ * 2. Using `:hover` and a `touchstart` event listener registered on the document
+ *    (Doesn't work on Surface touch devices)
+ *
+ * Note: Transitions don't work with `uk-postion-center-*` classes because they also use `transform`,
+ *       therefore it's recommended to use an extra `div` for the transition.
  */
 .uk-transition-fade,
 [class*='uk-transition-scale'],
 [class*='uk-transition-slide'] {
   transition: 0.3s ease-out;
   transition-property: opacity, transform, filter;
-}
-.uk-transition-toggle:focus {
-  outline: none;
+  opacity: 0;
 }
 /*
  * Fade
  */
-.uk-transition-fade {
-  opacity: 0;
-}
-/* Show */
-.uk-transition-toggle:hover [class*='uk-transition-fade'],
-.uk-transition-toggle.uk-hover [class*='uk-transition-fade'],
-.uk-transition-toggle:focus [class*='uk-transition-fade'],
-.uk-transition-active.uk-active [class*='uk-transition-fade'] {
+.uk-transition-toggle:hover .uk-transition-fade,
+.uk-transition-toggle:focus .uk-transition-fade,
+.uk-transition-active.uk-active .uk-transition-fade {
   opacity: 1;
 }
 /*
  * Scale
- * Note: Using `scale3d` for better image rendering
  */
-[class*='uk-transition-scale'] {
-  opacity: 0;
-}
 .uk-transition-scale-up {
-  transform: scale3d(1, 1, 1);
+  transform: scale(1, 1);
 }
 .uk-transition-scale-down {
-  transform: scale3d(1.1, 1.1, 1);
+  transform: scale(1.1, 1.1);
 }
 /* Show */
 .uk-transition-toggle:hover .uk-transition-scale-up,
-.uk-transition-toggle.uk-hover .uk-transition-scale-up,
 .uk-transition-toggle:focus .uk-transition-scale-up,
 .uk-transition-active.uk-active .uk-transition-scale-up {
   opacity: 1;
-  transform: scale3d(1.1, 1.1, 1);
+  transform: scale(1.1, 1.1);
 }
 .uk-transition-toggle:hover .uk-transition-scale-down,
-.uk-transition-toggle.uk-hover .uk-transition-scale-down,
 .uk-transition-toggle:focus .uk-transition-scale-down,
 .uk-transition-active.uk-active .uk-transition-scale-down {
   opacity: 1;
-  transform: scale3d(1, 1, 1);
+  transform: scale(1, 1);
 }
 /*
  * Slide
  */
-[class*='uk-transition-slide'] {
-  opacity: 0;
-}
 .uk-transition-slide-top {
   transform: translateY(-100%);
 }
@@ -8761,19 +8974,18 @@ iframe.uk-cover {
 }
 /* Show */
 .uk-transition-toggle:hover [class*='uk-transition-slide'],
-.uk-transition-toggle.uk-hover [class*='uk-transition-slide'],
 .uk-transition-toggle:focus [class*='uk-transition-slide'],
 .uk-transition-active.uk-active [class*='uk-transition-slide'] {
   opacity: 1;
-  transform: translateX(0) translateY(0);
+  transform: translate(0, 0);
 }
 /* Opacity modifier
-========================================================================== */
+ ========================================================================== */
 .uk-transition-opaque {
   opacity: 1;
 }
 /* Duration modifiers
-========================================================================== */
+ ========================================================================== */
 .uk-transition-slow {
   transition-duration: 0.7s;
 }
@@ -8844,13 +9056,19 @@ iframe.uk-cover {
 .uk-invisible {
   visibility: hidden !important;
 }
-/* Hover
+/* Toggle (Hover + Focus)
  ========================================================================== */
 /*
  * Hidden
- * Can't use `display: none` because it's not accessible through keyboard.
+ * 1. The toggle is triggered on touch devices using `:focus` and tabindex
+ * 2. The target stays visible if any element within receives focus through keyboard
+ *    Doesn't work in Edge, yet.
+ * 3. Can't use `display: none` nor `visibility: hidden` because both are not focusable.
+ *
  */
-.uk-visible-toggle:not(:hover):not(.uk-hover) .uk-hidden-hover:not(:focus) {
+/* 1 + 2 */
+.uk-visible-toggle:not(:hover):not(:focus) .uk-hidden-hover:not(:focus-within) {
+  /* 3 */
   position: absolute !important;
   width: 0 !important;
   height: 0 !important;
@@ -8860,10 +9078,24 @@ iframe.uk-cover {
 }
 /*
  * Invisible
- * Can't use `visibility: hidden` because it's not accessible through keyboard.
  */
-.uk-visible-toggle:not(:hover):not(.uk-hover) .uk-invisible-hover:not(:focus) {
+/* 1 + 2 */
+.uk-visible-toggle:not(:hover):not(:focus) .uk-invisible-hover:not(:focus-within) {
+  /* 3 */
   opacity: 0 !important;
+}
+/*
+ * 1. Prevent tab highlighting on iOS.
+ */
+.uk-visible-toggle {
+  /* 1 */
+  -webkit-tap-highlight-color: transparent;
+}
+/*
+ * Remove outline for `tabindex`
+ */
+.uk-visible-toggle:focus {
+  outline: none;
 }
 /* Touch
  ========================================================================== */
@@ -9020,6 +9252,11 @@ iframe.uk-cover {
 .uk-light .uk-h5,
 .uk-light h6,
 .uk-light .uk-h6,
+.uk-light .uk-heading-small,
+.uk-light .uk-heading-medium,
+.uk-light .uk-heading-large,
+.uk-light .uk-heading-xlarge,
+.uk-light .uk-heading-2xlarge,
 .uk-section-primary:not(.uk-preserve-color) h1,
 .uk-section-primary:not(.uk-preserve-color) .uk-h1,
 .uk-section-primary:not(.uk-preserve-color) h2,
@@ -9032,6 +9269,11 @@ iframe.uk-cover {
 .uk-section-primary:not(.uk-preserve-color) .uk-h5,
 .uk-section-primary:not(.uk-preserve-color) h6,
 .uk-section-primary:not(.uk-preserve-color) .uk-h6,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-small,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-medium,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-large,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-xlarge,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-2xlarge,
 .uk-section-secondary:not(.uk-preserve-color) h1,
 .uk-section-secondary:not(.uk-preserve-color) .uk-h1,
 .uk-section-secondary:not(.uk-preserve-color) h2,
@@ -9044,6 +9286,11 @@ iframe.uk-cover {
 .uk-section-secondary:not(.uk-preserve-color) .uk-h5,
 .uk-section-secondary:not(.uk-preserve-color) h6,
 .uk-section-secondary:not(.uk-preserve-color) .uk-h6,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-small,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-medium,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-large,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-xlarge,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-2xlarge,
 .uk-tile-primary:not(.uk-preserve-color) h1,
 .uk-tile-primary:not(.uk-preserve-color) .uk-h1,
 .uk-tile-primary:not(.uk-preserve-color) h2,
@@ -9056,6 +9303,11 @@ iframe.uk-cover {
 .uk-tile-primary:not(.uk-preserve-color) .uk-h5,
 .uk-tile-primary:not(.uk-preserve-color) h6,
 .uk-tile-primary:not(.uk-preserve-color) .uk-h6,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-small,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-medium,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-large,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-xlarge,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-2xlarge,
 .uk-tile-secondary:not(.uk-preserve-color) h1,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-h1,
 .uk-tile-secondary:not(.uk-preserve-color) h2,
@@ -9068,6 +9320,11 @@ iframe.uk-cover {
 .uk-tile-secondary:not(.uk-preserve-color) .uk-h5,
 .uk-tile-secondary:not(.uk-preserve-color) h6,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-h6,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-small,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-medium,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-large,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-xlarge,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-2xlarge,
 .uk-card-primary.uk-card-body h1,
 .uk-card-primary.uk-card-body .uk-h1,
 .uk-card-primary.uk-card-body h2,
@@ -9080,6 +9337,11 @@ iframe.uk-cover {
 .uk-card-primary.uk-card-body .uk-h5,
 .uk-card-primary.uk-card-body h6,
 .uk-card-primary.uk-card-body .uk-h6,
+.uk-card-primary.uk-card-body .uk-heading-small,
+.uk-card-primary.uk-card-body .uk-heading-medium,
+.uk-card-primary.uk-card-body .uk-heading-large,
+.uk-card-primary.uk-card-body .uk-heading-xlarge,
+.uk-card-primary.uk-card-body .uk-heading-2xlarge,
 .uk-card-primary > :not([class*='uk-card-media']) h1,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-h1,
 .uk-card-primary > :not([class*='uk-card-media']) h2,
@@ -9092,6 +9354,11 @@ iframe.uk-cover {
 .uk-card-primary > :not([class*='uk-card-media']) .uk-h5,
 .uk-card-primary > :not([class*='uk-card-media']) h6,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-h6,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-small,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-medium,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-large,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-xlarge,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-2xlarge,
 .uk-card-secondary.uk-card-body h1,
 .uk-card-secondary.uk-card-body .uk-h1,
 .uk-card-secondary.uk-card-body h2,
@@ -9104,6 +9371,11 @@ iframe.uk-cover {
 .uk-card-secondary.uk-card-body .uk-h5,
 .uk-card-secondary.uk-card-body h6,
 .uk-card-secondary.uk-card-body .uk-h6,
+.uk-card-secondary.uk-card-body .uk-heading-small,
+.uk-card-secondary.uk-card-body .uk-heading-medium,
+.uk-card-secondary.uk-card-body .uk-heading-large,
+.uk-card-secondary.uk-card-body .uk-heading-xlarge,
+.uk-card-secondary.uk-card-body .uk-heading-2xlarge,
 .uk-card-secondary > :not([class*='uk-card-media']) h1,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-h1,
 .uk-card-secondary > :not([class*='uk-card-media']) h2,
@@ -9116,6 +9388,11 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-h5,
 .uk-card-secondary > :not([class*='uk-card-media']) h6,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-h6,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-small,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-medium,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-large,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-xlarge,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-2xlarge,
 .uk-overlay-primary h1,
 .uk-overlay-primary .uk-h1,
 .uk-overlay-primary h2,
@@ -9128,6 +9405,11 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-h5,
 .uk-overlay-primary h6,
 .uk-overlay-primary .uk-h6,
+.uk-overlay-primary .uk-heading-small,
+.uk-overlay-primary .uk-heading-medium,
+.uk-overlay-primary .uk-heading-large,
+.uk-overlay-primary .uk-heading-xlarge,
+.uk-overlay-primary .uk-heading-2xlarge,
 .uk-offcanvas-bar h1,
 .uk-offcanvas-bar .uk-h1,
 .uk-offcanvas-bar h2,
@@ -9139,7 +9421,12 @@ iframe.uk-cover {
 .uk-offcanvas-bar h5,
 .uk-offcanvas-bar .uk-h5,
 .uk-offcanvas-bar h6,
-.uk-offcanvas-bar .uk-h6 {
+.uk-offcanvas-bar .uk-h6,
+.uk-offcanvas-bar .uk-heading-small,
+.uk-offcanvas-bar .uk-heading-medium,
+.uk-offcanvas-bar .uk-heading-large,
+.uk-offcanvas-bar .uk-heading-xlarge,
+.uk-offcanvas-bar .uk-heading-2xlarge {
   color: #fff;
 }
 .uk-light blockquote,
@@ -9387,6 +9674,19 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-divider-small::after,
 .uk-offcanvas-bar .uk-divider-small::after {
   border-top-color: rgba(255, 255, 255, 0.2);
+}
+.uk-light .uk-divider-vertical::after,
+.uk-section-primary:not(.uk-preserve-color) .uk-divider-vertical::after,
+.uk-section-secondary:not(.uk-preserve-color) .uk-divider-vertical::after,
+.uk-tile-primary:not(.uk-preserve-color) .uk-divider-vertical::after,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-divider-vertical::after,
+.uk-card-primary.uk-card-body .uk-divider-vertical::after,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-divider-vertical::after,
+.uk-card-secondary.uk-card-body .uk-divider-vertical::after,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-divider-vertical::after,
+.uk-overlay-primary .uk-divider-vertical::after,
+.uk-offcanvas-bar .uk-divider-vertical::after {
+  border-right-color: rgba(255, 255, 255, 0.2);
 }
 .uk-light .uk-list-divider > li:nth-child(n+2),
 .uk-section-primary:not(.uk-preserve-color) .uk-list-divider > li:nth-child(n+2),
@@ -10833,6 +11133,19 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-nav-default .uk-nav-sub a:focus {
   color: rgba(255, 255, 255, 0.7);
 }
+.uk-light .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-section-primary:not(.uk-preserve-color) .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-section-secondary:not(.uk-preserve-color) .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-tile-primary:not(.uk-preserve-color) .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-card-primary.uk-card-body .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-card-secondary.uk-card-body .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-overlay-primary .uk-nav-default .uk-nav-sub li.uk-active > a,
+.uk-offcanvas-bar .uk-nav-default .uk-nav-sub li.uk-active > a {
+  color: #fff;
+}
 .uk-light .uk-nav-primary > li > a,
 .uk-section-primary:not(.uk-preserve-color) .uk-nav-primary > li > a,
 .uk-section-secondary:not(.uk-preserve-color) .uk-nav-primary > li > a,
@@ -10945,6 +11258,19 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-nav-primary .uk-nav-sub a:hover,
 .uk-offcanvas-bar .uk-nav-primary .uk-nav-sub a:focus {
   color: rgba(255, 255, 255, 0.7);
+}
+.uk-light .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-section-primary:not(.uk-preserve-color) .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-section-secondary:not(.uk-preserve-color) .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-tile-primary:not(.uk-preserve-color) .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-card-primary.uk-card-body .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-card-secondary.uk-card-body .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-overlay-primary .uk-nav-primary .uk-nav-sub li.uk-active > a,
+.uk-offcanvas-bar .uk-nav-primary .uk-nav-sub li.uk-active > a {
+  color: #fff;
 }
 .uk-light .uk-navbar-nav > li > a,
 .uk-section-primary:not(.uk-preserve-color) .uk-navbar-nav > li > a,
@@ -11579,7 +11905,7 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-accordion-title:focus,
 .uk-offcanvas-bar .uk-accordion-title:hover,
 .uk-offcanvas-bar .uk-accordion-title:focus {
-  color: #666;
+  color: rgba(255, 255, 255, 0.7);
 }
 .uk-light .uk-iconnav > * > a,
 .uk-section-primary:not(.uk-preserve-color) .uk-iconnav > * > a,
@@ -11670,6 +11996,19 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-text-muted {
   color: rgba(255, 255, 255, 0.5) !important;
 }
+.uk-light .uk-text-emphasis,
+.uk-section-primary:not(.uk-preserve-color) .uk-text-emphasis,
+.uk-section-secondary:not(.uk-preserve-color) .uk-text-emphasis,
+.uk-tile-primary:not(.uk-preserve-color) .uk-text-emphasis,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-text-emphasis,
+.uk-card-primary.uk-card-body .uk-text-emphasis,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-text-emphasis,
+.uk-card-secondary.uk-card-body .uk-text-emphasis,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-text-emphasis,
+.uk-overlay-primary .uk-text-emphasis,
+.uk-offcanvas-bar .uk-text-emphasis {
+  color: #fff !important;
+}
 .uk-light .uk-text-primary,
 .uk-section-primary:not(.uk-preserve-color) .uk-text-primary,
 .uk-section-secondary:not(.uk-preserve-color) .uk-text-primary,
@@ -11681,7 +12020,20 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-text-primary,
 .uk-overlay-primary .uk-text-primary,
 .uk-offcanvas-bar .uk-text-primary {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: #fff !important;
+}
+.uk-light .uk-text-secondary,
+.uk-section-primary:not(.uk-preserve-color) .uk-text-secondary,
+.uk-section-secondary:not(.uk-preserve-color) .uk-text-secondary,
+.uk-tile-primary:not(.uk-preserve-color) .uk-text-secondary,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-text-secondary,
+.uk-card-primary.uk-card-body .uk-text-secondary,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-text-secondary,
+.uk-card-secondary.uk-card-body .uk-text-secondary,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-text-secondary,
+.uk-overlay-primary .uk-text-secondary,
+.uk-offcanvas-bar .uk-text-secondary {
+  color: #fff !important;
 }
 .uk-light .uk-column-divider,
 .uk-section-primary:not(.uk-preserve-color) .uk-column-divider,
