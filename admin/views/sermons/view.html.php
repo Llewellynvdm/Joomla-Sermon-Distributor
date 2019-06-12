@@ -218,7 +218,15 @@ class SermondistributorViewSermons extends JViewLegacy
 
 		// Set Preacher Name Selection
 		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->options;
-		if ($this->preacherNameOptions)
+		// We do some sanitation for Preacher Name filter
+		if (SermondistributorHelper::checkArray($this->preacherNameOptions) &&
+			isset($this->preacherNameOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->preacherNameOptions[0]->value))
+		{
+			unset($this->preacherNameOptions[0]);
+		}
+		// Only load Preacher Name filter if it has values
+		if (SermondistributorHelper::checkArray($this->preacherNameOptions))
 		{
 			// Preacher Name Filter
 			JHtmlSidebar::addFilter(
@@ -240,7 +248,15 @@ class SermondistributorViewSermons extends JViewLegacy
 
 		// Set Series Name Selection
 		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->options;
-		if ($this->seriesNameOptions)
+		// We do some sanitation for Series Name filter
+		if (SermondistributorHelper::checkArray($this->seriesNameOptions) &&
+			isset($this->seriesNameOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->seriesNameOptions[0]->value))
+		{
+			unset($this->seriesNameOptions[0]);
+		}
+		// Only load Series Name filter if it has values
+		if (SermondistributorHelper::checkArray($this->seriesNameOptions))
 		{
 			// Series Name Filter
 			JHtmlSidebar::addFilter(
@@ -262,7 +278,15 @@ class SermondistributorViewSermons extends JViewLegacy
 
 		// Set Link Type Selection
 		$this->link_typeOptions = $this->getTheLink_typeSelections();
-		if ($this->link_typeOptions)
+		// We do some sanitation for Link Type filter
+		if (SermondistributorHelper::checkArray($this->link_typeOptions) &&
+			isset($this->link_typeOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->link_typeOptions[0]->value))
+		{
+			unset($this->link_typeOptions[0]);
+		}
+		// Only load Link Type filter if it has values
+		if (SermondistributorHelper::checkArray($this->link_typeOptions))
 		{
 			// Link Type Filter
 			JHtmlSidebar::addFilter(
@@ -284,7 +308,15 @@ class SermondistributorViewSermons extends JViewLegacy
 
 		// Set Source Selection
 		$this->sourceOptions = $this->getTheSourceSelections();
-		if ($this->sourceOptions)
+		// We do some sanitation for Source filter
+		if (SermondistributorHelper::checkArray($this->sourceOptions) &&
+			isset($this->sourceOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->sourceOptions[0]->value))
+		{
+			unset($this->sourceOptions[0]);
+		}
+		// Only load Source filter if it has values
+		if (SermondistributorHelper::checkArray($this->sourceOptions))
 		{
 			// Source Filter
 			JHtmlSidebar::addFilter(

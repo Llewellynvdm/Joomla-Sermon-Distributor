@@ -244,7 +244,6 @@
 						maxlength="150"
 						description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_TFOLDER_DESCRIPTION"
 						class="text_area span12"
-						required="false"
 						filter="PATH"
 						message="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_TFOLDER_MESSAGE"
 						hint="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_TFOLDER_HINT"

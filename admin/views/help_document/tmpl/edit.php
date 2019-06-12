@@ -120,7 +120,6 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 		<input type="hidden" name="task" value="help_document.edit" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
-	</div>
 </div>
 
 <div class="clearfix"></div>

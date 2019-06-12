@@ -201,7 +201,15 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 
 		// Set Build Selection
 		$this->buildOptions = $this->getTheBuildSelections();
-		if ($this->buildOptions)
+		// We do some sanitation for Build filter
+		if (SermondistributorHelper::checkArray($this->buildOptions) &&
+			isset($this->buildOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->buildOptions[0]->value))
+		{
+			unset($this->buildOptions[0]);
+		}
+		// Only load Build filter if it has values
+		if (SermondistributorHelper::checkArray($this->buildOptions))
 		{
 			// Build Filter
 			JHtmlSidebar::addFilter(
@@ -223,7 +231,15 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 
 		// Set External Source Description Selection
 		$this->external_sourceDescriptionOptions = JFormHelper::loadFieldType('Externalsource')->options;
-		if ($this->external_sourceDescriptionOptions)
+		// We do some sanitation for External Source Description filter
+		if (SermondistributorHelper::checkArray($this->external_sourceDescriptionOptions) &&
+			isset($this->external_sourceDescriptionOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->external_sourceDescriptionOptions[0]->value))
+		{
+			unset($this->external_sourceDescriptionOptions[0]);
+		}
+		// Only load External Source Description filter if it has values
+		if (SermondistributorHelper::checkArray($this->external_sourceDescriptionOptions))
 		{
 			// External Source Description Filter
 			JHtmlSidebar::addFilter(

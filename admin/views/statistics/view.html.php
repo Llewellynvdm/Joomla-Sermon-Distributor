@@ -201,7 +201,15 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 		// Set Sermon Name Selection
 		$this->sermonNameOptions = JFormHelper::loadFieldType('Sermon')->options;
-		if ($this->sermonNameOptions)
+		// We do some sanitation for Sermon Name filter
+		if (SermondistributorHelper::checkArray($this->sermonNameOptions) &&
+			isset($this->sermonNameOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->sermonNameOptions[0]->value))
+		{
+			unset($this->sermonNameOptions[0]);
+		}
+		// Only load Sermon Name filter if it has values
+		if (SermondistributorHelper::checkArray($this->sermonNameOptions))
 		{
 			// Sermon Name Filter
 			JHtmlSidebar::addFilter(
@@ -223,7 +231,15 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 		// Set Preacher Name Selection
 		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->options;
-		if ($this->preacherNameOptions)
+		// We do some sanitation for Preacher Name filter
+		if (SermondistributorHelper::checkArray($this->preacherNameOptions) &&
+			isset($this->preacherNameOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->preacherNameOptions[0]->value))
+		{
+			unset($this->preacherNameOptions[0]);
+		}
+		// Only load Preacher Name filter if it has values
+		if (SermondistributorHelper::checkArray($this->preacherNameOptions))
 		{
 			// Preacher Name Filter
 			JHtmlSidebar::addFilter(
@@ -245,7 +261,15 @@ class SermondistributorViewStatistics extends JViewLegacy
 
 		// Set Series Name Selection
 		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->options;
-		if ($this->seriesNameOptions)
+		// We do some sanitation for Series Name filter
+		if (SermondistributorHelper::checkArray($this->seriesNameOptions) &&
+			isset($this->seriesNameOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->seriesNameOptions[0]->value))
+		{
+			unset($this->seriesNameOptions[0]);
+		}
+		// Only load Series Name filter if it has values
+		if (SermondistributorHelper::checkArray($this->seriesNameOptions))
 		{
 			// Series Name Filter
 			JHtmlSidebar::addFilter(

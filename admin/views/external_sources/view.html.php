@@ -201,7 +201,15 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 
 		// Set Externalsources Selection
 		$this->externalsourcesOptions = $this->getTheExternalsourcesSelections();
-		if ($this->externalsourcesOptions)
+		// We do some sanitation for Externalsources filter
+		if (SermondistributorHelper::checkArray($this->externalsourcesOptions) &&
+			isset($this->externalsourcesOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->externalsourcesOptions[0]->value))
+		{
+			unset($this->externalsourcesOptions[0]);
+		}
+		// Only load Externalsources filter if it has values
+		if (SermondistributorHelper::checkArray($this->externalsourcesOptions))
 		{
 			// Externalsources Filter
 			JHtmlSidebar::addFilter(
@@ -223,7 +231,15 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 
 		// Set Update Method Selection
 		$this->update_methodOptions = $this->getTheUpdate_methodSelections();
-		if ($this->update_methodOptions)
+		// We do some sanitation for Update Method filter
+		if (SermondistributorHelper::checkArray($this->update_methodOptions) &&
+			isset($this->update_methodOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->update_methodOptions[0]->value))
+		{
+			unset($this->update_methodOptions[0]);
+		}
+		// Only load Update Method filter if it has values
+		if (SermondistributorHelper::checkArray($this->update_methodOptions))
 		{
 			// Update Method Filter
 			JHtmlSidebar::addFilter(
@@ -245,7 +261,15 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 
 		// Set Build Selection
 		$this->buildOptions = $this->getTheBuildSelections();
-		if ($this->buildOptions)
+		// We do some sanitation for Build filter
+		if (SermondistributorHelper::checkArray($this->buildOptions) &&
+			isset($this->buildOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->buildOptions[0]->value))
+		{
+			unset($this->buildOptions[0]);
+		}
+		// Only load Build filter if it has values
+		if (SermondistributorHelper::checkArray($this->buildOptions))
 		{
 			// Build Filter
 			JHtmlSidebar::addFilter(
