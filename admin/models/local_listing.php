@@ -31,13 +31,37 @@ use Joomla\Registry\Registry;
  * Sermondistributor Local_listing Model
  */
 class SermondistributorModelLocal_listing extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'left' => array(
+				'external_source'
+			),
+			'right' => array(
+				'build'
+			),
+			'fullwidth' => array(
+				'key',
+				'url'
+			),
+			'above' => array(
+				'name',
+				'size'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *

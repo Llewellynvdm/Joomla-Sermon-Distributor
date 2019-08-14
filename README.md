@@ -23,24 +23,24 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 12th June, 2019
++ *Last Build*: 14th August, 2019
 + *Version*: 2.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Build Time :hourglass:
 
-**187 Hours** or **23 Eight Hour Days** (actual time the author saved -
+**189 Hours** or **24 Eight Hour Days** (actual time the author saved -
 due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder))
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **66946**
++ *Line count*: **67680**
 + *File count*: **445**
 + *Folder count*: **93**
 
-**123 Hours** or **16 Eight Hour Days** (the actual time the author spent)
+**124 Hours** or **15 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
 > **debugging @47hours** = codingtime / 4;
@@ -48,7 +48,7 @@ due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder
 > **mapping @19hours** = codingtime / 10;
 > **office @31hours** = codingtime / 6;)
 
-**310 Hours** or **39 Eight Hour Days**
+**313 Hours** or **39 Eight Hour Days**
 (a total of the realistic time frame for this project)
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,

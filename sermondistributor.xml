@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.2" method="upgrade">
 	<name>COM_SERMONDISTRIBUTOR</name>
-	<creationDate>12th June, 2019</creationDate>
+	<creationDate>14th August, 2019</creationDate>
 	<author>Llewellyn van der Merwe</author>
 	<authorEmail>joomla@vdm.io</authorEmail>
 	<authorUrl>https://www.vdm.io/</authorUrl>
@@ -56,9 +56,7 @@
 		<filename>index.html</filename>
 		<filename>router.php</filename>
 		<filename>sermondistributor.php</filename>
-		<filename>sermondistributor.php</filename>
 		<filename>router.php</filename>
-		<filename>controller.php</filename>
 		<folder>assets</folder>
 		<folder>helpers</folder>
 		<folder>controllers</folder>
@@ -86,11 +84,6 @@
 			<filename>controller.php</filename>
 			<filename>index.html</filename>
 			<filename>sermondistributor.php</filename>
-			<filename>access.xml</filename>
-			<filename>config.xml</filename>
-			<filename>controller.php</filename>
-			<filename>sermondistributor.php</filename>
-			<filename>README.txt</filename>
 			<filename>README.txt</filename>
 			<folder>assets</folder>
 			<folder>controllers</folder>

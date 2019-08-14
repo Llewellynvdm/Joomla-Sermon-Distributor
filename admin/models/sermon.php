@@ -31,13 +31,59 @@ use Joomla\Registry\Registry;
  * Sermondistributor Sermon Model
  */
 class SermondistributorModelSermon extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'left' => array(
+				'scripture',
+				'short_description',
+				'icon'
+			),
+			'right' => array(
+				'series',
+				'catid',
+				'tags'
+			),
+			'fullwidth' => array(
+				'description'
+			),
+			'above' => array(
+				'name',
+				'alias',
+				'preacher'
+			),
+			'under' => array(
+				'not_required',
+				'auto_sermons'
+			)
+		),
+		'files' => array(
+			'fullwidth' => array(
+				'link_type',
+				'note_link_directed',
+				'note_link_encrypted',
+				'source',
+				'build',
+				'note_manual_externalsource',
+				'note_auto_externalsource',
+				'manual_files',
+				'local_files',
+				'url'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *

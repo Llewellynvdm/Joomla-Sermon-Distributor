@@ -31,13 +31,54 @@ use Joomla\Registry\Registry;
  * Sermondistributor External_source Model
  */
 class SermondistributorModelExternal_source extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'left' => array(
+				'oauthtoken',
+				'generated_access_token_note',
+				'permissiontype',
+				'app_limitation_note',
+				'dropboxoptions'
+			),
+			'right' => array(
+				'update_method',
+				'update_timer',
+				'filetypes'
+			),
+			'fullwidth' => array(
+				'sharedurl',
+				'folder',
+				'apicronjob_note'
+			),
+			'above' => array(
+				'description',
+				'externalsources'
+			),
+			'under' => array(
+				'not_required'
+			)
+		),
+		'build_option' => array(
+			'fullwidth' => array(
+				'build',
+				'note_manual_externalsource',
+				'note_auto_externalsource'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *

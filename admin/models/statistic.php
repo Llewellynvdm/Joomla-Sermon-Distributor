@@ -31,13 +31,34 @@ use Joomla\Registry\Registry;
  * Sermondistributor Statistic Model
  */
 class SermondistributorModelStatistic extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'left' => array(
+				'preacher',
+				'series'
+			),
+			'right' => array(
+				'counter'
+			),
+			'above' => array(
+				'filename',
+				'sermon'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *
