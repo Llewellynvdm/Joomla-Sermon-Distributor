@@ -55,7 +55,7 @@ defined('_JEXEC') or die('Restricted access');
 			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_LABEL', 'short_description', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap" >
-			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_SERMON_SERMON_CATEGORY', 'catid', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES', 'catid', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap hidden-phone" >
 			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL', 'link_type', $this->listDirn, $this->listOrder); ?>

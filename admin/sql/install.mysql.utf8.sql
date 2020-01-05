@@ -23,13 +23,13 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_preacher` (
 	`metadesc` TEXT NOT NULL,
 	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
+	KEY `idx_name` (`name`),
+	KEY `idx_alias` (`alias`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
 	KEY `idx_createdby` (`created_by`),
 	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
-	KEY `idx_name` (`name`),
-	KEY `idx_alias` (`alias`)
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_sermon` (
@@ -68,18 +68,18 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_sermon` (
 	`metadesc` TEXT NOT NULL,
 	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
-	KEY `idx_access` (`access`),
-	KEY `idx_checkout` (`checked_out`),
-	KEY `idx_createdby` (`created_by`),
-	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
 	KEY `idx_name` (`name`),
 	KEY `idx_preacher` (`preacher`),
 	KEY `idx_series` (`series`),
 	KEY `idx_catid` (`catid`),
 	KEY `idx_link_type` (`link_type`),
 	KEY `idx_alias` (`alias`),
-	KEY `idx_build` (`build`)
+	KEY `idx_build` (`build`),
+	KEY `idx_access` (`access`),
+	KEY `idx_checkout` (`checked_out`),
+	KEY `idx_createdby` (`created_by`),
+	KEY `idx_modifiedby` (`modified_by`),
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_series` (
@@ -106,13 +106,13 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_series` (
 	`metadesc` TEXT NOT NULL,
 	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
+	KEY `idx_name` (`name`),
+	KEY `idx_alias` (`alias`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
 	KEY `idx_createdby` (`created_by`),
 	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
-	KEY `idx_name` (`name`),
-	KEY `idx_alias` (`alias`)
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_statistic` (
@@ -139,15 +139,15 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_statistic` (
 	`metadesc` TEXT NOT NULL,
 	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
+	KEY `idx_filename` (`filename`),
+	KEY `idx_sermon` (`sermon`),
+	KEY `idx_preacher` (`preacher`),
+	KEY `idx_series` (`series`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
 	KEY `idx_createdby` (`created_by`),
 	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
-	KEY `idx_filename` (`filename`),
-	KEY `idx_sermon` (`sermon`),
-	KEY `idx_preacher` (`preacher`),
-	KEY `idx_series` (`series`)
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_external_source` (
@@ -177,16 +177,16 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_external_source` (
 	`hits` INT(10) unsigned NOT NULL DEFAULT 0,
 	`ordering` INT(11) NOT NULL DEFAULT 0,
 	PRIMARY KEY  (`id`),
-	KEY `idx_checkout` (`checked_out`),
-	KEY `idx_createdby` (`created_by`),
-	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
 	KEY `idx_description` (`description`),
 	KEY `idx_externalsources` (`externalsources`),
 	KEY `idx_update_method` (`update_method`),
 	KEY `idx_build` (`build`),
 	KEY `idx_dropboxoptions` (`dropboxoptions`),
-	KEY `idx_permissiontype` (`permissiontype`)
+	KEY `idx_permissiontype` (`permissiontype`),
+	KEY `idx_checkout` (`checked_out`),
+	KEY `idx_createdby` (`created_by`),
+	KEY `idx_modifiedby` (`modified_by`),
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_local_listing` (
@@ -210,13 +210,13 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_local_listing` (
 	`hits` INT(10) unsigned NOT NULL DEFAULT 0,
 	`ordering` INT(11) NOT NULL DEFAULT 0,
 	PRIMARY KEY  (`id`),
+	KEY `idx_name` (`name`),
+	KEY `idx_build` (`build`),
+	KEY `idx_key` (`key`),
 	KEY `idx_checkout` (`checked_out`),
 	KEY `idx_createdby` (`created_by`),
 	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
-	KEY `idx_name` (`name`),
-	KEY `idx_build` (`build`),
-	KEY `idx_key` (`key`)
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__sermondistributor_help_document` (
@@ -250,17 +250,17 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_help_document` (
 	`metadesc` TEXT NOT NULL,
 	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
-	KEY `idx_access` (`access`),
-	KEY `idx_checkout` (`checked_out`),
-	KEY `idx_createdby` (`created_by`),
-	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
 	KEY `idx_title` (`title`),
 	KEY `idx_type` (`type`),
 	KEY `idx_location` (`location`),
 	KEY `idx_article` (`article`),
 	KEY `idx_target` (`target`),
-	KEY `idx_alias` (`alias`)
+	KEY `idx_alias` (`alias`),
+	KEY `idx_access` (`access`),
+	KEY `idx_checkout` (`checked_out`),
+	KEY `idx_createdby` (`created_by`),
+	KEY `idx_modifiedby` (`modified_by`),
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 

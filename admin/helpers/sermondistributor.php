@@ -25,11 +25,21 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Language\Language;
+use Joomla\String\StringHelper;
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Sermondistributor component helper.
  */
 abstract class SermondistributorHelper
 {
+	/**
+	 * The Main Active Language
+	 * 
+	 * @var      string
+	 */
+	public static $langTag;
 
 	/**
 	* 	The global params
@@ -673,7 +683,7 @@ abstract class SermondistributorHelper
 	 * 
 	 * @var     array
 	 **/
-	protected static $fileExtentionToMimeType = array(
+	protected static $fileExtensionToMimeType = array(
 		'123'			=> 'application/vnd.lotus-1-2-3',
 		'3dml'			=> 'text/vnd.in3d.3dml',
 		'3ds'			=> 'image/x-3ds',
@@ -1680,9 +1690,9 @@ abstract class SermondistributorHelper
 		// get the extension form file
 		$extension = \strtolower(\pathinfo($file, \PATHINFO_EXTENSION));
 		// check if we have the extension listed
-		if (isset(self::$fileExtentionToMimeType[$extension]))
+		if (isset(self::$fileExtensionToMimeType[$extension]))
 		{
-			return self::$fileExtentionToMimeType[$extension];
+			return self::$fileExtensionToMimeType[$extension];
 		}
 		elseif (function_exists('mime_content_type'))
 		{
@@ -1696,6 +1706,61 @@ abstract class SermondistributorHelper
 			return $mimetype;
 		}
 		return 'application/octet-stream';
+	}
+
+	/**
+	 * Get the file extensions
+	 * 
+	 * @param   string    $target   The targeted/filter option
+	 * @param   boolean   $sorted   The multidimensional grouping sort (only if targeted filter is used)
+	 *
+	 * @return  array     All the extensions (targeted & sorted)
+	 * 
+	 */
+	public static function getFileExtensions($target = null, $sorted = false)
+	{
+		// we have some in-house grouping/filters :)
+		$filters = array(
+			'image' => array('image', 'font', 'model'),
+			'document' => array('application', 'text', 'chemical', 'message'),
+			'media' => array('video', 'audio'),
+			'file' => array('image', 'application', 'text', 'video', 'audio'),
+			'all' => array('application', 'text', 'chemical', 'message', 'image', 'font', 'model', 'video', 'audio', 'x-conference')
+		);
+		// sould we filter
+		if ($target)
+		{
+			// the bucket to get extensions
+			$fileextensions = array();
+			// check if filter exist (if not return empty array)
+			if (isset($filters[$target]))
+			{
+				foreach (self::$fileExtensionToMimeType as $extension => $mimetype)
+				{
+					// get the key mime type
+					$mimearr = explode("/", $mimetype, 2);
+					// check if this file extension should be added
+					if (in_array($mimearr[0], $filters[$target]))
+					{
+						if ($sorted)
+						{
+							if (!isset($fileextensions[$mimearr[0]]))
+							{
+								$fileextensions[$mimearr[0]] = array();
+							}
+							$fileextensions[$mimearr[0]][$extension] = $extension;
+						}
+						else
+						{
+							$fileextensions[$extension] = $extension;
+						}
+					}
+				}
+			}
+			return $fileextensions;
+		}
+		// we just return all file extensions
+		return array_keys(self::$fileExtensionToMimeType);
 	}
 
 	protected static function getDownloadFileName(&$sermon, $file, $type)
@@ -2681,6 +2746,7 @@ abstract class SermondistributorHelper
 		// return opened values
 		return $open;
 	}
+
 	/**
 	* Load the Component xml manifest.
 	**/
@@ -2834,7 +2900,7 @@ abstract class SermondistributorHelper
 		if ($user->authorise('sermon.access', 'com_sermondistributor') && $user->authorise('sermon.submenu', 'com_sermondistributor'))
 		{
 			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERMONS'), 'index.php?option=com_sermondistributor&view=sermons', $submenu === 'sermons');
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMON_CATEGORY'), 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.sermons', $submenu === 'categories.sermons');
+			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'), 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.sermons', $submenu === 'categories.sermons');
 		}
 		if ($user->authorise('series.access', 'com_sermondistributor') && $user->authorise('series.submenu', 'com_sermondistributor'))
 		{
@@ -3243,7 +3309,15 @@ abstract class SermondistributorHelper
 			{
 				$query->from($db->quoteName('#_'.$main.'_'.$table));
 			}
-			$query->where($db->quoteName($whereString) . ' '.$operator.' (' . implode(',',$where) . ')');
+			// add strings to array search
+			if ('IN_STRINGS' === $operator || 'NOT IN_STRINGS' === $operator)
+			{
+				$query->where($db->quoteName($whereString) . ' ' . str_replace('_STRINGS', '', $operator) . ' ("' . implode('","',$where) . '")');
+			}
+			else
+			{
+				$query->where($db->quoteName($whereString) . ' ' . $operator . ' (' . implode(',',$where) . ')');
+			}
 			$db->setQuery($query);
 			$db->execute();
 			if ($db->getNumRows())
@@ -3353,14 +3427,19 @@ abstract class SermondistributorHelper
 	* @param  string   $views       The related list view name
 	* @param  mixed    $target      Only get this permission (like edit, create, delete)
 	* @param  string   $component   The target component
+	* @param  object   $user        The user whose permissions we are loading
 	*
 	* @return  object   The JObject of permission/authorised actions
 	* 
 	**/
-	public static function getActions($view, &$record = null, $views = null, $target = null, $component = 'sermondistributor')
+	public static function getActions($view, &$record = null, $views = null, $target = null, $component = 'sermondistributor', $user = 'null')
 	{
-		// get the user object
-		$user = JFactory::getUser();
+		// load the user if not given
+		if (!self::checkObject($user))
+		{
+			// get the user object
+			$user = JFactory::getUser();
+		}
 		// load the JObject
 		$result = new JObject;
 		// make view name safe (just incase)
@@ -3694,7 +3773,7 @@ abstract class SermondistributorHelper
 				}
 			}
 			// check if there are any view values remaining
-			if (count($_result))
+			if (count((array) $_result))
 			{
 				$_result = json_encode($_result);
 				$_result = array($_result);
@@ -3819,7 +3898,31 @@ abstract class SermondistributorHelper
 				jimport('joomla.form.form');
 			}
 			// get field type
-			$field = JFormHelper::loadFieldType($attributes['type'],true);
+			$field = JFormHelper::loadFieldType($attributes['type'], true);
+			// get field xml
+			$XML = self::getFieldXML($attributes, $options);
+			// setup the field
+			$field->setup($XML, $default);
+			// return the field object
+			return $field;
+		}
+		return false;
+	}
+
+	/**
+	 * get the field xml
+	 *
+	 * @param   array      $attributes   The array of attributes
+	 * @param   array      $options      The options to apply to the XML element
+	 *
+	 * @return  object
+	 *
+	 */
+	public static function getFieldXML(&$attributes, $options = null)
+	{
+		// make sure we have attributes and a type value
+		if (self::checkArray($attributes))
+		{
 			// start field xml
 			$XML = new SimpleXMLElement('<field/>');
 			// load the attributes
@@ -3830,10 +3933,8 @@ abstract class SermondistributorHelper
 				// load the options
 				self::xmlAddOptions($XML, $options);
 			}
-			// setup the field
-			$field->setup($XML, $default);
-			// return the field object
-			return $field;
+			// return the field xml
+			return $XML;
 		}
 		return false;
 	}
@@ -4081,6 +4182,8 @@ abstract class SermondistributorHelper
 			$string = trim($string);
 			$string = preg_replace('/'.$spacer.'+/', ' ', $string);
 			$string = preg_replace('/\s+/', ' ', $string);
+			// Transliterate string
+			$string = self::transliterate($string);
 			// remove all and keep only characters
 			if ($keepOnlyCharacters)
 			{
@@ -4147,6 +4250,19 @@ abstract class SermondistributorHelper
 		}
 		// not a string
 		return '';
+	}
+
+	public static function transliterate($string)
+	{
+		// set tag only once
+		if (!self::checkString(self::$langTag))
+		{
+			// get global value
+			self::$langTag = JComponentHelper::getParams('com_sermondistributor')->get('language', 'en-GB');
+		}
+		// Transliterate on the language requested
+		$lang = Language::getInstance(self::$langTag);
+		return $lang->transliterate($string);
 	}
 
 	public static function htmlEscape($var, $charset = 'UTF-8', $shorten = false, $length = 40)

@@ -115,12 +115,18 @@ class SermondistributorModelLocal_listings extends JModelList
 		// load parent items
 		$items = parent::getItems();
 
-		// set values to display correctly.
+		// Set values to display correctly.
 		if (SermondistributorHelper::checkArray($items))
 		{
+			// Get the user object if not set.
+			if (!isset($user) || !SermondistributorHelper::checkObject($user))
+			{
+				$user = JFactory::getUser();
+			}
 			foreach ($items as $nr => &$item)
 			{
-				$access = (JFactory::getUser()->authorise('local_listing.access', 'com_sermondistributor.local_listing.' . (int) $item->id) && JFactory::getUser()->authorise('local_listing.access', 'com_sermondistributor'));
+				// Remove items the user can't access.
+				$access = ($user->authorise('local_listing.access', 'com_sermondistributor.local_listing.' . (int) $item->id) && $user->authorise('local_listing.access', 'com_sermondistributor'));
 				if (!$access)
 				{
 					unset($items[$nr]);
@@ -242,17 +248,23 @@ class SermondistributorModelLocal_listings extends JModelList
 	/**
 	 * Method to get list export data.
 	 *
+	 * @param   array  $pks  The ids of the items to get
+	 * @param   JUser  $user  The user making the request
+	 *
 	 * @return mixed  An array of data items on success, false on failure.
 	 */
-	public function getExportData($pks)
+	public function getExportData($pks, $user = null)
 	{
 		// setup the query
 		if (SermondistributorHelper::checkArray($pks))
 		{
-			// Set a value to know this is exporting method.
+			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
-			// Get the user object.
-			$user = JFactory::getUser();
+			// Get the user object if not set.
+			if (!isset($user) || !SermondistributorHelper::checkObject($user))
+			{
+				$user = JFactory::getUser();
+			}
 			// Create a new query object.
 			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
@@ -279,12 +291,13 @@ class SermondistributorModelLocal_listings extends JModelList
 				// Get the encryption object.
 				$basic = new FOFEncryptAes($basickey);
 
-				// set values to display correctly.
+				// Set values to display correctly.
 				if (SermondistributorHelper::checkArray($items))
 				{
 					foreach ($items as $nr => &$item)
 					{
-						$access = (JFactory::getUser()->authorise('local_listing.access', 'com_sermondistributor.local_listing.' . (int) $item->id) && JFactory::getUser()->authorise('local_listing.access', 'com_sermondistributor'));
+						// Remove items the user can't access.
+						$access = ($user->authorise('local_listing.access', 'com_sermondistributor.local_listing.' . (int) $item->id) && $user->authorise('local_listing.access', 'com_sermondistributor'));
 						if (!$access)
 						{
 							unset($items[$nr]);

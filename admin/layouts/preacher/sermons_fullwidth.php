@@ -81,7 +81,7 @@ $can = SermondistributorHelper::getActions('sermon');
 			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_LABEL'); ?>
 		</th>
 		<th data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMON_CATEGORY'); ?>
+			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'); ?>
 		</th>
 		<th data-hide="phone,tablet">
 			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL'); ?>

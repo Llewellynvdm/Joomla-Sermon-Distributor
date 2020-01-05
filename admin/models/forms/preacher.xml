@@ -157,7 +157,6 @@
 			class="text_area"
 			required="false"
 			filter="STRING"
-			validate="email"
 			message="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_MESSAGE"
 			hint="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_HINT"
 		/>

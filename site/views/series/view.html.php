@@ -84,7 +84,7 @@ class SermondistributorViewSeries extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			throw new Exception(implode("\n", $errors), 500);
+			throw new Exception(implode(PHP_EOL, $errors), 500);
 		}
 
 		parent::display($tpl);
@@ -98,7 +98,7 @@ class SermondistributorViewSeries extends JViewLegacy
 	 *
 	 * @return  boolean  True if successful;
 	 */
-	public function hit($pk = 0)
+	public function hit($pk = 0, $category = false)
 	{
 		if ($pk)
 		{
@@ -114,8 +114,15 @@ class SermondistributorViewSeries extends JViewLegacy
 			$conditions = array(
 			    $db->quoteName('id') . ' = ' . $pk
 			);
-
-			$query->update($db->quoteName('#__sermondistributor_series'))->set($fields)->where($conditions);
+			// set for category
+			if ($category)
+			{
+				$query->update($db->quoteName('#__categories'))->set($fields)->where($conditions);
+			}
+			else
+			{
+				$query->update($db->quoteName('#__sermondistributor_series'))->set($fields)->where($conditions);
+			}
 
 			$db->setQuery($query);
 			return $db->execute();
@@ -223,6 +230,7 @@ class SermondistributorViewSeries extends JViewLegacy
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
 				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/js/uikit-icons'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 			}
 		}
 

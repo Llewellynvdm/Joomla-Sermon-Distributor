@@ -384,7 +384,7 @@ class SermondistributorViewSermons extends JViewLegacy
 			'g.name' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL'),
 			'h.name' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL'),
 			'a.short_description' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_LABEL'),
-			'c.category_title' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMON_CATEGORY'),
+			'c.category_title' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'),
 			'a.link_type' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL'),
 			'a.source' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL'),
 			'a.id' => JText::_('JGRID_HEADING_ID')

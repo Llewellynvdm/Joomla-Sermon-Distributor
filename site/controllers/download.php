@@ -62,11 +62,11 @@ class SermondistributorControllerDownload extends JControllerLegacy
 						// we must first count this download
 						if (SermondistributorHelper::countDownload($keys,$filename))
 						{
-							$model = SermondistributorHelper::getModel('preachers', JPATH_COMPONENT_ADMINISTRATOR);
-							if (($result = $model->getSomeStuff($filename)) !== false)
-							{
+							// $model = SermondistributorHelper::getModel('preachers', JPATH_COMPONENT_ADMINISTRATOR);
+							// if (($result = $model->getSomeStuff($filename)) !== false)
+							// {
 								// on success do some thing more (code  here)
-							}
+							// }
 							// get Site name
 							$config = JFactory::getConfig();
 							$vendor = $config->get('sitename');

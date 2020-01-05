@@ -235,12 +235,18 @@ class SermondistributorModelSermon extends JModelAdmin
 		{
 			$items = $db->loadObjectList();
 
-			// set values to display correctly.
+			// Set values to display correctly.
 			if (SermondistributorHelper::checkArray($items))
 			{
+				// Get the user object if not set.
+				if (!isset($user) || !SermondistributorHelper::checkObject($user))
+				{
+					$user = JFactory::getUser();
+				}
 				foreach ($items as $nr => &$item)
 				{
-					$access = (JFactory::getUser()->authorise('statistic.access', 'com_sermondistributor.statistic.' . (int) $item->id) && JFactory::getUser()->authorise('statistic.access', 'com_sermondistributor'));
+					// Remove items the user can't access.
+					$access = ($user->authorise('statistic.access', 'com_sermondistributor.statistic.' . (int) $item->id) && $user->authorise('statistic.access', 'com_sermondistributor'));
 					if (!$access)
 					{
 						unset($items[$nr]);
@@ -269,8 +275,23 @@ class SermondistributorModelSermon extends JModelAdmin
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
+		// check if xpath was set in options
+		$xpath = false;
+		if (isset($options['xpath']))
+		{
+			$xpath = $options['xpath'];
+			unset($options['xpath']);
+		}
+		// check if clear form was set in options
+		$clear = false;
+		if (isset($options['clear']))
+		{
+			$clear = $options['clear'];
+			unset($options['clear']);
+		}
+
 		// Get the form.
-		$form = $this->loadForm('com_sermondistributor.sermon', 'sermon', $options);
+		$form = $this->loadForm('com_sermondistributor.sermon', 'sermon', $options, $clear, $xpath);
 
 		if (empty($form))
 		{
@@ -502,6 +523,8 @@ class SermondistributorModelSermon extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
+			// run the perprocess of the data
+			$this->preprocessData('com_sermondistributor.sermon', $data);
 		}
 
 		return $data;

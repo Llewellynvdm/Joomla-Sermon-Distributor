@@ -140,8 +140,23 @@ class SermondistributorModelStatistic extends JModelAdmin
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
+		// check if xpath was set in options
+		$xpath = false;
+		if (isset($options['xpath']))
+		{
+			$xpath = $options['xpath'];
+			unset($options['xpath']);
+		}
+		// check if clear form was set in options
+		$clear = false;
+		if (isset($options['clear']))
+		{
+			$clear = $options['clear'];
+			unset($options['clear']);
+		}
+
 		// Get the form.
-		$form = $this->loadForm('com_sermondistributor.statistic', 'statistic', $options);
+		$form = $this->loadForm('com_sermondistributor.statistic', 'statistic', $options, $clear, $xpath);
 
 		if (empty($form))
 		{
@@ -373,6 +388,8 @@ class SermondistributorModelStatistic extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
+			// run the perprocess of the data
+			$this->preprocessData('com_sermondistributor.statistic', $data);
 		}
 
 		return $data;

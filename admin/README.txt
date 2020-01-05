@@ -23,38 +23,38 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 14th August, 2019
++ *Last Build*: 5th January, 2020
 + *Version*: 2.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Build Time :hourglass:
 
-**189 Hours** or **24 Eight Hour Days** (actual time the author saved -
+**192 Hours** or **24 Eight Hour Days** (actual time the author saved -
 due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder))
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **67680**
++ *Line count*: **68757**
 + *File count*: **445**
 + *Folder count*: **93**
 
-**124 Hours** or **15 Eight Hour Days** (the actual time the author spent)
+**126 Hours** or **16 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
-> **debugging @47hours** = codingtime / 4;
+> **debugging @48hours** = codingtime / 4;
 > **planning @27hours** = codingtime / 7;
 > **mapping @19hours** = codingtime / 10;
-> **office @31hours** = codingtime / 6;)
+> **office @32hours** = codingtime / 6;)
 
-**313 Hours** or **39 Eight Hour Days**
+**318 Hours** or **40 Eight Hour Days**
 (a total of the realistic time frame for this project)
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > with the normal everyday realities at the office, that includes the component planning, mapping & debugging.)
 
-Project duration: **7.8 weeks** or **1.6 months**
+Project duration: **8 weeks** or **1.7 months**
 
 > This **component** was build with a Joomla [Automated Component Builder](https://www.vdm.io/joomla-component-builder).
 > Developed by [Llewellyn van der Merwe](mailto:joomla@vdm.io)

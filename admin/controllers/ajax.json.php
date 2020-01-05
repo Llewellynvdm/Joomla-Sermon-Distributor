@@ -140,7 +140,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$idNameValue = $jinput->get('idName', NULL, 'WORD');
 						$ojectValue = $jinput->get('oject', NULL, 'STRING');
-						if($idNameValue && $ojectValue && $user->id != 0)
+						if($idNameValue && $user->id != 0 && $ojectValue)
 						{
 							$result = $this->getModel('ajax')->getBuildTable($idNameValue, $ojectValue);
 						}
@@ -257,7 +257,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						$targetValue = $jinput->get('target', NULL, 'INT');
 						$typeValue = $jinput->get('type', NULL, 'INT');
 						$sleutelValue = $jinput->get('sleutel', NULL, 'CMD');
-						if($idValue && $targetValue && $typeValue && $sleutelValue && $user->id != 0)
+						if($idValue && $user->id != 0 && $targetValue && $typeValue && $sleutelValue)
 						{
 							$result = $this->getModel('ajax')->updateLocalListingExternal($idValue, $targetValue, $typeValue, $sleutelValue);
 						}

@@ -157,8 +157,23 @@ class SermondistributorModelHelp_document extends JModelAdmin
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
+		// check if xpath was set in options
+		$xpath = false;
+		if (isset($options['xpath']))
+		{
+			$xpath = $options['xpath'];
+			unset($options['xpath']);
+		}
+		// check if clear form was set in options
+		$clear = false;
+		if (isset($options['clear']))
+		{
+			$clear = $options['clear'];
+			unset($options['clear']);
+		}
+
 		// Get the form.
-		$form = $this->loadForm('com_sermondistributor.help_document', 'help_document', $options);
+		$form = $this->loadForm('com_sermondistributor.help_document', 'help_document', $options, $clear, $xpath);
 
 		if (empty($form))
 		{
@@ -388,6 +403,8 @@ class SermondistributorModelHelp_document extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
+			// run the perprocess of the data
+			$this->preprocessData('com_sermondistributor.help_document', $data);
 		}
 
 		return $data;
