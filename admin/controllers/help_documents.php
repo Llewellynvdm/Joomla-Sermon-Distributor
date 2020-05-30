@@ -25,6 +25,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Help_documents Controller
  */
@@ -66,7 +68,7 @@ class SermondistributorControllerHelp_documents extends JControllerAdmin
 			$input = JFactory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
 			// Sanitize the input
-			JArrayHelper::toInteger($pks);
+			ArrayHelper::toInteger($pks);
 			// Get the model
 			$model = $this->getModel('Help_documents');
 			// get the data to export

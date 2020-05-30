@@ -47,8 +47,9 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
 		$this->user = JFactory::getUser();
-		$this->listOrder = $this->escape($this->state->get('list.ordering'));
-		$this->listDirn = $this->escape($this->state->get('list.direction'));
+		// Add the list ordering clause.
+		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
+		$this->listDirn = $this->escape($this->state->get('list.direction', 'asc'));
 		$this->saveOrder = $this->listOrder == 'ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
@@ -301,7 +302,7 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'a.sorting' => JText::_('JGRID_HEADING_ORDERING'),
+			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
 			'a.name' => JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_LABEL'),
 			'a.build' => JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL'),

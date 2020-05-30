@@ -377,7 +377,7 @@ abstract class SermondistributorHelperRoute
 		}
 	
 		$views = array(
-			"com_sermondistributor.sermons" => "sermon");
+			"com_sermondistributor.sermon" => "sermon");
 		$view = $views[$category->extension];
        
 		if ($id < 1 || !($category instanceof JCategoryNode))

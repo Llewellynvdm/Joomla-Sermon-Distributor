@@ -35,6 +35,13 @@ use Joomla\Utilities\ArrayHelper;
 abstract class SermondistributorHelper
 {
 	/**
+	 * Composer Switch
+	 * 
+	 * @var      array
+	 */
+	protected static $composer = array();
+
+	/**
 	 * The Main Active Language
 	 * 
 	 * @var      string
@@ -2009,7 +2016,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	 *	Change to nice fancy date
+	 * Change to nice fancy date
 	 */
 	public static function fancyDate($date)
 	{
@@ -2021,7 +2028,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	 *	get date based in period past
+	 * get date based in period past
 	 */
 	public static function fancyDynamicDate($date)
 	{
@@ -2047,7 +2054,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	 *	Change to nice fancy day time and date
+	 * Change to nice fancy day time and date
 	 */
 	public static function fancyDayTimeDate($time)
 	{
@@ -2059,7 +2066,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	 *	Change to nice fancy time and date
+	 * Change to nice fancy time and date
 	 */
 	public static function fancyDateTime($time)
 	{
@@ -2071,7 +2078,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	 *	Change to nice hour:minutes time
+	 * Change to nice hour:minutes time
 	 */
 	public static function fancyTime($time)
 	{
@@ -2083,31 +2090,91 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	 * set the date as 2004/05 (for charts)
+	 * set the date day as Sunday through Saturday
 	 */
-	public static function setYearMonth($date)
+	public static function setDayName($date)
 	{
 		if (!self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
-		return date('Y/m', $date);
+		return date('l', $date);
+	}
+
+	/**
+	 * set the date month as January through December
+	 */
+	public static function setMonthName($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('F', $date);
+	}
+
+	/**
+	 * set the date day as 1st
+	 */
+	public static function setDay($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('jS', $date);
+	}
+
+	/**
+	 * set the date month as 5
+	 */
+	public static function setMonth($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('n', $date);
+	}
+
+	/**
+	 * set the date year as 2004 (for charts)
+	 */
+	public static function setYear($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('Y', $date);
+	}
+
+	/**
+	 * set the date as 2004/05 (for charts)
+	 */
+	public static function setYearMonth($date, $spacer = '/')
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('Y' . $spacer . 'm', $date);
 	}
 
 	/**
 	 * set the date as 2004/05/03 (for charts)
 	 */
-	public static function setYearMonthDay($date)
+	public static function setYearMonthDay($date, $spacer = '/')
 	{
 		if (!self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
-		return date('Y/m/d', $date);
+		return date('Y' . $spacer . 'm' . $spacer . 'd', $date);
 	}
 
 	/**
-	 *	Check if string is a valid time stamp
+	 * Check if string is a valid time stamp
 	 */
 	public static function isValidTimeStamp($timestamp)
 	{
@@ -2747,6 +2814,29 @@ abstract class SermondistributorHelper
 		return $open;
 	}
 
+	/**
+	 * Load the Composer Vendors
+	 */
+	public static function composerAutoload($target)
+	{
+		// insure we load the composer vendor only once
+		if (!isset(self::$composer[$target]))
+		{
+			// get the function name
+			$functionName = self::safeString('compose' . $target);
+			// check if method exist
+			if (method_exists(__CLASS__, $functionName))
+			{
+				return self::{$functionName}();
+			}
+			return false;
+		}
+		return self::$composer[$target];
+	}
+
+	/**
+	 * Convert it into a string
+	 */
 	public static function jsonToString($value, $sperator = ", ", $table = null, $id = 'id', $name = 'name')
 	{
 		// do some table foot work
@@ -2796,8 +2886,8 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Load the Component xml manifest.
-	**/
+	 * Load the Component xml manifest.
+	 */
 	public static function manifest()
 	{
 		$manifestUrl = JPATH_ADMINISTRATOR."/components/com_sermondistributor/sermondistributor.xml";
@@ -2805,13 +2895,13 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Joomla version object
-	**/	
+	 * Joomla version object
+	 */	
 	protected static $JVersion;
 
 	/**
-	* set/get Joomla version
-	**/
+	 * set/get Joomla version
+	 */
 	public static function jVersion()
 	{
 		// check if set
@@ -2823,8 +2913,8 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Load the Contributors details.
-	**/
+	 * Load the Contributors details.
+	 */
 	public static function getContributors()
 	{
 		// get params
@@ -2933,8 +3023,8 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Get any component's model
-	**/
+	 * Get any component's model
+	 */
 	public static function getModel($name, $path = JPATH_COMPONENT_SITE, $Component = 'Sermondistributor', $config = array())
 	{
 		// fix the name
@@ -2981,8 +3071,8 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Add to asset Table
-	*/
+	 * Add to asset Table
+	 */
 	public static function setAsset($id, $table, $inherit = true)
 	{
 		$parent = JTable::getInstance('Asset');
@@ -3553,18 +3643,18 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Get the action permissions
-	*
-	* @param  string   $view        The related view name
-	* @param  int      $record      The item to act upon
-	* @param  string   $views       The related list view name
-	* @param  mixed    $target      Only get this permission (like edit, create, delete)
-	* @param  string   $component   The target component
-	* @param  object   $user        The user whose permissions we are loading
-	*
-	* @return  object   The JObject of permission/authorised actions
-	* 
-	**/
+	 * Get the action permissions
+	 *
+	 * @param  string   $view        The related view name
+	 * @param  int      $record      The item to act upon
+	 * @param  string   $views       The related list view name
+	 * @param  mixed    $target      Only get this permission (like edit, create, delete)
+	 * @param  string   $component   The target component
+	 * @param  object   $user        The user whose permissions we are loading
+	 *
+	 * @return  object   The JObject of permission/authorised actions
+	 * 
+	 */
 	public static function getActions($view, &$record = null, $views = null, $target = null, $component = 'sermondistributor', $user = 'null')
 	{
 		// load the user if not given
@@ -3728,14 +3818,14 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Filter the action permissions
-	*
-	* @param  string   $action   The action to check
-	* @param  array    $targets  The array of target actions
-	*
-	* @return  boolean   true if action should be filtered out
-	* 
-	**/
+	 * Filter the action permissions
+	 *
+	 * @param  string   $action   The action to check
+	 * @param  array    $targets  The array of target actions
+	 *
+	 * @return  boolean   true if action should be filtered out
+	 * 
+	 */
 	protected static function filterActions(&$view, &$action, &$targets)
 	{
 		foreach ($targets as $target)
@@ -3751,12 +3841,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Check if have an json string
-	*
-	* @input	string   The json string to check
-	*
-	* @returns bool true on success
-	**/
+	 * Check if have an json string
+	 *
+	 * @input	string   The json string to check
+	 *
+	 * @returns bool true on success
+	 */
 	public static function checkJson($string)
 	{
 		if (self::checkString($string))
@@ -3768,12 +3858,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Check if have an object with a length
-	*
-	* @input	object   The object to check
-	*
-	* @returns bool true on success
-	**/
+	 * Check if have an object with a length
+	 *
+	 * @input	object   The object to check
+	 *
+	 * @returns bool true on success
+	 */
 	public static function checkObject($object)
 	{
 		if (isset($object) && is_object($object))
@@ -3784,12 +3874,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Check if have an array with a length
-	*
-	* @input	array   The array to check
-	*
-	* @returns bool/int  number of items in array on success
-	**/
+	 * Check if have an array with a length
+	 *
+	 * @input	array   The array to check
+	 *
+	 * @returns bool/int  number of items in array on success
+	 */
 	public static function checkArray($array, $removeEmptyString = false)
 	{
 		if (isset($array) && is_array($array) && ($nr = count((array)$array)) > 0)
@@ -3812,12 +3902,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Check if have a string with a length
-	*
-	* @input	string   The string to check
-	*
-	* @returns bool true on success
-	**/
+	 * Check if have a string with a length
+	 *
+	 * @input	string   The string to check
+	 *
+	 * @returns bool true on success
+	 */
 	public static function checkString($string)
 	{
 		if (isset($string) && is_string($string) && strlen($string) > 0)
@@ -3828,11 +3918,11 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Check if we are connected
-	* Thanks https://stackoverflow.com/a/4860432/1429677
-	*
-	* @returns bool true on success
-	**/
+	 * Check if we are connected
+	 * Thanks https://stackoverflow.com/a/4860432/1429677
+	 *
+	 * @returns bool true on success
+	 */
 	public static function isConnected()
 	{
 		// If example.com is down, then probably the whole internet is down, since IANA maintains the domain. Right?
@@ -3853,12 +3943,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Merge an array of array's
-	*
-	* @input	array   The arrays you would like to merge
-	*
-	* @returns array on success
-	**/
+	 * Merge an array of array's
+	 *
+	 * @input	array   The arrays you would like to merge
+	 *
+	 * @returns array on success
+	 */
 	public static function mergeArrays($arrays)
 	{
 		if(self::checkArray($arrays))
@@ -3883,12 +3973,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Shorten a string
-	*
-	* @input	string   The you would like to shorten
-	*
-	* @returns string on success
-	**/
+	 * Shorten a string
+	 *
+	 * @input	string   The you would like to shorten
+	 *
+	 * @returns string on success
+	 */
 	public static function shorten($string, $length = 40, $addTip = true)
 	{
 		if (self::checkString($string))
@@ -3924,12 +4014,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Making strings safe (various ways)
-	*
-	* @input	string   The you would like to make safe
-	*
-	* @returns string on success
-	**/
+	 * Making strings safe (various ways)
+	 *
+	 * @input	string   The you would like to make safe
+	 *
+	 * @returns string on success
+	 */
 	public static function safeString($string, $type = 'L', $spacer = '_', $replaceNumbers = true, $keepOnlyCharacters = true)
 	{
 		if ($replaceNumbers === true)
@@ -4083,12 +4173,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Convert an integer into an English word string
-	* Thanks to Tom Nicholson <http://php.net/manual/en/function.strval.php#41988>
-	*
-	* @input	an int
-	* @returns a string
-	**/
+	 * Convert an integer into an English word string
+	 * Thanks to Tom Nicholson <http://php.net/manual/en/function.strval.php#41988>
+	 *
+	 * @input	an int
+	 * @returns a string
+	 */
 	public static function numberToString($x)
 	{
 		$nwords = array( "zero", "one", "two", "three", "four", "five", "six", "seven",
@@ -4174,10 +4264,10 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Random Key
-	*
-	* @returns a string
-	**/
+	 * Random Key
+	 *
+	 * @returns a string
+	 */
 	public static function randomkey($size)
 	{
 		$bag = "abcefghijknopqrstuwxyzABCDDEFGHIJKLLMMNOPQRSTUVVWXYZabcddefghijkllmmnopqrstuvvwxyzABCEFGHIJKNOPQRSTUWXYZ";

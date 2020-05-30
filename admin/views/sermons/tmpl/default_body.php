@@ -108,8 +108,8 @@ $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 		</td>
 		<td class="nowrap">
 			<div class="name">
-				<?php if ($this->user->authorise('core.edit', 'com_sermondistributor.sermons.category.' . (int)$item->catid)): ?>
-					<a href="index.php?option=com_categories&task=category.edit&id=<?php echo (int)$item->catid; ?>&extension=com_sermondistributor.sermons"><?php echo $this->escape($item->category_title); ?></a>
+				<?php if ($this->user->authorise('core.edit', 'com_sermondistributor.sermon.category.' . (int)$item->catid)): ?>
+					<a href="index.php?option=com_categories&task=category.edit&id=<?php echo (int)$item->catid; ?>&extension=com_sermondistributor.sermon"><?php echo $this->escape($item->category_title); ?></a>
 				<?php else: ?>
 					<?php echo $this->escape($item->category_title); ?>
 				<?php endif; ?>

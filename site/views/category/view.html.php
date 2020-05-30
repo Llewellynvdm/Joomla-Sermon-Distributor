@@ -44,7 +44,7 @@ class SermondistributorViewCategory extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->category = $this->get('Category');
 		// add a hit to the category
-		if ($this->hit($this->category->id, true))
+		if ($this->hit($this->category->id))
 		{
 			$this->category->hits++;
 		}
@@ -96,7 +96,6 @@ class SermondistributorViewCategory extends JViewLegacy
 		parent::display($tpl);
 	}
 
-
 	 /**
 	 * Increment the hit counter for the category.
 	 *
@@ -104,7 +103,7 @@ class SermondistributorViewCategory extends JViewLegacy
 	 *
 	 * @return  boolean  True if successful;
 	 */
-	public function hit($pk = 0, $category = false)
+	public function hit($pk = 0)
 	{
 		if ($pk)
 		{
@@ -120,15 +119,7 @@ class SermondistributorViewCategory extends JViewLegacy
 			$conditions = array(
 			    $db->quoteName('id') . ' = ' . $pk
 			);
-			// set for category
-			if ($category)
-			{
-				$query->update($db->quoteName('#__categories'))->set($fields)->where($conditions);
-			}
-			else
-			{
-				$query->update($db->quoteName('#__sermondistributor_category'))->set($fields)->where($conditions);
-			}
+			$query->update($db->quoteName('#__categories'))->set($fields)->where($conditions);
 
 			$db->setQuery($query);
 			return $db->execute();

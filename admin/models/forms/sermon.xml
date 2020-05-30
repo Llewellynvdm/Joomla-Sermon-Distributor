@@ -160,9 +160,8 @@
 			type="category"
 			name="catid"
 			label="COM_SERMONDISTRIBUTOR_SERMON_CATID_LABEL"
-			extension="com_sermondistributor.sermons"
+			extension="com_sermondistributor.sermon"
 			required="false"
-			default=""
 			description="COM_SERMONDISTRIBUTOR_SERMON_CATID_DESCRIPTION"
 			class="inputbox"
 		/>
@@ -285,7 +284,7 @@
 		<field
 			type="hidden"
 			name="not_required"
-			default="[]"
+			default="一_一"
 		/>
 		<!-- Manual_files Field. Type: Externalsourcefiles. (custom) -->
 		<field

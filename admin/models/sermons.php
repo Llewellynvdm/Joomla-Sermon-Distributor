@@ -25,6 +25,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Sermons Model
  */
@@ -41,8 +43,8 @@ class SermondistributorModelSermons extends JModelList
 				'a.created_by','created_by',
 				'a.modified_by','modified_by',
 				'a.name','name',
-				'a.preacher','preacher',
-				'a.series','series',
+				'g.name',
+				'h.name',
 				'a.short_description','short_description',
 				'c.title','category_title',
 				'c.id', 'category_id',
@@ -313,7 +315,7 @@ class SermondistributorModelSermons extends JModelList
 		}
 		elseif (is_array($categoryId))
 		{
-			JArrayHelper::toInteger($categoryId);
+			ArrayHelper::toInteger($categoryId);
 			$categoryId = implode(',', $categoryId);
 			$query->where('a.category IN (' . $categoryId . ')');
 		}
@@ -321,7 +323,7 @@ class SermondistributorModelSermons extends JModelList
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');	
+		$orderDirn = $this->state->get('list.direction', 'asc');
 		if ($orderCol != '')
 		{
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));

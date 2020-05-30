@@ -88,8 +88,8 @@ if ($this->saveOrder)
                 $this->loadTemplate('batch_body')
             ); ?>
         <?php endif; ?>
-		<input type="hidden" name="filter_order" value="" />
-		<input type="hidden" name="filter_order_Dir" value="" />
+		<input type="hidden" name="filter_order" value="<?php echo $this->listOrder; ?>" />
+		<input type="hidden" name="filter_order_Dir" value="<?php echo $this->listDirn; ?>" />
 		<input type="hidden" name="boxchecked" value="0" />
 	</div>
 <?php endif; ?>

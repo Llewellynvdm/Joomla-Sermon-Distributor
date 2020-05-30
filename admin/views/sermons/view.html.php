@@ -47,8 +47,9 @@ class SermondistributorViewSermons extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
 		$this->user = JFactory::getUser();
-		$this->listOrder = $this->escape($this->state->get('list.ordering'));
-		$this->listDirn = $this->escape($this->state->get('list.direction'));
+		// Add the list ordering clause.
+		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
+		$this->listDirn = $this->escape($this->state->get('list.direction', 'asc'));
 		$this->saveOrder = $this->listOrder == 'ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
@@ -203,7 +204,7 @@ class SermondistributorViewSermons extends JViewLegacy
 		JHtmlSidebar::addFilter(
 			JText::_('JOPTION_SELECT_CATEGORY'),
 			'filter_category_id',
-			JHtml::_('select.options', JHtml::_('category.options', 'com_sermondistributor.sermons'), 'value', 'text', $this->state->get('filter.category_id'))
+			JHtml::_('select.options', JHtml::_('category.options', 'com_sermondistributor.sermon'), 'value', 'text', $this->state->get('filter.category_id'))
 		);
 
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
@@ -212,7 +213,7 @@ class SermondistributorViewSermons extends JViewLegacy
 			JHtmlBatch_::addListSelection(
 				JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_CATEGORY'),
 				'batch[category]',
-				JHtml::_('select.options', JHtml::_('category.options', 'com_sermondistributor.sermons'), 'value', 'text')
+				JHtml::_('select.options', JHtml::_('category.options', 'com_sermondistributor.sermon'), 'value', 'text')
 			);
 		}
 
@@ -378,13 +379,13 @@ class SermondistributorViewSermons extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'a.sorting' => JText::_('JGRID_HEADING_ORDERING'),
+			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
 			'a.name' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_NAME_LABEL'),
 			'g.name' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL'),
 			'h.name' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL'),
 			'a.short_description' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_LABEL'),
-			'c.category_title' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'),
+			'category_title' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'),
 			'a.link_type' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL'),
 			'a.source' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL'),
 			'a.id' => JText::_('JGRID_HEADING_ID')

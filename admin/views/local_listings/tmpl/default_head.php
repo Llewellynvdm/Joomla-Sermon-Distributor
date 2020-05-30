@@ -43,23 +43,23 @@ defined('_JEXEC') or die('Restricted access');
 		</th>
 	<?php endif; ?>
 	<th class="nowrap" >
-			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_LABEL', 'name', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_LABEL', 'a.name', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap hidden-phone" >
-			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL', 'build', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL', 'a.build', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap hidden-phone" >
-			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_LABEL', 'size', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_SIZE_LABEL', 'a.size', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap" >
-			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL', 'external_source_description', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL', 'g.description', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap hidden-phone" >
-			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_LABEL', 'key', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_LABEL', 'a.key', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<?php if ($this->canState): ?>
 		<th width="10" class="nowrap center" >
-			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_STATUS', 'published', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_STATUS', 'a.published', $this->listDirn, $this->listOrder); ?>
 		</th>
 	<?php else: ?>
 		<th width="10" class="nowrap center" >
@@ -67,6 +67,6 @@ defined('_JEXEC') or die('Restricted access');
 		</th>
 	<?php endif; ?>
 	<th width="5" class="nowrap center hidden-phone" >
-			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_ID', 'id', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_ID', 'a.id', $this->listDirn, $this->listOrder); ?>
 	</th>
 </tr>

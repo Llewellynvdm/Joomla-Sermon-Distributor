@@ -296,31 +296,46 @@ function vvvvvxc(target_vvvvvxc)
 	}
 }
 
-// update required fields
-function updateFieldRequired(name,status)
-{
-	var not_required = jQuery('#jform_not_required').val();
+// update fields required
+function updateFieldRequired(name, status) {
+	// check if not_required exist
+	if (jQuery('#jform_not_required').length > 0) {
+		var not_required = jQuery('#jform_not_required').val().split(",");
 
-	if(status == 1)
-	{
-		if (isSet(not_required) && not_required != 0)
+		if(status == 1)
 		{
-			not_required = not_required+','+name;
+			not_required.push(name);
 		}
 		else
 		{
-			not_required = ','+name;
+			not_required = removeFieldFromNotRequired(not_required, name);
 		}
-	}
-	else
-	{
-		if (isSet(not_required) && not_required != 0)
-		{
-			not_required = not_required.replace(','+name,'');
-		}
-	}
 
-	jQuery('#jform_not_required').val(not_required);
+		jQuery('#jform_not_required').val(fixNotRequiredArray(not_required).toString());
+	}
+}
+
+// remove field from not_required
+function removeFieldFromNotRequired(array, what) {
+	return array.filter(function(element){
+		return element !== what;
+	});
+}
+
+// fix not required array
+function fixNotRequiredArray(array) {
+	var seen = {};
+	return removeEmptyFromNotRequiredArray(array).filter(function(item) {
+		return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+	});
+}
+
+// remove empty from not_required array
+function removeEmptyFromNotRequiredArray(array) {
+	return array.filter(function (el) {
+		// remove ( 一_一) as well - lol
+		return (el.length > 0 && '一_一' !== el);
+	});
 }
 
 // the isSet function

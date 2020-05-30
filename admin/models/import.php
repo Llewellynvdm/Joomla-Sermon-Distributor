@@ -25,6 +25,9 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 /**
  * Sermondistributor Import Model
  */
@@ -369,9 +372,9 @@ class SermondistributorModelImport extends JModelLegacy
 		
 		return $check;
 	}
-	
+
 	/**
-	 * Check the extension 
+	 * Check the extension
 	 *
 	 * @param   string  $file    Name of the uploaded file
 	 *
@@ -379,7 +382,7 @@ class SermondistributorModelImport extends JModelLegacy
 	 *
 	 */
 	protected function checkExtension($file)
-	{		
+	{
 		// check the extention
 		switch(strtolower(pathinfo($file, PATHINFO_EXTENSION)))
 		{
@@ -391,7 +394,7 @@ class SermondistributorModelImport extends JModelLegacy
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Clean up temporary uploaded spreadsheet
 	 *
@@ -418,7 +421,7 @@ class SermondistributorModelImport extends JModelLegacy
 			JFile::delete(JPath::clean($package));
 		}
 	}
-	
+
 	/**
 	* Set the data from the spreadsheet to the database
 	*
@@ -431,8 +434,8 @@ class SermondistributorModelImport extends JModelLegacy
 	{
 		if (SermondistributorHelper::checkArray($target_headers))
 		{
-			// make sure the file is loaded		
-			JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
+			// make sure the file is loaded
+			SermondistributorHelper::composerAutoload('phpspreadsheet');
 			$jinput = JFactory::getApplication()->input;
 			foreach($target_headers as $header)
 			{
@@ -441,19 +444,19 @@ class SermondistributorModelImport extends JModelLegacy
 			// set the data
 			if(isset($package['dir']))
 			{
-				$inputFileType = PHPExcel_IOFactory::identify($package['dir']);
-				$excelReader = PHPExcel_IOFactory::createReader($inputFileType);
+				$inputFileType = IOFactory::identify($package['dir']);
+				$excelReader = IOFactory::createReader($inputFileType);
 				$excelReader->setReadDataOnly(true);
 				$excelObj = $excelReader->load($package['dir']);
 				$data['array'] = $excelObj->getActiveSheet()->toArray(null, true,true,true);
-				$excelObj->disconnectWorksheets(); 
+				$excelObj->disconnectWorksheets();
 				unset($excelObj);
-				return $this->save($data,$table);
+				return $this->save($data, $table);
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	* Save the data from the file to the database
 	*
@@ -468,14 +471,14 @@ class SermondistributorModelImport extends JModelLegacy
 		if(SermondistributorHelper::checkArray($data['array']))
 		{
 			// get user object
-			$user = JFactory::getUser();
+			$user		= JFactory::getUser();
 			// remove header if it has headers
-			$id_key = $data['target_headers']['id'];
-			$published_key = $data['target_headers']['published'];
-			$ordering_key = $data['target_headers']['ordering'];
+			$id_key	= $data['target_headers']['id'];
+			$published_key	= $data['target_headers']['published'];
+			$ordering_key	= $data['target_headers']['ordering'];
 			// get the first array set
 			$firstSet = reset($data['array']);
-            
+
 			// check if first array is a header array and remove if true
 			if($firstSet[$id_key] == 'id' || $firstSet[$published_key] == 'published' || $firstSet[$ordering_key] == 'ordering')
 			{
@@ -490,13 +493,13 @@ class SermondistributorModelImport extends JModelLegacy
 				// Get a db connection.
 				$db = JFactory::getDbo();
 				// set some defaults
-				$todayDate = JFactory::getDate()->toSql();
+				$todayDate		= JFactory::getDate()->toSql();
 				// get global action permissions
-				$canDo = SermondistributorHelper::getActions($table);
-				$canEdit = $canDo->get('core.edit');
-				$canState = $canDo->get('core.edit.state');
-				$canCreate = $canDo->get('core.create');
-				$hasAlias = $this->getAliasesUsed($table);
+				$canDo			= SermondistributorHelper::getActions($table);
+				$canEdit		= $canDo->get('core.edit');
+				$canState		= $canDo->get('core.edit.state');
+				$canCreate		= $canDo->get('core.create');
+				$hasAlias		= $this->getAliasesUsed($table);
 				// prosses the data
 				foreach($data['array'] as $row)
 				{
@@ -518,11 +521,11 @@ class SermondistributorModelImport extends JModelLegacy
 					if($found && $canEdit)
 					{
 						// update item
-						$id = $row[$id_key];
-						$version = $db->loadResult();
+						$id		= $row[$id_key];
+						$version	= $db->loadResult();
 						// reset all buckets
-						$query = $db->getQuery(true);
-						$fields = array();
+						$query		= $db->getQuery(true);
+						$fields	= array();
 						// Fields to update.
 						foreach($row as $key => $cell)
 						{
@@ -567,13 +570,13 @@ class SermondistributorModelImport extends JModelLegacy
 							}
 						}
 						// load the defaults
-						$fields[] = $db->quoteName('modified_by') . ' = ' . $db->quote($user->id);
-						$fields[] = $db->quoteName('modified') . ' = ' . $db->quote($todayDate);
+						$fields[]	= $db->quoteName('modified_by') . ' = ' . $db->quote($user->id);
+						$fields[]	= $db->quoteName('modified') . ' = ' . $db->quote($todayDate);
 						// Conditions for which records should be updated.
 						$conditions = array(
 							$db->quoteName('id') . ' = ' . $id
 						);
-						 
+						
 						$query->update($db->quoteName('#__sermondistributor_'.$table))->set($fields)->where($conditions);
 						$db->setQuery($query);
 						$db->execute();
@@ -583,9 +586,9 @@ class SermondistributorModelImport extends JModelLegacy
 						// insert item
 						$query = $db->getQuery(true);
 						// reset all buckets
-						$columns = array();
-						$values = array();
-						$version = false;
+						$columns	= array();
+						$values	= array();
+						$version	= false;
 						// Insert columns. Insert values.
 						foreach($row as $key => $cell)
 						{
@@ -623,30 +626,30 @@ class SermondistributorModelImport extends JModelLegacy
 							// set to insert array
 							if(in_array($key, $data['target_headers']) && is_numeric($cell))
 							{
-								$columns[] = $target[$key];
-								$values[] = $cell;
+								$columns[]	= $target[$key];
+								$values[]	= $cell;
 							}
 							elseif(in_array($key, $data['target_headers']) && is_string($cell))
 							{
-								$columns[] = $target[$key];
-								$values[] = $db->quote($cell);
+								$columns[]	= $target[$key];
+								$values[]	= $db->quote($cell);
 							}
 							elseif(in_array($key, $data['target_headers']) && is_null($cell))
 							{
 								// if import data is null then set empty
-								$columns[] = $target[$key];
-								$values[] = "''";
+								$columns[]	= $target[$key];
+								$values[]	= "''";
 							}
 						}
 						// load the defaults
-						$columns[] = 'created_by';
-						$values[] = $db->quote($user->id);
-						$columns[] = 'created';
-						$values[] = $db->quote($todayDate);
+						$columns[]	= 'created_by';
+						$values[]	= $db->quote($user->id);
+						$columns[]	= 'created';
+						$values[]	= $db->quote($todayDate);
 						if (!$version)
 						{
-							$columns[] = 'version';
-							$values[] = 1;
+							$columns[]	= 'version';
+							$values[]	= 1;
 						}
 						// Prepare the insert query.
 						$query
@@ -673,7 +676,7 @@ class SermondistributorModelImport extends JModelLegacy
 		}
 		return false;
 	}
-	
+
 	protected function getAlias($name,$type = false)
 	{
 		// sanitize the name to an alias

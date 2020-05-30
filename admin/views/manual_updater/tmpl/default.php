@@ -48,9 +48,7 @@ JHtml::_('behavior.keepalive');
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&view=manual_updater'); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
-        <input type="hidden" name="task" value="" />
-        <?php echo JHtml::_('form.token'); ?>
-</form>
+
 <?php if (isset($this->items) && SermondistributorHelper::checkArray($this->items)): ?>
 <script type="text/javascript">
 // Add spindle-wheel for update:
@@ -188,6 +186,9 @@ function server_updateLocalLinks(target, type, id, sleutel)
 		<p><?php echo JText::_('COM_SERMONDISTRIBUTOR_NO_MANUAL_UPDATES_AVAILABLE'); ?></p>
 	</div>
 <?php endif; ?>
+<input type="hidden" name="task" value="" />
+<?php echo JHtml::_('form.token'); ?>
+</form>
 <?php else: ?>
         <h1><?php echo JText::_('COM_SERMONDISTRIBUTOR_NO_ACCESS_GRANTED'); ?></h1>
 <?php endif; ?>

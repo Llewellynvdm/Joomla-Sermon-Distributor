@@ -25,6 +25,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Local_listings Model
  */
@@ -43,7 +45,7 @@ class SermondistributorModelLocal_listings extends JModelList
 				'a.name','name',
 				'a.build','build',
 				'a.size','size',
-				'a.external_source','external_source',
+				'g.description',
 				'a.key','key'
 			);
 		}
@@ -236,7 +238,7 @@ class SermondistributorModelLocal_listings extends JModelList
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');	
+		$orderDirn = $this->state->get('list.direction', 'asc');
 		if ($orderCol != '')
 		{
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));

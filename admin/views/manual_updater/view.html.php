@@ -163,8 +163,6 @@ class SermondistributorViewManual_updater extends JViewLegacy
 		$this->app->input->set('hidemainmenu', true);
 		// add title to the page
 		JToolbarHelper::title(JText::_('COM_SERMONDISTRIBUTOR_MANUAL_UPDATER'),'cogs');
-		// add the back button
-		// JToolBarHelper::custom('manual_updater.back', 'undo-2', '', 'COM_SERMONDISTRIBUTOR_BACK', false);
 		// add cpanel button
 		JToolBarHelper::custom('manual_updater.dashboard', 'grid-2', '', 'COM_SERMONDISTRIBUTOR_DASH', false);
 		if ($this->canDo->get('manual_updater.external_sources'))

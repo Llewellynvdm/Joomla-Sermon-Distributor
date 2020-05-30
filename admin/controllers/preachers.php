@@ -25,6 +25,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Preachers Controller
  */
@@ -66,7 +68,7 @@ class SermondistributorControllerPreachers extends JControllerAdmin
 			$input = JFactory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
 			// Sanitize the input
-			JArrayHelper::toInteger($pks);
+			ArrayHelper::toInteger($pks);
 			// Get the model
 			$model = $this->getModel('Preachers');
 			// get the data to export

@@ -25,6 +25,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Local_listings Controller
  */
@@ -66,7 +68,7 @@ class SermondistributorControllerLocal_listings extends JControllerAdmin
 			$input = JFactory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
 			// Sanitize the input
-			JArrayHelper::toInteger($pks);
+			ArrayHelper::toInteger($pks);
 			// Get the model
 			$model = $this->getModel('Local_listings');
 			// get the data to export

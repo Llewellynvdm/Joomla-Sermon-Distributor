@@ -30,10 +30,10 @@ defined('_JEXEC') or die('Restricted access');
  */
 
 //Insure this view category file is loaded.
-$classname = 'SermondistributorSermonsCategories';
+$classname = 'SermondistributorSermonCategories';
 if (!class_exists($classname))
 {
-	$path = JPATH_SITE . '/components/com_sermondistributor/helpers/categorysermons.php';
+	$path = JPATH_SITE . '/components/com_sermondistributor/helpers/categorysermon.php';
 	if (is_file($path))
 	{
 		include_once $path;

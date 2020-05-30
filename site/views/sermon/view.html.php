@@ -72,7 +72,7 @@ class SermondistributorViewSermon extends JViewLegacy
 	 *
 	 * @return  boolean  True if successful;
 	 */
-	public function hit($pk = 0, $category = false)
+	public function hit($pk = 0)
 	{
 		if ($pk)
 		{
@@ -88,15 +88,7 @@ class SermondistributorViewSermon extends JViewLegacy
 			$conditions = array(
 			    $db->quoteName('id') . ' = ' . $pk
 			);
-			// set for category
-			if ($category)
-			{
-				$query->update($db->quoteName('#__categories'))->set($fields)->where($conditions);
-			}
-			else
-			{
-				$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions);
-			}
+			$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions);
 
 			$db->setQuery($query);
 			return $db->execute();

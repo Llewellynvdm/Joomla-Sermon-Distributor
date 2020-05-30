@@ -239,7 +239,7 @@ class com_sermondistributorInstallerScript
 		$query->select($db->quoteName('type_id'));
 		$query->from($db->quoteName('#__content_types'));
 		// Where Sermon catid alias is found
-		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermons.category') );
+		$query->where( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermon.category') );
 		$db->setQuery($query);
 		// Execute query to see if alias is found
 		$db->execute();
@@ -250,7 +250,7 @@ class com_sermondistributorInstallerScript
 			// Since there are load the needed  sermon_catid type ids
 			$sermon_catid_ids = $db->loadColumn();
 			// Remove Sermon catid from the content type table
-			$sermon_catid_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermons.category') );
+			$sermon_catid_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermon.category') );
 			// Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__content_types'));
@@ -261,11 +261,11 @@ class com_sermondistributorInstallerScript
 			if ($sermon_catid_done)
 			{
 				// If succesfully remove Sermon catid add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove Sermon catid items from the contentitem tag map table
-			$sermon_catid_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermons.category') );
+			$sermon_catid_condition = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermon.category') );
 			// Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__contentitem_tag_map'));
@@ -276,11 +276,11 @@ class com_sermondistributorInstallerScript
 			if ($sermon_catid_done)
 			{
 				// If succesfully remove Sermon catid add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove Sermon catid items from the ucm content table
-			$sermon_catid_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.sermons.category') );
+			$sermon_catid_condition = array( $db->quoteName('core_type_alias') . ' = ' . $db->quote('com_sermondistributor.sermon.category') );
 			// Create a new query object.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__ucm_content'));
@@ -291,7 +291,7 @@ class com_sermondistributorInstallerScript
 			if ($sermon_catid_done)
 			{
 				// If succesfully remove Sermon catid add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermons.category) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the Sermon catid items are cleared from DB
@@ -1019,10 +1019,10 @@ class com_sermondistributorInstallerScript
 		if (isset($manifest->version) && strpos($manifest->version, '.') !== false)
 		{
 			$version = explode('.', $manifest->version);
+			// Get a db connection.
+			$db = JFactory::getDbo();
 			if ($version[0] == 1 && $version[1] < 4)
 			{
-				// Get a db connection.
-				$db = JFactory::getDbo();
 				// Create a new query object.
 				$query = $db->getQuery(true);
 				// update all manual and auto links in sermons
@@ -1104,11 +1104,87 @@ class com_sermondistributorInstallerScript
 					}
 				}
 			}
+			// target version less then or equal to 2.0.2
+			if (count($version) == 3 && ($version[0] == 2 && $version[1] == 0 && $version[2] <= 3) ||  ($version[0] < 2))
+			{
+				// we need to make a database correction
+				$fix_categories = array(
+					'com_sermondistributor.sermons' => 'com_sermondistributor.sermon'
+				);
+
+					// targeted tables (to fix all places categories are mapped into Joomla)
+					$fix_tables = array(
+						'content_types' => array(
+							'id' => 'type_id',
+							'key' => 'type_alias',
+							'suffix' => '.category'),
+						'contentitem_tag_map' => array(
+							'id' => 'type_id',
+							'key' => 'type_alias',
+							'suffix' => '.category'),
+						'ucm_content' => array(
+							'id' => 'core_content_id',
+							'key' => 'core_type_alias',
+							'suffix' => '.category'),
+						'categories' => array(
+							'id' => 'id',
+							'key' => 'extension',
+							'suffix' => '')
+					);
+					// the script that does the work
+					foreach ($fix_categories as $fix => $category)
+					{
+						// loop over the targeted tables
+						foreach ($fix_tables as $_table => $_update)
+						{
+							// Create a new query object.
+							$query = $db->getQuery(true);
+							// get all type_ids
+							$query->select($db->quoteName($_update['id']));
+							$query->from($db->quoteName('#__' . $_table));
+							$query->where( $db->quoteName($_update['key']) . ' = ' . $db->quote($fix . $_update['suffix']));
+							// Reset the query using our newly populated query object.
+							$db->setQuery($query);
+							$db->execute();
+							if ($db->getNumRows())
+							{
+
+								// all these must be updated
+								$ids = $db->loadColumn();
+								// Fields to update.
+								$fields = array(
+									$db->quoteName($_update['key']) . ' = ' . $db->quote($category . $_update['suffix'])
+								);
+								// Conditions for which records should be updated.
+								$conditions = array(
+									$db->quoteName($_update['id']) . ' IN (' . implode(', ', $ids) . ')'
+								);
+								$query->update($db->quoteName('#__' . $_table))->set($fields)->where($conditions);
+								$db->setQuery($query);
+								$result = $db->execute();
+								// on success
+								if ($result)
+								{
+									$app->enqueueMessage("<p>Updated <b>#__$_table - " . $_update['key'] . "</b> from <b>$fix</b>" . $_update['suffix'] . " to <b>$category</b>" . $_update['suffix'] . "!</p>", 'Notice');
+								}
+
+							}
+						}
+					}
+			}
 		}
 		}
 		// do any install needed
 		if ($type === 'install')
 		{
+		}
+		// check if the PHPExcel stuff is still around
+		if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_sermondistributor/helpers/PHPExcel.php'))
+		{
+			// We need to remove this old PHPExcel folder
+			$this->removeFolder(JPATH_ADMINISTRATOR . '/components/com_sermondistributor/helpers/PHPExcel');
+			// We need to remove this old PHPExcel file
+			JFile::delete(JPATH_ADMINISTRATOR . '/components/com_sermondistributor/helpers/PHPExcel.php');
 		}
 		return true;
 	}
@@ -1125,6 +1201,8 @@ class com_sermondistributorInstallerScript
 	{
 		// get application
 		$app = JFactory::getApplication();
+		// We check if we have dynamic folders to copy
+		$this->setDynamicF0ld3rs($app, $parent);
 		// set the default component settings
 		if ($type === 'install')
 		{
@@ -1151,7 +1229,7 @@ class com_sermondistributorInstallerScript
 			$sermon->table = '{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "Sermon","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$sermon->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "catid","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","preacher":"preacher","series":"series","short_description":"short_description","link_type":"link_type","source":"source","local_files":"local_files","alias":"alias","description":"description","tags":"tags","icon":"icon","build":"build","not_required":"not_required","manual_files":"manual_files","auto_sermons":"auto_sermons","url":"url","scripture":"scripture"}}';
 			$sermon->router = 'SermondistributorHelperRoute::getSermonRoute';
-			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","build","not_required"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
+			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Set the object into the content types table.
 			$sermon_Inserted = $db->insertObject('#__content_types', $sermon);
@@ -1159,7 +1237,7 @@ class com_sermondistributorInstallerScript
 			// Create the sermon category content type object.
 			$sermon_category = new stdClass();
 			$sermon_category->type_title = 'Sermondistributor Sermon Catid';
-			$sermon_category->type_alias = 'com_sermondistributor.sermons.category';
+			$sermon_category->type_alias = 'com_sermondistributor.sermon.category';
 			$sermon_category->table = '{"special":{"dbtable":"#__categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
 			$sermon_category->field_mappings = '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", "core_urls":"null", "core_version":"version", "core_ordering":"null", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"parent_id", "core_xreference":"null", "asset_id":"asset_id"}, "special":{"parent_id":"parent_id","lft":"lft","rgt":"rgt","level":"level","path":"path","extension":"extension","note":"note"}}';
 			$sermon_category->router = 'SermondistributorHelperRoute::getCategoryRoute';
@@ -1221,9 +1299,9 @@ class com_sermondistributorInstallerScript
 			$help_document->type_title = 'Sermondistributor Help_document';
 			$help_document->type_alias = 'com_sermondistributor.help_document';
 			$help_document->table = '{"special": {"dbtable": "#__sermondistributor_help_document","key": "id","type": "Help_document","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
-			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","not_required":"not_required","content":"content","article":"article","url":"url","target":"target","alias":"alias"}}';
+			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","not_required":"not_required","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}';
 			$help_document->router = 'SermondistributorHelperRoute::getHelp_documentRoute';
-			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","not_required","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
+			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
 
 			// Set the object into the content types table.
 			$help_document_Inserted = $db->insertObject('#__content_types', $help_document);
@@ -1435,7 +1513,7 @@ class com_sermondistributorInstallerScript
 			$sermon->table = '{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "Sermon","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$sermon->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "catid","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","preacher":"preacher","series":"series","short_description":"short_description","link_type":"link_type","source":"source","local_files":"local_files","alias":"alias","description":"description","tags":"tags","icon":"icon","build":"build","not_required":"not_required","manual_files":"manual_files","auto_sermons":"auto_sermons","url":"url","scripture":"scripture"}}';
 			$sermon->router = 'SermondistributorHelperRoute::getSermonRoute';
-			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","build","not_required"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
+			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Check if sermon type is already in content_type DB.
 			$sermon_id = null;
@@ -1460,7 +1538,7 @@ class com_sermondistributorInstallerScript
 			// Create the sermon category content type object.
 			$sermon_category = new stdClass();
 			$sermon_category->type_title = 'Sermondistributor Sermon Catid';
-			$sermon_category->type_alias = 'com_sermondistributor.sermons.category';
+			$sermon_category->type_alias = 'com_sermondistributor.sermon.category';
 			$sermon_category->table = '{"special":{"dbtable":"#__categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
 			$sermon_category->field_mappings = '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", "core_urls":"null", "core_version":"version", "core_ordering":"null", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"parent_id", "core_xreference":"null", "asset_id":"asset_id"}, "special":{"parent_id":"parent_id","lft":"lft","rgt":"rgt","level":"level","path":"path","extension":"extension","note":"note"}}';
 			$sermon_category->router = 'SermondistributorHelperRoute::getCategoryRoute';
@@ -1607,9 +1685,9 @@ class com_sermondistributorInstallerScript
 			$help_document->type_title = 'Sermondistributor Help_document';
 			$help_document->type_alias = 'com_sermondistributor.help_document';
 			$help_document->table = '{"special": {"dbtable": "#__sermondistributor_help_document","key": "id","type": "Help_document","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
-			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","not_required":"not_required","content":"content","article":"article","url":"url","target":"target","alias":"alias"}}';
+			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","not_required":"not_required","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}';
 			$help_document->router = 'SermondistributorHelperRoute::getHelp_documentRoute';
-			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","not_required","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
+			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
 
 			// Check if help_document type is already in content_type DB.
 			$help_document_id = null;
@@ -1722,7 +1800,7 @@ class com_sermondistributorInstallerScript
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 2.0.2 Was Successful! Let us know if anything is not working as expected.</h3>';
+				<h3>Upgrade to Version 2.0.3 Was Successful! Let us know if anything is not working as expected.</h3>';
 
 			// Set db if not set already.
 			if (!isset($db))
@@ -1986,5 +2064,141 @@ class com_sermondistributorInstallerScript
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Remove folders with files
+	 * 
+	 * @param   string   $dir     The path to folder to remove
+	 * @param   boolean  $ignore  The folders and files to ignore and not remove
+	 *
+	 * @return  boolean   True in all is removed
+	 * 
+	 */
+	protected function removeFolder($dir, $ignore = false)
+	{
+		if (JFolder::exists($dir))
+		{
+			$it = new RecursiveDirectoryIterator($dir);
+			$it = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+			// remove ending /
+			$dir = rtrim($dir, '/');
+			// now loop the files & folders
+			foreach ($it as $file)
+			{
+				if ('.' === $file->getBasename() || '..' ===  $file->getBasename()) continue;
+				// set file dir
+				$file_dir = $file->getPathname();
+				// check if this is a dir or a file
+				if ($file->isDir())
+				{
+					$keeper = false;
+					if ($this->checkArray($ignore))
+					{
+						foreach ($ignore as $keep)
+						{
+							if (strpos($file_dir, $dir.'/'.$keep) !== false)
+							{
+								$keeper = true;
+							}
+						}
+					}
+					if ($keeper)
+					{
+						continue;
+					}
+					JFolder::delete($file_dir);
+				}
+				else
+				{
+					$keeper = false;
+					if ($this->checkArray($ignore))
+					{
+						foreach ($ignore as $keep)
+						{
+							if (strpos($file_dir, $dir.'/'.$keep) !== false)
+							{
+								$keeper = true;
+							}
+						}
+					}
+					if ($keeper)
+					{
+						continue;
+					}
+					JFile::delete($file_dir);
+				}
+			}
+			// delete the root folder if not ignore found
+			if (!$this->checkArray($ignore))
+			{
+				return JFolder::delete($dir);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Check if have an array with a length
+	 *
+	 * @input	array   The array to check
+	 *
+	 * @returns bool/int  number of items in array on success
+	 */
+	protected function checkArray($array, $removeEmptyString = false)
+	{
+		if (isset($array) && is_array($array) && ($nr = count((array)$array)) > 0)
+		{
+			// also make sure the empty strings are removed
+			if ($removeEmptyString)
+			{
+				foreach ($array as $key => $string)
+				{
+					if (empty($string))
+					{
+						unset($array[$key]);
+					}
+				}
+				return $this->checkArray($array, false);
+			}
+			return $nr;
+		}
+		return false;
+	}
+
+	/**
+	 * Method to set/copy dynamic folders into place (use with caution)
+	 *
+	 * @return void
+	 */
+	protected function setDynamicF0ld3rs($app, $parent)
+	{
+		// get the instalation path
+		$installer = $parent->getParent();
+		$installPath = $installer->getPath('source');
+		// get all the folders
+		$folders = JFolder::folders($installPath);
+		// check if we have folders we may want to copy
+		$doNotCopy = array('media','admin','site'); // Joomla already deals with these
+		if (count((array) $folders) > 1)
+		{
+			foreach ($folders as $folder)
+			{
+				// Only copy if not a standard folders
+				if (!in_array($folder, $doNotCopy))
+				{
+					// set the source path
+					$src = $installPath.'/'.$folder;
+					// set the destination path
+					$dest = JPATH_ROOT.'/'.$folder;
+					// now try to copy the folder
+					if (!JFolder::copy($src, $dest, '', true))
+					{
+						$app->enqueueMessage('Could not copy '.$folder.' folder into place, please make sure destination is writable!', 'error');
+					}
+				}
+			}
+		}
 	}
 }

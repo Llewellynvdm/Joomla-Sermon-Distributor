@@ -217,7 +217,7 @@
 		<field
 			type="hidden"
 			name="not_required"
-			default="[]"
+			default="一_一"
 		/>
 		<!-- Apicronjob_note Field. Type: Note. A None Database Field. (joomla) -->
 		<field type="note" name="apicronjob_note" label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_APICRONJOB_NOTE_LABEL" description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_APICRONJOB_NOTE_DESCRIPTION" heading="h4" class="apicronjob_note" />
