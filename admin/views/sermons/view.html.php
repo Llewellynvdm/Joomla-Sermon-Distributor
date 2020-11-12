@@ -14,12 +14,12 @@
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	A sermon distributor that links to Dropbox. 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	A sermon distributor that links to Dropbox.
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -50,7 +50,7 @@ class SermondistributorViewSermons extends JViewLegacy
 		// Add the list ordering clause.
 		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
 		$this->listDirn = $this->escape($this->state->get('list.direction', 'asc'));
-		$this->saveOrder = $this->listOrder == 'ordering';
+		$this->saveOrder = $this->listOrder == 'a.ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
@@ -60,6 +60,8 @@ class SermondistributorViewSermons extends JViewLegacy
 		$this->canCreate = $this->canDo->get('sermon.create');
 		$this->canDelete = $this->canDo->get('sermon.delete');
 		$this->canBatch = $this->canDo->get('core.batch');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
@@ -72,7 +74,7 @@ class SermondistributorViewSermons extends JViewLegacy
 				$this->batchDisplay = JHtmlBatch_::render();
 			}
 		}
-		
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -169,11 +171,6 @@ class SermondistributorViewSermons extends JViewLegacy
 
 		if ($this->canState)
 		{
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'),
-				'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
 			// only load if batch allowed
 			if ($this->canBatch)
 			{
@@ -185,12 +182,6 @@ class SermondistributorViewSermons extends JViewLegacy
 			}
 		}
 
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'),
-			'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
-
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
 			JHtmlBatch_::addListSelection(
@@ -199,13 +190,6 @@ class SermondistributorViewSermons extends JViewLegacy
 				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
 			);
 		}
-
-		// Category Filter.
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_CATEGORY'),
-			'filter_category_id',
-			JHtml::_('select.options', JHtml::_('category.options', 'com_sermondistributor.sermon'), 'value', 'text', $this->state->get('filter.category_id'))
-		);
 
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
@@ -229,13 +213,6 @@ class SermondistributorViewSermons extends JViewLegacy
 		// Only load Preacher Name filter if it has values
 		if (SermondistributorHelper::checkArray($this->preacherNameOptions))
 		{
-			// Preacher Name Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL').' -',
-				'filter_preacher',
-				JHtml::_('select.options', $this->preacherNameOptions, 'value', 'text', $this->state->get('filter.preacher'))
-			);
-
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
 				// Preacher Name Batch Selection
@@ -259,13 +236,6 @@ class SermondistributorViewSermons extends JViewLegacy
 		// Only load Series Name filter if it has values
 		if (SermondistributorHelper::checkArray($this->seriesNameOptions))
 		{
-			// Series Name Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL').' -',
-				'filter_series',
-				JHtml::_('select.options', $this->seriesNameOptions, 'value', 'text', $this->state->get('filter.series'))
-			);
-
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
 				// Series Name Batch Selection
@@ -289,13 +259,6 @@ class SermondistributorViewSermons extends JViewLegacy
 		// Only load Link Type filter if it has values
 		if (SermondistributorHelper::checkArray($this->link_typeOptions))
 		{
-			// Link Type Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL').' -',
-				'filter_link_type',
-				JHtml::_('select.options', $this->link_typeOptions, 'value', 'text', $this->state->get('filter.link_type'))
-			);
-
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
 				// Link Type Batch Selection
@@ -319,13 +282,6 @@ class SermondistributorViewSermons extends JViewLegacy
 		// Only load Source filter if it has values
 		if (SermondistributorHelper::checkArray($this->sourceOptions))
 		{
-			// Source Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL').' -',
-				'filter_source',
-				JHtml::_('select.options', $this->sourceOptions, 'value', 'text', $this->state->get('filter.source'))
-			);
-
 			if ($this->canBatch && $this->canCreate && $this->canEdit)
 			{
 				// Source Batch Selection

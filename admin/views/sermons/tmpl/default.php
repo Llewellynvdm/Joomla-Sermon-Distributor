@@ -14,21 +14,25 @@
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	A sermon distributor that links to Dropbox. 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	A sermon distributor that links to Dropbox.
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 
 // load tooltip behavior
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', '.multipleCategories', null, array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
+JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null, array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
+JHtml::_('formbehavior.chosen', '.multiplePreachers', null, array('placeholder_text_multiple' => JText::_('Select preachers')));
+JHtml::_('formbehavior.chosen', '.multipleSource', null, array('placeholder_text_multiple' => JText::_('Select source')));
 JHtml::_('formbehavior.chosen', 'select');
 
 if ($this->saveOrder)
@@ -38,23 +42,6 @@ if ($this->saveOrder)
 }
 
 ?>
-<script type="text/javascript">
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $this->listOrder; ?>')
-		{
-			dirn = 'asc';
-		}
-		else
-		{
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
 <form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&view=sermons'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if(!empty( $this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -64,13 +51,15 @@ if ($this->saveOrder)
 <?php else : ?>
 	<div id="j-main-container">
 <?php endif; ?>
+		<?php
+		// Search tools bar
+		echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+		?>
 <?php if (empty($this->items)): ?>
-	<?php echo $this->loadTemplate('toolbar');?>
     <div class="alert alert-no-items">
         <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
     </div>
 <?php else : ?>
-		<?php echo $this->loadTemplate('toolbar');?>
 		<table class="table table-striped" id="sermonList">
 			<thead><?php echo $this->loadTemplate('head');?></thead>
 			<tfoot><?php echo $this->loadTemplate('foot');?></tfoot>
@@ -88,8 +77,6 @@ if ($this->saveOrder)
                 $this->loadTemplate('batch_body')
             ); ?>
         <?php endif; ?>
-		<input type="hidden" name="filter_order" value="<?php echo $this->listOrder; ?>" />
-		<input type="hidden" name="filter_order_Dir" value="<?php echo $this->listDirn; ?>" />
 		<input type="hidden" name="boxchecked" value="0" />
 	</div>
 <?php endif; ?>

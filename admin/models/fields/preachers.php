@@ -14,12 +14,12 @@
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	A sermon distributor that links to Dropbox. 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	A sermon distributor that links to Dropbox.
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -59,7 +59,9 @@ class JFormFieldPreachers extends JFormFieldList
 		$options = array();
 		if ($items)
 		{
-			$options[] = JHtml::_('select.option', '', 'Select a preacher');
+			if ($this->multiple === false) {
+				$options[] = JHtml::_('select.option', '', 'Select a preacher');
+			}
 			foreach($items as $item)
 			{
 				$options[] = JHtml::_('select.option', $item->id, $item->preacher_request_id_name);

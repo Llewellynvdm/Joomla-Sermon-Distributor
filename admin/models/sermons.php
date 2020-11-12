@@ -14,12 +14,12 @@
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	A sermon distributor that links to Dropbox. 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	A sermon distributor that links to Dropbox.
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -42,9 +42,10 @@ class SermondistributorModelSermons extends JModelList
 				'a.ordering','ordering',
 				'a.created_by','created_by',
 				'a.modified_by','modified_by',
+				'a.access','access',
 				'a.name','name',
-				'g.name',
-				'h.name',
+				'g.name','preacher',
+				'h.name','series',
 				'a.short_description','short_description',
 				'c.title','category_title',
 				'c.id', 'category_id',
@@ -56,7 +57,7 @@ class SermondistributorModelSermons extends JModelList
 
 		parent::__construct($config);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -74,8 +75,8 @@ class SermondistributorModelSermons extends JModelList
 		$name = $this->getUserStateFromRequest($this->context . '.filter.name', 'filter_name');
 		$this->setState('filter.name', $name);
 
-		$preacher = $this->getUserStateFromRequest($this->context . '.filter.preacher', 'filter_preacher');
-		$this->setState('filter.preacher', $preacher);
+//		$preacher = $this->getUserStateFromRequest($this->context . '.filter.preacher', 'filter_preacher');
+//		$this->setState('filter.preacher', $preacher);
 
 		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		$this->setState('filter.series', $series);
@@ -86,8 +87,8 @@ class SermondistributorModelSermons extends JModelList
 		$category = $app->getUserStateFromRequest($this->context . '.filter.category', 'filter_category');
 		$this->setState('filter.category', $category);
 
-		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
-		$this->setState('filter.category_id', $categoryId);
+//		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
+//		$this->setState('filter.category_id', $categoryId);
 
 		$catid = $app->getUserStateFromRequest($this->context . '.filter.catid', 'filter_catid');
 		$this->setState('filter.catid', $catid);
@@ -97,29 +98,46 @@ class SermondistributorModelSermons extends JModelList
 
 		$source = $this->getUserStateFromRequest($this->context . '.filter.source', 'filter_source');
 		$this->setState('filter.source', $source);
-        
+
 		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
 		$this->setState('filter.sorting', $sorting);
-        
+
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $access);
-        
+
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-        
+
 		$created_by = $this->getUserStateFromRequest($this->context . '.filter.created_by', 'filter_created_by', '');
 		$this->setState('filter.created_by', $created_by);
 
 		$created = $this->getUserStateFromRequest($this->context . '.filter.created', 'filter_created');
 		$this->setState('filter.created', $created);
 
+		// Handle multiple fields -> original code commented above
+		$formSubmited = $app->input->post->get('form_submited');
+		$access     = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
+		$preacher = $this->getUserStateFromRequest($this->context . '.filter.preacher', 'filter_preacher');
+		if ($formSubmited)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+
+			$categoryId = $app->input->post->get('category_id');
+			$this->setState('filter.category_id', $categoryId);
+
+			$preacher = $app->input->post->get('preacher');
+			$this->setState('filter.preacher', $preacher);
+		}
+
 		// List state information.
 		parent::populateState($ordering, $direction);
 	}
-	
+
 	/**
 	 * Method to get an array of data items.
 	 *
@@ -166,7 +184,7 @@ class SermondistributorModelSermons extends JModelList
 			}
 		}
 
-        
+
 		// return items
 		return $items;
 	}
@@ -208,7 +226,7 @@ class SermondistributorModelSermons extends JModelList
 		}
 		return $value;
 	}
-	
+
 	/**
 	 * Method to build an SQL query to load the list data.
 	 *
@@ -253,10 +271,19 @@ class SermondistributorModelSermons extends JModelList
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 		// Filter by access level.
-		if ($access = $this->getState('filter.access'))
+		$access = $this->getState('filter.access');
+
+		if (is_numeric($access))
 		{
 			$query->where('a.access = ' . (int) $access);
 		}
+		elseif (is_array($access))
+		{
+			$access = ArrayHelper::toInteger($access);
+			$access = implode(',', $access);
+			$query->where('a.access IN (' . $access . ')');
+		}
+
 		// Implement View Level Access
 		if (!$user->authorise('core.options', 'com_sermondistributor'))
 		{
@@ -279,9 +306,17 @@ class SermondistributorModelSermons extends JModelList
 		}
 
 		// Filter by preacher.
-		if ($preacher = $this->getState('filter.preacher'))
+		$preacher = $this->getState('filter.preacher');
+
+		if (is_numeric($preacher))
 		{
-			$query->where('a.preacher = ' . $db->quote($db->escape($preacher)));
+			$query->where('a.preacher = ' . (int) $preacher);
+		}
+		elseif (is_array($preacher))
+		{
+			$preacher = ArrayHelper::toInteger($preacher);
+			$preacher = implode(',', $preacher);
+			$query->where('a.preacher IN (' . $preacher . ')');
 		}
 		// Filter by series.
 		if ($series = $this->getState('filter.series'))
@@ -294,9 +329,17 @@ class SermondistributorModelSermons extends JModelList
 			$query->where('a.link_type = ' . $db->quote($db->escape($link_type)));
 		}
 		// Filter by Source.
-		if ($source = $this->getState('filter.source'))
+		$source = $this->getState('filter.source');
+
+		if (is_numeric($source))
 		{
-			$query->where('a.source = ' . $db->quote($db->escape($source)));
+			$query->where('a.source = ' . (int) $source);
+		}
+		elseif (is_array($source))
+		{
+			$source = ArrayHelper::toInteger($source);
+			$source = implode(',', $source);
+			$query->where('a.source IN (' . $source . ')');
 		}
 
 		// Filter by a single or group of categories.
@@ -317,7 +360,7 @@ class SermondistributorModelSermons extends JModelList
 		{
 			ArrayHelper::toInteger($categoryId);
 			$categoryId = implode(',', $categoryId);
-			$query->where('a.category IN (' . $categoryId . ')');
+			$query->where('a.catid IN (' . $categoryId . ')');
 		}
 
 
@@ -436,7 +479,7 @@ class SermondistributorModelSermons extends JModelList
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Method to get a store id based on model configuration state.
 	 *
@@ -502,12 +545,12 @@ class SermondistributorModelSermons extends JModelList
 
 				// Conditions for which records should be updated.
 				$conditions = array(
-					$db->quoteName('checked_out') . '!=0', 
+					$db->quoteName('checked_out') . '!=0',
 					$db->quoteName('checked_out_time') . '<\''.$date.'\''
 				);
 
 				// Check table
-				$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions); 
+				$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions);
 
 				$db->setQuery($query);
 
