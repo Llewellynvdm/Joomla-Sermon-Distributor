@@ -75,9 +75,6 @@ class SermondistributorModelSermons extends JModelList
 		$name = $this->getUserStateFromRequest($this->context . '.filter.name', 'filter_name');
 		$this->setState('filter.name', $name);
 
-//		$preacher = $this->getUserStateFromRequest($this->context . '.filter.preacher', 'filter_preacher');
-//		$this->setState('filter.preacher', $preacher);
-
 		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		$this->setState('filter.series', $series);
 
@@ -86,9 +83,6 @@ class SermondistributorModelSermons extends JModelList
 
 		$category = $app->getUserStateFromRequest($this->context . '.filter.category', 'filter_category');
 		$this->setState('filter.category', $category);
-
-//		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
-//		$this->setState('filter.category_id', $categoryId);
 
 		$catid = $app->getUserStateFromRequest($this->context . '.filter.catid', 'filter_catid');
 		$this->setState('filter.catid', $catid);
@@ -101,9 +95,6 @@ class SermondistributorModelSermons extends JModelList
 
 		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
 		$this->setState('filter.sorting', $sorting);
-
-		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
-		$this->setState('filter.access', $access);
 
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
