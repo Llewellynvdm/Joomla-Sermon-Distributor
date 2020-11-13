@@ -52,6 +52,8 @@ if ($this->saveOrder)
 	<div id="j-main-container">
 <?php endif; ?>
 		<?php
+		// Better trash
+		echo JLayoutHelper::render('bettertrash', $this);
 		// Search tools bar
 		echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 		?>
