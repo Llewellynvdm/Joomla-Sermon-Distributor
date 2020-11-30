@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -42,21 +42,27 @@ class SermondistributorModelHelp_documents extends JModelList
 				'a.ordering','ordering',
 				'a.created_by','created_by',
 				'a.modified_by','modified_by',
-				'a.title','title',
 				'a.type','type',
 				'a.location','location',
-				'g.',
-				'h.'
+				'a.admin_view','admin_view',
+				'a.site_view','site_view',
+				'a.title','title'
 			);
 		}
 
 		parent::__construct($config);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
 	 * @return  void
+	 *
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -67,38 +73,62 @@ class SermondistributorModelHelp_documents extends JModelList
 		{
 			$this->context .= '.' . $layout;
 		}
-		$title = $this->getUserStateFromRequest($this->context . '.filter.title', 'filter_title');
-		$this->setState('filter.title', $title);
 
-		$type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type');
-		$this->setState('filter.type', $type);
-
-		$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
-		$this->setState('filter.location', $location);
-
-		$admin_view = $this->getUserStateFromRequest($this->context . '.filter.admin_view', 'filter_admin_view');
-		$this->setState('filter.admin_view', $admin_view);
-
-		$site_view = $this->getUserStateFromRequest($this->context . '.filter.site_view', 'filter_site_view');
-		$this->setState('filter.site_view', $site_view);
-        
-		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
-		$this->setState('filter.sorting', $sorting);
-        
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $access);
-        
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-        
+
 		$created_by = $this->getUserStateFromRequest($this->context . '.filter.created_by', 'filter_created_by', '');
 		$this->setState('filter.created_by', $created_by);
 
 		$created = $this->getUserStateFromRequest($this->context . '.filter.created', 'filter_created');
 		$this->setState('filter.created', $created);
+
+		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
+		$this->setState('filter.sorting', $sorting);
+
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		// Check if the form was submitted
+		$formSubmited = $app->input->post->get('form_submited');
+
+		$type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type');
+		if ($formSubmited)
+		{
+			$type = $app->input->post->get('type');
+			$this->setState('filter.type', $type);
+		}
+
+		$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+		if ($formSubmited)
+		{
+			$location = $app->input->post->get('location');
+			$this->setState('filter.location', $location);
+		}
+
+		$admin_view = $this->getUserStateFromRequest($this->context . '.filter.admin_view', 'filter_admin_view');
+		if ($formSubmited)
+		{
+			$admin_view = $app->input->post->get('admin_view');
+			$this->setState('filter.admin_view', $admin_view);
+		}
+
+		$site_view = $this->getUserStateFromRequest($this->context . '.filter.site_view', 'filter_site_view');
+		if ($formSubmited)
+		{
+			$site_view = $app->input->post->get('site_view');
+			$this->setState('filter.site_view', $site_view);
+		}
+
+		$title = $this->getUserStateFromRequest($this->context . '.filter.title', 'filter_title');
+		if ($formSubmited)
+		{
+			$title = $app->input->post->get('title');
+			$this->setState('filter.title', $title);
+		}
 
 		// List state information.
 		parent::populateState($ordering, $direction);
@@ -264,29 +294,77 @@ class SermondistributorModelHelp_documents extends JModelList
 		}
 
 		// Filter by Type.
-		if ($type = $this->getState('filter.type'))
+		$_type = $this->getState('filter.type');
+		if (is_numeric($_type))
 		{
-			$query->where('a.type = ' . $db->quote($db->escape($type)));
+			if (is_float($_type))
+			{
+				$query->where('a.type = ' . (float) $_type);
+			}
+			else
+			{
+				$query->where('a.type = ' . (int) $_type);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_type))
+		{
+			$query->where('a.type = ' . $db->quote($db->escape($_type)));
 		}
 		// Filter by Location.
-		if ($location = $this->getState('filter.location'))
+		$_location = $this->getState('filter.location');
+		if (is_numeric($_location))
 		{
-			$query->where('a.location = ' . $db->quote($db->escape($location)));
+			if (is_float($_location))
+			{
+				$query->where('a.location = ' . (float) $_location);
+			}
+			else
+			{
+				$query->where('a.location = ' . (int) $_location);
+			}
 		}
-		// Filter by admin_view.
-		if ($admin_view = $this->getState('filter.admin_view'))
+		elseif (SermondistributorHelper::checkString($_location))
 		{
-			$query->where('a.admin_view = ' . $db->quote($db->escape($admin_view)));
+			$query->where('a.location = ' . $db->quote($db->escape($_location)));
 		}
-		// Filter by site_view.
-		if ($site_view = $this->getState('filter.site_view'))
+		// Filter by Admin_view.
+		$_admin_view = $this->getState('filter.admin_view');
+		if (is_numeric($_admin_view))
 		{
-			$query->where('a.site_view = ' . $db->quote($db->escape($site_view)));
+			if (is_float($_admin_view))
+			{
+				$query->where('a.admin_view = ' . (float) $_admin_view);
+			}
+			else
+			{
+				$query->where('a.admin_view = ' . (int) $_admin_view);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_admin_view))
+		{
+			$query->where('a.admin_view = ' . $db->quote($db->escape($_admin_view)));
+		}
+		// Filter by Site_view.
+		$_site_view = $this->getState('filter.site_view');
+		if (is_numeric($_site_view))
+		{
+			if (is_float($_site_view))
+			{
+				$query->where('a.site_view = ' . (float) $_site_view);
+			}
+			else
+			{
+				$query->where('a.site_view = ' . (int) $_site_view);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_site_view))
+		{
+			$query->where('a.site_view = ' . $db->quote($db->escape($_site_view)));
 		}
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');
+		$orderDirn = $this->state->get('list.direction', 'desc');
 		if ($orderCol != '')
 		{
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -306,7 +384,7 @@ class SermondistributorModelHelp_documents extends JModelList
 	public function getExportData($pks, $user = null)
 	{
 		// setup the query
-		if (SermondistributorHelper::checkArray($pks))
+		if (($pks_size = SermondistributorHelper::checkArray($pks)) !== false || 'bulk' === $pks)
 		{
 			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
@@ -324,7 +402,24 @@ class SermondistributorModelHelp_documents extends JModelList
 
 			// From the sermondistributor_help_document table
 			$query->from($db->quoteName('#__sermondistributor_help_document', 'a'));
-			$query->where('a.id IN (' . implode(',',$pks) . ')');
+			// The bulk export path
+			if ('bulk' === $pks)
+			{
+				$query->where('a.id > 0');
+			}
+			// A large array of ID's will not work out well
+			elseif ($pks_size > 500)
+			{
+				// Use lowest ID
+				$query->where('a.id >= ' . (int) min($pks));
+				// Use highest ID
+				$query->where('a.id <= ' . (int) max($pks));
+			}
+			// The normal default path
+			else
+			{
+				$query->where('a.id IN (' . implode(',',$pks) . ')');
+			}
 			// Implement View Level Access
 			if (!$user->authorise('core.options', 'com_sermondistributor'))
 			{
@@ -415,11 +510,11 @@ class SermondistributorModelHelp_documents extends JModelList
 		$id .= ':' . $this->getState('filter.ordering');
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.modified_by');
-		$id .= ':' . $this->getState('filter.title');
 		$id .= ':' . $this->getState('filter.type');
 		$id .= ':' . $this->getState('filter.location');
 		$id .= ':' . $this->getState('filter.admin_view');
 		$id .= ':' . $this->getState('filter.site_view');
+		$id .= ':' . $this->getState('filter.title');
 
 		return parent::getStoreId($id);
 	}

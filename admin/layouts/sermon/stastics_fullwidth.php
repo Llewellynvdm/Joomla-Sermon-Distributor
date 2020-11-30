@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -117,25 +117,25 @@ else
 		<td>
 			<?php echo $displayData->escape($item->counter); ?>
 		</td>
-		<?php if ($item->published == 1):?>
+		<?php if ($item->published == 1): ?>
 			<td class="center"  data-value="1">
 				<span class="status-metro status-published" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_PUBLISHED');  ?>">
 					<?php echo JText::_('COM_SERMONDISTRIBUTOR_PUBLISHED'); ?>
 				</span>
 			</td>
-		<?php elseif ($item->published == 0):?>
+		<?php elseif ($item->published == 0): ?>
 			<td class="center"  data-value="2">
 				<span class="status-metro status-inactive" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_INACTIVE');  ?>">
 					<?php echo JText::_('COM_SERMONDISTRIBUTOR_INACTIVE'); ?>
 				</span>
 			</td>
-		<?php elseif ($item->published == 2):?>
+		<?php elseif ($item->published == 2): ?>
 			<td class="center"  data-value="3">
 				<span class="status-metro status-archived" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_ARCHIVED');  ?>">
 					<?php echo JText::_('COM_SERMONDISTRIBUTOR_ARCHIVED'); ?>
 				</span>
 			</td>
-		<?php elseif ($item->published == -2):?>
+		<?php elseif ($item->published == -2): ?>
 			<td class="center"  data-value="4">
 				<span class="status-metro status-trashed" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_TRASHED');  ?>">
 					<?php echo JText::_('COM_SERMONDISTRIBUTOR_TRASHED'); ?>

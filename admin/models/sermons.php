@@ -14,11 +14,11 @@
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox.
+	A sermon distributor that links to Dropbox. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -42,16 +42,15 @@ class SermondistributorModelSermons extends JModelList
 				'a.ordering','ordering',
 				'a.created_by','created_by',
 				'a.modified_by','modified_by',
-				'a.access','access',
-				'a.name','name',
 				'g.name','preacher',
 				'h.name','series',
-				'a.short_description','short_description',
 				'c.title','category_title',
 				'c.id', 'category_id',
-				'a.catid', 'catid',
+				'a.catid','catid',
 				'a.link_type','link_type',
-				'a.source','source'
+				'a.source','source',
+				'a.name','name',
+				'a.short_description','short_description'
 			);
 		}
 
@@ -61,7 +60,13 @@ class SermondistributorModelSermons extends JModelList
 	/**
 	 * Method to auto-populate the model state.
 	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
 	 * @return  void
+	 *
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -72,32 +77,9 @@ class SermondistributorModelSermons extends JModelList
 		{
 			$this->context .= '.' . $layout;
 		}
-		$name = $this->getUserStateFromRequest($this->context . '.filter.name', 'filter_name');
-		$this->setState('filter.name', $name);
 
-		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
-		$this->setState('filter.series', $series);
-
-		$short_description = $this->getUserStateFromRequest($this->context . '.filter.short_description', 'filter_short_description');
-		$this->setState('filter.short_description', $short_description);
-
-		$category = $app->getUserStateFromRequest($this->context . '.filter.category', 'filter_category');
-		$this->setState('filter.category', $category);
-
-		$catid = $app->getUserStateFromRequest($this->context . '.filter.catid', 'filter_catid');
-		$this->setState('filter.catid', $catid);
-
-		$link_type = $this->getUserStateFromRequest($this->context . '.filter.link_type', 'filter_link_type');
-		$this->setState('filter.link_type', $link_type);
-
-		$source = $this->getUserStateFromRequest($this->context . '.filter.source', 'filter_source');
-		$this->setState('filter.source', $source);
-
-		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
-		$this->setState('filter.sorting', $sorting);
-
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
+		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+		$this->setState('filter.access', $access);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
@@ -108,27 +90,74 @@ class SermondistributorModelSermons extends JModelList
 		$created = $this->getUserStateFromRequest($this->context . '.filter.created', 'filter_created');
 		$this->setState('filter.created', $created);
 
-		// Handle multiple fields -> original code commented above
+		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
+		$this->setState('filter.sorting', $sorting);
+
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		// Check if the form was submitted
 		$formSubmited = $app->input->post->get('form_submited');
-		$access     = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
+
 		$preacher = $this->getUserStateFromRequest($this->context . '.filter.preacher', 'filter_preacher');
 		if ($formSubmited)
 		{
-			$access = $app->input->post->get('access');
-			$this->setState('filter.access', $access);
-
-			$categoryId = $app->input->post->get('category_id');
-			$this->setState('filter.category_id', $categoryId);
-
 			$preacher = $app->input->post->get('preacher');
 			$this->setState('filter.preacher', $preacher);
+		}
+
+		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
+		if ($formSubmited)
+		{
+			$series = $app->input->post->get('series');
+			$this->setState('filter.series', $series);
+		}
+
+		$category = $app->getUserStateFromRequest($this->context . '.filter.category', 'filter_category');
+		$this->setState('filter.category', $category);
+
+		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
+		$this->setState('filter.category_id', $categoryId);
+
+		$catid = $this->getUserStateFromRequest($this->context . '.filter.catid', 'filter_catid');
+		if ($formSubmited)
+		{
+			$catid = $app->input->post->get('catid');
+			$this->setState('filter.catid', $catid);
+		}
+
+		$link_type = $this->getUserStateFromRequest($this->context . '.filter.link_type', 'filter_link_type');
+		if ($formSubmited)
+		{
+			$link_type = $app->input->post->get('link_type');
+			$this->setState('filter.link_type', $link_type);
+		}
+
+		$source = $this->getUserStateFromRequest($this->context . '.filter.source', 'filter_source');
+		if ($formSubmited)
+		{
+			$source = $app->input->post->get('source');
+			$this->setState('filter.source', $source);
+		}
+
+		$name = $this->getUserStateFromRequest($this->context . '.filter.name', 'filter_name');
+		if ($formSubmited)
+		{
+			$name = $app->input->post->get('name');
+			$this->setState('filter.name', $name);
+		}
+
+		$short_description = $this->getUserStateFromRequest($this->context . '.filter.short_description', 'filter_short_description');
+		if ($formSubmited)
+		{
+			$short_description = $app->input->post->get('short_description');
+			$this->setState('filter.short_description', $short_description);
 		}
 
 		// List state information.
 		parent::populateState($ordering, $direction);
 	}
-
+	
 	/**
 	 * Method to get an array of data items.
 	 *
@@ -175,7 +204,7 @@ class SermondistributorModelSermons extends JModelList
 			}
 		}
 
-
+        
 		// return items
 		return $items;
 	}
@@ -217,7 +246,7 @@ class SermondistributorModelSermons extends JModelList
 		}
 		return $value;
 	}
-
+	
 	/**
 	 * Method to build an SQL query to load the list data.
 	 *
@@ -262,19 +291,10 @@ class SermondistributorModelSermons extends JModelList
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 		// Filter by access level.
-		$access = $this->getState('filter.access');
-
-		if (is_numeric($access))
+		if ($access = $this->getState('filter.access'))
 		{
 			$query->where('a.access = ' . (int) $access);
 		}
-		elseif (is_array($access))
-		{
-			$access = ArrayHelper::toInteger($access);
-			$access = implode(',', $access);
-			$query->where('a.access IN (' . $access . ')');
-		}
-
 		// Implement View Level Access
 		if (!$user->authorise('core.options', 'com_sermondistributor'))
 		{
@@ -296,41 +316,119 @@ class SermondistributorModelSermons extends JModelList
 			}
 		}
 
-		// Filter by preacher.
-		$preacher = $this->getState('filter.preacher');
-
-		if (is_numeric($preacher))
+		// Filter by Preacher.
+		$_preacher = $this->getState('filter.preacher');
+		if (is_numeric($_preacher))
 		{
-			$query->where('a.preacher = ' . (int) $preacher);
+			if (is_float($_preacher))
+			{
+				$query->where('a.preacher = ' . (float) $_preacher);
+			}
+			else
+			{
+				$query->where('a.preacher = ' . (int) $_preacher);
+			}
 		}
-		elseif (is_array($preacher))
+		elseif (SermondistributorHelper::checkString($_preacher))
 		{
-			$preacher = ArrayHelper::toInteger($preacher);
-			$preacher = implode(',', $preacher);
-			$query->where('a.preacher IN (' . $preacher . ')');
+			$query->where('a.preacher = ' . $db->quote($db->escape($_preacher)));
 		}
-		// Filter by series.
-		if ($series = $this->getState('filter.series'))
+		elseif (SermondistributorHelper::checkArray($_preacher))
 		{
-			$query->where('a.series = ' . $db->quote($db->escape($series)));
+			// Secure the array for the query
+			$_preacher = array_map( function ($val) use(&$db) {
+				if (is_numeric($val))
+				{
+					if (is_float($val))
+					{
+						return (float) $val;
+					}
+					else
+					{
+						return (int) $val;
+					}
+				}
+				elseif (SermondistributorHelper::checkString($val))
+				{
+					return $db->quote($db->escape($val));
+				}
+			}, $_preacher);
+			// Filter by the Preacher Array.
+			$query->where('a.preacher IN (' . implode(',', $_preacher) . ')');
+		}
+		// Filter by Series.
+		$_series = $this->getState('filter.series');
+		if (is_numeric($_series))
+		{
+			if (is_float($_series))
+			{
+				$query->where('a.series = ' . (float) $_series);
+			}
+			else
+			{
+				$query->where('a.series = ' . (int) $_series);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_series))
+		{
+			$query->where('a.series = ' . $db->quote($db->escape($_series)));
+		}
+		elseif (SermondistributorHelper::checkArray($_series))
+		{
+			// Secure the array for the query
+			$_series = array_map( function ($val) use(&$db) {
+				if (is_numeric($val))
+				{
+					if (is_float($val))
+					{
+						return (float) $val;
+					}
+					else
+					{
+						return (int) $val;
+					}
+				}
+				elseif (SermondistributorHelper::checkString($val))
+				{
+					return $db->quote($db->escape($val));
+				}
+			}, $_series);
+			// Filter by the Series Array.
+			$query->where('a.series IN (' . implode(',', $_series) . ')');
 		}
 		// Filter by Link_type.
-		if ($link_type = $this->getState('filter.link_type'))
+		$_link_type = $this->getState('filter.link_type');
+		if (is_numeric($_link_type))
 		{
-			$query->where('a.link_type = ' . $db->quote($db->escape($link_type)));
+			if (is_float($_link_type))
+			{
+				$query->where('a.link_type = ' . (float) $_link_type);
+			}
+			else
+			{
+				$query->where('a.link_type = ' . (int) $_link_type);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_link_type))
+		{
+			$query->where('a.link_type = ' . $db->quote($db->escape($_link_type)));
 		}
 		// Filter by Source.
-		$source = $this->getState('filter.source');
-
-		if (is_numeric($source))
+		$_source = $this->getState('filter.source');
+		if (is_numeric($_source))
 		{
-			$query->where('a.source = ' . (int) $source);
+			if (is_float($_source))
+			{
+				$query->where('a.source = ' . (float) $_source);
+			}
+			else
+			{
+				$query->where('a.source = ' . (int) $_source);
+			}
 		}
-		elseif (is_array($source))
+		elseif (SermondistributorHelper::checkString($_source))
 		{
-			$source = ArrayHelper::toInteger($source);
-			$source = implode(',', $source);
-			$query->where('a.source IN (' . $source . ')');
+			$query->where('a.source = ' . $db->quote($db->escape($_source)));
 		}
 
 		// Filter by a single or group of categories.
@@ -357,7 +455,7 @@ class SermondistributorModelSermons extends JModelList
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');
+		$orderDirn = $this->state->get('list.direction', 'desc');
 		if ($orderCol != '')
 		{
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -377,7 +475,7 @@ class SermondistributorModelSermons extends JModelList
 	public function getExportData($pks, $user = null)
 	{
 		// setup the query
-		if (SermondistributorHelper::checkArray($pks))
+		if (($pks_size = SermondistributorHelper::checkArray($pks)) !== false || 'bulk' === $pks)
 		{
 			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
@@ -395,7 +493,24 @@ class SermondistributorModelSermons extends JModelList
 
 			// From the sermondistributor_sermon table
 			$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
-			$query->where('a.id IN (' . implode(',',$pks) . ')');
+			// The bulk export path
+			if ('bulk' === $pks)
+			{
+				$query->where('a.id > 0');
+			}
+			// A large array of ID's will not work out well
+			elseif ($pks_size > 500)
+			{
+				// Use lowest ID
+				$query->where('a.id >= ' . (int) min($pks));
+				// Use highest ID
+				$query->where('a.id <= ' . (int) max($pks));
+			}
+			// The normal default path
+			else
+			{
+				$query->where('a.id IN (' . implode(',',$pks) . ')');
+			}
 			// Implement View Level Access
 			if (!$user->authorise('core.options', 'com_sermondistributor'))
 			{
@@ -470,7 +585,7 @@ class SermondistributorModelSermons extends JModelList
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Method to get a store id based on model configuration state.
 	 *
@@ -486,15 +601,15 @@ class SermondistributorModelSermons extends JModelList
 		$id .= ':' . $this->getState('filter.ordering');
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.modified_by');
-		$id .= ':' . $this->getState('filter.name');
 		$id .= ':' . $this->getState('filter.preacher');
 		$id .= ':' . $this->getState('filter.series');
-		$id .= ':' . $this->getState('filter.short_description');
 		$id .= ':' . $this->getState('filter.category');
 		$id .= ':' . $this->getState('filter.category_id');
 		$id .= ':' . $this->getState('filter.catid');
 		$id .= ':' . $this->getState('filter.link_type');
 		$id .= ':' . $this->getState('filter.source');
+		$id .= ':' . $this->getState('filter.name');
+		$id .= ':' . $this->getState('filter.short_description');
 
 		return parent::getStoreId($id);
 	}
@@ -536,12 +651,12 @@ class SermondistributorModelSermons extends JModelList
 
 				// Conditions for which records should be updated.
 				$conditions = array(
-					$db->quoteName('checked_out') . '!=0',
+					$db->quoteName('checked_out') . '!=0', 
 					$db->quoteName('checked_out_time') . '<\''.$date.'\''
 				);
 
 				// Check table
-				$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions);
+				$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions); 
 
 				$db->setQuery($query);
 

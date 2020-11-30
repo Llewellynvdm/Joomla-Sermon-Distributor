@@ -14,11 +14,11 @@
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox.
+	A sermon distributor that links to Dropbox. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -47,9 +47,13 @@ class SermondistributorViewSermons extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
 		$this->user = JFactory::getUser();
+		// Load the filter form from xml.
+		$this->filterForm = $this->get('FilterForm');
+		// Load the active filters.
+		$this->activeFilters = $this->get('ActiveFilters');
 		// Add the list ordering clause.
 		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
-		$this->listDirn = $this->escape($this->state->get('list.direction', 'asc'));
+		$this->listDirn = $this->escape($this->state->get('list.direction', 'DESC'));
 		$this->saveOrder = $this->listOrder == 'a.ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
@@ -60,8 +64,6 @@ class SermondistributorViewSermons extends JViewLegacy
 		$this->canCreate = $this->canDo->get('sermon.create');
 		$this->canDelete = $this->canDo->get('sermon.delete');
 		$this->canBatch = $this->canDo->get('core.batch');
-		$this->filterForm    = $this->get('FilterForm');
-		$this->activeFilters = $this->get('ActiveFilters');
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
@@ -74,7 +76,7 @@ class SermondistributorViewSermons extends JViewLegacy
 				$this->batchDisplay = JHtmlBatch_::render();
 			}
 		}
-
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -169,19 +171,17 @@ class SermondistributorViewSermons extends JViewLegacy
 			JToolBarHelper::preferences('com_sermondistributor');
 		}
 
-		if ($this->canState)
+		// Only load published batch if state and batch is allowed
+		if ($this->canState && $this->canBatch)
 		{
-			// only load if batch allowed
-			if ($this->canBatch)
-			{
-				JHtmlBatch_::addListSelection(
-					JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_STATE'),
-					'batch[published]',
-					JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
-				);
-			}
+			JHtmlBatch_::addListSelection(
+				JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_STATE'),
+				'batch[published]',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
+			);
 		}
 
+		// Only load access batch if create, edit and batch is allowed
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
 			JHtmlBatch_::addListSelection(
@@ -201,96 +201,84 @@ class SermondistributorViewSermons extends JViewLegacy
 			);
 		}
 
-		// Set Preacher Name Selection
-		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->options;
-		// We do some sanitation for Preacher Name filter
-		if (SermondistributorHelper::checkArray($this->preacherNameOptions) &&
-			isset($this->preacherNameOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->preacherNameOptions[0]->value))
+		// Only load Preacher Name batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
-			unset($this->preacherNameOptions[0]);
-		}
-		// Only load Preacher Name filter if it has values
-		if (SermondistributorHelper::checkArray($this->preacherNameOptions))
-		{
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+			// Set Preacher Name Selection
+			$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->options;
+			// We do some sanitation for Preacher Name filter
+			if (SermondistributorHelper::checkArray($this->preacherNameOptions) &&
+				isset($this->preacherNameOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->preacherNameOptions[0]->value))
 			{
-				// Preacher Name Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL').' -',
-					'batch[preacher]',
-					JHtml::_('select.options', $this->preacherNameOptions, 'value', 'text')
-				);
+				unset($this->preacherNameOptions[0]);
 			}
+			// Preacher Name Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL').' -',
+				'batch[preacher]',
+				JHtml::_('select.options', $this->preacherNameOptions, 'value', 'text')
+			);
 		}
 
-		// Set Series Name Selection
-		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->options;
-		// We do some sanitation for Series Name filter
-		if (SermondistributorHelper::checkArray($this->seriesNameOptions) &&
-			isset($this->seriesNameOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->seriesNameOptions[0]->value))
+		// Only load Series Name batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
-			unset($this->seriesNameOptions[0]);
-		}
-		// Only load Series Name filter if it has values
-		if (SermondistributorHelper::checkArray($this->seriesNameOptions))
-		{
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+			// Set Series Name Selection
+			$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->options;
+			// We do some sanitation for Series Name filter
+			if (SermondistributorHelper::checkArray($this->seriesNameOptions) &&
+				isset($this->seriesNameOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->seriesNameOptions[0]->value))
 			{
-				// Series Name Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL').' -',
-					'batch[series]',
-					JHtml::_('select.options', $this->seriesNameOptions, 'value', 'text')
-				);
+				unset($this->seriesNameOptions[0]);
 			}
+			// Series Name Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL').' -',
+				'batch[series]',
+				JHtml::_('select.options', $this->seriesNameOptions, 'value', 'text')
+			);
 		}
 
-		// Set Link Type Selection
-		$this->link_typeOptions = $this->getTheLink_typeSelections();
-		// We do some sanitation for Link Type filter
-		if (SermondistributorHelper::checkArray($this->link_typeOptions) &&
-			isset($this->link_typeOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->link_typeOptions[0]->value))
+		// Only load Link Type batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
-			unset($this->link_typeOptions[0]);
-		}
-		// Only load Link Type filter if it has values
-		if (SermondistributorHelper::checkArray($this->link_typeOptions))
-		{
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+			// Set Link Type Selection
+			$this->link_typeOptions = JFormHelper::loadFieldType('sermonsfilterlinktype')->options;
+			// We do some sanitation for Link Type filter
+			if (SermondistributorHelper::checkArray($this->link_typeOptions) &&
+				isset($this->link_typeOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->link_typeOptions[0]->value))
 			{
-				// Link Type Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL').' -',
-					'batch[link_type]',
-					JHtml::_('select.options', $this->link_typeOptions, 'value', 'text')
-				);
+				unset($this->link_typeOptions[0]);
 			}
+			// Link Type Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL').' -',
+				'batch[link_type]',
+				JHtml::_('select.options', $this->link_typeOptions, 'value', 'text')
+			);
 		}
 
-		// Set Source Selection
-		$this->sourceOptions = $this->getTheSourceSelections();
-		// We do some sanitation for Source filter
-		if (SermondistributorHelper::checkArray($this->sourceOptions) &&
-			isset($this->sourceOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->sourceOptions[0]->value))
+		// Only load Source batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
-			unset($this->sourceOptions[0]);
-		}
-		// Only load Source filter if it has values
-		if (SermondistributorHelper::checkArray($this->sourceOptions))
-		{
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+			// Set Source Selection
+			$this->sourceOptions = JFormHelper::loadFieldType('sermonsfiltersource')->options;
+			// We do some sanitation for Source filter
+			if (SermondistributorHelper::checkArray($this->sourceOptions) &&
+				isset($this->sourceOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->sourceOptions[0]->value))
 			{
-				// Source Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL').' -',
-					'batch[source]',
-					JHtml::_('select.options', $this->sourceOptions, 'value', 'text')
-				);
+				unset($this->sourceOptions[0]);
 			}
+			// Source Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL').' -',
+				'batch[source]',
+				JHtml::_('select.options', $this->sourceOptions, 'value', 'text')
+			);
 		}
 	}
 
@@ -335,7 +323,7 @@ class SermondistributorViewSermons extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
+			'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
 			'a.name' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_NAME_LABEL'),
 			'g.name' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL'),
@@ -346,77 +334,5 @@ class SermondistributorViewSermons extends JViewLegacy
 			'a.source' => JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL'),
 			'a.id' => JText::_('JGRID_HEADING_ID')
 		);
-	}
-
-	protected function getTheLink_typeSelections()
-	{
-		// Get a db connection.
-		$db = JFactory::getDbo();
-
-		// Create a new query object.
-		$query = $db->getQuery(true);
-
-		// Select the text.
-		$query->select($db->quoteName('link_type'));
-		$query->from($db->quoteName('#__sermondistributor_sermon'));
-		$query->order($db->quoteName('link_type') . ' ASC');
-
-		// Reset the query using our newly populated query object.
-		$db->setQuery($query);
-
-		$results = $db->loadColumn();
-
-		if ($results)
-		{
-			// get model
-			$model = $this->getModel();
-			$results = array_unique($results);
-			$_filter = array();
-			foreach ($results as $link_type)
-			{
-				// Translate the link_type selection
-				$text = $model->selectionTranslation($link_type,'link_type');
-				// Now add the link_type and its text to the options array
-				$_filter[] = JHtml::_('select.option', $link_type, JText::_($text));
-			}
-			return $_filter;
-		}
-		return false;
-	}
-
-	protected function getTheSourceSelections()
-	{
-		// Get a db connection.
-		$db = JFactory::getDbo();
-
-		// Create a new query object.
-		$query = $db->getQuery(true);
-
-		// Select the text.
-		$query->select($db->quoteName('source'));
-		$query->from($db->quoteName('#__sermondistributor_sermon'));
-		$query->order($db->quoteName('source') . ' ASC');
-
-		// Reset the query using our newly populated query object.
-		$db->setQuery($query);
-
-		$results = $db->loadColumn();
-
-		if ($results)
-		{
-			// get model
-			$model = $this->getModel();
-			$results = array_unique($results);
-			$_filter = array();
-			foreach ($results as $source)
-			{
-				// Translate the source selection
-				$text = $model->selectionTranslation($source,'source');
-				// Now add the source and its text to the options array
-				$_filter[] = JHtml::_('select.option', $source, JText::_($text));
-			}
-			return $_filter;
-		}
-		return false;
 	}
 }

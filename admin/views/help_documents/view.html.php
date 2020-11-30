@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -47,10 +47,14 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
 		$this->user = JFactory::getUser();
+		// Load the filter form from xml.
+		$this->filterForm = $this->get('FilterForm');
+		// Load the active filters.
+		$this->activeFilters = $this->get('ActiveFilters');
 		// Add the list ordering clause.
 		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
-		$this->listDirn = $this->escape($this->state->get('list.direction', 'asc'));
-		$this->saveOrder = $this->listOrder == 'ordering';
+		$this->listDirn = $this->escape($this->state->get('list.direction', 'DESC'));
+		$this->saveOrder = $this->listOrder == 'a.ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
@@ -167,30 +171,17 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			JToolBarHelper::preferences('com_sermondistributor');
 		}
 
-		if ($this->canState)
+		// Only load published batch if state and batch is allowed
+		if ($this->canState && $this->canBatch)
 		{
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'),
-				'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+			JHtmlBatch_::addListSelection(
+				JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_STATE'),
+				'batch[published]',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
 			);
-			// only load if batch allowed
-			if ($this->canBatch)
-			{
-				JHtmlBatch_::addListSelection(
-					JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_STATE'),
-					'batch[published]',
-					JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
-				);
-			}
 		}
 
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'),
-			'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
-
+		// Only load access batch if create, edit and batch is allowed
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
 			JHtmlBatch_::addListSelection(
@@ -200,124 +191,84 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			);
 		}
 
-		// Set Type Selection
-		$this->typeOptions = $this->getTheTypeSelections();
-		// We do some sanitation for Type filter
-		if (SermondistributorHelper::checkArray($this->typeOptions) &&
-			isset($this->typeOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->typeOptions[0]->value))
+		// Only load Type batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
-			unset($this->typeOptions[0]);
-		}
-		// Only load Type filter if it has values
-		if (SermondistributorHelper::checkArray($this->typeOptions))
-		{
-			// Type Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_LABEL').' -',
-				'filter_type',
-				JHtml::_('select.options', $this->typeOptions, 'value', 'text', $this->state->get('filter.type'))
-			);
-
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+			// Set Type Selection
+			$this->typeOptions = JFormHelper::loadFieldType('helpdocumentsfiltertype')->options;
+			// We do some sanitation for Type filter
+			if (SermondistributorHelper::checkArray($this->typeOptions) &&
+				isset($this->typeOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->typeOptions[0]->value))
 			{
-				// Type Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_LABEL').' -',
-					'batch[type]',
-					JHtml::_('select.options', $this->typeOptions, 'value', 'text')
-				);
+				unset($this->typeOptions[0]);
 			}
-		}
-
-		// Set Location Selection
-		$this->locationOptions = $this->getTheLocationSelections();
-		// We do some sanitation for Location filter
-		if (SermondistributorHelper::checkArray($this->locationOptions) &&
-			isset($this->locationOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->locationOptions[0]->value))
-		{
-			unset($this->locationOptions[0]);
-		}
-		// Only load Location filter if it has values
-		if (SermondistributorHelper::checkArray($this->locationOptions))
-		{
-			// Location Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_LABEL').' -',
-				'filter_location',
-				JHtml::_('select.options', $this->locationOptions, 'value', 'text', $this->state->get('filter.location'))
+			// Type Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_LABEL').' -',
+				'batch[type]',
+				JHtml::_('select.options', $this->typeOptions, 'value', 'text')
 			);
+		}
 
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+		// Only load Location batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		{
+			// Set Location Selection
+			$this->locationOptions = JFormHelper::loadFieldType('helpdocumentsfilterlocation')->options;
+			// We do some sanitation for Location filter
+			if (SermondistributorHelper::checkArray($this->locationOptions) &&
+				isset($this->locationOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->locationOptions[0]->value))
 			{
-				// Location Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_LABEL').' -',
-					'batch[location]',
-					JHtml::_('select.options', $this->locationOptions, 'value', 'text')
-				);
+				unset($this->locationOptions[0]);
 			}
-		}
-
-		// Set Admin View Selection
-		$this->admin_viewOptions = JFormHelper::loadFieldType('Adminviewfolderlist')->options;
-		// We do some sanitation for Admin View filter
-		if (SermondistributorHelper::checkArray($this->admin_viewOptions) &&
-			isset($this->admin_viewOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->admin_viewOptions[0]->value))
-		{
-			unset($this->admin_viewOptions[0]);
-		}
-		// Only load Admin View filter if it has values
-		if (SermondistributorHelper::checkArray($this->admin_viewOptions))
-		{
-			// Admin View Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL').' -',
-				'filter_admin_view',
-				JHtml::_('select.options', $this->admin_viewOptions, 'value', 'text', $this->state->get('filter.admin_view'))
+			// Location Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_LOCATION_LABEL').' -',
+				'batch[location]',
+				JHtml::_('select.options', $this->locationOptions, 'value', 'text')
 			);
+		}
 
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+		// Only load Admin View batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		{
+			// Set Admin View Selection
+			$this->admin_viewOptions = JFormHelper::loadFieldType('Adminviewfolderlist')->options;
+			// We do some sanitation for Admin View filter
+			if (SermondistributorHelper::checkArray($this->admin_viewOptions) &&
+				isset($this->admin_viewOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->admin_viewOptions[0]->value))
 			{
-				// Admin View Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL').' -',
-					'batch[admin_view]',
-					JHtml::_('select.options', $this->admin_viewOptions, 'value', 'text')
-				);
+				unset($this->admin_viewOptions[0]);
 			}
-		}
-
-		// Set Site View Selection
-		$this->site_viewOptions = JFormHelper::loadFieldType('Siteviewfolderlist')->options;
-		// We do some sanitation for Site View filter
-		if (SermondistributorHelper::checkArray($this->site_viewOptions) &&
-			isset($this->site_viewOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->site_viewOptions[0]->value))
-		{
-			unset($this->site_viewOptions[0]);
-		}
-		// Only load Site View filter if it has values
-		if (SermondistributorHelper::checkArray($this->site_viewOptions))
-		{
-			// Site View Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL').' -',
-				'filter_site_view',
-				JHtml::_('select.options', $this->site_viewOptions, 'value', 'text', $this->state->get('filter.site_view'))
+			// Admin View Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_ADMIN_VIEW_LABEL').' -',
+				'batch[admin_view]',
+				JHtml::_('select.options', $this->admin_viewOptions, 'value', 'text')
 			);
+		}
 
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+		// Only load Site View batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		{
+			// Set Site View Selection
+			$this->site_viewOptions = JFormHelper::loadFieldType('Siteviewfolderlist')->options;
+			// We do some sanitation for Site View filter
+			if (SermondistributorHelper::checkArray($this->site_viewOptions) &&
+				isset($this->site_viewOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->site_viewOptions[0]->value))
 			{
-				// Site View Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL').' -',
-					'batch[site_view]',
-					JHtml::_('select.options', $this->site_viewOptions, 'value', 'text')
-				);
+				unset($this->site_viewOptions[0]);
 			}
+			// Site View Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL').' -',
+				'batch[site_view]',
+				JHtml::_('select.options', $this->site_viewOptions, 'value', 'text')
+			);
 		}
 	}
 
@@ -362,7 +313,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
+			'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
 			'a.title' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TITLE_LABEL'),
 			'a.type' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_TYPE_LABEL'),
@@ -371,77 +322,5 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			'h.' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_SITE_VIEW_LABEL'),
 			'a.id' => JText::_('JGRID_HEADING_ID')
 		);
-	}
-
-	protected function getTheTypeSelections()
-	{
-		// Get a db connection.
-		$db = JFactory::getDbo();
-
-		// Create a new query object.
-		$query = $db->getQuery(true);
-
-		// Select the text.
-		$query->select($db->quoteName('type'));
-		$query->from($db->quoteName('#__sermondistributor_help_document'));
-		$query->order($db->quoteName('type') . ' ASC');
-
-		// Reset the query using our newly populated query object.
-		$db->setQuery($query);
-
-		$results = $db->loadColumn();
-
-		if ($results)
-		{
-			// get model
-			$model = $this->getModel();
-			$results = array_unique($results);
-			$_filter = array();
-			foreach ($results as $type)
-			{
-				// Translate the type selection
-				$text = $model->selectionTranslation($type,'type');
-				// Now add the type and its text to the options array
-				$_filter[] = JHtml::_('select.option', $type, JText::_($text));
-			}
-			return $_filter;
-		}
-		return false;
-	}
-
-	protected function getTheLocationSelections()
-	{
-		// Get a db connection.
-		$db = JFactory::getDbo();
-
-		// Create a new query object.
-		$query = $db->getQuery(true);
-
-		// Select the text.
-		$query->select($db->quoteName('location'));
-		$query->from($db->quoteName('#__sermondistributor_help_document'));
-		$query->order($db->quoteName('location') . ' ASC');
-
-		// Reset the query using our newly populated query object.
-		$db->setQuery($query);
-
-		$results = $db->loadColumn();
-
-		if ($results)
-		{
-			// get model
-			$model = $this->getModel();
-			$results = array_unique($results);
-			$_filter = array();
-			foreach ($results as $location)
-			{
-				// Translate the location selection
-				$text = $model->selectionTranslation($location,'location');
-				// Now add the location and its text to the options array
-				$_filter[] = JHtml::_('select.option', $location, JText::_($text));
-			}
-			return $_filter;
-		}
-		return false;
 	}
 }

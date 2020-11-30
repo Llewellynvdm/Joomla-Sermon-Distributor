@@ -14,11 +14,11 @@
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_head.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox.
+	A sermon distributor that links to Dropbox. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 

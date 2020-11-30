@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -42,21 +42,27 @@ class SermondistributorModelLocal_listings extends JModelList
 				'a.ordering','ordering',
 				'a.created_by','created_by',
 				'a.modified_by','modified_by',
-				'a.name','name',
 				'a.build','build',
+				'g.description','external_source',
+				'a.name','name',
 				'a.size','size',
-				'g.description',
 				'a.key','key'
 			);
 		}
 
 		parent::__construct($config);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
 	 * @return  void
+	 *
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -67,38 +73,62 @@ class SermondistributorModelLocal_listings extends JModelList
 		{
 			$this->context .= '.' . $layout;
 		}
-		$name = $this->getUserStateFromRequest($this->context . '.filter.name', 'filter_name');
-		$this->setState('filter.name', $name);
 
-		$build = $this->getUserStateFromRequest($this->context . '.filter.build', 'filter_build');
-		$this->setState('filter.build', $build);
-
-		$size = $this->getUserStateFromRequest($this->context . '.filter.size', 'filter_size');
-		$this->setState('filter.size', $size);
-
-		$external_source = $this->getUserStateFromRequest($this->context . '.filter.external_source', 'filter_external_source');
-		$this->setState('filter.external_source', $external_source);
-
-		$key = $this->getUserStateFromRequest($this->context . '.filter.key', 'filter_key');
-		$this->setState('filter.key', $key);
-        
-		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
-		$this->setState('filter.sorting', $sorting);
-        
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $access);
-        
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-        
+
 		$created_by = $this->getUserStateFromRequest($this->context . '.filter.created_by', 'filter_created_by', '');
 		$this->setState('filter.created_by', $created_by);
 
 		$created = $this->getUserStateFromRequest($this->context . '.filter.created', 'filter_created');
 		$this->setState('filter.created', $created);
+
+		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
+		$this->setState('filter.sorting', $sorting);
+
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		// Check if the form was submitted
+		$formSubmited = $app->input->post->get('form_submited');
+
+		$build = $this->getUserStateFromRequest($this->context . '.filter.build', 'filter_build');
+		if ($formSubmited)
+		{
+			$build = $app->input->post->get('build');
+			$this->setState('filter.build', $build);
+		}
+
+		$external_source = $this->getUserStateFromRequest($this->context . '.filter.external_source', 'filter_external_source');
+		if ($formSubmited)
+		{
+			$external_source = $app->input->post->get('external_source');
+			$this->setState('filter.external_source', $external_source);
+		}
+
+		$name = $this->getUserStateFromRequest($this->context . '.filter.name', 'filter_name');
+		if ($formSubmited)
+		{
+			$name = $app->input->post->get('name');
+			$this->setState('filter.name', $name);
+		}
+
+		$size = $this->getUserStateFromRequest($this->context . '.filter.size', 'filter_size');
+		if ($formSubmited)
+		{
+			$size = $app->input->post->get('size');
+			$this->setState('filter.size', $size);
+		}
+
+		$key = $this->getUserStateFromRequest($this->context . '.filter.key', 'filter_key');
+		if ($formSubmited)
+		{
+			$key = $app->input->post->get('key');
+			$this->setState('filter.key', $key);
+		}
 
 		// List state information.
 		parent::populateState($ordering, $direction);
@@ -226,19 +256,43 @@ class SermondistributorModelLocal_listings extends JModelList
 		}
 
 		// Filter by Build.
-		if ($build = $this->getState('filter.build'))
+		$_build = $this->getState('filter.build');
+		if (is_numeric($_build))
 		{
-			$query->where('a.build = ' . $db->quote($db->escape($build)));
+			if (is_float($_build))
+			{
+				$query->where('a.build = ' . (float) $_build);
+			}
+			else
+			{
+				$query->where('a.build = ' . (int) $_build);
+			}
 		}
-		// Filter by external_source.
-		if ($external_source = $this->getState('filter.external_source'))
+		elseif (SermondistributorHelper::checkString($_build))
 		{
-			$query->where('a.external_source = ' . $db->quote($db->escape($external_source)));
+			$query->where('a.build = ' . $db->quote($db->escape($_build)));
+		}
+		// Filter by External_source.
+		$_external_source = $this->getState('filter.external_source');
+		if (is_numeric($_external_source))
+		{
+			if (is_float($_external_source))
+			{
+				$query->where('a.external_source = ' . (float) $_external_source);
+			}
+			else
+			{
+				$query->where('a.external_source = ' . (int) $_external_source);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_external_source))
+		{
+			$query->where('a.external_source = ' . $db->quote($db->escape($_external_source)));
 		}
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');
+		$orderDirn = $this->state->get('list.direction', 'desc');
 		if ($orderCol != '')
 		{
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -258,7 +312,7 @@ class SermondistributorModelLocal_listings extends JModelList
 	public function getExportData($pks, $user = null)
 	{
 		// setup the query
-		if (SermondistributorHelper::checkArray($pks))
+		if (($pks_size = SermondistributorHelper::checkArray($pks)) !== false || 'bulk' === $pks)
 		{
 			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
@@ -276,7 +330,24 @@ class SermondistributorModelLocal_listings extends JModelList
 
 			// From the sermondistributor_local_listing table
 			$query->from($db->quoteName('#__sermondistributor_local_listing', 'a'));
-			$query->where('a.id IN (' . implode(',',$pks) . ')');
+			// The bulk export path
+			if ('bulk' === $pks)
+			{
+				$query->where('a.id > 0');
+			}
+			// A large array of ID's will not work out well
+			elseif ($pks_size > 500)
+			{
+				// Use lowest ID
+				$query->where('a.id >= ' . (int) min($pks));
+				// Use highest ID
+				$query->where('a.id <= ' . (int) max($pks));
+			}
+			// The normal default path
+			else
+			{
+				$query->where('a.id IN (' . implode(',',$pks) . ')');
+			}
 
 			// Order the results by ordering
 			$query->order('a.ordering  ASC');
@@ -371,10 +442,10 @@ class SermondistributorModelLocal_listings extends JModelList
 		$id .= ':' . $this->getState('filter.ordering');
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.modified_by');
-		$id .= ':' . $this->getState('filter.name');
 		$id .= ':' . $this->getState('filter.build');
-		$id .= ':' . $this->getState('filter.size');
 		$id .= ':' . $this->getState('filter.external_source');
+		$id .= ':' . $this->getState('filter.name');
+		$id .= ':' . $this->getState('filter.size');
 		$id .= ':' . $this->getState('filter.key');
 
 		return parent::getStoreId($id);

@@ -16,7 +16,7 @@
 			type="category"
 			name="id"
 			label="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_REQUEST_ID_LABEL"
-			extension="com_sermondistributor.sermons"
+			extension="com_sermondistributor.sermon"
 			required="false"
 			default=""
 			description="COM_SERMONDISTRIBUTOR_CONFIG_CATEGORY_REQUEST_ID_DESCRIPTION"

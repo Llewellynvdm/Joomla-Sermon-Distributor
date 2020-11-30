@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addrulepath="/administrator/components/com_sermondistributor/models/rules"
+	addfieldpath="/administrator/components/com_sermondistributor/models/fields"
+>
+	<fields name="filter">
+		<field
+			type="text"
+			name="search"
+			inputmode="search"
+			label="COM_SERMONDISTRIBUTOR_FILTER_SEARCH"
+			description="COM_SERMONDISTRIBUTOR_FILTER_SEARCH_EXTERNAL_SOURCES"
+			hint="JSEARCH_FILTER"
+		/>
+		<field
+			type="status"
+			name="published"
+			label="COM_SERMONDISTRIBUTOR_FILTER_PUBLISHED"
+			description="COM_SERMONDISTRIBUTOR_FILTER_PUBLISHED_EXTERNAL_SOURCES"
+			onchange="this.form.submit();"
+		>
+			<option value="">JOPTION_SELECT_PUBLISHED</option>
+		</field>
+		<field
+			type="externalsourcesfilterexternalsources"
+			name="externalsources"
+			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_EXTERNALSOURCES_LABEL"
+			multiple="false"
+			onchange="this.form.submit();"
+		/>
+		<field
+			type="externalsourcesfilterupdatemethod"
+			name="update_method"
+			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_UPDATE_METHOD_LABEL"
+			multiple="false"
+			onchange="this.form.submit();"
+		/>
+		<field
+			type="externalsourcesfilterbuild"
+			name="build"
+			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_BUILD_LABEL"
+			multiple="false"
+			onchange="this.form.submit();"
+		/>
+		<input type="hidden" name="form_submited" value="1"/>
+	</fields>
+
+	<fields name="list">
+		<field
+			name="fullordering"
+			type="list"
+			label="COM_CONTENT_LIST_FULL_ORDERING"
+			description="COM_CONTENT_LIST_FULL_ORDERING_DESC"
+			onchange="this.form.submit();"
+			default="a.id DESC"
+			validate="options"
+		>
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+			<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+			<option value="a.published ASC">JSTATUS_ASC</option>
+			<option value="a.published DESC">JSTATUS_DESC</option>
+			<option value="a.description ASC">COM_SERMONDISTRIBUTOR_FILTER_DESCRIPTION_ASCENDING</option>
+			<option value="a.description DESC">COM_SERMONDISTRIBUTOR_FILTER_DESCRIPTION_DESCENDING</option>
+			<option value="a.externalsources ASC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNALSOURCES_ASCENDING</option>
+			<option value="a.externalsources DESC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNALSOURCES_DESCENDING</option>
+			<option value="a.update_method ASC">COM_SERMONDISTRIBUTOR_FILTER_UPDATE_METHOD_ASCENDING</option>
+			<option value="a.update_method DESC">COM_SERMONDISTRIBUTOR_FILTER_UPDATE_METHOD_DESCENDING</option>
+			<option value="a.build ASC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_ASCENDING</option>
+			<option value="a.build DESC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_DESCENDING</option>
+			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+
+		<field
+			name="limit"
+			type="limitbox"
+			label="COM_CONTENT_LIST_LIMIT"
+			description="COM_CONTENT_LIST_LIMIT_DESC"
+			class="input-mini"
+			default="25"
+			onchange="this.form.submit();"
+		/>
+	</fields>
+</form>

@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -160,12 +160,12 @@ class SermondistributorViewExternal_source extends JViewLegacy
 				if ($this->canDo->get('external_source.clear_local_listing'))
 				{
 					// add Clear Local Listing button.
-					JToolBarHelper::custom('external_source.clearLocalListing', 'delete', '', 'COM_SERMONDISTRIBUTOR_CLEAR_LOCAL_LISTING', false);
+					JToolBarHelper::custom('external_source.clearLocalListing', 'delete custom-button-clearlocallisting', '', 'COM_SERMONDISTRIBUTOR_CLEAR_LOCAL_LISTING', false);
 				}
 				if ($this->canDo->get('external_source.reset_update_status'))
 				{
 					// add Reset Update Status button.
-					JToolBarHelper::custom('external_source.resetUpdateStatus', 'undo-2', '', 'COM_SERMONDISTRIBUTOR_RESET_UPDATE_STATUS', false);
+					JToolBarHelper::custom('external_source.resetUpdateStatus', 'undo-2 custom-button-resetupdatestatus', '', 'COM_SERMONDISTRIBUTOR_RESET_UPDATE_STATUS', false);
 				}
 				JToolBarHelper::cancel('external_source.cancel', 'JTOOLBAR_CLOSE');
 			}

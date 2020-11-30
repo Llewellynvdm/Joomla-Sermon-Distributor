@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -42,20 +42,26 @@ class SermondistributorModelExternal_sources extends JModelList
 				'a.ordering','ordering',
 				'a.created_by','created_by',
 				'a.modified_by','modified_by',
-				'a.description','description',
 				'a.externalsources','externalsources',
 				'a.update_method','update_method',
-				'a.build','build'
+				'a.build','build',
+				'a.description','description'
 			);
 		}
 
 		parent::__construct($config);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
 	 * @return  void
+	 *
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -66,35 +72,55 @@ class SermondistributorModelExternal_sources extends JModelList
 		{
 			$this->context .= '.' . $layout;
 		}
-		$description = $this->getUserStateFromRequest($this->context . '.filter.description', 'filter_description');
-		$this->setState('filter.description', $description);
 
-		$externalsources = $this->getUserStateFromRequest($this->context . '.filter.externalsources', 'filter_externalsources');
-		$this->setState('filter.externalsources', $externalsources);
-
-		$update_method = $this->getUserStateFromRequest($this->context . '.filter.update_method', 'filter_update_method');
-		$this->setState('filter.update_method', $update_method);
-
-		$build = $this->getUserStateFromRequest($this->context . '.filter.build', 'filter_build');
-		$this->setState('filter.build', $build);
-        
-		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
-		$this->setState('filter.sorting', $sorting);
-        
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $access);
-        
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-        
+
 		$created_by = $this->getUserStateFromRequest($this->context . '.filter.created_by', 'filter_created_by', '');
 		$this->setState('filter.created_by', $created_by);
 
 		$created = $this->getUserStateFromRequest($this->context . '.filter.created', 'filter_created');
 		$this->setState('filter.created', $created);
+
+		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
+		$this->setState('filter.sorting', $sorting);
+
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		// Check if the form was submitted
+		$formSubmited = $app->input->post->get('form_submited');
+
+		$externalsources = $this->getUserStateFromRequest($this->context . '.filter.externalsources', 'filter_externalsources');
+		if ($formSubmited)
+		{
+			$externalsources = $app->input->post->get('externalsources');
+			$this->setState('filter.externalsources', $externalsources);
+		}
+
+		$update_method = $this->getUserStateFromRequest($this->context . '.filter.update_method', 'filter_update_method');
+		if ($formSubmited)
+		{
+			$update_method = $app->input->post->get('update_method');
+			$this->setState('filter.update_method', $update_method);
+		}
+
+		$build = $this->getUserStateFromRequest($this->context . '.filter.build', 'filter_build');
+		if ($formSubmited)
+		{
+			$build = $app->input->post->get('build');
+			$this->setState('filter.build', $build);
+		}
+
+		$description = $this->getUserStateFromRequest($this->context . '.filter.description', 'filter_description');
+		if ($formSubmited)
+		{
+			$description = $app->input->post->get('description');
+			$this->setState('filter.description', $description);
+		}
 
 		// List state information.
 		parent::populateState($ordering, $direction);
@@ -300,24 +326,60 @@ class SermondistributorModelExternal_sources extends JModelList
 		}
 
 		// Filter by Externalsources.
-		if ($externalsources = $this->getState('filter.externalsources'))
+		$_externalsources = $this->getState('filter.externalsources');
+		if (is_numeric($_externalsources))
 		{
-			$query->where('a.externalsources = ' . $db->quote($db->escape($externalsources)));
+			if (is_float($_externalsources))
+			{
+				$query->where('a.externalsources = ' . (float) $_externalsources);
+			}
+			else
+			{
+				$query->where('a.externalsources = ' . (int) $_externalsources);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_externalsources))
+		{
+			$query->where('a.externalsources = ' . $db->quote($db->escape($_externalsources)));
 		}
 		// Filter by Update_method.
-		if ($update_method = $this->getState('filter.update_method'))
+		$_update_method = $this->getState('filter.update_method');
+		if (is_numeric($_update_method))
 		{
-			$query->where('a.update_method = ' . $db->quote($db->escape($update_method)));
+			if (is_float($_update_method))
+			{
+				$query->where('a.update_method = ' . (float) $_update_method);
+			}
+			else
+			{
+				$query->where('a.update_method = ' . (int) $_update_method);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_update_method))
+		{
+			$query->where('a.update_method = ' . $db->quote($db->escape($_update_method)));
 		}
 		// Filter by Build.
-		if ($build = $this->getState('filter.build'))
+		$_build = $this->getState('filter.build');
+		if (is_numeric($_build))
 		{
-			$query->where('a.build = ' . $db->quote($db->escape($build)));
+			if (is_float($_build))
+			{
+				$query->where('a.build = ' . (float) $_build);
+			}
+			else
+			{
+				$query->where('a.build = ' . (int) $_build);
+			}
+		}
+		elseif (SermondistributorHelper::checkString($_build))
+		{
+			$query->where('a.build = ' . $db->quote($db->escape($_build)));
 		}
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');
+		$orderDirn = $this->state->get('list.direction', 'desc');
 		if ($orderCol != '')
 		{
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -337,7 +399,7 @@ class SermondistributorModelExternal_sources extends JModelList
 	public function getExportData($pks, $user = null)
 	{
 		// setup the query
-		if (SermondistributorHelper::checkArray($pks))
+		if (($pks_size = SermondistributorHelper::checkArray($pks)) !== false || 'bulk' === $pks)
 		{
 			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
@@ -355,7 +417,24 @@ class SermondistributorModelExternal_sources extends JModelList
 
 			// From the sermondistributor_external_source table
 			$query->from($db->quoteName('#__sermondistributor_external_source', 'a'));
-			$query->where('a.id IN (' . implode(',',$pks) . ')');
+			// The bulk export path
+			if ('bulk' === $pks)
+			{
+				$query->where('a.id > 0');
+			}
+			// A large array of ID's will not work out well
+			elseif ($pks_size > 500)
+			{
+				// Use lowest ID
+				$query->where('a.id >= ' . (int) min($pks));
+				// Use highest ID
+				$query->where('a.id <= ' . (int) max($pks));
+			}
+			// The normal default path
+			else
+			{
+				$query->where('a.id IN (' . implode(',',$pks) . ')');
+			}
 
 			// Order the results by ordering
 			$query->order('a.ordering  ASC');
@@ -450,10 +529,10 @@ class SermondistributorModelExternal_sources extends JModelList
 		$id .= ':' . $this->getState('filter.ordering');
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.modified_by');
-		$id .= ':' . $this->getState('filter.description');
 		$id .= ':' . $this->getState('filter.externalsources');
 		$id .= ':' . $this->getState('filter.update_method');
 		$id .= ':' . $this->getState('filter.build');
+		$id .= ':' . $this->getState('filter.description');
 
 		return parent::getStoreId($id);
 	}

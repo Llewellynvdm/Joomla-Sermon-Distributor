@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addrulepath="/administrator/components/com_sermondistributor/models/rules"
+	addfieldpath="/administrator/components/com_sermondistributor/models/fields"
+>
+	<fields name="filter">
+		<field
+			type="text"
+			name="search"
+			inputmode="search"
+			label="COM_SERMONDISTRIBUTOR_FILTER_SEARCH"
+			description="COM_SERMONDISTRIBUTOR_FILTER_SEARCH_LOCAL_LISTINGS"
+			hint="JSEARCH_FILTER"
+		/>
+		<field
+			type="status"
+			name="published"
+			label="COM_SERMONDISTRIBUTOR_FILTER_PUBLISHED"
+			description="COM_SERMONDISTRIBUTOR_FILTER_PUBLISHED_LOCAL_LISTINGS"
+			onchange="this.form.submit();"
+		>
+			<option value="">JOPTION_SELECT_PUBLISHED</option>
+		</field>
+		<field
+			type="locallistingsfilterbuild"
+			name="build"
+			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL"
+			multiple="false"
+			onchange="this.form.submit();"
+		/>
+		<field
+			type="externalsource"
+			name="external_source"
+			label="COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL"
+			multiple="false"
+			onchange="this.form.submit();"
+		/>
+		<input type="hidden" name="form_submited" value="1"/>
+	</fields>
+
+	<fields name="list">
+		<field
+			name="fullordering"
+			type="list"
+			label="COM_CONTENT_LIST_FULL_ORDERING"
+			description="COM_CONTENT_LIST_FULL_ORDERING_DESC"
+			onchange="this.form.submit();"
+			default="a.id DESC"
+			validate="options"
+		>
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+			<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+			<option value="a.published ASC">JSTATUS_ASC</option>
+			<option value="a.published DESC">JSTATUS_DESC</option>
+			<option value="a.name ASC">COM_SERMONDISTRIBUTOR_FILTER_NAME_ASCENDING</option>
+			<option value="a.name DESC">COM_SERMONDISTRIBUTOR_FILTER_NAME_DESCENDING</option>
+			<option value="a.build ASC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_ASCENDING</option>
+			<option value="a.build DESC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_DESCENDING</option>
+			<option value="a.size ASC">COM_SERMONDISTRIBUTOR_FILTER_SIZE_ASCENDING</option>
+			<option value="a.size DESC">COM_SERMONDISTRIBUTOR_FILTER_SIZE_DESCENDING</option>
+			<option value="g.description ASC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNAL_SOURCE_ASCENDING</option>
+			<option value="g.description DESC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNAL_SOURCE_DESCENDING</option>
+			<option value="a.key ASC">COM_SERMONDISTRIBUTOR_FILTER_KEY_ASCENDING</option>
+			<option value="a.key DESC">COM_SERMONDISTRIBUTOR_FILTER_KEY_DESCENDING</option>
+			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+
+		<field
+			name="limit"
+			type="limitbox"
+			label="COM_CONTENT_LIST_LIMIT"
+			description="COM_CONTENT_LIST_LIMIT_DESC"
+			class="input-mini"
+			default="25"
+			onchange="this.form.submit();"
+		/>
+	</fields>
+</form>

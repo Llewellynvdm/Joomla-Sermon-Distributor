@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -38,7 +38,7 @@ class SermondistributorModelSermondistributor extends JModelList
 		$icons  = array();
 		// view groups array
 		$viewGroups = array(
-			'main' => array('png.preacher.add', 'png.preachers', 'png.sermon.add', 'png.sermons', 'png.sermons.catid', 'png.series.add', 'png.series_list', 'png.statistics', 'png.external_source.add', 'png.external_sources', 'png.manual_updater', 'png.local_listings', 'png.help_documents')
+			'main' => array('png.preacher.add', 'png.preachers', 'png.sermon.add', 'png.sermons', 'png.sermons.catid_qpo0O0oqp_com_sermondistributor_po0O0oq_sermon', 'png.series.add', 'png.series_list', 'png.statistics', 'png.external_source.add', 'png.external_sources', 'png.manual_updater', 'png.local_listings', 'png.help_documents')
 		);
 		// view access array
 		$viewAccess = array(
@@ -103,8 +103,8 @@ class SermondistributorModelSermondistributor extends JModelList
 							$viewName 	= $name;
 							$alt 		= $name;
 							$url 		= $url;
-							$image 		= $name.'.'.$type;
-							$name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U');
+							$image 		= $name . '.' . $type;
+							$name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_' . SermondistributorHelper::safeString($name,'U');
 						}
 					}
 					// internal views
@@ -126,17 +126,27 @@ class SermondistributorModelSermondistributor extends JModelList
 							switch($action)
 							{
 								case 'add':
-									$url 	= 'index.php?option=com_sermondistributor&view='.$name.'&layout=edit';
-									$image 	= $name.'_'.$action.'.'.$type;
-									$alt 	= $name.'&nbsp;'.$action;
+									$url	= 'index.php?option=com_sermondistributor&view=' . $name . '&layout=edit';
+									$image	= $name . '_' . $action.  '.' . $type;
+									$alt	= $name . '&nbsp;' . $action;
 									$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_ADD';
 									$add	= true;
 								break;
 								default:
-									$url 	= 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.'.$name;
-									$image 	= $name.'_'.$action.'.'.$type;
-									$alt 	= $name.'&nbsp;'.$action;
-									$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U').'_'.SermondistributorHelper::safeString($action,'U');
+									// check for new convention (more stable)
+									if (strpos($action, '_qpo0O0oqp_') !== false)
+									{
+										list($action, $extension) = (array) explode('_qpo0O0oqp_', $action);
+										$extension = str_replace('_po0O0oq_', '.', $extension);
+									}
+									else
+									{
+										$extension = 'com_sermondistributor.' . $name;
+									}
+									$url	= 'index.php?option=com_categories&view=categories&extension=' . $extension;
+									$image	= $name . '_' . $action . '.' . $type;
+									$alt	= $viewName . '&nbsp;' . $action;
+									$name	= 'COM_SERMONDISTRIBUTOR_DASHBOARD_' . SermondistributorHelper::safeString($name,'U') . '_' . SermondistributorHelper::safeString($action,'U');
 								break;
 							}
 						}
@@ -144,9 +154,9 @@ class SermondistributorModelSermondistributor extends JModelList
 						{
 							$viewName 	= $name;
 							$alt 		= $name;
-							$url 		= 'index.php?option=com_sermondistributor&view='.$name;
-							$image 		= $name.'.'.$type;
-							$name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.SermondistributorHelper::safeString($name,'U');
+							$url 		= 'index.php?option=com_sermondistributor&view=' . $name;
+							$image 		= $name . '.' . $type;
+							$name 		= 'COM_SERMONDISTRIBUTOR_DASHBOARD_' . SermondistributorHelper::safeString($name,'U');
 							$hover		= false;
 						}
 					}
@@ -154,8 +164,8 @@ class SermondistributorModelSermondistributor extends JModelList
 					{
 						$viewName 	= $view;
 						$alt 		= $view;
-						$url 		= 'index.php?option=com_sermondistributor&view='.$view;
-						$image 		= $view.'.png';
+						$url 		= 'index.php?option=com_sermondistributor&view=' . $view;
+						$image 		= $view . '.png';
 						$name 		= ucwords($view).'<br /><br />';
 						$hover		= false;
 					}
@@ -167,7 +177,7 @@ class SermondistributorModelSermondistributor extends JModelList
 						$dashboard_list = false;
 						$accessTo = '';
 						$accessAdd = '';
-						// acces checking start
+						// access checking start
 						$accessCreate = (isset($viewAccess[$viewName.'.create'])) ? SermondistributorHelper::checkString($viewAccess[$viewName.'.create']):false;
 						$accessAccess = (isset($viewAccess[$viewName.'.access'])) ? SermondistributorHelper::checkString($viewAccess[$viewName.'.access']):false;
 						// set main controllers
@@ -182,7 +192,7 @@ class SermondistributorModelSermondistributor extends JModelList
 						{
 							$accessAdd = 'core.create';
 						}
-						// check if acces to view is set
+						// check if access to view is set
 						if ($accessAccess)
 						{
 							$accessTo = $viewAccess[$viewName.'.access'];
@@ -269,9 +279,9 @@ class SermondistributorModelSermondistributor extends JModelList
 		$document = JFactory::getDocument();
 		$document->addScript(JURI::root() . "media/com_sermondistributor/js/timeago.js");
 		$document->addScriptDeclaration('
-		var urlToGetAllOpenIssues = "https://api.github.com/repos/SermonDistributor/Joomla-3-Component/issues?state=open&page=1&per_page=5";
-		var urlToGetAllClosedIssues = "https://api.github.com/repos/SermonDistributor/Joomla-3-Component/issues?state=closed&page=1&per_page=5";
-		var urlToGetAllReleases = "https://api.github.com/repos/SermonDistributor/Joomla-3-Component/releases?page=1&per_page=5";
+		var urlToGetAllOpenIssues = "https://api.github.com/repos/Llewellynvdm/Joomla-Sermon-Distributor/issues?state=open&page=1&per_page=5";
+		var urlToGetAllClosedIssues = "https://api.github.com/repos/Llewellynvdm/Joomla-Sermon-Distributor/issues?state=closed&page=1&per_page=5";
+		var urlToGetAllReleases = "https://api.github.com/repos/Llewellynvdm/Joomla-Sermon-Distributor/releases?page=1&per_page=5";
 		jQuery(document).ready(function () {
 			jQuery.getJSON(urlToGetAllOpenIssues, function (openissues) {
 				jQuery("#openissues").html("");
@@ -325,7 +335,7 @@ class SermondistributorModelSermondistributor extends JModelList
 					// set active release
 					var activeNotice = "";
 					if (i === 0) {
-						var activeNotice = "<a class=\'btn btn-small btn-success\' href=\'https://github.com/SermonDistributor/Joomla-3-Component/releases/latest\'><span class=\'icon-shield icon-white\'></span> '.JText::_('COM_SERMONDISTRIBUTOR_LATEST_RELEASE').'</a><br /><br />";
+						var activeNotice = "<a class=\'btn btn-small btn-success\' href=\'https://github.com/Llewellynvdm/Joomla-Sermon-Distributor/releases/latest\'><span class=\'icon-shield icon-white\'></span> '.JText::_('COM_SERMONDISTRIBUTOR_LATEST_RELEASE').'</a><br /><br />";
 					}
 					// set time ago
 					var timeago = jQuery.timeago(new Date(tagrelease.published_at)); 
@@ -341,11 +351,11 @@ class SermondistributorModelSermondistributor extends JModelList
 			});
 		});');
 		$create = '<div class="btn-group pull-right">
-					<a href="https://github.com/SermonDistributor/Joomla-3-Component/issues/new" class="btn btn-primary"  target="_blank">'.JText::_('COM_SERMONDISTRIBUTOR_NEW_ISSUE').'</a>
+					<a href="https://github.com/Llewellynvdm/Joomla-Sermon-Distributor/issues/new" class="btn btn-primary"  target="_blank">'.JText::_('COM_SERMONDISTRIBUTOR_NEW_ISSUE').'</a>
 				</div></br >';
-		$moreopen = '<b><a href="https://github.com/SermonDistributor/Joomla-3-Component/issues" target="_blank">'.JText::_('COM_SERMONDISTRIBUTOR_VIEW_MORE_ISSUES_ON_GITHUB').'</a>...</b> ';
-		$moreclosed = '<b><a href="https://github.com/SermonDistributor/Joomla-3-Component/issues?q=is%3Aissue+is%3Aclosed" target="_blank">'.JText::_('COM_SERMONDISTRIBUTOR_VIEW_MORE_ISSUES_ON_GITHUB').'</a>...</b> ';
-		$viewissues = '<b><a href="https://github.com/SermonDistributor/Joomla-3-Component/releases" target="_blank">'.JText::_('COM_SERMONDISTRIBUTOR_VIEW_MORE_RELEASES_ON_GITHUB').'</a>...</b> ';
+		$moreopen = '<b><a href="https://github.com/Llewellynvdm/Joomla-Sermon-Distributor/issues" target="_blank">'.JText::_('COM_SERMONDISTRIBUTOR_VIEW_MORE_ISSUES_ON_GITHUB').'</a>...</b> ';
+		$moreclosed = '<b><a href="https://github.com/Llewellynvdm/Joomla-Sermon-Distributor/issues?q=is%3Aissue+is%3Aclosed" target="_blank">'.JText::_('COM_SERMONDISTRIBUTOR_VIEW_MORE_ISSUES_ON_GITHUB').'</a>...</b> ';
+		$viewissues = '<b><a href="https://github.com/Llewellynvdm/Joomla-Sermon-Distributor/releases" target="_blank">'.JText::_('COM_SERMONDISTRIBUTOR_VIEW_MORE_RELEASES_ON_GITHUB').'</a>...</b> ';
 
 		return (object) array(
 				'openissues' => $create.'<div id="openissues">'.JText::_('COM_SERMONDISTRIBUTOR_A_FEW_OPEN_ISSUES_FROM_GITHUB_IS_LOADING').'.<span class="loading-dots">.</span></small></div>'.$moreopen, 
@@ -358,7 +368,7 @@ class SermondistributorModelSermondistributor extends JModelList
 	{
 		$document = JFactory::getDocument();
 		$document->addScriptDeclaration('
-		var gewiki = "https://raw.githubusercontent.com/wiki/SermonDistributor/Joomla-3-Component/Home.md";
+		var gewiki = "https://raw.githubusercontent.com/wiki/Llewellynvdm/Joomla-Sermon-Distributor/Home.md";
 		jQuery(document).ready(function () {
 			jQuery.get(gewiki)
 			.success(function(wiki) { 

@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -82,7 +82,7 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 	<?php $this->tab_name = 'local_listingTab'; ?>
 	<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
-	<?php if ($this->canDo->get('local_listing.delete') || $this->canDo->get('local_listing.edit.created_by') || $this->canDo->get('local_listing.edit.state') || $this->canDo->get('local_listing.edit.created')) : ?>
+	<?php if ($this->canDo->get('local_listing.edit.created_by') || $this->canDo->get('local_listing.edit.created') || $this->canDo->get('local_listing.edit.state') || ($this->canDo->get('local_listing.delete') && $this->canDo->get('local_listing.edit.state'))) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'local_listingTab', 'publishing', JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_PUBLISHING', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span6">

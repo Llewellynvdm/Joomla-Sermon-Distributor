@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -47,10 +47,14 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
 		$this->user = JFactory::getUser();
+		// Load the filter form from xml.
+		$this->filterForm = $this->get('FilterForm');
+		// Load the active filters.
+		$this->activeFilters = $this->get('ActiveFilters');
 		// Add the list ordering clause.
 		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
-		$this->listDirn = $this->escape($this->state->get('list.direction', 'asc'));
-		$this->saveOrder = $this->listOrder == 'ordering';
+		$this->listDirn = $this->escape($this->state->get('list.direction', 'DESC'));
+		$this->saveOrder = $this->listOrder == 'a.ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
@@ -167,97 +171,54 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 			JToolBarHelper::preferences('com_sermondistributor');
 		}
 
-		if ($this->canState)
-		{
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'),
-				'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-			// only load if batch allowed
-			if ($this->canBatch)
-			{
-				JHtmlBatch_::addListSelection(
-					JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_STATE'),
-					'batch[published]',
-					JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
-				);
-			}
-		}
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'),
-			'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
-
-		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		// Only load published batch if state and batch is allowed
+		if ($this->canState && $this->canBatch)
 		{
 			JHtmlBatch_::addListSelection(
-				JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_ACCESS'),
-				'batch[access]',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
+				JText::_('COM_SERMONDISTRIBUTOR_KEEP_ORIGINAL_STATE'),
+				'batch[published]',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
 			);
 		}
 
-		// Set Build Selection
-		$this->buildOptions = $this->getTheBuildSelections();
-		// We do some sanitation for Build filter
-		if (SermondistributorHelper::checkArray($this->buildOptions) &&
-			isset($this->buildOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->buildOptions[0]->value))
+		// Only load Build batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
-			unset($this->buildOptions[0]);
-		}
-		// Only load Build filter if it has values
-		if (SermondistributorHelper::checkArray($this->buildOptions))
-		{
-			// Build Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL').' -',
-				'filter_build',
-				JHtml::_('select.options', $this->buildOptions, 'value', 'text', $this->state->get('filter.build'))
-			);
-
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+			// Set Build Selection
+			$this->buildOptions = JFormHelper::loadFieldType('locallistingsfilterbuild')->options;
+			// We do some sanitation for Build filter
+			if (SermondistributorHelper::checkArray($this->buildOptions) &&
+				isset($this->buildOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->buildOptions[0]->value))
 			{
-				// Build Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL').' -',
-					'batch[build]',
-					JHtml::_('select.options', $this->buildOptions, 'value', 'text')
-				);
+				unset($this->buildOptions[0]);
 			}
-		}
-
-		// Set External Source Description Selection
-		$this->external_sourceDescriptionOptions = JFormHelper::loadFieldType('Externalsource')->options;
-		// We do some sanitation for External Source Description filter
-		if (SermondistributorHelper::checkArray($this->external_sourceDescriptionOptions) &&
-			isset($this->external_sourceDescriptionOptions[0]->value) &&
-			!SermondistributorHelper::checkString($this->external_sourceDescriptionOptions[0]->value))
-		{
-			unset($this->external_sourceDescriptionOptions[0]);
-		}
-		// Only load External Source Description filter if it has values
-		if (SermondistributorHelper::checkArray($this->external_sourceDescriptionOptions))
-		{
-			// External Source Description Filter
-			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL').' -',
-				'filter_external_source',
-				JHtml::_('select.options', $this->external_sourceDescriptionOptions, 'value', 'text', $this->state->get('filter.external_source'))
+			// Build Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL').' -',
+				'batch[build]',
+				JHtml::_('select.options', $this->buildOptions, 'value', 'text')
 			);
+		}
 
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
+		// Only load External Source Description batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		{
+			// Set External Source Description Selection
+			$this->external_sourceDescriptionOptions = JFormHelper::loadFieldType('Externalsource')->options;
+			// We do some sanitation for External Source Description filter
+			if (SermondistributorHelper::checkArray($this->external_sourceDescriptionOptions) &&
+				isset($this->external_sourceDescriptionOptions[0]->value) &&
+				!SermondistributorHelper::checkString($this->external_sourceDescriptionOptions[0]->value))
 			{
-				// External Source Description Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL').' -',
-					'batch[external_source]',
-					JHtml::_('select.options', $this->external_sourceDescriptionOptions, 'value', 'text')
-				);
+				unset($this->external_sourceDescriptionOptions[0]);
 			}
+			// External Source Description Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EXTERNAL_SOURCE_LABEL').' -',
+				'batch[external_source]',
+				JHtml::_('select.options', $this->external_sourceDescriptionOptions, 'value', 'text')
+			);
 		}
 	}
 
@@ -302,7 +263,7 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
+			'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
 			'a.name' => JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NAME_LABEL'),
 			'a.build' => JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_BUILD_LABEL'),
@@ -311,41 +272,5 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 			'a.key' => JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_KEY_LABEL'),
 			'a.id' => JText::_('JGRID_HEADING_ID')
 		);
-	}
-
-	protected function getTheBuildSelections()
-	{
-		// Get a db connection.
-		$db = JFactory::getDbo();
-
-		// Create a new query object.
-		$query = $db->getQuery(true);
-
-		// Select the text.
-		$query->select($db->quoteName('build'));
-		$query->from($db->quoteName('#__sermondistributor_local_listing'));
-		$query->order($db->quoteName('build') . ' ASC');
-
-		// Reset the query using our newly populated query object.
-		$db->setQuery($query);
-
-		$results = $db->loadColumn();
-
-		if ($results)
-		{
-			// get model
-			$model = $this->getModel();
-			$results = array_unique($results);
-			$_filter = array();
-			foreach ($results as $build)
-			{
-				// Translate the build selection
-				$text = $model->selectionTranslation($build,'build');
-				// Now add the build and its text to the options array
-				$_filter[] = JHtml::_('select.option', $build, JText::_($text));
-			}
-			return $_filter;
-		}
-		return false;
 	}
 }

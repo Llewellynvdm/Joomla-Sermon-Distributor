@@ -17,9 +17,9 @@
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
+
 	A sermon distributor that links to Dropbox. 
-                                                             
+
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -168,7 +168,7 @@ class SermondistributorViewManual_updater extends JViewLegacy
 		if ($this->canDo->get('manual_updater.external_sources'))
 		{
 			// add External Sources button.
-			JToolBarHelper::custom('manual_updater.gotoExternalSources', 'puzzle', '', 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCES', false);
+			JToolBarHelper::custom('manual_updater.gotoExternalSources', 'puzzle custom-button-gotoexternalsources', '', 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCES', false);
 		}
 
 		// set help url for this view if found

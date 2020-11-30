@@ -14,16 +14,16 @@
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_body.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox.
+	A sermon distributor that links to Dropbox. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die('Restricted access'); 
 
 $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 
@@ -38,11 +38,8 @@ $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 		<td class="order nowrap center hidden-phone">
 		<?php if ($canDo->get('sermon.edit.state')): ?>
 			<?php
-				if ($this->saveOrder)
-				{
-					$iconClass = '';
-				}
-				else
+				$iconClass = '';
+				if (!$this->saveOrder)
 				{
 					$iconClass = ' inactive tip-top" hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
 				}
