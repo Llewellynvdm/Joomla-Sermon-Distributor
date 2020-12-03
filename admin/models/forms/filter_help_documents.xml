@@ -24,8 +24,8 @@
 		<field
 			type="accesslevel"
 			name="access"
-			label="JOPTION_FILTER_ACCESS"
-			description="JOPTION_FILTER_ACCESS_DESC"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
 			multiple="true"
 			class="multipleAccessLevels"
 			onchange="this.form.submit();"

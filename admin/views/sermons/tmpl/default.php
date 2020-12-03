@@ -30,6 +30,8 @@ JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', '.multiplePreachers', null, array('placeholder_text_multiple' => '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_PREACHER') . ' -'));
 JHtml::_('formbehavior.chosen', '.multipleSeries', null, array('placeholder_text_multiple' => '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_SERIES') . ' -'));
+JHtml::_('formbehavior.chosen', '.multipleCategories', null, array('placeholder_text_multiple' => '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_SERMONS_CATEGORIES') . ' -'));
+JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null, array('placeholder_text_multiple' => '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_ACCESS') . ' -'));
 JHtml::_('formbehavior.chosen', 'select');
 if ($this->saveOrder)
 {

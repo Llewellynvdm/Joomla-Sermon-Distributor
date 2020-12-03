@@ -28,6 +28,7 @@ defined('_JEXEC') or die('Restricted access');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null, array('placeholder_text_multiple' => '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_ACCESS') . ' -'));
 JHtml::_('formbehavior.chosen', 'select');
 if ($this->saveOrder)
 {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.2" method="upgrade">
 	<name>COM_SERMONDISTRIBUTOR</name>
-	<creationDate>30th November, 2020</creationDate>
+	<creationDate>3rd December, 2020</creationDate>
 	<author>Llewellyn van der Merwe</author>
 	<authorEmail>joomla@vdm.io</authorEmail>
 	<authorUrl>https://www.vdm.io/</authorUrl>

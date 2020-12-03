@@ -24,7 +24,7 @@
 		<field
 			type="category"
 			name="category_id"
-			label="JOPTION_FILTER_CATEGORY"
+			label="COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES"
 			description="JOPTION_FILTER_CATEGORY_DESC"
 			multiple="true"
 			class="multipleCategories"
@@ -35,8 +35,8 @@
 		<field
 			type="accesslevel"
 			name="access"
-			label="JOPTION_FILTER_ACCESS"
-			description="JOPTION_FILTER_ACCESS_DESC"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
 			multiple="true"
 			class="multipleAccessLevels"
 			onchange="this.form.submit();"
