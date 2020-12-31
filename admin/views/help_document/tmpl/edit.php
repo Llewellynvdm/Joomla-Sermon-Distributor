@@ -95,25 +95,6 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
 	<?php endif; ?>
 
-	<?php if ($this->canDo->get('core.admin')) : ?>
-	<?php echo JHtml::_('bootstrap.addTab', 'help_documentTab', 'permissions', JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_PERMISSION', true)); ?>
-		<div class="row-fluid form-horizontal-desktop">
-			<div class="span12">
-				<fieldset class="adminform">
-					<div class="adminformlist">
-					<?php foreach ($this->form->getFieldset('accesscontrol') as $field): ?>
-						<div>
-							<?php echo $field->label; echo $field->input;?>
-						</div>
-						<div class="clearfix"></div>
-					<?php endforeach; ?>
-					</div>
-				</fieldset>
-			</div>
-		</div>
-	<?php echo JHtml::_('bootstrap.endTab'); ?>
-	<?php endif; ?>
-
 	<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
 	<div>

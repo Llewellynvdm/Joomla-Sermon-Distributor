@@ -63,14 +63,14 @@ class JFormFieldSermonsfilterlinktype extends JFormFieldList
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
+		$_filter = array();
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_LINK_TYPE') . ' -');
 
 		if ($results)
 		{
 			// get sermonsmodel
 			$model = SermondistributorHelper::getModel('sermons');
 			$results = array_unique($results);
-			$_filter = array();
-			$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_LINK_TYPE') . ' -');
 			foreach ($results as $link_type)
 			{
 				// Translate the link_type selection
@@ -78,8 +78,7 @@ class JFormFieldSermonsfilterlinktype extends JFormFieldList
 				// Now add the link_type and its text to the options array
 				$_filter[] = JHtml::_('select.option', $link_type, JText::_($text));
 			}
-			return $_filter;
 		}
-		return false;
+		return $_filter;
 	}
 }

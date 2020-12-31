@@ -23,7 +23,7 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
@@ -49,6 +49,8 @@ if ($this->saveOrder)
 	<div id="j-main-container">
 <?php endif; ?>
 <?php
+	// Add the trash helper layout
+	echo JLayoutHelper::render('trashhelper', $this);
 	// Add the searchtools
 	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 ?>

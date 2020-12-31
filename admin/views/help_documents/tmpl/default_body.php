@@ -23,7 +23,7 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 
 $edit = "index.php?option=com_sermondistributor&view=help_documents&task=help_document.edit";
 

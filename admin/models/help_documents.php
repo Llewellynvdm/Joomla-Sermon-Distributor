@@ -520,7 +520,18 @@ class SermondistributorModelHelp_documents extends JModelList
 		$id .= ':' . $this->getState('filter.id');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
-		$id .= ':' . $this->getState('filter.access');
+		// Check if the value is an array
+		$_access = $this->getState('filter.access');
+		if (SermondistributorHelper::checkArray($_access))
+		{
+			$id .= ':' . implode(':', $_access);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_access)
+		 || SermondistributorHelper::checkString($_access))
+		{
+			$id .= ':' . $_access;
+		}
 		$id .= ':' . $this->getState('filter.ordering');
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.modified_by');

@@ -24,6 +24,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
 JHtml::_('behavior.tabstate');
 
 // Set the component css/js
@@ -32,7 +33,7 @@ $document->addStyleSheet('components/com_sermondistributor/assets/css/site.css')
 $document->addScript('components/com_sermondistributor/assets/js/site.js');
 
 // Require helper files
-JLoader::register('SermondistributorHelper', __DIR__ . '/helpers/sermondistributor.php'); 
+JLoader::register('SermondistributorHelper', __DIR__ . '/helpers/sermondistributor.php');
 JLoader::register('SermondistributorHelperRoute', __DIR__ . '/helpers/route.php'); 
 
 // Get an instance of the controller prefixed by Sermondistributor

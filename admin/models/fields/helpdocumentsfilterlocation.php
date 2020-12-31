@@ -63,14 +63,14 @@ class JFormFieldHelpdocumentsfilterlocation extends JFormFieldList
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
+		$_filter = array();
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_LOCATION') . ' -');
 
 		if ($results)
 		{
 			// get help_documentsmodel
 			$model = SermondistributorHelper::getModel('help_documents');
 			$results = array_unique($results);
-			$_filter = array();
-			$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_LOCATION') . ' -');
 			foreach ($results as $location)
 			{
 				// Translate the location selection
@@ -78,8 +78,7 @@ class JFormFieldHelpdocumentsfilterlocation extends JFormFieldList
 				// Now add the location and its text to the options array
 				$_filter[] = JHtml::_('select.option', $location, JText::_($text));
 			}
-			return $_filter;
 		}
-		return false;
+		return $_filter;
 	}
 }

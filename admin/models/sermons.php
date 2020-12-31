@@ -611,15 +611,81 @@ class SermondistributorModelSermons extends JModelList
 		$id .= ':' . $this->getState('filter.id');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
-		$id .= ':' . $this->getState('filter.access');
+		// Check if the value is an array
+		$_access = $this->getState('filter.access');
+		if (SermondistributorHelper::checkArray($_access))
+		{
+			$id .= ':' . implode(':', $_access);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_access)
+		 || SermondistributorHelper::checkString($_access))
+		{
+			$id .= ':' . $_access;
+		}
 		$id .= ':' . $this->getState('filter.ordering');
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.modified_by');
-		$id .= ':' . $this->getState('filter.preacher');
-		$id .= ':' . $this->getState('filter.series');
-		$id .= ':' . $this->getState('filter.category');
-		$id .= ':' . $this->getState('filter.category_id');
-		$id .= ':' . $this->getState('filter.catid');
+		// Check if the value is an array
+		$_preacher = $this->getState('filter.preacher');
+		if (SermondistributorHelper::checkArray($_preacher))
+		{
+			$id .= ':' . implode(':', $_preacher);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_preacher)
+		 || SermondistributorHelper::checkString($_preacher))
+		{
+			$id .= ':' . $_preacher;
+		}
+		// Check if the value is an array
+		$_series = $this->getState('filter.series');
+		if (SermondistributorHelper::checkArray($_series))
+		{
+			$id .= ':' . implode(':', $_series);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_series)
+		 || SermondistributorHelper::checkString($_series))
+		{
+			$id .= ':' . $_series;
+		}
+		// Check if the value is an array
+		$_category = $this->getState('filter.category');
+		if (SermondistributorHelper::checkArray($_category))
+		{
+			$id .= ':' . implode(':', $_category);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_category)
+		 || SermondistributorHelper::checkString($_category))
+		{
+			$id .= ':' . $_category;
+		}
+		// Check if the value is an array
+		$_category_id = $this->getState('filter.category_id');
+		if (SermondistributorHelper::checkArray($_category_id))
+		{
+			$id .= ':' . implode(':', $_category_id);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_category_id)
+		 || SermondistributorHelper::checkString($_category_id))
+		{
+			$id .= ':' . $_category_id;
+		}
+		// Check if the value is an array
+		$_catid = $this->getState('filter.catid');
+		if (SermondistributorHelper::checkArray($_catid))
+		{
+			$id .= ':' . implode(':', $_catid);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_catid)
+		 || SermondistributorHelper::checkString($_catid))
+		{
+			$id .= ':' . $_catid;
+		}
 		$id .= ':' . $this->getState('filter.link_type');
 		$id .= ':' . $this->getState('filter.source');
 		$id .= ':' . $this->getState('filter.name');

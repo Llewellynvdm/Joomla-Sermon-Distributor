@@ -63,14 +63,14 @@ class JFormFieldExternalsourcesfilterupdatemethod extends JFormFieldList
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
+		$_filter = array();
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_UPDATE_METHOD') . ' -');
 
 		if ($results)
 		{
 			// get external_sourcesmodel
 			$model = SermondistributorHelper::getModel('external_sources');
 			$results = array_unique($results);
-			$_filter = array();
-			$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_UPDATE_METHOD') . ' -');
 			foreach ($results as $update_method)
 			{
 				// Translate the update_method selection
@@ -78,8 +78,7 @@ class JFormFieldExternalsourcesfilterupdatemethod extends JFormFieldList
 				// Now add the update_method and its text to the options array
 				$_filter[] = JHtml::_('select.option', $update_method, JText::_($text));
 			}
-			return $_filter;
 		}
-		return false;
+		return $_filter;
 	}
 }

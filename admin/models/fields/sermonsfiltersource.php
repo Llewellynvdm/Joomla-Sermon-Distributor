@@ -63,14 +63,14 @@ class JFormFieldSermonsfiltersource extends JFormFieldList
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
+		$_filter = array();
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_SOURCE') . ' -');
 
 		if ($results)
 		{
 			// get sermonsmodel
 			$model = SermondistributorHelper::getModel('sermons');
 			$results = array_unique($results);
-			$_filter = array();
-			$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_SOURCE') . ' -');
 			foreach ($results as $source)
 			{
 				// Translate the source selection
@@ -78,8 +78,7 @@ class JFormFieldSermonsfiltersource extends JFormFieldList
 				// Now add the source and its text to the options array
 				$_filter[] = JHtml::_('select.option', $source, JText::_($text));
 			}
-			return $_filter;
 		}
-		return false;
+		return $_filter;
 	}
 }

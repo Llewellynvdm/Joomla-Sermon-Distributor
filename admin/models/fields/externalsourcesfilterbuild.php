@@ -63,14 +63,14 @@ class JFormFieldExternalsourcesfilterbuild extends JFormFieldList
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
+		$_filter = array();
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_BUILD') . ' -');
 
 		if ($results)
 		{
 			// get external_sourcesmodel
 			$model = SermondistributorHelper::getModel('external_sources');
 			$results = array_unique($results);
-			$_filter = array();
-			$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_BUILD') . ' -');
 			foreach ($results as $build)
 			{
 				// Translate the build selection
@@ -78,8 +78,7 @@ class JFormFieldExternalsourcesfilterbuild extends JFormFieldList
 				// Now add the build and its text to the options array
 				$_filter[] = JHtml::_('select.option', $build, JText::_($text));
 			}
-			return $_filter;
 		}
-		return false;
+		return $_filter;
 	}
 }
