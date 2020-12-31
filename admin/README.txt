@@ -23,7 +23,7 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 3rd December, 2020
++ *Last Build*: 4th December, 2020
 + *Version*: 2.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,7 +36,7 @@ due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **72786**
++ *Line count*: **72798**
 + *File count*: **459**
 + *Folder count*: **93**
 

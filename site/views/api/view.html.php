@@ -121,8 +121,6 @@ class SermondistributorViewApi extends JViewLegacy
 	 */
 	protected function addToolBar()
 	{
-		// adding the joomla toolbar to the front
-		JLoader::register('JToolbarHelper', JPATH_ADMINISTRATOR.'/includes/toolbar.php');
 		
 		// set help url for this view if found
 		$help_url = SermondistributorHelper::getHelpUrl('api');
