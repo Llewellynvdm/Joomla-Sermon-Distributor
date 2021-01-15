@@ -61,15 +61,23 @@ defined('JPATH_BASE') or die('Restricted access');
 		}
 	</script>
 	<div class="alert alert-error">
-		<h4 class="alert-heading">
-			<span class="icon-trash"></span>
-			<?= JText::_("COM_SERMONDISTRIBUTOR_TRASHED_ITEMS") ?>
-		</h4>
-		<p><?= JText::_("COM_SERMONDISTRIBUTOR_YOU_ARE_CURRENTLY_VIEWING_THE_TRASHED_ITEMS") ?></p>
-		<button onclick="emptyTrash();" class="btn btn-small btn-danger">
-			<span class="icon-delete" aria-hidden="true"></span>
-			<?= JText::_("COM_SERMONDISTRIBUTOR_EMPTY_TRASH") ?>
-		</button>
+		<?php if (empty($displayData->items)): ?>
+			<h4 class="alert-heading">
+				<span class="icon-trash"></span>
+				<?= JText::_("COM_SERMONDISTRIBUTOR_TRASH_AREA") ?>
+			</h4>
+			<p><?= JText::_("COM_SERMONDISTRIBUTOR_YOU_ARE_CURRENTLY_VIEWING_THE_TRASH_AREA_AND_YOU_DONT_HAVE_ANY_ITEMS_IN_TRASH_AT_THE_MOMENT") ?></p>
+		<?php else: ?>
+			<h4 class="alert-heading">
+				<span class="icon-trash"></span>
+				<?= JText::_("COM_SERMONDISTRIBUTOR_TRASHED_ITEMS") ?>
+			</h4>
+			<p><?= JText::_("COM_SERMONDISTRIBUTOR_YOU_ARE_CURRENTLY_VIEWING_THE_TRASHED_ITEMS") ?></p>
+			<button onclick="emptyTrash();" class="btn btn-small btn-danger">
+				<span class="icon-delete" aria-hidden="true"></span>
+				<?= JText::_("COM_SERMONDISTRIBUTOR_EMPTY_TRASH") ?>
+			</button>
+		<?php endif; ?>
 		<button onclick="exitTrash();" class="btn btn-small">
 			<span class="icon-back" aria-hidden="true"></span>
 			<?= JText::_("COM_SERMONDISTRIBUTOR_EXIT_TRASH") ?>
