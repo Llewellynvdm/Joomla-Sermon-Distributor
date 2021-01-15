@@ -77,8 +77,8 @@ class SermondistributorModelCategories extends JModelList
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
 		// Get where a.published is 1
 		$query->where('a.published = 1');
-		// Get where a.extension is "com_sermondistributor.sermons"
-		$query->where('a.extension = "com_sermondistributor.sermons"');
+		// Get where a.extension is "com_sermondistributor.sermon"
+		$query->where('a.extension = "com_sermondistributor.sermon"');
 		$query->order('a.title ASC');
 
 		// return the query object

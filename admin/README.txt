@@ -11,6 +11,7 @@ The best way to see all your options is to install this component on you Joomla 
 ### Example Website, That Has Over 6000 Audio Files
 
 [LoudVoice.org](http://www.loudvoice.org)
+[TrueChristian.Church](https://truechristian.church/)
 
 ### Some Video Demonstrations
 
@@ -36,7 +37,7 @@ due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **73060**
++ *Line count*: **73062**
 + *File count*: **460**
 + *Folder count*: **93**
 
@@ -56,8 +57,8 @@ due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder
 
 Project duration: **8.4 weeks** or **1.8 months**
 
-> This **component** was build with a Joomla [Automated Component Builder](https://www.vdm.io/joomla-component-builder).
-> Developed by [Llewellyn van der Merwe](mailto:joomla@vdm.io)
+> This **component** was build with a Joomla [Automated Component Builder](http://joomlacomponentbuilder.com).
+> Developed by [Llewellyn van der Merwe](mailto:llewellyn@joomlacomponentbuilder.com)
 
 
 ## Contributors
