@@ -64,7 +64,7 @@ class JFormFieldLocallistingsfilterbuild extends JFormFieldList
 
 		$results = $db->loadColumn();
 		$_filter = array();
-		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_BUILD') . ' -');
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_BUILD_OPTION') . ' -');
 
 		if ($results)
 		{

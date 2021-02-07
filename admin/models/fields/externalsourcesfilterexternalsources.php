@@ -64,7 +64,7 @@ class JFormFieldExternalsourcesfilterexternalsources extends JFormFieldList
 
 		$results = $db->loadColumn();
 		$_filter = array();
-		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_EXTERNALSOURCES') . ' -');
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_EXTERNAL_SOURCES') . ' -');
 
 		if ($results)
 		{

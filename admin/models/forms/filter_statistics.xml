@@ -69,8 +69,8 @@
 			<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
 			<option value="a.published ASC">JSTATUS_ASC</option>
 			<option value="a.published DESC">JSTATUS_DESC</option>
-			<option value="a.filename ASC">COM_SERMONDISTRIBUTOR_FILTER_FILENAME_ASCENDING</option>
-			<option value="a.filename DESC">COM_SERMONDISTRIBUTOR_FILTER_FILENAME_DESCENDING</option>
+			<option value="a.filename ASC">COM_SERMONDISTRIBUTOR_FILTER_FILE_NAME_ASCENDING</option>
+			<option value="a.filename DESC">COM_SERMONDISTRIBUTOR_FILTER_FILE_NAME_DESCENDING</option>
 			<option value="g.name ASC">COM_SERMONDISTRIBUTOR_FILTER_SERMON_ASCENDING</option>
 			<option value="g.name DESC">COM_SERMONDISTRIBUTOR_FILTER_SERMON_DESCENDING</option>
 			<option value="h.name ASC">COM_SERMONDISTRIBUTOR_FILTER_PREACHER_ASCENDING</option>

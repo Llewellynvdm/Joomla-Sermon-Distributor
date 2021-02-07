@@ -64,7 +64,7 @@ class JFormFieldSermonsfiltersource extends JFormFieldList
 
 		$results = $db->loadColumn();
 		$_filter = array();
-		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_SOURCE') . ' -');
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_FILE_SOURCE') . ' -');
 
 		if ($results)
 		{

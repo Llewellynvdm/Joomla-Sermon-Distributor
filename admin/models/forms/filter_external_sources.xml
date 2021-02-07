@@ -62,12 +62,12 @@
 			<option value="a.published DESC">JSTATUS_DESC</option>
 			<option value="a.description ASC">COM_SERMONDISTRIBUTOR_FILTER_DESCRIPTION_ASCENDING</option>
 			<option value="a.description DESC">COM_SERMONDISTRIBUTOR_FILTER_DESCRIPTION_DESCENDING</option>
-			<option value="a.externalsources ASC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNALSOURCES_ASCENDING</option>
-			<option value="a.externalsources DESC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNALSOURCES_DESCENDING</option>
+			<option value="a.externalsources ASC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNAL_SOURCES_ASCENDING</option>
+			<option value="a.externalsources DESC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNAL_SOURCES_DESCENDING</option>
 			<option value="a.update_method ASC">COM_SERMONDISTRIBUTOR_FILTER_UPDATE_METHOD_ASCENDING</option>
 			<option value="a.update_method DESC">COM_SERMONDISTRIBUTOR_FILTER_UPDATE_METHOD_DESCENDING</option>
-			<option value="a.build ASC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_ASCENDING</option>
-			<option value="a.build DESC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_DESCENDING</option>
+			<option value="a.build ASC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_OPTION_ASCENDING</option>
+			<option value="a.build DESC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_OPTION_DESCENDING</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>

@@ -99,10 +99,10 @@
 			<option value="a.short_description DESC">COM_SERMONDISTRIBUTOR_FILTER_SHORT_DESCRIPTION_DESCENDING</option>
 			<option value="category_title ASC">COM_SERMONDISTRIBUTOR_FILTER_SERMONS_CATEGORIES_ASCENDING</option>
 			<option value="category_title DESC">COM_SERMONDISTRIBUTOR_FILTER_SERMONS_CATEGORIES_DESCENDING</option>
-			<option value="a.link_type ASC">COM_SERMONDISTRIBUTOR_FILTER_LINK_TYPE_ASCENDING</option>
-			<option value="a.link_type DESC">COM_SERMONDISTRIBUTOR_FILTER_LINK_TYPE_DESCENDING</option>
-			<option value="a.source ASC">COM_SERMONDISTRIBUTOR_FILTER_SOURCE_ASCENDING</option>
-			<option value="a.source DESC">COM_SERMONDISTRIBUTOR_FILTER_SOURCE_DESCENDING</option>
+			<option value="a.link_type ASC">COM_SERMONDISTRIBUTOR_FILTER_DOWNLOAD_LINK_OPTION_ASCENDING</option>
+			<option value="a.link_type DESC">COM_SERMONDISTRIBUTOR_FILTER_DOWNLOAD_LINK_OPTION_DESCENDING</option>
+			<option value="a.source ASC">COM_SERMONDISTRIBUTOR_FILTER_FILE_SOURCE_ASCENDING</option>
+			<option value="a.source DESC">COM_SERMONDISTRIBUTOR_FILTER_FILE_SOURCE_DESCENDING</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>

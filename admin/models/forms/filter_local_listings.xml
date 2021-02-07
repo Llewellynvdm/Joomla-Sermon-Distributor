@@ -53,16 +53,16 @@
 			<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
 			<option value="a.published ASC">JSTATUS_ASC</option>
 			<option value="a.published DESC">JSTATUS_DESC</option>
-			<option value="a.name ASC">COM_SERMONDISTRIBUTOR_FILTER_NAME_ASCENDING</option>
-			<option value="a.name DESC">COM_SERMONDISTRIBUTOR_FILTER_NAME_DESCENDING</option>
-			<option value="a.build ASC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_ASCENDING</option>
-			<option value="a.build DESC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_DESCENDING</option>
-			<option value="a.size ASC">COM_SERMONDISTRIBUTOR_FILTER_SIZE_ASCENDING</option>
-			<option value="a.size DESC">COM_SERMONDISTRIBUTOR_FILTER_SIZE_DESCENDING</option>
+			<option value="a.name ASC">COM_SERMONDISTRIBUTOR_FILTER_FILE_NAME_ASCENDING</option>
+			<option value="a.name DESC">COM_SERMONDISTRIBUTOR_FILTER_FILE_NAME_DESCENDING</option>
+			<option value="a.build ASC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_OPTION_ASCENDING</option>
+			<option value="a.build DESC">COM_SERMONDISTRIBUTOR_FILTER_BUILD_OPTION_DESCENDING</option>
+			<option value="a.size ASC">COM_SERMONDISTRIBUTOR_FILTER_FILE_SIZE_ASCENDING</option>
+			<option value="a.size DESC">COM_SERMONDISTRIBUTOR_FILTER_FILE_SIZE_DESCENDING</option>
 			<option value="g.description ASC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNAL_SOURCE_ASCENDING</option>
 			<option value="g.description DESC">COM_SERMONDISTRIBUTOR_FILTER_EXTERNAL_SOURCE_DESCENDING</option>
-			<option value="a.key ASC">COM_SERMONDISTRIBUTOR_FILTER_KEY_ASCENDING</option>
-			<option value="a.key DESC">COM_SERMONDISTRIBUTOR_FILTER_KEY_DESCENDING</option>
+			<option value="a.key ASC">COM_SERMONDISTRIBUTOR_FILTER_LISTING_KEY_ASCENDING</option>
+			<option value="a.key DESC">COM_SERMONDISTRIBUTOR_FILTER_LISTING_KEY_DESCENDING</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>

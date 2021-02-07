@@ -57,6 +57,10 @@ class JFormFieldAdminviewfolderlist extends JFormFieldList
 		// now check if there are files in the folder
 		if (JFolder::exists($localfolder) && $folders = JFolder::folders($localfolder))
 		{
+			if ($this->multiple === false)
+			{
+				$options[] = JHtml::_('select.option', '', JText::_('COM_SERMONDISTRIBUTOR_SELECT_AN_ADMIN_VIEW'));
+			}
 			foreach ($folders as $folder)
 			{
 				$options[] = JHtml::_('select.option', $folder, SermondistributorHelper::safeString($folder, 'W'));

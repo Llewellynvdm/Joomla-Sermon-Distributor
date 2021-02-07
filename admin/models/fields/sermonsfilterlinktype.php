@@ -64,7 +64,7 @@ class JFormFieldSermonsfilterlinktype extends JFormFieldList
 
 		$results = $db->loadColumn();
 		$_filter = array();
-		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_LINK_TYPE') . ' -');
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_DOWNLOAD_LINK_OPTION') . ' -');
 
 		if ($results)
 		{
