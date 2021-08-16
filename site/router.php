@@ -64,7 +64,7 @@ class SermondistributorRouter extends JComponentRouterBase
 		{
 			$view = $query['view'];
 
-			if (empty($query['Itemid']))
+			if (empty($query['Itemid']) && !(isset($view) && isset($query['id']) && ($view === 'preachers' || $view === 'preacher' || $view === 'categories' || $view === 'category' || $view === 'serieslist' || $view === 'series' || $view === 'sermon' || $view === 'api')))
 			{
 				$segments[] = $query['view'];
 			}

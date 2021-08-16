@@ -119,12 +119,6 @@ class SermondistributorModelPreacher extends JModelAdmin
 				$registry->loadString($item->metadata);
 				$item->metadata = $registry->toArray();
 			}
-			
-			if (!empty($item->id))
-			{
-				$item->tags = new JHelperTags;
-				$item->tags->getTagIds($item->id, 'com_sermondistributor.preacher');
-			}
 		}
 		$this->preachervvvv = $item->id;
 
@@ -227,6 +221,23 @@ class SermondistributorModelPreacher extends JModelAdmin
 						continue;
 					}
 
+					// Add the tags
+					$item->tags = new JHelperTags;
+					$item->tags->getTagIds(
+						$item->id, 'com_sermondistributor.sermon'
+					);
+					if ($item->tags->tags)
+					{
+						$item->tags = implode(', ',
+							$item->tags->getTagNames(
+								explode(',', $item->tags->tags)
+							)
+						);
+					}
+					else
+					{
+						$item->tags = '';
+					}
 				}
 			}
 
@@ -403,7 +414,7 @@ class SermondistributorModelPreacher extends JModelAdmin
 	 */
 	public function getScript()
 	{
-		return 'administrator/components/com_sermondistributor/models/forms/preacher.js';
+		return 'media/com_sermondistributor/js/preacher.js';
 	}
     
 	/**

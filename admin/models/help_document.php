@@ -133,12 +133,6 @@ class SermondistributorModelHelp_document extends JModelAdmin
 				// JSON Decode groups.
 				$item->groups = json_decode($item->groups,true);
 			}
-			
-			if (!empty($item->id))
-			{
-				$item->tags = new JHelperTags;
-				$item->tags->getTagIds($item->id, 'com_sermondistributor.help_document');
-			}
 		}
 
 		return $item;
@@ -260,7 +254,7 @@ class SermondistributorModelHelp_document extends JModelAdmin
 	 */
 	public function getScript()
 	{
-		return 'administrator/components/com_sermondistributor/models/forms/help_document.js';
+		return 'media/com_sermondistributor/js/help_document.js';
 	}
     
 	/**

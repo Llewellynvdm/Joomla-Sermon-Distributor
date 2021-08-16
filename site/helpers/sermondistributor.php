@@ -29,6 +29,8 @@ use Joomla\CMS\Language\Language;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 
 /**
  * Sermondistributor component helper
@@ -409,11 +411,10 @@ abstract class SermondistributorHelper
 		{
 			$filePath = $default;
 		}
-		jimport('joomla.filesystem.folder');
 		// create the folder if it does not exist
-		if ($createIfNotSet && !JFolder::exists($filePath))
+		if ($createIfNotSet && !Folder::exists($filePath))
 		{
-			JFolder::create($filePath);
+			Folder::create($filePath);
 		}
 		// setup the file name
 		$fileName = '';
@@ -3072,12 +3073,12 @@ abstract class SermondistributorHelper
 			$filePath = $path . '/' . $name . '.php';
 			$fullPathModel = $fullPathModels . '/' . $name . '.php';
 			// check if it exists
-			if (JFile::exists($filePath))
+			if (File::exists($filePath))
 			{
 				// get the file
 				require_once $filePath;
 			}
-			elseif (JFile::exists($fullPathModel))
+			elseif (File::exists($fullPathModel))
 			{
 				// get the file
 				require_once $fullPathModel;

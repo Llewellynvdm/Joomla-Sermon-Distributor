@@ -120,8 +120,6 @@
 			maxlength="150"
 			description="COM_SERMONDISTRIBUTOR_SERMON_NAME_DESCRIPTION"
 			class="text_area"
-			readonly="false"
-			disabled="false"
 			required="true"
 			filter="STRING"
 			message="COM_SERMONDISTRIBUTOR_SERMON_NAME_MESSAGE"

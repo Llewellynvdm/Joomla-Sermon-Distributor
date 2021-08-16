@@ -32,6 +32,8 @@ use Joomla\Utilities\ArrayHelper;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 
 /**
  * Sermondistributor component helper.
@@ -412,11 +414,10 @@ abstract class SermondistributorHelper
 		{
 			$filePath = $default;
 		}
-		jimport('joomla.filesystem.folder');
 		// create the folder if it does not exist
-		if ($createIfNotSet && !JFolder::exists($filePath))
+		if ($createIfNotSet && !Folder::exists($filePath))
 		{
-			JFolder::create($filePath);
+			Folder::create($filePath);
 		}
 		// setup the file name
 		$fileName = '';
@@ -3147,7 +3148,7 @@ abstract class SermondistributorHelper
 	/**
 	* Prepares the xml document
 	*/
-	public static function xls($rows, $fileName = null, $title = null, $subjectTab = null, $creator = 'Joomla Component Builder', $description = null, $category = null,$keywords = null, $modified = null)
+	public static function xls($rows, $fileName = null, $title = null, $subjectTab = null, $creator = 'Vast Development Method', $description = null, $category = null,$keywords = null, $modified = null)
 	{
 		// set the user
 		$user = JFactory::getUser();
@@ -3181,7 +3182,7 @@ abstract class SermondistributorHelper
 		// Set document properties
 		$spreadsheet->getProperties()
 			->setCreator($creator)
-			->setCompany('Joomla Component Builder')
+			->setCompany('Vast Development Method')
 			->setLastModifiedBy($modified)
 			->setTitle($title)
 			->setSubject($subjectTab);
@@ -3798,12 +3799,12 @@ abstract class SermondistributorHelper
 			$filePath = $path . '/' . $name . '.php';
 			$fullPathModel = $fullPathModels . '/' . $name . '.php';
 			// check if it exists
-			if (JFile::exists($filePath))
+			if (File::exists($filePath))
 			{
 				// get the file
 				require_once $filePath;
 			}
-			elseif (JFile::exists($fullPathModel))
+			elseif (File::exists($fullPathModel))
 			{
 				// get the file
 				require_once $fullPathModel;

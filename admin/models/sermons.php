@@ -194,6 +194,23 @@ class SermondistributorModelSermons extends JModelList
 					continue;
 				}
 
+				// Add the tags
+				$item->tags = new JHelperTags;
+				$item->tags->getTagIds(
+					$item->id, 'com_sermondistributor.sermon'
+				);
+				if ($item->tags->tags)
+				{
+					$item->tags = implode(', ',
+						$item->tags->getTagNames(
+							explode(',', $item->tags->tags)
+						)
+					);
+				}
+				else
+				{
+					$item->tags = '';
+				}
 			}
 		}
 
@@ -554,6 +571,23 @@ class SermondistributorModelSermons extends JModelList
 							continue;
 						}
 
+						// Add the tags
+						$item->tags = new JHelperTags;
+						$item->tags->getTagIds(
+							$item->id, 'com_sermondistributor.sermon'
+						);
+						if ($item->tags->tags)
+						{
+							$item->tags = implode(', ',
+								$item->tags->getTagNames(
+									explode(',', $item->tags->tags)
+								)
+							);
+						}
+						else
+						{
+							$item->tags = '';
+						}
 						// unset the values we don't want exported.
 						unset($item->asset_id);
 						unset($item->checked_out);

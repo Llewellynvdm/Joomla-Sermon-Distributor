@@ -116,12 +116,6 @@ class SermondistributorModelStatistic extends JModelAdmin
 				$registry->loadString($item->metadata);
 				$item->metadata = $registry->toArray();
 			}
-			
-			if (!empty($item->id))
-			{
-				$item->tags = new JHelperTags;
-				$item->tags->getTagIds($item->id, 'com_sermondistributor.statistic');
-			}
 		}
 
 		return $item;
@@ -245,7 +239,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 	 */
 	public function getScript()
 	{
-		return 'administrator/components/com_sermondistributor/models/forms/statistic.js';
+		return 'media/com_sermondistributor/js/statistic.js';
 	}
     
 	/**

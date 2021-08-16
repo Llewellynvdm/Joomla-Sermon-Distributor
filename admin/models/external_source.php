@@ -227,12 +227,6 @@ class SermondistributorModelExternal_source extends JModelAdmin
 				// JSON Decode filetypes.
 				$item->filetypes = json_decode($item->filetypes);
 			}
-			
-			if (!empty($item->id))
-			{
-				$item->tags = new JHelperTags;
-				$item->tags->getTagIds($item->id, 'com_sermondistributor.external_source');
-			}
 		}
 
 		return $item;
@@ -356,7 +350,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 	 */
 	public function getScript()
 	{
-		return 'administrator/components/com_sermondistributor/models/forms/external_source.js';
+		return 'media/com_sermondistributor/js/external_source.js';
 	}
     
 	/**

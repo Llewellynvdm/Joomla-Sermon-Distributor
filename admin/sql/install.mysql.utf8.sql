@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `#__sermondistributor_sermon` (
 	`series` INT(11) NOT NULL DEFAULT 0,
 	`short_description` VARCHAR(255) NOT NULL DEFAULT '',
 	`source` TINYINT(1) NOT NULL DEFAULT 0,
+	`tags` TEXT NOT NULL,
 	`url` VARCHAR(255) NOT NULL DEFAULT '',
 	`params` text NOT NULL,
 	`published` TINYINT(3) NOT NULL DEFAULT 1,

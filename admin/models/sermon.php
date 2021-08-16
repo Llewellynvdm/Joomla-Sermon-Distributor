@@ -153,9 +153,10 @@ class SermondistributorModelSermon extends JModelAdmin
 				// JSON Decode manual_files.
 				$item->manual_files = json_decode($item->manual_files);
 			}
-			
+
 			if (!empty($item->id))
 			{
+				// Get Tag IDs.
 				$item->tags = new JHelperTags;
 				$item->tags->getTagIds($item->id, 'com_sermondistributor.sermon');
 			}
@@ -388,7 +389,7 @@ class SermondistributorModelSermon extends JModelAdmin
 	 */
 	public function getScript()
 	{
-		return 'administrator/components/com_sermondistributor/models/forms/sermon.js';
+		return 'media/com_sermondistributor/js/sermon.js';
 	}
     
 	/**

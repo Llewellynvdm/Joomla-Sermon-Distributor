@@ -162,12 +162,6 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 				// basic decrypt data url.
 				$item->url = rtrim($basic->decryptString($item->url), "\0");
 			}
-			
-			if (!empty($item->id))
-			{
-				$item->tags = new JHelperTags;
-				$item->tags->getTagIds($item->id, 'com_sermondistributor.local_listing');
-			}
 		}
 
 		return $item;
@@ -393,7 +387,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 	 */
 	public function getScript()
 	{
-		return 'administrator/components/com_sermondistributor/models/forms/local_listing.js';
+		return 'media/com_sermondistributor/js/local_listing.js';
 	}
     
 	/**
