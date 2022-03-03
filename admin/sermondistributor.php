@@ -25,7 +25,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tabstate');
+
 
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_sermondistributor'))
@@ -39,8 +39,8 @@ $document->addStyleSheet('components/com_sermondistributor/assets/css/admin.css'
 $document->addScript('components/com_sermondistributor/assets/js/admin.js');
 
 // require helper files
-JLoader::register('SermondistributorHelper', __DIR__ . '/helpers/sermondistributor.php'); 
-JLoader::register('JHtmlBatch_', __DIR__ . '/helpers/html/batch_.php'); 
+JLoader::register('SermondistributorHelper', __DIR__ . '/helpers/sermondistributor.php');
+JLoader::register('JHtmlBatch_', __DIR__ . '/helpers/html/batch_.php');
 
 // Get an instance of the controller prefixed by Sermondistributor
 $controller = JControllerLegacy::getInstance('Sermondistributor');

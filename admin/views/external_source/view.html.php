@@ -172,10 +172,10 @@ class SermondistributorViewExternal_source extends JViewLegacy
 		}
 		JToolbarHelper::divider();
 		// set help url for this view if found
-		$help_url = SermondistributorHelper::getHelpUrl('external_source');
-		if (SermondistributorHelper::checkString($help_url))
+		$this->help_url = SermondistributorHelper::getHelpUrl('external_source');
+		if (SermondistributorHelper::checkString($this->help_url))
 		{
-			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
+			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 	}
 

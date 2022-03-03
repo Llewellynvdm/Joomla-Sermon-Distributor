@@ -25,6 +25,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+
+
 /**
  * Sermondistributor Model
  */
@@ -292,7 +294,7 @@ class SermondistributorModelSermondistributor extends JModelList
             				.append("<h3><a href=\"" + issue.html_url + "\" target=\"_blank\">" + issue.title + "</a></h3>")
 					.append("<img alt=\"@" + issue.user.login + "\" style=\"vertical-align: baseline;\" src=\"" + issue.user.avatar_url +"&amp;s=60\" width=\"30\" height=\"30\"> ")
             				.append("<em><a href=\"" + issue.user.html_url + "\" target=\"_blank\">" + issue.user.login + "</a> '.JText::_('COM_SERMONDISTRIBUTOR_OPENED_THIS').' <a href=\"" + issue.html_url + "\" target=\"_blank\">'.JText::_('COM_SERMONDISTRIBUTOR_ISSUE').'-" + issue.number + "</a> (" + timeago + ")</em> ")
-            				.append(marked(issue.body))
+            				.append(marked.parse(issue.body))
             				.append("<a href=\"" + issue.html_url + "\" target=\"_blank\"><span class=\'icon-new-tab\'></span>'.JText::_('COM_SERMONDISTRIBUTOR_RESPOND_TO_THIS_ISSUE_ON_GITHUB').'</a>...<hr />");
     				});
 			});
@@ -305,7 +307,7 @@ class SermondistributorModelSermondistributor extends JModelList
             				.append("<h3><a href=\"" + issue.html_url + "\" target=\"_blank\">" + issue.title + "</a></h3>")
 					.append("<img alt=\"@" + issue.user.login + "\" style=\"vertical-align: baseline;\" src=\"" + issue.user.avatar_url +"&amp;s=60\" width=\"30\" height=\"30\"> ")
             				.append("<em><a href=\"" + issue.user.html_url + "\" target=\"_blank\">" + issue.user.login + "</a> '.JText::_('COM_SERMONDISTRIBUTOR_OPENED').' <a href=\"" + issue.html_url + "\" target=\"_blank\">'.JText::_('COM_SERMONDISTRIBUTOR_ISSUE').'-" + issue.number + "</a> (" + timeago + ")</em>")
-            				.append(marked(issue.body))
+            				.append(marked.parse(issue.body))
             				.append("<a href=\"" + issue.html_url + "\" target=\"_blank\"><span class=\'icon-new-tab\'></span>'.JText::_('COM_SERMONDISTRIBUTOR_REVIEW_THIS_ISSUE_ON_GITHUB').'</a>...<hr />");
     				});
 			});
@@ -344,7 +346,7 @@ class SermondistributorModelSermondistributor extends JModelList
 					.append(activeNotice)
 					.append("<img alt=\"@" + tagrelease.author.login + "\" style=\"vertical-align: baseline;\" src=\"" + tagrelease.author.avatar_url +"&amp;s=60\" width=\"30\" height=\"30\"> ")
             				.append("<em><a href=\"" + tagrelease.author.html_url + "\" target=\"_blank\">" + tagrelease.author.login + "</a> '.JText::_('COM_SERMONDISTRIBUTOR_RELEASED_THIS').'<em> <b><span class=\'icon-tag-2\'></span>" + tagrelease.tag_name+ "</b> (" + timeago + ")")
-            				.append(marked(tagrelease.body))
+            				.append(marked.parse(tagrelease.body))
             				.append(" <a class=\"hasTooltip\" href=\"" + tagrelease.assets[0].browser_download_url + "\" title=\"'.JText::_('COM_SERMONDISTRIBUTOR_DOWNLOAD').' " + tagrelease.assets[0].name + "\" target=\"_self\"><span class=\'icon-download\'></span>" + tagrelease.assets[0].name + "</a> (<a class=\"hasTooltip\" href=\"" + tagrelease.assets[0].browser_download_url + "\" title=\"'.JText::_('COM_SERMONDISTRIBUTOR_TOTAL_DOWNLOADS').'\"><small>" + tagrelease.assets[0].download_count + "</small></a>) ")
             				.append("| <a href=\"" + tagrelease.html_url + "\" target=\"_blank\" title=\"'.JText::_('COM_SERMONDISTRIBUTOR_OPEN').' " + tagrelease.name + " '.JText::_('COM_SERMONDISTRIBUTOR_ON_GITHUB').'\"><span class=\'icon-new-tab\'></span>'.JText::_('COM_SERMONDISTRIBUTOR_OPEN_ON_GITHUB').'</a>...<hr />");
     				});
@@ -372,7 +374,7 @@ class SermondistributorModelSermondistributor extends JModelList
 		jQuery(document).ready(function () {
 			jQuery.get(gewiki)
 			.success(function(wiki) { 
-				jQuery("#wiki-md").html(marked(wiki));
+				jQuery("#wiki-md").html(marked.parse(wiki));
 			})
 			.error(function(jqXHR, textStatus, errorThrown) { 
 				jQuery("#wiki-md").html("'.JText::_('COM_SERMONDISTRIBUTOR_PLEASE_CHECK_AGAIN_LATTER').'");
@@ -396,7 +398,7 @@ class SermondistributorModelSermondistributor extends JModelList
 			jQuery.get(noticeboard)
 			.success(function(board) { 
 				if (board.length > 5) {
-					jQuery("#noticeboard-md").html(marked(board));
+					jQuery("#noticeboard-md").html(marked.parse(board));
 					getIS(1,board).done(function(result) {
 						if (result){
 							jQuery("#cpanel_tabTabs a").each(function() {

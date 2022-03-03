@@ -159,10 +159,10 @@ class SermondistributorViewLocal_listings extends JViewLegacy
 		}
 
 		// set help url for this view if found
-		$help_url = SermondistributorHelper::getHelpUrl('local_listings');
-		if (SermondistributorHelper::checkString($help_url))
+		$this->help_url = SermondistributorHelper::getHelpUrl('local_listings');
+		if (SermondistributorHelper::checkString($this->help_url))
 		{
-				JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
+				JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 
 		// add the options comp button

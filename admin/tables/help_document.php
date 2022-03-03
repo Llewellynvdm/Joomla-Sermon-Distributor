@@ -336,7 +336,7 @@ class SermondistributorTableHelp_document extends JTable
 			$this->alias = $this->title;
 		}
 
-		$this->alias = JApplication::stringURLSafe($this->alias);
+		$this->alias = JApplicationHelper::stringURLSafe($this->alias);
 
 		if (trim(str_replace('-', '', $this->alias)) == '')
 		{

@@ -143,7 +143,7 @@ class SermondistributorModelPreacher extends JModelList
 		{
 			// Load the JEvent Dispatcher
 			JPluginHelper::importPlugin('content');
-			$this->_dispatcher = JEventDispatcher::getInstance();
+			$this->_dispatcher = JFactory::getApplication();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
@@ -166,7 +166,7 @@ class SermondistributorModelPreacher extends JModelList
 				$_description = new stdClass();
 				$_description->text =& $item->description; // value must be in text
 				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
-				$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.preacher.description', &$_description, &$params, 0));
+				$this->_dispatcher->triggerEvent("onContentPrepare", array('com_sermondistributor.preacher.description', &$_description, &$params, 0));
 				// Checking if description has uikit components that must be loaded.
 				$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
 				// set idSermonStatisticE to the $item object.
@@ -317,14 +317,14 @@ class SermondistributorModelPreacher extends JModelList
 		}
 	// Load the JEvent Dispatcher
 	JPluginHelper::importPlugin('content');
-	$this->_dispatcher = JEventDispatcher::getInstance();
+	$this->_dispatcher = JFactory::getApplication();
 		// Check if item has params, or pass whole item.
 		$params = (isset($data->params) && SermondistributorHelper::checkJson($data->params)) ? json_decode($data->params) : $data;
 		// Make sure the content prepare plugins fire on description
 		$_description = new stdClass();
 		$_description->text =& $data->description; // value must be in text
 		// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
-		$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.preacher.description', &$_description, &$params, 0));
+		$this->_dispatcher->triggerEvent("onContentPrepare", array('com_sermondistributor.preacher.description', &$_description, &$params, 0));
 		// Checking if description has uikit components that must be loaded.
 		$this->uikitComp = SermondistributorHelper::getUikitComp($data->description,$this->uikitComp);
 

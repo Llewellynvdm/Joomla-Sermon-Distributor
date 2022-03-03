@@ -25,7 +25,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tabstate');
+
 
 // Set the component css/js
 $document = JFactory::getDocument();
@@ -34,7 +34,7 @@ $document->addScript('components/com_sermondistributor/assets/js/site.js');
 
 // Require helper files
 JLoader::register('SermondistributorHelper', __DIR__ . '/helpers/sermondistributor.php');
-JLoader::register('SermondistributorHelperRoute', __DIR__ . '/helpers/route.php'); 
+JLoader::register('SermondistributorHelperRoute', __DIR__ . '/helpers/route.php');
 
 // Get an instance of the controller prefixed by Sermondistributor
 $controller = JControllerLegacy::getInstance('Sermondistributor');

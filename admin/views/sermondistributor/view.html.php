@@ -25,6 +25,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+
+
 /**
  * Sermondistributor View class
  */
@@ -72,10 +74,10 @@ class SermondistributorViewSermondistributor extends JViewLegacy
 		JToolBarHelper::title(JText::_('COM_SERMONDISTRIBUTOR_DASHBOARD'), 'grid-2');
 
 		// set help url for this view if found
-		$help_url = SermondistributorHelper::getHelpUrl('sermondistributor');
-		if (SermondistributorHelper::checkString($help_url))
+		$this->help_url = SermondistributorHelper::getHelpUrl('sermondistributor');
+		if (SermondistributorHelper::checkString($this->help_url))
 		{
-			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
+			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 
 		if ($canDo->get('core.admin') || $canDo->get('core.options'))

@@ -146,17 +146,17 @@
 			default="0">
 			<!-- Option Set. -->
 			<option value=".mp3">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MPTHREE</option>
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MP3</option>
 			<option value=".m4a">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MFOURA</option>
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_M4A</option>
 			<option value=".ogg">
 				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_OGG</option>
 			<option value=".wav">
 				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_WAV</option>
 			<option value=".mp4">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MPFOUR</option>
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MP4</option>
 			<option value=".m4v">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MFOURV</option>
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_M4V</option>
 			<option value=".mov">
 				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MOV</option>
 			<option value=".wmv">
@@ -168,9 +168,9 @@
 			<option value=".ogv">
 				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_OGV</option>
 			<option value=".3gp">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_THREEGP</option>
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_3GP</option>
 			<option value=".3g2">
-				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_THREEGTWO</option>
+				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_3G2</option>
 			<option value=".pdf">
 				COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_PDF</option>
 			<option value=".doc">

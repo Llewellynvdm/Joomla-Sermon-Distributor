@@ -157,8 +157,8 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>			
-		<!-- Spacer_hr_two Field. Type: Spacer. A None Database Field. (joomla) -->
-		<field type="spacer" name="spacer_hr_two" hr="true" class="spacer_hr_two" />			
+		<!-- Spacer_hr_2 Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_2" hr="true" class="spacer_hr_2" />			
 		<!-- Category_sermons_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"

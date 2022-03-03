@@ -60,8 +60,8 @@
 			last="50000"
 			step="10"
 		/>
-		<!-- Spacer_hr_four Field. Type: Spacer. A None Database Field. (joomla) -->
-		<field type="spacer" name="spacer_hr_four" hr="true" class="spacer_hr_four" />
+		<!-- Spacer_hr_4 Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_4" hr="true" class="spacer_hr_4" />
 		<field name="autorTitle"
 			type="spacer"
 			label="COM_SERMONDISTRIBUTOR_CONFIG_AUTHOR"
@@ -393,7 +393,7 @@
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_CONFIG_JPLAYER</option>
 			<option value="3">
-				COM_SERMONDISTRIBUTOR_CONFIG_HTML_FIVE_BASIC</option>
+				COM_SERMONDISTRIBUTOR_CONFIG_HTML_5_BASIC</option>
 		</field>
 	</fieldset>
 	<fieldset
@@ -917,8 +917,8 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>
-		<!-- Spacer_hr_one Field. Type: Spacer. A None Database Field. (joomla) -->
-		<field type="spacer" name="spacer_hr_one" hr="true" class="spacer_hr_one" />
+		<!-- Spacer_hr_1 Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_1" hr="true" class="spacer_hr_1" />
 		<!-- Preacher_sermons_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
@@ -1352,8 +1352,8 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>
-		<!-- Spacer_hr_two Field. Type: Spacer. A None Database Field. (joomla) -->
-		<field type="spacer" name="spacer_hr_two" hr="true" class="spacer_hr_two" />
+		<!-- Spacer_hr_2 Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_2" hr="true" class="spacer_hr_2" />
 		<!-- Category_sermons_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"
@@ -1787,8 +1787,8 @@
 			<option value="0">
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
 		</field>
-		<!-- Spacer_hr_three Field. Type: Spacer. A None Database Field. (joomla) -->
-		<field type="spacer" name="spacer_hr_three" hr="true" class="spacer_hr_three" />
+		<!-- Spacer_hr_3 Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_3" hr="true" class="spacer_hr_3" />
 		<!-- Series_sermons_display Field. Type: Radio. (joomla) -->
 		<field
 			type="radio"

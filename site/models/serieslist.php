@@ -111,7 +111,7 @@ class SermondistributorModelSerieslist extends JModelList
 		{
 			// Load the JEvent Dispatcher
 			JPluginHelper::importPlugin('content');
-			$this->_dispatcher = JEventDispatcher::getInstance();
+			$this->_dispatcher = JFactory::getApplication();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
@@ -122,7 +122,7 @@ class SermondistributorModelSerieslist extends JModelList
 				$_description = new stdClass();
 				$_description->text =& $item->description; // value must be in text
 				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
-				$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.series.description', &$_description, &$params, 0));
+				$this->_dispatcher->triggerEvent("onContentPrepare", array('com_sermondistributor.series.description', &$_description, &$params, 0));
 				// Checking if description has uikit components that must be loaded.
 				$this->uikitComp = SermondistributorHelper::getUikitComp($item->description,$this->uikitComp);
 				// set idSeriesSermonB to the $item object.

@@ -137,7 +137,7 @@ class SermondistributorModelExternal_sources extends JModelList
 	 */
 	public function getItems()
 	{
-		// check in items
+		// Check in items
 		$this->checkInNow();
 
 		// load parent items
@@ -233,19 +233,19 @@ class SermondistributorModelExternal_sources extends JModelList
 		if ($name === 'filetypes')
 		{
 			$filetypesArray = array(
-				'.mp3' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MPTHREE',
-				'.m4a' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MFOURA',
+				'.mp3' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MP3',
+				'.m4a' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_M4A',
 				'.ogg' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_OGG',
 				'.wav' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_WAV',
-				'.mp4' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MPFOUR',
-				'.m4v' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MFOURV',
+				'.mp4' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MP4',
+				'.m4v' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_M4V',
 				'.mov' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MOV',
 				'.wmv' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_WMV',
 				'.avi' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_AVI',
 				'.mpg' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_MPG',
 				'.ogv' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_OGV',
-				'.3gp' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_THREEGP',
-				'.3g2' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_THREEGTWO',
+				'.3gp' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_3GP',
+				'.3g2' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_3G2',
 				'.pdf' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_PDF',
 				'.doc' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DOC',
 				'.docx' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DOCX',
@@ -557,17 +557,19 @@ class SermondistributorModelExternal_sources extends JModelList
 
 			// Get a db connection.
 			$db = JFactory::getDbo();
-			// reset query
+			// Reset query.
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->quoteName('#__sermondistributor_external_source'));
-			$db->setQuery($query);
+			// Only select items that are checked out.
+			$query->where($db->quoteName('checked_out') . '!=0');
+			$db->setQuery($query, 0, 1);
 			$db->execute();
 			if ($db->getNumRows())
 			{
-				// Get Yesterdays date
+				// Get Yesterdays date.
 				$date = JFactory::getDate()->modify($time)->toSql();
-				// reset query
+				// Reset query.
 				$query = $db->getQuery(true);
 
 				// Fields to update.
@@ -582,7 +584,7 @@ class SermondistributorModelExternal_sources extends JModelList
 					$db->quoteName('checked_out_time') . '<\''.$date.'\''
 				);
 
-				// Check table
+				// Check table.
 				$query->update($db->quoteName('#__sermondistributor_external_source'))->set($fields)->where($conditions); 
 
 				$db->setQuery($query);

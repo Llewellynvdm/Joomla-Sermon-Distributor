@@ -123,10 +123,10 @@ class SermondistributorViewApi extends JViewLegacy
 	{
 		
 		// set help url for this view if found
-		$help_url = SermondistributorHelper::getHelpUrl('api');
-		if (SermondistributorHelper::checkString($help_url))
+		$this->help_url = SermondistributorHelper::getHelpUrl('api');
+		if (SermondistributorHelper::checkString($this->help_url))
 		{
-			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $help_url);
+			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 		// now initiate the toolbar
 		$this->toolbar = JToolbar::getInstance();

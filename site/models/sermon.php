@@ -168,7 +168,7 @@ class SermondistributorModelSermon extends JModelItem
 				}
 			// Load the JEvent Dispatcher
 			JPluginHelper::importPlugin('content');
-			$this->_dispatcher = JEventDispatcher::getInstance();
+			$this->_dispatcher = JFactory::getApplication();
 				// Check if we can decode local_files
 				if (SermondistributorHelper::checkJson($data->local_files))
 				{
@@ -187,7 +187,7 @@ class SermondistributorModelSermon extends JModelItem
 				$_description = new stdClass();
 				$_description->text =& $data->description; // value must be in text
 				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
-				$this->_dispatcher->trigger("onContentPrepare", array('com_sermondistributor.sermon.description', &$_description, &$params, 0));
+				$this->_dispatcher->triggerEvent("onContentPrepare", array('com_sermondistributor.sermon.description', &$_description, &$params, 0));
 				// Checking if description has uikit components that must be loaded.
 				$this->uikitComp = SermondistributorHelper::getUikitComp($data->description,$this->uikitComp);
 				// set the global sermon value.

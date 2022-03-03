@@ -37,8 +37,10 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		parent::__construct($config);
 		// make sure all json stuff are set
 		JFactory::getDocument()->setMimeEncoding( 'application/json' );
-		JResponse::setHeader('Content-Disposition','attachment;filename="getajax.json"');
-		JResponse::setHeader("Access-Control-Allow-Origin", "*");
+		// get the application
+		$app = JFactory::getApplication();
+		$app->setHeader('Content-Disposition','attachment;filename="getajax.json"');
+		$app->setHeader('Access-Control-Allow-Origin', '*');
 		// load the tasks 
 		$this->registerTask('isNew', 'ajax');
 		$this->registerTask('isRead', 'ajax');
@@ -50,20 +52,26 @@ class SermondistributorControllerAjax extends JControllerLegacy
 
 	public function ajax()
 	{
+		// get the user for later use
 		$user 		= JFactory::getUser();
+		// get the input values
 		$jinput 	= JFactory::getApplication()->input;
+		// check if we should return raw
+		$returnRaw	= $jinput->get('raw', false, 'BOOLEAN');
+		// return to a callback function
+		$callback	= $jinput->get('callback', null, 'CMD');
 		// Check Token!
 		$token 		= JSession::getFormToken();
 		$call_token	= $jinput->get('token', 0, 'ALNUM');
 		if($jinput->get($token, 0, 'ALNUM') || $token === $call_token)
 		{
+			// get the task
 			$task = $this->getTask();
 			switch($task)
 			{
 				case 'isNew':
 					try
 					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$noticeValue = $jinput->get('notice', NULL, 'STRING');
 						if($noticeValue && $user->id != 0)
 						{
@@ -73,7 +81,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback . "(".json_encode($result).");";
 						}
@@ -88,9 +96,13 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback."(".json_encode($e).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($e);
 						}
 						else
 						{
@@ -101,7 +113,6 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'isRead':
 					try
 					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$noticeValue = $jinput->get('notice', NULL, 'STRING');
 						if($noticeValue && $user->id != 0)
 						{
@@ -111,7 +122,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback . "(".json_encode($result).");";
 						}
@@ -126,9 +137,13 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback."(".json_encode($e).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($e);
 						}
 						else
 						{
@@ -139,7 +154,6 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'getBuildTable':
 					try
 					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$idNameValue = $jinput->get('idName', NULL, 'WORD');
 						$ojectValue = $jinput->get('oject', NULL, 'STRING');
 						if($idNameValue && $user->id != 0 && $ojectValue)
@@ -150,7 +164,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback . "(".json_encode($result).");";
 						}
@@ -165,9 +179,13 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback."(".json_encode($e).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($e);
 						}
 						else
 						{
@@ -178,7 +196,6 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'getSourceStatus':
 					try
 					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$idValue = $jinput->get('id', NULL, 'INT');
 						if($idValue && $user->id != 0)
 						{
@@ -188,7 +205,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback . "(".json_encode($result).");";
 						}
@@ -203,9 +220,13 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback."(".json_encode($e).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($e);
 						}
 						else
 						{
@@ -216,7 +237,6 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'getCronPath':
 					try
 					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$getTypeValue = $jinput->get('getType', NULL, 'WORD');
 						if($getTypeValue && $user->id != 0)
 						{
@@ -226,7 +246,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback . "(".json_encode($result).");";
 						}
@@ -241,9 +261,13 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback."(".json_encode($e).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($e);
 						}
 						else
 						{
@@ -254,7 +278,6 @@ class SermondistributorControllerAjax extends JControllerLegacy
 				case 'updateLocalListingExternal':
 					try
 					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$idValue = $jinput->get('id', NULL, 'INT');
 						$targetValue = $jinput->get('target', NULL, 'INT');
 						$typeValue = $jinput->get('type', NULL, 'INT');
@@ -267,7 +290,7 @@ class SermondistributorControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback . "(".json_encode($result).");";
 						}
@@ -282,9 +305,13 @@ class SermondistributorControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback."(".json_encode($e).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($e);
 						}
 						else
 						{
@@ -296,9 +323,14 @@ class SermondistributorControllerAjax extends JControllerLegacy
 		}
 		else
 		{
-			if($callback = $jinput->get('callback', null, 'CMD'))
+			// return to a callback function
+			if($callback)
 			{
 				echo $callback."(".json_encode(false).");";
+			}
+			elseif($returnRaw)
+			{
+				echo json_encode(false);
 			}
 			else
 			{
