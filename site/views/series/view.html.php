@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Filesystem\File;
 
 /**
- * Sermondistributor View class for the Series
+ * Sermondistributor Html View class for the Series
  */
-class SermondistributorViewSeries extends JViewLegacy
+class SermondistributorViewSeries extends HtmlView
 {
 	// Overwriting JView display method
 	function display($tpl = null)
@@ -155,12 +156,12 @@ class SermondistributorViewSeries extends JViewLegacy
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit-v2/css/uikit'.$style.$size.'.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+				JHtml::_('stylesheet', 'media/com_sermondistributor/uikit-v2/css/uikit'.$style.$size.'.css', ['version' => 'auto']);
 			}
 			// The uikit js.
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v2/js/uikit'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+				JHtml::_('script', 'media/com_sermondistributor/uikit-v2/js/uikit'.$size.'.js', ['version' => 'auto']);
 			}
 
 			// Load the script to find all uikit components needed.
@@ -200,13 +201,13 @@ class SermondistributorViewSeries extends JViewLegacy
 						if (File::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit-v2/css/components/'.$name.$style.$size.'.css'))
 						{
 							// load the css.
-							$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit-v2/css/components/'.$name.$style.$size.'.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+							JHtml::_('stylesheet', 'media/com_sermondistributor/uikit-v2/css/components/'.$name.$style.$size.'.css', ['version' => 'auto']);
 						}
 						// check if the JavaScript file exists.
 						if (File::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit-v2/js/components/'.$name.$size.'.js'))
 						{
 							// load the js.
-							$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v2/js/components/'.$name.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('type' => 'text/javascript', 'async' => 'async') : true);
+							JHtml::_('script', 'media/com_sermondistributor/uikit-v2/js/components/'.$name.$size.'.js', ['version' => 'auto'], ['type' => 'text/javascript', 'async' => 'async']);
 						}
 					}
 				}
@@ -218,35 +219,35 @@ class SermondistributorViewSeries extends JViewLegacy
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				$this->document->addStyleSheet(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/css/uikit'.$size.'.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+				JHtml::_('stylesheet', 'media/com_sermondistributor/uikit-v3/css/uikit'.$size.'.css', ['version' => 'auto']);
 			}
 			// The uikit js.
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/js/uikit-icons'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+				JHtml::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', ['version' => 'auto']);
+				JHtml::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit-icons'.$size.'.js', ['version' => 'auto']);
 			}
 		}
 
 		// Add the CSS for Footable.
-		$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable-v2/css/footable.core.min.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		JHtml::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.core.min.css', ['version' => 'auto']);
 
 		// Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
-			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable-v2/css/footable.metro.min.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+			JHtml::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.metro.min.css', ['version' => 'auto']);
 		}
 		// Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
-			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable-v2/css/footable.standalone.min.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+			JHtml::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.standalone.min.css', ['version' => 'auto']);
 		}
 
 		// Add the JavaScript for Footable
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.sort.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.filter.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.paginate.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+		JHtml::_('script', 'media/com_sermondistributor/footable-v2/js/footable.js', ['version' => 'auto']);
+		JHtml::_('script', 'media/com_sermondistributor/footable-v2/js/footable.sort.js', ['version' => 'auto']);
+		JHtml::_('script', 'media/com_sermondistributor/footable-v2/js/footable.filter.js', ['version' => 'auto']);
+		JHtml::_('script', 'media/com_sermondistributor/footable-v2/js/footable.paginate.js', ['version' => 'auto']);
 		// load the meta description
 		if (isset($this->series->metadesc) && $this->series->metadesc)
 		{

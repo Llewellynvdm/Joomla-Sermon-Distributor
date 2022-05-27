@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		import.php
@@ -25,15 +25,16 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\Utilities\ArrayHelper;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 /**
- * Sermondistributor Import Model
+ * Sermondistributor Import Base Database Model
  */
-class SermondistributorModelImport extends JModelLegacy
+class SermondistributorModelImport extends BaseDatabaseModel
 {
 	// set uploading values
 	protected $use_streams = false;

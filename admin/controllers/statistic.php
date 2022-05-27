@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Statistic Controller
+ * Statistic Form Controller
  */
-class SermondistributorControllerStatistic extends JControllerForm
+class SermondistributorControllerStatistic extends FormController
 {
 	/**
 	 * Current or most recently performed task.

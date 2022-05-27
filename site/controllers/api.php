@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		api.php
@@ -28,9 +28,9 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor Api Controller
+ * Sermondistributor Api Form Controller
  */
-class SermondistributorControllerApi extends JControllerForm
+class SermondistributorControllerApi extends FormController
 {
 	/**
 	 * Current or most recently performed task.

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Filesystem\File;
 
 /**
- * Series View class
+ * Series Html View class
  */
-class SermondistributorViewSeries extends JViewLegacy
+class SermondistributorViewSeries extends HtmlView
 {
 	/**
 	 * display method of View
@@ -208,24 +209,24 @@ class SermondistributorViewSeries extends JViewLegacy
 		$this->document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/series.css", (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 
 		// Add the CSS for Footable.
-		$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable-v2/css/footable.core.min.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		JHtml::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.core.min.css', ['version' => 'auto']);
 
 		// Use the Metro Style
 		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
 		{
-			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable-v2/css/footable.metro.min.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+			JHtml::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.metro.min.css', ['version' => 'auto']);
 		}
 		// Use the Legacy Style.
 		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
 		{
-			$this->document->addStyleSheet(JURI::root() .'media/com_sermondistributor/footable-v2/css/footable.standalone.min.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+			JHtml::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.standalone.min.css', ['version' => 'auto']);
 		}
 
 		// Add the JavaScript for Footable
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.sort.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.filter.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		$this->document->addScript(JURI::root() .'media/com_sermondistributor/footable-v2/js/footable.paginate.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+		JHtml::_('script', 'media/com_sermondistributor/footable-v2/js/footable.js', ['version' => 'auto']);
+		JHtml::_('script', 'media/com_sermondistributor/footable-v2/js/footable.sort.js', ['version' => 'auto']);
+		JHtml::_('script', 'media/com_sermondistributor/footable-v2/js/footable.filter.js', ['version' => 'auto']);
+		JHtml::_('script', 'media/com_sermondistributor/footable-v2/js/footable.paginate.js', ['version' => 'auto']);
 
 		$footable = "jQuery(document).ready(function() { jQuery(function () { jQuery('.footable').footable(); }); jQuery('.nav-tabs').on('click', 'li', function() { setTimeout(tableFix, 10); }); }); function tableFix() { jQuery('.footable').trigger('footable_resize'); }";
 		$this->document->addScriptDeclaration($footable);

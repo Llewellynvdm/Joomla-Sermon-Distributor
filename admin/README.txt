@@ -1,4 +1,4 @@
-# Sermon Distributor (2.0.x)
+# Sermon Distributor (2.1.x)
 
  ![Sermon Distributor image](https://raw.githubusercontent.com/Llewellynvdm/Joomla-Sermon-Distributor/master/admin/assets/images/vdm-component.jpg "The Sermon Distributor")
 
@@ -24,8 +24,8 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 2nd March, 2022
-+ *Version*: 2.0.x
++ *Last Build*: 27th May, 2022
++ *Version*: 2.1.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,11 +37,11 @@ due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **73932**
++ *Line count*: **74036**
 + *File count*: **472**
 + *Folder count*: **99**
 
-**136 Hours** or **17 Eight Hour Days** (the actual time the author spent)
+**137 Hours** or **17 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
 > **debugging @52hours** = codingtime / 4;
@@ -49,7 +49,7 @@ due to [Automated Component Builder](https://www.vdm.io/joomla-component-builder
 > **mapping @21hours** = codingtime / 10;
 > **office @34hours** = codingtime / 6;)
 
-**342 Hours** or **43 Eight Hour Days**
+**343 Hours** or **43 Eight Hour Days**
 (a total of the realistic time frame for this project)
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,

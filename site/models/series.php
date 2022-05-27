@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		series.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor Model for Series
+ * Sermondistributor List Model for Series
  */
-class SermondistributorModelSeries extends JModelList
+class SermondistributorModelSeries extends ListModel
 {
 	/**
 	 * Model user data.

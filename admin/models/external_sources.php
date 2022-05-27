@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_sources.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * External_sources Model
+ * External_sources List Model
  */
-class SermondistributorModelExternal_sources extends JModelList
+class SermondistributorModelExternal_sources extends ListModel
 {
 	public function __construct($config = array())
 	{

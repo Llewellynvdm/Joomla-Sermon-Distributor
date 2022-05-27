@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.php
@@ -25,14 +25,15 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor External_source Model
+ * Sermondistributor External_source Admin Model
  */
-class SermondistributorModelExternal_source extends JModelAdmin
+class SermondistributorModelExternal_source extends AdminModel
 {
 	/**
 	 * The tab layout fields array.

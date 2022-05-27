@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		manual_updater.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor Model for Manual_updater
+ * Sermondistributor List Model for Manual_updater
  */
-class SermondistributorModelManual_updater extends JModelList
+class SermondistributorModelManual_updater extends ListModel
 {
 	/**
 	 * Model user data.

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor Help Controller
+ * Sermondistributor Help Base Controller
  */
-class SermondistributorControllerHelp extends JControllerLegacy
+class SermondistributorControllerHelp extends BaseController
 {
 	public function __construct($config)
 	{

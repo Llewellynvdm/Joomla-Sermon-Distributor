@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_documents.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Help_documents Model
+ * Help_documents List Model
  */
-class SermondistributorModelHelp_documents extends JModelList
+class SermondistributorModelHelp_documents extends ListModel
 {
 	public function __construct($config = array())
 	{

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		manual_updater.php
@@ -25,14 +25,22 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Manual_updater Controller
+ * Manual_updater Admin Controller
  */
-class SermondistributorControllerManual_updater extends JControllerAdmin
+class SermondistributorControllerManual_updater extends AdminController
 {
+	/**
+	 * The prefix to use with controller messages.
+	 *
+	 * @var    string
+	 * @since  1.6
+	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR_MANUAL_UPDATER';
+
 	/**
 	 * Proxy for getModel.
 	 * @since	2.5
@@ -44,7 +52,7 @@ class SermondistributorControllerManual_updater extends JControllerAdmin
 		return $model;
 	}
 
-        public function dashboard()
+	public function dashboard()
 	{
 		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor', false));
 		return;

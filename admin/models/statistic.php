@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		statistic.php
@@ -25,14 +25,15 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor Statistic Model
+ * Sermondistributor Statistic Admin Model
  */
-class SermondistributorModelStatistic extends JModelAdmin
+class SermondistributorModelStatistic extends AdminModel
 {
 	/**
 	 * The tab layout fields array.

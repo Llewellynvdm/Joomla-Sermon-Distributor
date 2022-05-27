@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor Sermon Model
+ * Sermondistributor Sermon Item Model
  */
-class SermondistributorModelSermon extends JModelItem
+class SermondistributorModelSermon extends ItemModel
 {
 	/**
 	 * Model context string.

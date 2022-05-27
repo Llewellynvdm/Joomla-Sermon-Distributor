@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -689,12 +689,12 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	 * File Extension to Mimetype
+	 * File Extensions to Mimetypes
 	 * https://gist.github.com/Llewellynvdm/74be373357e131b8775a7582c3de508b
 	 * http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
-	 * 
+	 *
 	 * @var     array
-	 **/
+	 */
 	protected static $fileExtensionToMimeType = array(
 		'123'			=> 'application/vnd.lotus-1-2-3',
 		'3dml'			=> 'text/vnd.in3d.3dml',
@@ -1239,6 +1239,7 @@ abstract class SermondistributorHelper
 		'opf'			=> 'application/oebps-package+xml',
 		'opml'			=> 'text/x-opml',
 		'oprc'			=> 'application/vnd.palm',
+		'opus'			=> 'audio/ogg',
 		'org'			=> 'application/vnd.lotus-organizer',
 		'osf'			=> 'application/vnd.yamaha.openscoreformat',
 		'osfpvg'		=> 'application/vnd.yamaha.openscoreformat.osfpvg+xml',
@@ -1700,7 +1701,7 @@ abstract class SermondistributorHelper
 		 */		
 
 		// get the extension form file
-		$extension = \strtolower(\pathinfo($file, \PATHINFO_EXTENSION));
+		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 		// check if we have the extension listed
 		if (isset(self::$fileExtensionToMimeType[$extension]))
 		{
@@ -4595,3 +4596,4 @@ abstract class SermondistributorHelper
 		return $default;
 	}
 }
+

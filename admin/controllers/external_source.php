@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * External_source Controller
+ * External_source Form Controller
  */
-class SermondistributorControllerExternal_source extends JControllerForm
+class SermondistributorControllerExternal_source extends FormController
 {
 	/**
 	 * Current or most recently performed task.

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermons Controller
+ * Sermons Admin Controller
  */
-class SermondistributorControllerSermons extends JControllerAdmin
+class SermondistributorControllerSermons extends AdminController
 {
 	/**
 	 * The prefix to use with controller messages.

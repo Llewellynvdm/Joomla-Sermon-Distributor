@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_body.php
@@ -84,7 +84,7 @@ $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 		</td>
 		<td class="nowrap">
 			<div class="name">
-				<?php if ($this->user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
+				<?php if ($this->user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int) $item->preacher)): ?>
 					<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->escape($item->preacher_name); ?></a>
 				<?php else: ?>
 					<?php echo $this->escape($item->preacher_name); ?>
@@ -93,7 +93,7 @@ $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 		</td>
 		<td class="nowrap">
 			<div class="name">
-				<?php if ($this->user->authorise('series.edit', 'com_sermondistributor.series.' . (int)$item->series)): ?>
+				<?php if ($this->user->authorise('series.edit', 'com_sermondistributor.series.' . (int) $item->series)): ?>
 					<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->escape($item->series_name); ?></a>
 				<?php else: ?>
 					<?php echo $this->escape($item->series_name); ?>

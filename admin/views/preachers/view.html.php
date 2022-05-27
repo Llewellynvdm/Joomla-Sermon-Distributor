@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Filesystem\File;
 
 /**
- * Sermondistributor View class for the Preachers
+ * Sermondistributor Html View class for the Preachers
  */
-class SermondistributorViewPreachers extends JViewLegacy
+class SermondistributorViewPreachers extends HtmlView
 {
 	/**
 	 * Preachers view display method

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		import.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor Import Controller
+ * Sermondistributor Import Base Controller
  */
-class SermondistributorControllerImport extends JControllerLegacy
+class SermondistributorControllerImport extends BaseController
 {
 	/**
 	 * Import an spreadsheet.

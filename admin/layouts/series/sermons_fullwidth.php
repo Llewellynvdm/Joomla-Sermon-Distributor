@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons_fullwidth.php
@@ -111,7 +111,7 @@ $can = SermondistributorHelper::getActions('sermon');
 			<?php endif; ?>
 		</td>
 		<td>
-			<?php if ($user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
+			<?php if ($user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int) $item->preacher)): ?>
 				<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?><?php echo $ref; ?>"><?php echo $displayData->escape($item->preacher_name); ?></a>
 			<?php else: ?>
 				<?php echo $displayData->escape($item->preacher_name); ?>

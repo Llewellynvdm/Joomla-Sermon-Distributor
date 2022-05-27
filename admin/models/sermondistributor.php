@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Utilities\ArrayHelper;
 
 /**
- * Sermondistributor Model
+ * Sermondistributor List Model
  */
-class SermondistributorModelSermondistributor extends JModelList
+class SermondistributorModelSermondistributor extends ListModel
 {
 	public function getIcons()
 	{
@@ -468,7 +469,7 @@ jQuery(document).ready( function($) {
 		jQuery(document).ready(function () {
 			jQuery.get(getreadme)
 			.success(function(readme) { 
-				jQuery("#readme-md").html(marked(readme));
+				jQuery("#readme-md").html(marked.parse(readme));
 			})
 			.error(function(jqXHR, textStatus, errorThrown) { 
 				jQuery("#readme-md").html("'.JText::_('COM_SERMONDISTRIBUTOR_PLEASE_CHECK_AGAIN_LATTER').'");

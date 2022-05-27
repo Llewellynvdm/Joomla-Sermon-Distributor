@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		local_listing.php
@@ -25,6 +25,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
@@ -32,7 +33,7 @@ use Joomla\Utilities\ArrayHelper;
 /**
  * Local_listings Table class
  */
-class SermondistributorTableLocal_listing extends JTable
+class SermondistributorTableLocal_listing extends Table
 {
 	/**
 	 * Ensure the params and metadata in json encoded in the bind method

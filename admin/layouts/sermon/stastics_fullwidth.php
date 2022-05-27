@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		stastics_fullwidth.php
@@ -101,14 +101,14 @@ else
 			<?php echo $displayData->escape($item->sermon_name); ?>
 		</td>
 		<td>
-			<?php if ($user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int)$item->preacher)): ?>
+			<?php if ($user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int) $item->preacher)): ?>
 				<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?><?php echo $ref; ?>"><?php echo $displayData->escape($item->preacher_name); ?></a>
 			<?php else: ?>
 				<?php echo $displayData->escape($item->preacher_name); ?>
 			<?php endif; ?>
 		</td>
 		<td>
-			<?php if ($user->authorise('series.edit', 'com_sermondistributor.series.' . (int)$item->series)): ?>
+			<?php if ($user->authorise('series.edit', 'com_sermondistributor.series.' . (int) $item->series)): ?>
 				<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?><?php echo $ref; ?>"><?php echo $displayData->escape($item->series_name); ?></a>
 			<?php else: ?>
 				<?php echo $displayData->escape($item->series_name); ?>

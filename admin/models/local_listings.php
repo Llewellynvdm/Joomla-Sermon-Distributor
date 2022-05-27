@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.0.x
+	@version		2.1.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		local_listings.php
@@ -25,12 +25,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Local_listings Model
+ * Local_listings List Model
  */
-class SermondistributorModelLocal_listings extends JModelList
+class SermondistributorModelLocal_listings extends ListModel
 {
 	public function __construct($config = array())
 	{
