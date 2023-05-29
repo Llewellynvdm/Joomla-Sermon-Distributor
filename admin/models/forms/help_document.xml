@@ -229,7 +229,6 @@
 			label="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_LABEL"
 			size="60"
 			maxlength="150"
-			default=""
 			description="COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_URL_DESCRIPTION"
 			class="text_area"
 			required="true"

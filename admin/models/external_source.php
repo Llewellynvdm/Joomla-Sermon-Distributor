@@ -111,7 +111,7 @@ class SermondistributorModelExternal_source extends AdminModel
 
 	public function clearLocalListing($id) 
 	{
-		// clear local listing
+		// clear local listings
 		if ($id > 0)
 		{
 			$db = JFactory::getDbo();
@@ -182,6 +182,7 @@ class SermondistributorModelExternal_source extends AdminModel
 		}
 		return array('error' => JText::_('COM_SERMONDISTRIBUTOR_NO_ID_FOUND_CAN_NOT_RESET_THE_UPDATE_STATUS'));
 	}
+
     
 	/**
 	 * Method to get a single record.

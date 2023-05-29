@@ -1,0 +1,69 @@
+{
+  "global": {
+    "packager": "Vast Development Method",
+    "packager_url": "https://dev.vdm.io/",
+    "url": "git.vdm.dev",
+    "api": "https://git.vdm.dev/api/v1"
+  },
+  "package": {
+    "name": "PKG_SERMONDISTRIBUTOR",
+    "code_name": "sermondistributor",
+    "package_name": "pkg_sermondistributor",
+    "min_joomla_version": "3.8",
+    "max_joomla_version": "3.10",
+    "copyright": "Copyright (C) 2015 Llewellyn van der Merwe. All rights reserved.",
+    "copyright_year": "2015",
+    "license": "GNU General Public License version 2; see LICENSE",
+    "license_file": "LICENSE",
+    "author": "Llewellyn van der Merwe",
+    "author_email": "joomla@vdm.io",
+    "author_url": "https://io.vdm.dev/",
+    "description": "The Sermon Distributor.",
+    "version_id": "com_sermondistributor",
+    "update_servers": "https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/master/sermondistributor_update_server.xml"
+  },
+  "repository": {
+    "owner": "christian",
+    "repo": "pkg-sermondistributor"
+  },
+  "files": [
+    {
+      "owner": "christian",
+      "repo": "Joomla-Sermon-Distributor",
+      "id": "com_sermondistributor",
+      "type": "component",
+      "mode": "master"
+    },
+    {
+      "owner": "christian",
+      "repo": "mod_dailylight",
+      "id": "mod_dailylight",
+      "type": "module",
+      "client": "site",
+      "mode": "master"
+    },
+    {
+      "owner": "christian",
+      "repo": "mod_dailyscripture",
+      "id": "mod_dailyscripture",
+      "type": "module",
+      "client": "site",
+      "mode": "master"
+    }
+  ],
+  "languages": [
+    {
+      "tag": "en-GB",
+      "ini": "sys.ini",
+      "key": "PKG_SERMONDISTRIBUTOR",
+      "value": "Sermon Distributor Package"
+    },
+    {
+      "tag": "en-GB",
+      "ini": "ini",
+      "key": "PKG_SERMONDISTRIBUTOR",
+      "value": "Sermon Distributor Package"
+    }
+  ]
+}
+

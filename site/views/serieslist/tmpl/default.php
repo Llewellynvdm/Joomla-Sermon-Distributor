@@ -28,7 +28,7 @@ defined('_JEXEC') or die('Restricted access');
 
 
 // Set the heading of the page
-$heading = ($this->params->get('page_heading')) ? $this->params->get('page_heading'):(isset($this->menu->title)) ? $this->menu->title:'';
+$heading = ($this->params->get('page_heading')) ? $this->params->get('page_heading') : ((isset($this->menu->title)) ? $this->menu->title : '');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_sermondistributor'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if ($this->params->get('show_page_heading')): ?>
