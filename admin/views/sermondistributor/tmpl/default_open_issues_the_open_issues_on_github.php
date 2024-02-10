@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_open_issues_the_open_issues_on_github.php
@@ -24,6 +24,10 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper as Html;
 
 ?>
 <?php echo $this->github->openissues; ?>

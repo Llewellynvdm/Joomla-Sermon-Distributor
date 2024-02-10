@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.php
@@ -25,10 +25,22 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Filter\InputFilter;
+use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\UCM\UCMType;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Helper\TagsHelper;
+use VDM\Joomla\Utilities\StringHelper as UtilitiesStringHelper;
+use VDM\Joomla\Utilities\FileHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\FOF\Encrypt\AES;
 
 /**
  * Sermondistributor External_source Admin Model
@@ -97,16 +109,16 @@ class SermondistributorModelExternal_source extends AdminModel
 	 * @param   string  $prefix  A prefix for the table class name. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return  JTable  A database object
+	 * @return  Table  A database object
 	 *
 	 * @since   1.6
 	 */
-	public function getTable($type = 'external_source', $prefix = 'SermondistributorTable', $config = array())
+	public function getTable($type = 'external_source', $prefix = 'SermondistributorTable', $config = [])
 	{
 		// add table path for when model gets used from other component
 		$this->addTablePath(JPATH_ADMINISTRATOR . '/components/com_sermondistributor/tables');
 		// get instance of the table
-		return JTable::getInstance($type, $prefix, $config);
+		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function clearLocalListing($id) 
@@ -114,7 +126,7 @@ class SermondistributorModelExternal_source extends AdminModel
 		// clear local listings
 		if ($id > 0)
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true);
  
 			$conditions = array(
@@ -146,7 +158,7 @@ class SermondistributorModelExternal_source extends AdminModel
 					// build info file key
 					$targetArray = explode(', ', $target);
 					$targetArray[2] = ($targetArray[2] == 2) ? 'auto' : 'manual';
-					$infoFileKey = SermondistributorHelper::safeString(implode('', $targetArray));
+					$infoFileKey = UtilitiesStringHelper::safe(implode('', $targetArray));
 					$infoFileName = md5($infoFileKey.'info').'.json';
 					// info on update path
 					$infoFilePath = JPATH_COMPONENT_SITE.'/helpers/'.$infoFileName;
@@ -155,35 +167,35 @@ class SermondistributorModelExternal_source extends AdminModel
 					{
 						if (!JFile::delete($infoFilePath))
 						{
-							$errors[] = JText::sprintf('COM_SERMONDISTRIBUTOR_S_COULD_NOT_BE_REMOVE', $infoFileName);
+							$errors[] = Text::sprintf('COM_SERMONDISTRIBUTOR_S_COULD_NOT_BE_REMOVE', $infoFileName);
 						}
 					}
 					// remove any notice on update errors
 					$key = preg_replace('/[ ,]+/', '', trim($target));
-					$noticeFilePath =  SermondistributorHelper::getFilePath('update', 'error', $key, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
+					$noticeFilePath =  FileHelper::getPath('update', 'error', $key, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
 					// now remove file if found
 					if (JFile::exists($noticeFilePath))
 					{
 						if (!JFile::delete($noticeFilePath))
 						{
 							$noticeFileName = basename($noticeFilePath);
-							$errors[] = JText::sprintf('COM_SERMONDISTRIBUTOR_S_COULD_NOT_BE_REMOVE', $noticeFileName);
+							$errors[] = Text::sprintf('COM_SERMONDISTRIBUTOR_S_COULD_NOT_BE_REMOVE', $noticeFileName);
 						}
 					}
 				}
 				// check if there was an error
-				if (SermondistributorHelper::checkArray($errors))
+				if (UtilitiesArrayHelper::check($errors))
 				{
 					return array('error' => '<ul><li>'.implode('</li><li>', $errors).'</li></ul>');
 				}
 				return true;
 			}
-			return array('error' => JText::_('COM_SERMONDISTRIBUTOR_THERE_IS_NO_TARGETS_SET_FOR_THIS_SOURCE_CAN_NOT_RESET_THE_UPDATE_STATUS'));
+			return array('error' => Text::_('COM_SERMONDISTRIBUTOR_THERE_IS_NO_TARGETS_SET_FOR_THIS_SOURCE_CAN_NOT_RESET_THE_UPDATE_STATUS'));
 		}
-		return array('error' => JText::_('COM_SERMONDISTRIBUTOR_NO_ID_FOUND_CAN_NOT_RESET_THE_UPDATE_STATUS'));
+		return array('error' => Text::_('COM_SERMONDISTRIBUTOR_NO_ID_FOUND_CAN_NOT_RESET_THE_UPDATE_STATUS'));
 	}
 
-    
+
 	/**
 	 * Method to get a single record.
 	 *
@@ -216,7 +228,7 @@ class SermondistributorModelExternal_source extends AdminModel
 			// Get the basic encryption.
 			$basickey = SermondistributorHelper::getCryptKey('basic');
 			// Get the encryption object.
-			$basic = new FOFEncryptAes($basickey);
+			$basic = new AES($basickey);
 
 			if (!empty($item->oauthtoken) && $basickey && !is_numeric($item->oauthtoken) && $item->oauthtoken === base64_encode(base64_decode($item->oauthtoken, true)))
 			{
@@ -245,7 +257,7 @@ class SermondistributorModelExternal_source extends AdminModel
 	 *
 	 * @since   1.6
 	 */
-	public function getForm($data = array(), $loadData = true, $options = array('control' => 'jform'))
+	public function getForm($data = [], $loadData = true, $options = array('control' => 'jform'))
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
@@ -272,7 +284,7 @@ class SermondistributorModelExternal_source extends AdminModel
 			return false;
 		}
 
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -285,7 +297,7 @@ class SermondistributorModelExternal_source extends AdminModel
 			$id = $jinput->get('id', 0, 'INT');
 		}
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing item.
 		// Modify the form based on Edit State access controls.
@@ -348,13 +360,13 @@ class SermondistributorModelExternal_source extends AdminModel
 	/**
 	 * Method to get the script that have to be included on the form
 	 *
-	 * @return string	script files
+	 * @return string    script files
 	 */
 	public function getScript()
 	{
 		return 'media/com_sermondistributor/js/external_source.js';
 	}
-    
+
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
@@ -373,7 +385,7 @@ class SermondistributorModelExternal_source extends AdminModel
 				return;
 			}
 
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 			// The record has been set. Check the record permissions.
 			return $user->authorise('external_source.delete', 'com_sermondistributor.external_source.' . (int) $record->id);
 		}
@@ -391,8 +403,8 @@ class SermondistributorModelExternal_source extends AdminModel
 	 */
 	protected function canEditState($record)
 	{
-		$user = JFactory::getUser();
-		$recordId = (!empty($record->id)) ? $record->id : 0;
+		$user = Factory::getUser();
+		$recordId = $record->id ??  0;
 
 		if ($recordId)
 		{
@@ -403,31 +415,31 @@ class SermondistributorModelExternal_source extends AdminModel
 				return false;
 			}
 		}
-		// In the absense of better information, revert to the component permissions.
+		// In the absence of better information, revert to the component permissions.
 		return $user->authorise('external_source.edit.state', 'com_sermondistributor');
 	}
-    
+
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param	array	$data	An array of input data.
-	 * @param	string	$key	The name of the key for the primary key.
+	 * @param    array    $data   An array of input data.
+	 * @param    string   $key    The name of the key for the primary key.
 	 *
-	 * @return	boolean
-	 * @since	2.5
+	 * @return    boolean
+	 * @since    2.5
 	 */
-	protected function allowEdit($data = array(), $key = 'id')
+	protected function allowEdit($data = [], $key = 'id')
 	{
 		// Check specific edit permission then general edit permission.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		return $user->authorise('external_source.edit', 'com_sermondistributor.external_source.'. ((int) isset($data[$key]) ? $data[$key] : 0)) or $user->authorise('external_source.edit',  'com_sermondistributor');
 	}
-    
+
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   JTable  $table  A JTable object.
+	 * @param   Table  $table  A Table object.
 	 *
 	 * @return  void
 	 *
@@ -435,19 +447,19 @@ class SermondistributorModelExternal_source extends AdminModel
 	 */
 	protected function prepareTable($table)
 	{
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
-		
+		$date = Factory::getDate();
+		$user = Factory::getUser();
+
 		if (isset($table->name))
 		{
 			$table->name = htmlspecialchars_decode($table->name, ENT_QUOTES);
 		}
-		
+
 		if (isset($table->alias) && empty($table->alias))
 		{
 			$table->generateAlias();
 		}
-		
+
 		if (empty($table->id))
 		{
 			$table->created = $date->toSql();
@@ -459,7 +471,7 @@ class SermondistributorModelExternal_source extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$query = $db->getQuery(true)
 					->select('MAX(ordering)')
 					->from($db->quoteName('#__sermondistributor_external_source'));
@@ -474,7 +486,7 @@ class SermondistributorModelExternal_source extends AdminModel
 			$table->modified = $date->toSql();
 			$table->modified_by = $user->id;
 		}
-        
+
 		if (!empty($table->id))
 		{
 			// Increment the items version number.
@@ -489,10 +501,10 @@ class SermondistributorModelExternal_source extends AdminModel
 	 *
 	 * @since   1.6
 	 */
-	protected function loadFormData() 
+	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_sermondistributor.edit.external_source.data', array());
+		$data = Factory::getApplication()->getUserState('com_sermondistributor.edit.external_source.data', []);
 
 		if (empty($data))
 		{
@@ -520,7 +532,7 @@ class SermondistributorModelExternal_source extends AdminModel
 	public function validate($form, $data, $group = null)
 	{
 		// check if the not_required field is set
-		if (isset($data['not_required']) && SermondistributorHelper::checkString($data['not_required']))
+		if (isset($data['not_required']) && UtilitiesStringHelper::check($data['not_required']))
 		{
 			$requiredFields = (array) explode(',',(string) $data['not_required']);
 			$requiredFields = array_unique($requiredFields);
@@ -528,7 +540,7 @@ class SermondistributorModelExternal_source extends AdminModel
 			foreach ($requiredFields as $requiredField)
 			{
 				// make sure there is a string value
-				if (SermondistributorHelper::checkString($requiredField))
+				if (UtilitiesStringHelper::check($requiredField))
 				{
 					// change to false
 					$form->setFieldAttribute($requiredField, 'required', 'false');
@@ -551,7 +563,7 @@ class SermondistributorModelExternal_source extends AdminModel
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Method to delete one or more records.
 	 *
@@ -567,7 +579,7 @@ class SermondistributorModelExternal_source extends AdminModel
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -587,10 +599,10 @@ class SermondistributorModelExternal_source extends AdminModel
 		{
 			return false;
 		}
-		
+
 		return true;
-        }
-    
+	}
+
 	/**
 	 * Method to perform batch operations on an item or a set of items.
 	 *
@@ -616,30 +628,30 @@ class SermondistributorModelExternal_source extends AdminModel
 
 		if (empty($pks))
 		{
-			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
 			return false;
 		}
 
 		$done = false;
 
 		// Set some needed variables.
-		$this->user			= JFactory::getUser();
-		$this->table			= $this->getTable();
-		$this->tableClassName		= get_class($this->table);
-		$this->contentType		= new JUcmType;
-		$this->type			= $this->contentType->getTypeByTable($this->tableClassName);
-		$this->canDo			= SermondistributorHelper::getActions('external_source');
-		$this->batchSet			= true;
+		$this->user = Factory::getUser();
+		$this->table = $this->getTable();
+		$this->tableClassName = get_class($this->table);
+		$this->contentType = new UCMType;
+		$this->type = $this->contentType->getTypeByTable($this->tableClassName);
+		$this->canDo = SermondistributorHelper::getActions('external_source');
+		$this->batchSet = true;
 
 		if (!$this->canDo->get('core.batch'))
 		{
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
 			return false;
 		}
-        
+
 		if ($this->type == false)
 		{
-			$type = new JUcmType;
+			$type = new UCMType;
 			$this->type = $type->getTypeByAlias($this->typeAlias);
 		}
 
@@ -676,8 +688,7 @@ class SermondistributorModelExternal_source extends AdminModel
 
 		if (!$done)
 		{
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
-
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
 			return false;
 		}
 
@@ -703,7 +714,7 @@ class SermondistributorModelExternal_source extends AdminModel
 		if (empty($this->batchSet))
 		{
 			// Set some needed variables.
-			$this->user 		= JFactory::getUser();
+			$this->user 		= Factory::getUser();
 			$this->table 		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
 			$this->canDo		= SermondistributorHelper::getActions('external_source');
@@ -729,7 +740,7 @@ class SermondistributorModelExternal_source extends AdminModel
 				$values['published'] = 0;
 		}
 
-		$newIds = array();
+		$newIds = [];
 		// Parent exists so let's proceed
 		while (!empty($pks))
 		{
@@ -742,7 +753,7 @@ class SermondistributorModelExternal_source extends AdminModel
 			if (!$this->user->authorise('external_source.edit', $contexts[$pk]))
 			{
 				// Not fatal error
-				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+				$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 				continue;
 			}
 
@@ -758,19 +769,19 @@ class SermondistributorModelExternal_source extends AdminModel
 				else
 				{
 					// Not fatal error
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
 			}
 
 			// Only for strings
-			if (SermondistributorHelper::checkString($this->table->description) && !is_numeric($this->table->description))
+			if (UtilitiesStringHelper::check($this->table->description) && !is_numeric($this->table->description))
 			{
 				$this->table->description = $this->generateUnique('description',$this->table->description);
 			}
 
 			// insert all set values
-			if (SermondistributorHelper::checkArray($values))
+			if (UtilitiesArrayHelper::check($values))
 			{
 				foreach ($values as $key => $value)
 				{
@@ -782,7 +793,7 @@ class SermondistributorModelExternal_source extends AdminModel
 			}
 
 			// update all unique fields
-			if (SermondistributorHelper::checkArray($uniqueFields))
+			if (UtilitiesArrayHelper::check($uniqueFields))
 			{
 				foreach ($uniqueFields as $uniqueField)
 				{
@@ -846,7 +857,7 @@ class SermondistributorModelExternal_source extends AdminModel
 		if (empty($this->batchSet))
 		{
 			// Set some needed variables.
-			$this->user		= JFactory::getUser();
+			$this->user		= Factory::getUser();
 			$this->table		= $this->getTable();
 			$this->tableClassName	= get_class($this->table);
 			$this->canDo		= SermondistributorHelper::getActions('external_source');
@@ -854,7 +865,7 @@ class SermondistributorModelExternal_source extends AdminModel
 
 		if (!$this->canDo->get('external_source.edit') && !$this->canDo->get('external_source.batch'))
 		{
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 			return false;
 		}
 
@@ -871,7 +882,7 @@ class SermondistributorModelExternal_source extends AdminModel
 		{
 			if (!$this->user->authorise('external_source.edit', $contexts[$pk]))
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 				return false;
 			}
 
@@ -887,13 +898,13 @@ class SermondistributorModelExternal_source extends AdminModel
 				else
 				{
 					// Not fatal error
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
 			}
 
 			// insert all set values.
-			if (SermondistributorHelper::checkArray($values))
+			if (UtilitiesArrayHelper::check($values))
 			{
 				foreach ($values as $key => $value)
 				{
@@ -937,7 +948,7 @@ class SermondistributorModelExternal_source extends AdminModel
 
 		return true;
 	}
-	
+
 	/**
 	 * Method to save the form data.
 	 *
@@ -949,15 +960,15 @@ class SermondistributorModelExternal_source extends AdminModel
 	 */
 	public function save($data)
 	{
-		$input	= JFactory::getApplication()->input;
-		$filter	= JFilterInput::getInstance();
-        
+		$input    = Factory::getApplication()->input;
+		$filter   = InputFilter::getInstance();
+
 		// set the metadata to the Item Data
 		if (isset($data['metadata']) && isset($data['metadata']['author']))
 		{
 			$data['metadata']['author'] = $filter->clean($data['metadata']['author'], 'TRIM');
-            
-			$metadata = new JRegistry;
+
+			$metadata = new Registry;
 			$metadata->loadArray($data['metadata']);
 			$data['metadata'] = (string) $metadata;
 		}
@@ -971,18 +982,18 @@ class SermondistributorModelExternal_source extends AdminModel
 		// Get the basic encryption key.
 		$basickey = SermondistributorHelper::getCryptKey('basic');
 		// Get the encryption object
-		$basic = new FOFEncryptAes($basickey);
+		$basic = new AES($basickey);
 
 		// Encrypt data oauthtoken.
 		if (isset($data['oauthtoken']) && $basickey)
 		{
 			$data['oauthtoken'] = $basic->encryptString($data['oauthtoken']);
 		}
-        
+
 		// Set the Params Items to data
 		if (isset($data['params']) && is_array($data['params']))
 		{
-			$params = new JRegistry;
+			$params = new Registry;
 			$params->loadArray($data['params']);
 			$data['params'] = (string) $params;
 		}
@@ -992,7 +1003,7 @@ class SermondistributorModelExternal_source extends AdminModel
 		{
 			// Automatic handling of other unique fields
 			$uniqueFields = $this->getUniqueFields();
-			if (SermondistributorHelper::checkArray($uniqueFields))
+			if (UtilitiesArrayHelper::check($uniqueFields))
 			{
 				foreach ($uniqueFields as $uniqueField)
 				{
@@ -1000,14 +1011,14 @@ class SermondistributorModelExternal_source extends AdminModel
 				}
 			}
 		}
-		
+
 		if (parent::save($data))
 		{
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Method to generate a unique value.
 	 *
@@ -1020,7 +1031,6 @@ class SermondistributorModelExternal_source extends AdminModel
 	 */
 	protected function generateUnique($field,$value)
 	{
-
 		// set field value unique
 		$table = $this->getTable();
 
@@ -1046,7 +1056,7 @@ class SermondistributorModelExternal_source extends AdminModel
 		// Alter the title
 		$table = $this->getTable();
 
-		while ($table->load(array('title' => $title)))
+		while ($table->load(['title' => $title]))
 		{
 			$title = StringHelper::increment($title);
 		}

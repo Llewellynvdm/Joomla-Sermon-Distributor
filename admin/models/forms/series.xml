@@ -81,6 +81,7 @@
 			label="COM_SERMONDISTRIBUTOR_SERIES_VERSION_LABEL"
 			description="COM_SERMONDISTRIBUTOR_SERIES_VERSION_DESC"
 			size="6"
+			default="1"
 			readonly="true"
 			filter="unset"
 		/>
@@ -203,7 +204,7 @@
 			/>
 		</fieldset>
 	</fields>
-	
+
 	<!-- Access Control Fields. -->
 	<fieldset name="accesscontrol">
 		<!-- Asset Id Field. Type: Hidden (joomla) -->

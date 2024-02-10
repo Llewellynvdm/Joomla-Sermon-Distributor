@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categories.php
@@ -25,8 +25,16 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Helper\TagsHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\Utilities\JsonHelper;
+use VDM\Joomla\Utilities\StringHelper;
 
 /**
  * Sermondistributor List Model for Categories
@@ -55,17 +63,17 @@ class SermondistributorModelCategories extends ListModel
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$this->user = JFactory::getUser();
+		$this->user = Factory::getUser();
 		$this->userId = $this->user->get('id');
 		$this->guest = $this->user->get('guest');
 		$this->groups = $this->user->get('groups');
 		$this->authorisedGroups = $this->user->getAuthorisedGroups();
 		$this->levels = $this->user->getAuthorisedViewLevels();
-		$this->app = JFactory::getApplication();
+		$this->app = Factory::getApplication();
 		$this->input = $this->app->input;
 		$this->initSet = true; 
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -93,49 +101,49 @@ class SermondistributorModelCategories extends ListModel
 	 */
 	public function getItems()
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// check if this user has permission to access item
 		if (!$user->authorise('site.categories.access', 'com_sermondistributor'))
 		{
-			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_CATEGORIES'), 'error');
+			$app = Factory::getApplication();
+			$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_CATEGORIES'), 'error');
 			// redirect away to the default view if no access allowed.
-			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
+			$app->redirect(Route::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
 		}
 		// load parent items
 		$items = parent::getItems();
 
 		// Get the global params
-		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
+		$globalParams = ComponentHelper::getParams('com_sermondistributor', true);
 
 		// Insure all item fields are adapted where needed.
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
-				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+				$item->slug = ($item->id ?? '0') . (isset($item->alias) ? ':' . $item->alias : '');
 				// set idCatidSermonB to the $item object.
 				$item->idCatidSermonB = $this->getIdCatidSermonEfee_B($item->id);
 			}
 		}
 
 
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			foreach ($items as $nr => &$item)
 			{
-				if (!SermondistributorHelper::checkArray($item->idCatidSermonB))
+				if (!UtilitiesArrayHelper::check($item->idCatidSermonB))
 				{
 					// remove empty category
 					unset($items[$nr]);
 				}
 				// set the icon if found
-				if (SermondistributorHelper::checkJson($item->params))
+				if (JsonHelper::check($item->params))
 				{
 					$params = json_decode($item->params, true);
-					if (isset($params['image']) && SermondistributorHelper::checkString($params['image']))
+					if (isset($params['image']) && StringHelper::check($params['image']))
 					{
 						$item->icon = $params['image'];
 					}
@@ -156,7 +164,7 @@ class SermondistributorModelCategories extends ListModel
 	public function getIdCatidSermonEfee_B($id)
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -192,7 +200,7 @@ class SermondistributorModelCategories extends ListModel
 	 */
 	public function getUikitComp()
 	{
-		if (isset($this->uikitComp) && SermondistributorHelper::checkArray($this->uikitComp))
+		if (isset($this->uikitComp) && UtilitiesArrayHelper::check($this->uikitComp))
 		{
 			return $this->uikitComp;
 		}

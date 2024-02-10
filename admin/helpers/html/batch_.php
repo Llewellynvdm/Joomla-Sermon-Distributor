@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		batch_.php
@@ -38,7 +38,7 @@ abstract class JHtmlBatch_
 	 * @var    array
 	 * @since  3.0
 	 */
-	protected static $ListSelection = array();
+	protected static $ListSelection = [];
 
 	/**
 	 * Render the batch selection options.

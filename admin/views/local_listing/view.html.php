@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -25,7 +25,19 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use VDM\Joomla\Utilities\StringHelper;
 
 /**
  * Local_listing Html View class
@@ -39,7 +51,7 @@ class SermondistributorViewLocal_listing extends HtmlView
 	public function display($tpl = null)
 	{
 		// set params
-		$this->params = JComponentHelper::getParams('com_sermondistributor');
+		$this->params = ComponentHelper::getParams('com_sermondistributor');
 		// Assign the variables
 		$this->form = $this->get('Form');
 		$this->item = $this->get('Item');
@@ -48,7 +60,7 @@ class SermondistributorViewLocal_listing extends HtmlView
 		// get action permissions
 		$this->canDo = SermondistributorHelper::getActions('local_listing', $this->item);
 		// get input
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 		$this->ref = $jinput->get('ref', 0, 'word');
 		$this->refid = $jinput->get('refid', 0, 'int');
 		$return = $jinput->get('return', null, 'base64');
@@ -73,7 +85,7 @@ class SermondistributorViewLocal_listing extends HtmlView
 
 		// Set the toolbar
 		$this->addToolBar();
-		
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -93,34 +105,34 @@ class SermondistributorViewLocal_listing extends HtmlView
 	 */
 	protected function addToolBar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
-		$user = JFactory::getUser();
+		Factory::getApplication()->input->set('hidemainmenu', true);
+		$user = Factory::getUser();
 		$userId	= $user->id;
 		$isNew = $this->item->id == 0;
 
-		JToolbarHelper::title( JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NEW' : 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EDIT'), 'pencil-2 article-add');
+		ToolbarHelper::title( Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NEW' : 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EDIT'), 'pencil-2 article-add');
 		// Built the actions for new and existing records.
-		if (SermondistributorHelper::checkString($this->referral))
+		if (StringHelper::check($this->referral))
 		{
 			if ($this->canDo->get('local_listing.create') && $isNew)
 			{
 				// We can create the record.
-				JToolBarHelper::save('local_listing.save', 'JTOOLBAR_SAVE');
+				ToolbarHelper::save('local_listing.save', 'JTOOLBAR_SAVE');
 			}
 			elseif ($this->canDo->get('local_listing.edit'))
 			{
 				// We can save the record.
-				JToolBarHelper::save('local_listing.save', 'JTOOLBAR_SAVE');
+				ToolbarHelper::save('local_listing.save', 'JTOOLBAR_SAVE');
 			}
 			if ($isNew)
 			{
 				// Do not creat but cancel.
-				JToolBarHelper::cancel('local_listing.cancel', 'JTOOLBAR_CANCEL');
+				ToolbarHelper::cancel('local_listing.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
 				// We can close it.
-				JToolBarHelper::cancel('local_listing.cancel', 'JTOOLBAR_CLOSE');
+				ToolbarHelper::cancel('local_listing.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
 		else
@@ -130,44 +142,44 @@ class SermondistributorViewLocal_listing extends HtmlView
 				// For new records, check the create permission.
 				if ($this->canDo->get('local_listing.create'))
 				{
-					JToolBarHelper::apply('local_listing.apply', 'JTOOLBAR_APPLY');
-					JToolBarHelper::save('local_listing.save', 'JTOOLBAR_SAVE');
-					JToolBarHelper::custom('local_listing.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+					ToolbarHelper::apply('local_listing.apply', 'JTOOLBAR_APPLY');
+					ToolbarHelper::save('local_listing.save', 'JTOOLBAR_SAVE');
+					ToolbarHelper::custom('local_listing.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
 				};
-				JToolBarHelper::cancel('local_listing.cancel', 'JTOOLBAR_CANCEL');
+				ToolbarHelper::cancel('local_listing.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
 			{
 				if ($this->canDo->get('local_listing.edit'))
 				{
 					// We can save the new record
-					JToolBarHelper::apply('local_listing.apply', 'JTOOLBAR_APPLY');
-					JToolBarHelper::save('local_listing.save', 'JTOOLBAR_SAVE');
+					ToolbarHelper::apply('local_listing.apply', 'JTOOLBAR_APPLY');
+					ToolbarHelper::save('local_listing.save', 'JTOOLBAR_SAVE');
 					// We can save this record, but check the create permission to see
 					// if we can return to make a new one.
 					if ($this->canDo->get('local_listing.create'))
 					{
-						JToolBarHelper::custom('local_listing.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+						ToolbarHelper::custom('local_listing.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
 					}
 				}
 				$canVersion = ($this->canDo->get('core.version') && $this->canDo->get('local_listing.version'));
 				if ($this->state->params->get('save_history', 1) && $this->canDo->get('local_listing.edit') && $canVersion)
 				{
-					JToolbarHelper::versions('com_sermondistributor.local_listing', $this->item->id);
+					ToolbarHelper::versions('com_sermondistributor.local_listing', $this->item->id);
 				}
 				if ($this->canDo->get('local_listing.create'))
 				{
-					JToolBarHelper::custom('local_listing.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+					ToolbarHelper::custom('local_listing.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 				}
-				JToolBarHelper::cancel('local_listing.cancel', 'JTOOLBAR_CLOSE');
+				ToolbarHelper::cancel('local_listing.cancel', 'JTOOLBAR_CLOSE');
 			}
 		}
-		JToolbarHelper::divider();
+		ToolbarHelper::divider();
 		// set help url for this view if found
 		$this->help_url = SermondistributorHelper::getHelpUrl('local_listing');
-		if (SermondistributorHelper::checkString($this->help_url))
+		if (StringHelper::check($this->help_url))
 		{
-			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
+			ToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 	}
 
@@ -182,11 +194,11 @@ class SermondistributorViewLocal_listing extends HtmlView
 	{
 		if(strlen($var) > 30)
 		{
-    		// use the helper htmlEscape method instead and shorten the string
-			return SermondistributorHelper::htmlEscape($var, $this->_charset, true, 30);
+			// use the helper htmlEscape method instead and shorten the string
+			return StringHelper::html($var, $this->_charset, true, 30);
 		}
 		// use the helper htmlEscape method instead.
-		return SermondistributorHelper::htmlEscape($var, $this->_charset);
+		return StringHelper::html($var, $this->_charset);
 	}
 
 	/**
@@ -197,20 +209,26 @@ class SermondistributorViewLocal_listing extends HtmlView
 	protected function setDocument()
 	{
 		$isNew = ($this->item->id < 1);
-		if (!isset($this->document))
-		{
-			$this->document = JFactory::getDocument();
-		}
-		$this->document->setTitle(JText::_($isNew ? 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NEW' : 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EDIT'));
-		$this->document->addStyleSheet(JURI::root() . "administrator/components/com_sermondistributor/assets/css/local_listing.css", (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->getDocument()->setTitle(Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NEW' : 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EDIT'));
+		Html::_('stylesheet', "administrator/components/com_sermondistributor/assets/css/local_listing.css", ['version' => 'auto']);
 		// Add Ajax Token
-		$this->document->addScriptDeclaration("var token = '".JSession::getFormToken()."';");
-		$this->document->addScript(JURI::root() . $this->script, (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		$this->document->addScript(JURI::root() . "administrator/components/com_sermondistributor/views/local_listing/submitbutton.js", (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript'); 
+		$this->document->addScriptDeclaration("var token = '" . Session::getFormToken() . "';");
+		Html::_('script', $this->script, ['version' => 'auto']);
+		Html::_('script', "administrator/components/com_sermondistributor/views/local_listing/submitbutton.js", ['version' => 'auto']);
 		// add JavaScripts
-		$this->document->addScript( JURI::root(true) .'/media/com_sermondistributor/uikit/js/uikit.min.js' );
+		Html::_('script', 'media/com_sermondistributor/uikit/js/uikit.min.js', ['version' => 'auto']);
 		// add the style sheets
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_sermondistributor/uikit/css/uikit.gradient.min.css' );
-		JText::script('view not acceptable. Error');
+		Html::_('stylesheet', 'media/com_sermondistributor/uikit/css/uikit.gradient.min.css', ['version' => 'auto']);
+		Text::script('view not acceptable. Error');
+	}
+
+	/**
+	 * Get the Document (helper method toward Joomla 4 and 5)
+	 */
+	public function getDocument()
+	{
+		$this->document ??= JFactory::getDocument();
+
+		return $this->document;
 	}
 }

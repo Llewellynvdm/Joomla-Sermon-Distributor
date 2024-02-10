@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -25,10 +25,17 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.formvalidator');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.keepalive');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+use VDM\Joomla\Utilities\ArrayHelper;
+use VDM\Joomla\Utilities\StringHelper;
+Html::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+Html::_('behavior.formvalidator');
+Html::_('formbehavior.chosen', 'select');
+Html::_('behavior.keepalive');
 
 // get the needed module for translation
 $model = SermondistributorHelper::getModel('external_sources');
@@ -46,9 +53,9 @@ $model = SermondistributorHelper::getModel('external_sources');
 		}
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&view=manual_updater'); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
+<form action="<?php echo Route::_('index.php?option=com_sermondistributor&view=manual_updater'); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
-<?php if (isset($this->items) && SermondistributorHelper::checkArray($this->items)): ?>
+<?php if (isset($this->items) && ArrayHelper::check($this->items)): ?>
 <script type="text/javascript">
 // Add spindle-wheel for update:
 jQuery(document).ready(function($) {
@@ -75,48 +82,48 @@ jQuery(document).ready(function($) {
 });
 </script>
 <div id="sermondistributor_loader">
-	<?php echo JHtml::_('bootstrap.startAccordion', 'dashboard'); ?>
+	<?php echo Html::_('bootstrap.startAccordion', 'dashboard'); ?>
 		<?php foreach ($this->items as $item): ?>
-			<?php $key = SermondistributorHelper::safeString($item->description).$item->id; ?>
-			<?php $name = '<div id="heading_'. $key .'">'. $item->description . ' <small>(' . JText::_($model->selectionTranslation($item->build, 'build')) . ')</small></div>'; ?>
-			<?php echo JHtml::_('bootstrap.addSlide', 'dashboard', $name, $key); ?>
+			<?php $key = StringHelper::safe($item->description).$item->id; ?>
+			<?php $name = '<div id="heading_'. $key .'">'. $item->description . ' <small>(' . Text::_($model->selectionTranslation($item->build, 'build')) . ')</small></div>'; ?>
+			<?php echo Html::_('bootstrap.addSlide', 'dashboard', $name, $key); ?>
 				<div class="uk-form-row">
 					<label class="uk-form-label" >
-						<?php echo JText::_('COM_SERMONDISTRIBUTOR_ADD_THE_STRONGAPP_GENERATED_ACCESS_TOKENSTRONG_HERE'); ?>
+						<?php echo Text::_('COM_SERMONDISTRIBUTOR_ADD_THE_STRONGAPP_GENERATED_ACCESS_TOKENSTRONG_HERE'); ?>
 					</label>
 					<input 
 						class="span12"
 						type="text"
 						id="sleutel-<?php echo $item->id; ?>"
-						placeholder="<?php echo JText::_('COM_SERMONDISTRIBUTOR_ADD_TOKEN_HERE'); ?>"
+						placeholder="<?php echo Text::_('COM_SERMONDISTRIBUTOR_ADD_TOKEN_HERE'); ?>"
 					> 
 				</div>
 				<div class="alert alert-info">
-					<p><?php echo JText::_('COM_SERMONDISTRIBUTOR_BY_USING_AN_ACCESS_TOKEN_YOU_WILL_BE_ABLE_TO_MAKE_API_CALLS_FOR_YOUR_OWN_ACCOUNT_WITHOUT_GOING_THROUGH_THE_AUTHORIZATION_FLOW_DURING_THIS_MANUAL_UPDATE_OF_THE_LOCAL_LISTINGBR_THE_TOKEN_WILL_NOT_BE_STORED_AND_FOR_SAFETY_THE_TOKEN_WILL_BE_REVOKED_ONCE_THE_UPDATE_IS_COMPLETED_SUCCESSFULLYBR_BTHIS_WILL_MEAN_IT_CAN_ONLY_BE_USED_THIS_ONCEB_YOU_WOULD_NEED_A_NEW_TOKEN_EACH_TIME_YOU_RUN_THIS_UPDATE_MANUALLY_BR_SMALLMAKE_SURE_TO_HAVE_SSL_INPLACE_ON_THIS_PAGE_WHEN_DOING_THIS_UPDATE_AS_AN_EXTRA_SECURITY_MEASURESMALL'); ?></p>
+					<p><?php echo Text::_('COM_SERMONDISTRIBUTOR_BY_USING_AN_ACCESS_TOKEN_YOU_WILL_BE_ABLE_TO_MAKE_API_CALLS_FOR_YOUR_OWN_ACCOUNT_WITHOUT_GOING_THROUGH_THE_AUTHORIZATION_FLOW_DURING_THIS_MANUAL_UPDATE_OF_THE_LOCAL_LISTINGBR_THE_TOKEN_WILL_NOT_BE_STORED_AND_FOR_SAFETY_THE_TOKEN_WILL_BE_REVOKED_ONCE_THE_UPDATE_IS_COMPLETED_SUCCESSFULLYBR_BTHIS_WILL_MEAN_IT_CAN_ONLY_BE_USED_THIS_ONCEB_YOU_WOULD_NEED_A_NEW_TOKEN_EACH_TIME_YOU_RUN_THIS_UPDATE_MANUALLY_BR_SMALLMAKE_SURE_TO_HAVE_SSL_INPLACE_ON_THIS_PAGE_WHEN_DOING_THIS_UPDATE_AS_AN_EXTRA_SECURITY_MEASURESMALL'); ?></p>
 				</div>
 				<?php $targets = SermondistributorHelper::getExternalListingUpdateKeys($item->id, 1, 2); ?>
-				<?php if (SermondistributorHelper::checkArray($targets)) : ?>
+				<?php if (ArrayHelper::check($targets)) : ?>
 					<?php foreach($targets as $target): ?>
 					<?php $error = SermondistributorHelper::getUpdateError(0, $item->id.$target.$item->build); ?>
-					<?php if (SermondistributorHelper::checkString($error)): ?>
-						<?php $errorKey = SermondistributorHelper::safeString($item->id.$target.$item->build); ?>
-						<a class="btn btn-danger" href="#<?php echo 'error'.$errorKey; ?>" data-toggle="modal"><?php echo JText::_('COM_SERMONDISTRIBUTOR_VIEW_ERROR'); ?></a>
-						<?php echo JHtml::_('bootstrap.renderModal', 'error'.$errorKey, array('title' => JText::_('COM_SERMONDISTRIBUTOR_THERE_WAS_AN_ERROR_DURING_THE_LAST_UPDATE_ATTEMPT')), $error); ?>
+					<?php if (StringHelper::check($error)): ?>
+						<?php $errorKey = StringHelper::safe($item->id.$target.$item->build); ?>
+						<a class="btn btn-danger" href="#<?php echo 'error'.$errorKey; ?>" data-toggle="modal"><?php echo Text::_('COM_SERMONDISTRIBUTOR_VIEW_ERROR'); ?></a>
+						<?php echo Html::_('bootstrap.renderModal', 'error'.$errorKey, array('title' => Text::_('COM_SERMONDISTRIBUTOR_THERE_WAS_AN_ERROR_DURING_THE_LAST_UPDATE_ATTEMPT')), $error); ?>
 					<?php endif; ?>
 					<button onclick="updateLocalLinks('sleutel-<?php echo $item->id; ?>', <?php echo $target; ?>, <?php echo $item->id; ?>, <?php echo $item->build; ?>)" class="btn btn-big">
 						<span class="icon-cog"></span>
-							<?php echo JText::sprintf('COM_SERMONDISTRIBUTOR_UPDATE_LOCAL_LINKS_OF_TARGET_S_EXTERNAL_SOURCE', $target); ?>
+							<?php echo Text::sprintf('COM_SERMONDISTRIBUTOR_UPDATE_LOCAL_LINKS_OF_TARGET_S_EXTERNAL_SOURCE', $target); ?>
 					</button>
 					<?php endforeach; ?>
 				<?php else: ?>
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_THERE_HAS_NO_TARGETS_BEEN_SET_PLEASE_MAKE_SURE_TO_ADD_TARGETS_TO_THIS_EXTERNAL_SOURCE'); ?>
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_THERE_HAS_NO_TARGETS_BEEN_SET_PLEASE_MAKE_SURE_TO_ADD_TARGETS_TO_THIS_EXTERNAL_SOURCE'); ?>
 				<?php endif; ?>
-			<?php echo JHtml::_('bootstrap.endSlide'); ?>
+			<?php echo Html::_('bootstrap.endSlide'); ?>
 		<?php endforeach; ?>
-	<?php echo JHtml::_('bootstrap.endAccordion'); ?>
+	<?php echo Html::_('bootstrap.endAccordion'); ?>
 </div>
 <div id="uploader" style="display:none;">
-	<center><h1><?php echo JText::_('COM_SERMONDISTRIBUTOR_THE_UPDATE_IS_RUNNING'); ?><span class="loading-dots">.</span></h1><p><b>You can close the browser window!</b><br />This update will continue to run in the background on the server (and can take hours).<br />Check again latter since time of completion, or any errors will be logged and displayed here.</p></center>
+	<center><h1><?php echo Text::_('COM_SERMONDISTRIBUTOR_THE_UPDATE_IS_RUNNING'); ?><span class="loading-dots">.</span></h1><p><b>You can close the browser window!</b><br />This update will continue to run in the background on the server (and can take hours).<br />Check again latter since time of completion, or any errors will be logged and displayed here.</p></center>
 </div>
 <script>
 // token 
@@ -182,12 +189,12 @@ function server_updateLocalLinks(target, type, id, sleutel)
 </script>
 <?php else: ?>
 	<div class="uk-alert uk-alert-success" data-uk-alert>
-		<p><?php echo JText::_('COM_SERMONDISTRIBUTOR_NO_MANUAL_UPDATES_AVAILABLE'); ?></p>
+		<p><?php echo Text::_('COM_SERMONDISTRIBUTOR_NO_MANUAL_UPDATES_AVAILABLE'); ?></p>
 	</div>
 <?php endif; ?>
 <input type="hidden" name="task" value="" />
-<?php echo JHtml::_('form.token'); ?>
+<?php echo Html::_('form.token'); ?>
 </form>
 <?php else: ?>
-        <h1><?php echo JText::_('COM_SERMONDISTRIBUTOR_NO_ACCESS_GRANTED'); ?></h1>
+		<h1><?php echo Text::_('COM_SERMONDISTRIBUTOR_NO_ACCESS_GRANTED'); ?></h1>
 <?php endif; ?>

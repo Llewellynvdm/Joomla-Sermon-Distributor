@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_sources.php
@@ -25,8 +25,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\Utilities\ObjectHelper;
 
 /**
  * External_sources Admin Controller
@@ -60,13 +66,13 @@ class SermondistributorControllerExternal_sources extends AdminController
 	public function exportData()
 	{
 		// Check for request forgeries
-		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
 		// check if export is allowed for this user.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		if ($user->authorise('external_source.export', 'com_sermondistributor') && $user->authorise('core.export', 'com_sermondistributor'))
 		{
 			// Get the input
-			$input = JFactory::getApplication()->input;
+			$input = Factory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
 			// Sanitize the input
 			$pks = ArrayHelper::toInteger($pks);
@@ -74,16 +80,16 @@ class SermondistributorControllerExternal_sources extends AdminController
 			$model = $this->getModel('External_sources');
 			// get the data to export
 			$data = $model->getExportData($pks);
-			if (SermondistributorHelper::checkArray($data))
+			if (UtilitiesArrayHelper::check($data))
 			{
 				// now set the data to the spreadsheet
-				$date = JFactory::getDate();
+				$date = Factory::getDate();
 				SermondistributorHelper::xls($data,'External_sources_'.$date->format('jS_F_Y'),'External sources exported ('.$date->format('jS F, Y').')','external sources');
 			}
 		}
 		// Redirect to the list screen with error.
-		$message = JText::_('COM_SERMONDISTRIBUTOR_EXPORT_FAILED');
-		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=external_sources', false), $message, 'error');
+		$message = Text::_('COM_SERMONDISTRIBUTOR_EXPORT_FAILED');
+		$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=external_sources', false), $message, 'error');
 		return;
 	}
 
@@ -91,32 +97,32 @@ class SermondistributorControllerExternal_sources extends AdminController
 	public function importData()
 	{
 		// Check for request forgeries
-		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
 		// check if import is allowed for this user.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		if ($user->authorise('external_source.import', 'com_sermondistributor') && $user->authorise('core.import', 'com_sermondistributor'))
 		{
 			// Get the import model
 			$model = $this->getModel('External_sources');
 			// get the headers to import
 			$headers = $model->getExImPortHeaders();
-			if (SermondistributorHelper::checkObject($headers))
+			if (ObjectHelper::check($headers))
 			{
 				// Load headers to session.
-				$session = JFactory::getSession();
+				$session = Factory::getSession();
 				$headers = json_encode($headers);
 				$session->set('external_source_VDM_IMPORTHEADERS', $headers);
 				$session->set('backto_VDM_IMPORT', 'external_sources');
 				$session->set('dataType_VDM_IMPORTINTO', 'external_source');
 				// Redirect to import view.
-				$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_SELECT_FILE_FOR_EXTERNAL_SOURCES');
-				$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=import', false), $message);
+				$message = Text::_('COM_SERMONDISTRIBUTOR_IMPORT_SELECT_FILE_FOR_EXTERNAL_SOURCES');
+				$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=import', false), $message);
 				return;
 			}
 		}
 		// Redirect to the list screen with error.
-		$message = JText::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
-		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=external_sources', false), $message, 'error');
+		$message = Text::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
+		$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=external_sources', false), $message, 'error');
 		return;
 	}
 }

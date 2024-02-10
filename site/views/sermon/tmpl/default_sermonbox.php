@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_sermonbox.php
@@ -24,6 +24,10 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
 
 // build the list class
 $style = $this->params->get('sermon_list_style');
@@ -91,7 +95,7 @@ $this->item->params = $this->params;
 			?>
 			<div class="uk-panel-badge uk-badge <?php echo $badge_class; ?>">
 				<i class="uk-icon-<?php echo $badge_icon; ?>"></i>
-				<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->item->hits; ?>
+				<?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->item->hits; ?>
 			</div>
 		<?php endif ;?>
 		<?php if ($this->params->get('sermon_icon')): ?>
@@ -107,25 +111,25 @@ $this->item->params = $this->params;
 			<div class="uk-panel">
 				<ul class="uk-list<?php echo $listClass; ?>">
 					<?php if ($this->params->get('sermon_download_counter')): ?>
-						<li class="<?php echo $contrastClass; ?>"><?php echo JText::_('COM_SERMONDISTRIBUTOR_TOTAL_DOWNLOADS'); ?>: <?php echo $this->item->statisticTotal; ?></li>
+						<li class="<?php echo $contrastClass; ?>"><?php echo Text::_('COM_SERMONDISTRIBUTOR_TOTAL_DOWNLOADS'); ?>: <?php echo $this->item->statisticTotal; ?></li>
 					<?php endif; ?>
 					<?php if ($this->params->get('sermon_preacher') && $this->item->preacher): ?>
-						<li class="<?php echo $contrastClass; ?>"><?php echo JText::_('COM_SERMONDISTRIBUTOR_PREACHER'); ?>: <a  class="<?php echo $contrastClass; ?>" href="<?php echo $this->item->preacher_link; ?>" data-uk-tooltip title="<?php echo $this->item->preacher_name; ?>"><?php echo $this->item->preacher_name; ?></a></li>
+						<li class="<?php echo $contrastClass; ?>"><?php echo Text::_('COM_SERMONDISTRIBUTOR_PREACHER'); ?>: <a  class="<?php echo $contrastClass; ?>" href="<?php echo $this->item->preacher_link; ?>" data-uk-tooltip title="<?php echo $this->item->preacher_name; ?>"><?php echo $this->item->preacher_name; ?></a></li>
 					<?php endif; ?>
 					<?php if ($this->params->get('sermon_series') && $this->item->series): ?>
-						<li class="<?php echo $contrastClass; ?>"><?php echo JText::_('COM_SERMONDISTRIBUTOR_SERIES'); ?>: <a  class="<?php echo $contrastClass; ?>" href="<?php echo $this->item->series_link; ?>" data-uk-tooltip title="<?php echo $this->item->series_name; ?>"><?php echo $this->item->series_name; ?></a></li>
+						<li class="<?php echo $contrastClass; ?>"><?php echo Text::_('COM_SERMONDISTRIBUTOR_SERIES'); ?>: <a  class="<?php echo $contrastClass; ?>" href="<?php echo $this->item->series_link; ?>" data-uk-tooltip title="<?php echo $this->item->series_name; ?>"><?php echo $this->item->series_name; ?></a></li>
 					<?php endif; ?>
 					<?php if ($this->params->get('sermon_category') && $this->item->category): ?>
-						<li class="<?php echo $contrastClass; ?>"><?php echo JText::_('COM_SERMONDISTRIBUTOR_CATEGORY'); ?>: <a  class="<?php echo $contrastClass; ?>" href="<?php echo $this->item->category_link; ?>" data-uk-tooltip title="<?php echo $this->item->category; ?>"><?php echo $this->item->category; ?></a></li>
+						<li class="<?php echo $contrastClass; ?>"><?php echo Text::_('COM_SERMONDISTRIBUTOR_CATEGORY'); ?>: <a  class="<?php echo $contrastClass; ?>" href="<?php echo $this->item->category_link; ?>" data-uk-tooltip title="<?php echo $this->item->category; ?>"><?php echo $this->item->category; ?></a></li>
 					<?php endif; ?>
 					<?php if ($this->params->get('sermon_downloads')): ?>
-						<li><?php echo JLayoutHelper::render('downloadsermonbutton', $this->item); ?></li>
+						<li><?php echo LayoutHelper::render('downloadsermonbutton', $this->item); ?></li>
 					<?php endif; ?>
 					<?php if ($this->params->get('add_to_button') && isset($this->item->dropbox_buttons)): ?>
-						<li><?php echo JLayoutHelper::render('addtodropboxbutton', $this->item); ?></li>
+						<li><?php echo LayoutHelper::render('addtodropboxbutton', $this->item); ?></li>
 					<?php endif; ?>
 						<?php if (1 == $this->item->playerKey): ?>
-							<?php echo JLayoutHelper::render('mediaplayer', $this->item); ?>
+							<?php echo LayoutHelper::render('mediaplayer', $this->item); ?>
 						<?php endif; ?>
 				</ul>
 			</div>
@@ -146,5 +150,5 @@ $this->item->params = $this->params;
 	</div>
 </div>
 <?php if (2 == $this->item->playerKey || 3 == $this->item->playerKey): ?>
-	<?php echo JLayoutHelper::render('mediaplayer', $this->item); ?>
+	<?php echo LayoutHelper::render('mediaplayer', $this->item); ?>
 <?php endif; ?>

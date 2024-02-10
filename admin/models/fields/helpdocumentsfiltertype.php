@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		helpdocumentsfiltertype.php
@@ -25,6 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+
 // import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
@@ -37,19 +41,19 @@ class JFormFieldHelpdocumentsfiltertype extends JFormFieldList
 	/**
 	 * The helpdocumentsfiltertype field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 */
 	public $type = 'helpdocumentsfiltertype';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return	array    An array of JHtml options.
+	 * @return    array    An array of Html options.
 	 */
 	protected function getOptions()
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -62,21 +66,21 @@ class JFormFieldHelpdocumentsfiltertype extends JFormFieldList
 		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
 
-		$results = $db->loadColumn();
-		$_filter = array();
-		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_TYPE') . ' -');
+		$_results = $db->loadColumn();
+		$_filter = [];
+		$_filter[] = Html::_('select.option', '', '- ' . Text::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_TYPE') . ' -');
 
-		if ($results)
+		if ($_results)
 		{
 			// get help_documentsmodel
-			$model = SermondistributorHelper::getModel('help_documents');
-			$results = array_unique($results);
-			foreach ($results as $type)
+			$_model = SermondistributorHelper::getModel('help_documents');
+			$_results = array_unique($_results);
+			foreach ($_results as $type)
 			{
 				// Translate the type selection
-				$text = $model->selectionTranslation($type,'type');
+				$_text = $_model->selectionTranslation($type,'type');
 				// Now add the type and its text to the options array
-				$_filter[] = JHtml::_('select.option', $type, JText::_($text));
+				$_filter[] = Html::_('select.option', $type, Text::_($_text));
 			}
 		}
 		return $_filter;

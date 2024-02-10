@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		api.php
@@ -25,7 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use VDM\Joomla\Utilities\StringHelper;
+use VDM\Joomla\Utilities\ArrayHelper;
 
 /**
  * Sermondistributor Api Form Controller
@@ -41,7 +44,7 @@ class SermondistributorControllerApi extends FormController
 	 */
 	protected $task;
 
-	public function __construct($config = array())
+	public function __construct($config = [])
 	{
 		$this->view_list = 'preachers'; // safeguard for setting the return view listing to the default site view.
 		parent::__construct($config);
@@ -50,20 +53,20 @@ class SermondistributorControllerApi extends FormController
 	public function worker()
 	{
 		// get input values
-		$input = JFactory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 		// get DATA
 		$DATA = $input->post->get('VDM_DATA', null, 'STRING');
 		// get TASK
 		$TASK = $input->server->get('HTTP_VDM_TASK', null, 'STRING');
 		// check if correct value is given
-		if (SermondistributorHelper::checkString($DATA) && SermondistributorHelper::checkString($TASK))
+		if (StringHelper::check($DATA) && StringHelper::check($TASK))
 		{
 			// get data array
 			$dataArray = explode('___VDM___', $DATA);
 			// get the task
 			$task = SermondistributorHelper::unlock($TASK);
 			// check the array
-			if (SermondistributorHelper::checkArray($dataArray) && SermondistributorHelper::checkString($task))
+			if (ArrayHelper::check($dataArray) && StringHelper::check($task))
 			{
 				// open theQueue function
 				if ('theQueue' === $task)
@@ -72,7 +75,7 @@ class SermondistributorControllerApi extends FormController
 					{
 						echo 1;
 						// clear session
-						JFactory::getApplication()->getSession()->destroy();
+						Factory::getApplication()->getSession()->destroy();
 						jexit();
 					}
 				}
@@ -81,7 +84,7 @@ class SermondistributorControllerApi extends FormController
 		// not success
 		echo 0;
 		// clear session
-		JFactory::getApplication()->getSession()->destroy();
+		Factory::getApplication()->getSession()->destroy();
 		jexit();
 	}
 
@@ -95,7 +98,7 @@ class SermondistributorControllerApi extends FormController
 		foreach ($dataArray as $data)
 		{
 			$data = SermondistributorHelper::unlock($data);
-			if (SermondistributorHelper::checkArray($data) && count($data) == 3)
+			if (ArrayHelper::check($data) && count($data) == 3)
 			{
 				if (!$model->theQueue($data[0], $data[1], $data[2])) // id, target, typeID
 				{
@@ -129,13 +132,13 @@ class SermondistributorControllerApi extends FormController
 			// not success
 			echo 1;
 			// clear session
-			JFactory::getApplication()->getSession()->destroy();
+			Factory::getApplication()->getSession()->destroy();
 			jexit();
 		}
 		// not success
 		echo 0;
 		// clear session
-		JFactory::getApplication()->getSession()->destroy();
+		Factory::getApplication()->getSession()->destroy();
 		jexit();
 	}
 
@@ -144,7 +147,7 @@ class SermondistributorControllerApi extends FormController
 		// get params
 		$params = JComponentHelper::getParams('com_sermondistributor');
 		// return user object
-		return JFactory::getUser($params->get('api', 0, 'INT'));
+		return Factory::getUser($params->get('api', 0, 'INT'));
 	}
 
 	/**
@@ -159,13 +162,13 @@ class SermondistributorControllerApi extends FormController
 	 *
 	 * @since   12.2
 	 */
-	protected function allowEdit($data = array(), $key = 'id')
+	protected function allowEdit($data = [], $key = 'id')
 	{
 		// to insure no other tampering
 		return false;
 	}
 
-        /**
+	/**
 	 * Method override to check if you can add a new record.
 	 *
 	 * @param   array  $data  An array of input data.
@@ -174,7 +177,7 @@ class SermondistributorControllerApi extends FormController
 	 *
 	 * @since   1.6
 	 */
-	protected function allowAdd($data = array())
+	protected function allowAdd($data = [])
 	{
 		// to insure no other tampering
 		return false;
@@ -209,7 +212,7 @@ class SermondistributorControllerApi extends FormController
 	 *
 	 * @since   12.2
 	 */
-	protected function postSaveHook(JModelLegacy $model, $validData = array())
+	protected function postSaveHook(JModelLegacy $model, $validData = [])
 	{
 	}
 }

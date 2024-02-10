@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		mediaplayer.php
@@ -25,6 +25,13 @@
 // No direct access to this file
 defined('JPATH_BASE') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use VDM\Joomla\Utilities\ArrayHelper;
+use VDM\Joomla\Utilities\StringHelper;
+
 $players = array();
 $num = 'A';
 if (isset($displayData->download_links) && count($displayData->download_links))
@@ -38,14 +45,14 @@ if (isset($displayData->download_links) && count($displayData->download_links))
 			$audio['link'] = $link;
 			if (1 == count($displayData->download_links))
 			{
-				$audio['name'] = JText::_('COM_SERMONDISTRIBUTOR_PLAY_AUDIO_FILE');
+				$audio['name'] = Text::_('COM_SERMONDISTRIBUTOR_PLAY_AUDIO_FILE');
 			}
 			else
 			{
-				$audio['name'] = JText::_('COM_SERMONDISTRIBUTOR_PLAY_AUDIO_FILE').' '.$num;
+				$audio['name'] = Text::_('COM_SERMONDISTRIBUTOR_PLAY_AUDIO_FILE').' '.$num;
 			}
 			$audio['filename'] = $filename;
-			$players[] = JLayoutHelper::render('soundmanagerthreesixty', $audio);
+			$players[] = LayoutHelper::render('soundmanagerthreesixty', $audio);
 			$num++;
 		}
 		elseif (2 == $displayData->playerKey)
@@ -53,11 +60,11 @@ if (isset($displayData->download_links) && count($displayData->download_links))
 			// use jPlayer
 			if (1 == count($displayData->download_links))
 			{
-				$name = JText::_('COM_SERMONDISTRIBUTOR_AUDIO_FILE');
+				$name = Text::_('COM_SERMONDISTRIBUTOR_AUDIO_FILE');
 			}
 			else
 			{
-				$name = JText::_('COM_SERMONDISTRIBUTOR_AUDIO_FILE').' '.$num;
+				$name = Text::_('COM_SERMONDISTRIBUTOR_AUDIO_FILE').' '.$num;
 			}
 			if (!isset($players['script']))
 			{
@@ -79,31 +86,31 @@ if (isset($displayData->download_links) && count($displayData->download_links))
 		elseif (3 == $displayData->playerKey)
 		{
 			// use html5 player (plain and simple)
-			$players[] = JLayoutHelper::render('htmlfive', $link);	
+			$players[] = LayoutHelper::render('htmlfive', $link);	
 		}
 	}
 	// use jPlayer layout
-	if (isset($players['script']) && SermondistributorHelper::checkArray($players['script']))
+	if (isset($players['script']) && ArrayHelper::check($players['script']))
 	{
-		$players['swfPath'] = JURI::root() .'media/com_sermondistributor/jplayer/jplayer';
+		$players['swfPath'] = Uri::root() .'media/com_sermondistributor/jplayer/jplayer';
 		if (2 == $displayData->playerKey && 1 == count($displayData->download_links))
 		{
-			$players = JLayoutHelper::render('jplayerbluemonday', $players);
+			$players = LayoutHelper::render('jplayerbluemonday', $players);
 		}
 		elseif (2 == $displayData->playerKey && count($displayData->download_links) > 1)
 		{
-			$players = JLayoutHelper::render('jplayerbluemondaylist', $players);
+			$players = LayoutHelper::render('jplayerbluemondaylist', $players);
 		}
 	}
 }
 
 ?>
-<?php if (JFactory::getApplication()->client->browser): ?>
-	<?php if (1 == $displayData->playerKey && SermondistributorHelper::checkArray($players)): ?>
+<?php if (Factory::getApplication()->client->browser): ?>
+	<?php if (1 == $displayData->playerKey && ArrayHelper::check($players)): ?>
 		<li><?php echo implode('',$players); ?></li>
-	<?php elseif (2 == $displayData->playerKey && SermondistributorHelper::checkString($players)): ?>
+	<?php elseif (2 == $displayData->playerKey && StringHelper::check($players)): ?>
 		<div class="uk-width-1-1 uk-margin"><div class="uk-panel"><?php echo $players; ?></div></div>
-	<?php elseif (3 == $displayData->playerKey && SermondistributorHelper::checkArray($players)): ?>
+	<?php elseif (3 == $displayData->playerKey && ArrayHelper::check($players)): ?>
 		<div class="uk-width-1-1 uk-margin"><div class="uk-panel"><?php echo implode('</div><div class="uk-panel">', $players);  ?></div></div>
 	<?php endif; ?>
 <?php endif; ?>

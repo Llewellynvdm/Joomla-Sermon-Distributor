@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -25,7 +25,9 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -37,9 +39,9 @@ class SermondistributorControllerAjax extends BaseController
 	{
 		parent::__construct($config);
 		// make sure all json stuff are set
-		JFactory::getDocument()->setMimeEncoding( 'application/json' );
+		Factory::getDocument()->setMimeEncoding( 'application/json' );
 		// get the application
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$app->setHeader('Content-Disposition','attachment;filename="getajax.json"');
 		$app->setHeader('Access-Control-Allow-Origin', '*');
 		// load the tasks 
@@ -54,16 +56,16 @@ class SermondistributorControllerAjax extends BaseController
 	public function ajax()
 	{
 		// get the user for later use
-		$user 		= JFactory::getUser();
+		$user         = Factory::getUser();
 		// get the input values
-		$jinput 	= JFactory::getApplication()->input;
+		$jinput       = Factory::getApplication()->input;
 		// check if we should return raw
-		$returnRaw	= $jinput->get('raw', false, 'BOOLEAN');
+		$returnRaw    = $jinput->get('raw', false, 'BOOLEAN');
 		// return to a callback function
-		$callback	= $jinput->get('callback', null, 'CMD');
+		$callback     = $jinput->get('callback', null, 'CMD');
 		// Check Token!
-		$token 		= JSession::getFormToken();
-		$call_token	= $jinput->get('token', 0, 'ALNUM');
+		$token        = Session::getFormToken();
+		$call_token   = $jinput->get('token', 0, 'ALNUM');
 		if($jinput->get($token, 0, 'ALNUM') || $token === $call_token)
 		{
 			// get the task
@@ -76,7 +78,15 @@ class SermondistributorControllerAjax extends BaseController
 						$noticeValue = $jinput->get('notice', NULL, 'STRING');
 						if($noticeValue && $user->id != 0)
 						{
-							$result = $this->getModel('ajax')->isNew($noticeValue);
+							$ajaxModule = $this->getModel('ajax');
+							if ($ajaxModule)
+							{
+								$result = $ajaxModule->isNew($noticeValue);
+							}
+							else
+							{
+								$result = false;
+							}
 						}
 						else
 						{
@@ -95,7 +105,7 @@ class SermondistributorControllerAjax extends BaseController
 							echo "(".json_encode($result).");";
 						}
 					}
-					catch(Exception $e)
+					catch(\Exception $e)
 					{
 						if($callback)
 						{
@@ -117,7 +127,15 @@ class SermondistributorControllerAjax extends BaseController
 						$noticeValue = $jinput->get('notice', NULL, 'STRING');
 						if($noticeValue && $user->id != 0)
 						{
-							$result = $this->getModel('ajax')->isRead($noticeValue);
+							$ajaxModule = $this->getModel('ajax');
+							if ($ajaxModule)
+							{
+								$result = $ajaxModule->isRead($noticeValue);
+							}
+							else
+							{
+								$result = false;
+							}
 						}
 						else
 						{
@@ -136,7 +154,7 @@ class SermondistributorControllerAjax extends BaseController
 							echo "(".json_encode($result).");";
 						}
 					}
-					catch(Exception $e)
+					catch(\Exception $e)
 					{
 						if($callback)
 						{
@@ -159,7 +177,15 @@ class SermondistributorControllerAjax extends BaseController
 						$ojectValue = $jinput->get('oject', NULL, 'STRING');
 						if($idNameValue && $user->id != 0 && $ojectValue)
 						{
-							$result = $this->getModel('ajax')->getBuildTable($idNameValue, $ojectValue);
+							$ajaxModule = $this->getModel('ajax');
+							if ($ajaxModule)
+							{
+								$result = $ajaxModule->getBuildTable($idNameValue, $ojectValue);
+							}
+							else
+							{
+								$result = false;
+							}
 						}
 						else
 						{
@@ -178,7 +204,7 @@ class SermondistributorControllerAjax extends BaseController
 							echo "(".json_encode($result).");";
 						}
 					}
-					catch(Exception $e)
+					catch(\Exception $e)
 					{
 						if($callback)
 						{
@@ -200,7 +226,15 @@ class SermondistributorControllerAjax extends BaseController
 						$idValue = $jinput->get('id', NULL, 'INT');
 						if($idValue && $user->id != 0)
 						{
-							$result = $this->getModel('ajax')->getSourceStatus($idValue);
+							$ajaxModule = $this->getModel('ajax');
+							if ($ajaxModule)
+							{
+								$result = $ajaxModule->getSourceStatus($idValue);
+							}
+							else
+							{
+								$result = false;
+							}
 						}
 						else
 						{
@@ -219,7 +253,7 @@ class SermondistributorControllerAjax extends BaseController
 							echo "(".json_encode($result).");";
 						}
 					}
-					catch(Exception $e)
+					catch(\Exception $e)
 					{
 						if($callback)
 						{
@@ -241,7 +275,15 @@ class SermondistributorControllerAjax extends BaseController
 						$getTypeValue = $jinput->get('getType', NULL, 'WORD');
 						if($getTypeValue && $user->id != 0)
 						{
-							$result = $this->getModel('ajax')->getCronPath($getTypeValue);
+							$ajaxModule = $this->getModel('ajax');
+							if ($ajaxModule)
+							{
+								$result = $ajaxModule->getCronPath($getTypeValue);
+							}
+							else
+							{
+								$result = false;
+							}
 						}
 						else
 						{
@@ -260,7 +302,7 @@ class SermondistributorControllerAjax extends BaseController
 							echo "(".json_encode($result).");";
 						}
 					}
-					catch(Exception $e)
+					catch(\Exception $e)
 					{
 						if($callback)
 						{
@@ -285,7 +327,15 @@ class SermondistributorControllerAjax extends BaseController
 						$sleutelValue = $jinput->get('sleutel', NULL, 'CMD');
 						if($idValue && $user->id != 0 && $targetValue && $typeValue && $sleutelValue)
 						{
-							$result = $this->getModel('ajax')->updateLocalListingExternal($idValue, $targetValue, $typeValue, $sleutelValue);
+							$ajaxModule = $this->getModel('ajax');
+							if ($ajaxModule)
+							{
+								$result = $ajaxModule->updateLocalListingExternal($idValue, $targetValue, $typeValue, $sleutelValue);
+							}
+							else
+							{
+								$result = false;
+							}
 						}
 						else
 						{
@@ -304,7 +354,7 @@ class SermondistributorControllerAjax extends BaseController
 							echo "(".json_encode($result).");";
 						}
 					}
-					catch(Exception $e)
+					catch(\Exception $e)
 					{
 						if($callback)
 						{

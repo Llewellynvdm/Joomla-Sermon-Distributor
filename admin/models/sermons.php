@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons.php
@@ -25,18 +25,26 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Helper\TagsHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\Utilities\ObjectHelper;
+use VDM\Joomla\Utilities\StringHelper;
 
 /**
  * Sermons List Model
  */
 class SermondistributorModelSermons extends ListModel
 {
-	public function __construct($config = array())
+	public function __construct($config = [])
 	{
 		if (empty($config['filter_fields']))
-        {
+		{
 			$config['filter_fields'] = array(
 				'a.id','id',
 				'a.published','published',
@@ -72,7 +80,7 @@ class SermondistributorModelSermons extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		// Adjust the context to support modal layouts.
 		if ($layout = $app->input->get('layout'))
@@ -163,7 +171,7 @@ class SermondistributorModelSermons extends ListModel
 		// List state information.
 		parent::populateState($ordering, $direction);
 	}
-	
+
 	/**
 	 * Method to get an array of data items.
 	 *
@@ -178,12 +186,12 @@ class SermondistributorModelSermons extends ListModel
 		$items = parent::getItems();
 
 		// Set values to display correctly.
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			// Get the user object if not set.
-			if (!isset($user) || !SermondistributorHelper::checkObject($user))
+			if (!isset($user) || !ObjectHelper::check($user))
 			{
-				$user = JFactory::getUser();
+				$user = Factory::getUser();
 			}
 			foreach ($items as $nr => &$item)
 			{
@@ -196,7 +204,7 @@ class SermondistributorModelSermons extends ListModel
 				}
 
 				// Add the tags
-				$item->tags = new JHelperTags;
+				$item->tags = new TagsHelper;
 				$item->tags->getTagIds(
 					$item->id, 'com_sermondistributor.sermon'
 				);
@@ -216,7 +224,7 @@ class SermondistributorModelSermons extends ListModel
 		}
 
 		// set selection value to a translatable value
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			foreach ($items as $nr => &$item)
 			{
@@ -227,7 +235,7 @@ class SermondistributorModelSermons extends ListModel
 			}
 		}
 
-        
+
 		// return items
 		return $items;
 	}
@@ -235,7 +243,7 @@ class SermondistributorModelSermons extends ListModel
 	/**
 	 * Method to convert selection values to translatable string.
 	 *
-	 * @return translatable string
+	 * @return  string   The translatable string.
 	 */
 	public function selectionTranslation($value,$name)
 	{
@@ -247,7 +255,7 @@ class SermondistributorModelSermons extends ListModel
 				2 => 'COM_SERMONDISTRIBUTOR_SERMON_DIRECT'
 			);
 			// Now check if value is found in this array
-			if (isset($link_typeArray[$value]) && SermondistributorHelper::checkString($link_typeArray[$value]))
+			if (isset($link_typeArray[$value]) && StringHelper::check($link_typeArray[$value]))
 			{
 				return $link_typeArray[$value];
 			}
@@ -262,25 +270,25 @@ class SermondistributorModelSermons extends ListModel
 				3 => 'COM_SERMONDISTRIBUTOR_SERMON_URL'
 			);
 			// Now check if value is found in this array
-			if (isset($sourceArray[$value]) && SermondistributorHelper::checkString($sourceArray[$value]))
+			if (isset($sourceArray[$value]) && StringHelper::check($sourceArray[$value]))
 			{
 				return $sourceArray[$value];
 			}
 		}
 		return $value;
 	}
-	
+
 	/**
 	 * Method to build an SQL query to load the list data.
 	 *
-	 * @return	string	An SQL query
+	 * @return    string    An SQL query
 	 */
 	protected function getListQuery()
 	{
 		// Get the user object.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// Create a new query object.
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = $db->getQuery(true);
 
 		// Select some fields
@@ -319,7 +327,7 @@ class SermondistributorModelSermons extends ListModel
 		{
 			$query->where('a.access = ' . (int) $_access);
 		}
-		elseif (SermondistributorHelper::checkArray($_access))
+		elseif (UtilitiesArrayHelper::check($_access))
 		{
 			// Secure the array for the query
 			$_access = ArrayHelper::toInteger($_access);
@@ -360,11 +368,11 @@ class SermondistributorModelSermons extends ListModel
 				$query->where('a.preacher = ' . (int) $_preacher);
 			}
 		}
-		elseif (SermondistributorHelper::checkString($_preacher))
+		elseif (StringHelper::check($_preacher))
 		{
 			$query->where('a.preacher = ' . $db->quote($db->escape($_preacher)));
 		}
-		elseif (SermondistributorHelper::checkArray($_preacher))
+		elseif (UtilitiesArrayHelper::check($_preacher))
 		{
 			// Secure the array for the query
 			$_preacher = array_map( function ($val) use(&$db) {
@@ -379,7 +387,7 @@ class SermondistributorModelSermons extends ListModel
 						return (int) $val;
 					}
 				}
-				elseif (SermondistributorHelper::checkString($val))
+				elseif (StringHelper::check($val))
 				{
 					return $db->quote($db->escape($val));
 				}
@@ -400,11 +408,11 @@ class SermondistributorModelSermons extends ListModel
 				$query->where('a.series = ' . (int) $_series);
 			}
 		}
-		elseif (SermondistributorHelper::checkString($_series))
+		elseif (StringHelper::check($_series))
 		{
 			$query->where('a.series = ' . $db->quote($db->escape($_series)));
 		}
-		elseif (SermondistributorHelper::checkArray($_series))
+		elseif (UtilitiesArrayHelper::check($_series))
 		{
 			// Secure the array for the query
 			$_series = array_map( function ($val) use(&$db) {
@@ -419,7 +427,7 @@ class SermondistributorModelSermons extends ListModel
 						return (int) $val;
 					}
 				}
-				elseif (SermondistributorHelper::checkString($val))
+				elseif (StringHelper::check($val))
 				{
 					return $db->quote($db->escape($val));
 				}
@@ -440,7 +448,7 @@ class SermondistributorModelSermons extends ListModel
 				$query->where('a.link_type = ' . (int) $_link_type);
 			}
 		}
-		elseif (SermondistributorHelper::checkString($_link_type))
+		elseif (StringHelper::check($_link_type))
 		{
 			$query->where('a.link_type = ' . $db->quote($db->escape($_link_type)));
 		}
@@ -457,7 +465,7 @@ class SermondistributorModelSermons extends ListModel
 				$query->where('a.source = ' . (int) $_source);
 			}
 		}
-		elseif (SermondistributorHelper::checkString($_source))
+		elseif (StringHelper::check($_source))
 		{
 			$query->where('a.source = ' . $db->quote($db->escape($_source)));
 		}
@@ -468,7 +476,7 @@ class SermondistributorModelSermons extends ListModel
 
 		if (is_numeric($categoryId))
 		{
-			$cat_tbl = JTable::getInstance('Category', 'JTable');
+			$cat_tbl = Table::getInstance('Category', 'JTable');
 			$cat_tbl->load($categoryId);
 			$rgt = $cat_tbl->rgt;
 			$lft = $cat_tbl->lft;
@@ -485,10 +493,12 @@ class SermondistributorModelSermons extends ListModel
 
 
 		// Add the list ordering clause.
-		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'desc');
+		$orderCol = $this->getState('list.ordering', 'a.id');
+		$orderDirn = $this->getState('list.direction', 'desc');
 		if ($orderCol != '')
 		{
+			// Check that the order direction is valid encase we have a field called direction as part of filers.
+			$orderDirn = (is_string($orderDirn) && in_array(strtolower($orderDirn), ['asc', 'desc'])) ? $orderDirn : 'desc';
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
 		}
 
@@ -506,17 +516,17 @@ class SermondistributorModelSermons extends ListModel
 	public function getExportData($pks, $user = null)
 	{
 		// setup the query
-		if (($pks_size = SermondistributorHelper::checkArray($pks)) !== false || 'bulk' === $pks)
+		if (($pks_size = UtilitiesArrayHelper::check($pks)) !== false || 'bulk' === $pks)
 		{
 			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
 			// Get the user object if not set.
-			if (!isset($user) || !SermondistributorHelper::checkObject($user))
+			if (!isset($user) || !ObjectHelper::check($user))
 			{
-				$user = JFactory::getUser();
+				$user = Factory::getUser();
 			}
 			// Create a new query object.
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = $db->getQuery(true);
 
 			// Select some fields
@@ -560,7 +570,7 @@ class SermondistributorModelSermons extends ListModel
 				$items = $db->loadObjectList();
 
 				// Set values to display correctly.
-				if (SermondistributorHelper::checkArray($items))
+				if (UtilitiesArrayHelper::check($items))
 				{
 					foreach ($items as $nr => &$item)
 					{
@@ -573,7 +583,7 @@ class SermondistributorModelSermons extends ListModel
 						}
 
 						// Add the tags
-						$item->tags = new JHelperTags;
+						$item->tags = new TagsHelper;
 						$item->tags->getTagIds(
 							$item->id, 'com_sermondistributor.sermon'
 						);
@@ -597,7 +607,7 @@ class SermondistributorModelSermons extends ListModel
 				}
 				// Add headers to items array.
 				$headers = $this->getExImPortHeaders();
-				if (SermondistributorHelper::checkObject($headers))
+				if (ObjectHelper::check($headers))
 				{
 					array_unshift($items,$headers);
 				}
@@ -615,16 +625,16 @@ class SermondistributorModelSermons extends ListModel
 	public function getExImPortHeaders()
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		// get the columns
 		$columns = $db->getTableColumns("#__sermondistributor_sermon");
-		if (SermondistributorHelper::checkArray($columns))
+		if (UtilitiesArrayHelper::check($columns))
 		{
 			// remove the headers you don't import/export.
 			unset($columns['asset_id']);
 			unset($columns['checked_out']);
 			unset($columns['checked_out_time']);
-			$headers = new stdClass();
+			$headers = new \stdClass();
 			foreach ($columns as $column => $type)
 			{
 				$headers->{$column} = $column;
@@ -633,7 +643,7 @@ class SermondistributorModelSermons extends ListModel
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Method to get a store id based on model configuration state.
 	 *
@@ -648,13 +658,13 @@ class SermondistributorModelSermons extends ListModel
 		$id .= ':' . $this->getState('filter.published');
 		// Check if the value is an array
 		$_access = $this->getState('filter.access');
-		if (SermondistributorHelper::checkArray($_access))
+		if (UtilitiesArrayHelper::check($_access))
 		{
 			$id .= ':' . implode(':', $_access);
 		}
 		// Check if this is only an number or string
 		elseif (is_numeric($_access)
-		 || SermondistributorHelper::checkString($_access))
+		 || StringHelper::check($_access))
 		{
 			$id .= ':' . $_access;
 		}
@@ -663,61 +673,61 @@ class SermondistributorModelSermons extends ListModel
 		$id .= ':' . $this->getState('filter.modified_by');
 		// Check if the value is an array
 		$_preacher = $this->getState('filter.preacher');
-		if (SermondistributorHelper::checkArray($_preacher))
+		if (UtilitiesArrayHelper::check($_preacher))
 		{
 			$id .= ':' . implode(':', $_preacher);
 		}
 		// Check if this is only an number or string
 		elseif (is_numeric($_preacher)
-		 || SermondistributorHelper::checkString($_preacher))
+		 || StringHelper::check($_preacher))
 		{
 			$id .= ':' . $_preacher;
 		}
 		// Check if the value is an array
 		$_series = $this->getState('filter.series');
-		if (SermondistributorHelper::checkArray($_series))
+		if (UtilitiesArrayHelper::check($_series))
 		{
 			$id .= ':' . implode(':', $_series);
 		}
 		// Check if this is only an number or string
 		elseif (is_numeric($_series)
-		 || SermondistributorHelper::checkString($_series))
+		 || StringHelper::check($_series))
 		{
 			$id .= ':' . $_series;
 		}
 		// Check if the value is an array
 		$_category = $this->getState('filter.category');
-		if (SermondistributorHelper::checkArray($_category))
+		if (UtilitiesArrayHelper::check($_category))
 		{
 			$id .= ':' . implode(':', $_category);
 		}
 		// Check if this is only an number or string
 		elseif (is_numeric($_category)
-		 || SermondistributorHelper::checkString($_category))
+		 || StringHelper::check($_category))
 		{
 			$id .= ':' . $_category;
 		}
 		// Check if the value is an array
 		$_category_id = $this->getState('filter.category_id');
-		if (SermondistributorHelper::checkArray($_category_id))
+		if (UtilitiesArrayHelper::check($_category_id))
 		{
 			$id .= ':' . implode(':', $_category_id);
 		}
 		// Check if this is only an number or string
 		elseif (is_numeric($_category_id)
-		 || SermondistributorHelper::checkString($_category_id))
+		 || StringHelper::check($_category_id))
 		{
 			$id .= ':' . $_category_id;
 		}
 		// Check if the value is an array
 		$_catid = $this->getState('filter.catid');
-		if (SermondistributorHelper::checkArray($_catid))
+		if (UtilitiesArrayHelper::check($_catid))
 		{
 			$id .= ':' . implode(':', $_catid);
 		}
 		// Check if this is only an number or string
 		elseif (is_numeric($_catid)
-		 || SermondistributorHelper::checkString($_catid))
+		 || StringHelper::check($_catid))
 		{
 			$id .= ':' . $_catid;
 		}
@@ -732,19 +742,18 @@ class SermondistributorModelSermons extends ListModel
 	/**
 	 * Build an SQL query to checkin all items left checked out longer then a set time.
 	 *
-	 * @return  a bool
-	 *
+	 * @return bool
+	 * @since 3.2.0
 	 */
-	protected function checkInNow()
+	protected function checkInNow(): bool
 	{
 		// Get set check in time
-		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');
+		$time = ComponentHelper::getParams('com_sermondistributor')->get('check_in');
 
 		if ($time)
 		{
-
 			// Get a db connection.
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			// Reset query.
 			$query = $db->getQuery(true);
 			$query->select('*');
@@ -756,7 +765,7 @@ class SermondistributorModelSermons extends ListModel
 			if ($db->getNumRows())
 			{
 				// Get Yesterdays date.
-				$date = JFactory::getDate()->modify($time)->toSql();
+				$date = Factory::getDate()->modify($time)->toSql();
 				// Reset query.
 				$query = $db->getQuery(true);
 
@@ -777,7 +786,7 @@ class SermondistributorModelSermons extends ListModel
 
 				$db->setQuery($query);
 
-				$db->execute();
+				return $db->execute();
 			}
 		}
 

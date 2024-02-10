@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -25,8 +25,17 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Filesystem\File;
+use VDM\Joomla\Utilities\ArrayHelper;
+use VDM\Joomla\Utilities\StringHelper;
 
 /**
  * Sermondistributor Html View class for the Manual_updater
@@ -37,11 +46,11 @@ class SermondistributorViewManual_updater extends HtmlView
 	function display($tpl = null)
 	{
 		// get component params
-		$this->params = JComponentHelper::getParams('com_sermondistributor');
+		$this->params = ComponentHelper::getParams('com_sermondistributor');
 		// get the application
-		$this->app = JFactory::getApplication();
+		$this->app = Factory::getApplication();
 		// get the user object
-		$this->user	= JFactory::getUser();
+		$this->user    = Factory::getUser();
 		// get global action permissions
 		$this->canDo = SermondistributorHelper::getActions('manual_updater');
 		// Initialise variables.
@@ -60,7 +69,7 @@ class SermondistributorViewManual_updater extends HtmlView
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			throw new Exception(implode(PHP_EOL, $errors), 500);
+			throw new \Exception(implode(PHP_EOL, $errors), 500);
 		}
 
 		parent::display($tpl);
@@ -72,12 +81,15 @@ class SermondistributorViewManual_updater extends HtmlView
 	protected function setDocument()
 	{
 
-		// always make sure jquery is loaded.
-		JHtml::_('jquery.framework');
+		// Only load jQuery if needed. (default is true)
+		if ($this->params->get('add_jquery_framework', 1) == 1)
+		{
+			Html::_('jquery.framework');
+		}
 		// Load the header checker class.
 		require_once( JPATH_COMPONENT_ADMINISTRATOR.'/helpers/headercheck.php' );
 		// Initialize the header checker.
-		$HeaderCheck = new sermondistributorHeaderCheck;
+		$HeaderCheck = new sermondistributorHeaderCheck();
 
 		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');
@@ -96,27 +108,25 @@ class SermondistributorViewManual_updater extends HtmlView
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				JHtml::_('stylesheet', 'media/com_sermondistributor/uikit-v2/css/uikit'.$style.$size.'.css', ['version' => 'auto']);
+				Html::_('stylesheet', 'media/com_sermondistributor/uikit-v2/css/uikit'.$style.$size.'.css', ['version' => 'auto']);
 			}
 			// The uikit js.
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				JHtml::_('script', 'media/com_sermondistributor/uikit-v2/js/uikit'.$size.'.js', ['version' => 'auto']);
+				Html::_('script', 'media/com_sermondistributor/uikit-v2/js/uikit'.$size.'.js', ['version' => 'auto']);
 			}
 
 			// Load the script to find all uikit components needed.
 			if ($uikit != 2)
 			{
 				// Set the default uikit components in this view.
-				$uikitComp = array();
+				$uikitComp = [];
 				$uikitComp[] = 'uk-form';
 			}
 
 			// Load the needed uikit components in this view.
-			if ($uikit != 2 && isset($uikitComp) && SermondistributorHelper::checkArray($uikitComp))
+			if ($uikit != 2 && isset($uikitComp) && ArrayHelper::check($uikitComp))
 			{
-				// load just in case.
-				jimport('joomla.filesystem.file');
 				// loading...
 				foreach ($uikitComp as $class)
 				{
@@ -126,13 +136,13 @@ class SermondistributorViewManual_updater extends HtmlView
 						if (File::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit-v2/css/components/'.$name.$style.$size.'.css'))
 						{
 							// load the css.
-							JHtml::_('stylesheet', 'media/com_sermondistributor/uikit-v2/css/components/'.$name.$style.$size.'.css', ['version' => 'auto']);
+							Html::_('stylesheet', 'media/com_sermondistributor/uikit-v2/css/components/'.$name.$style.$size.'.css', ['version' => 'auto']);
 						}
 						// check if the JavaScript file exists.
 						if (File::exists(JPATH_ROOT.'/media/com_sermondistributor/uikit-v2/js/components/'.$name.$size.'.js'))
 						{
 							// load the js.
-							JHtml::_('script', 'media/com_sermondistributor/uikit-v2/js/components/'.$name.$size.'.js', ['version' => 'auto'], ['type' => 'text/javascript', 'async' => 'async']);
+							Html::_('script', 'media/com_sermondistributor/uikit-v2/js/components/'.$name.$size.'.js', ['version' => 'auto'], ['type' => 'text/javascript', 'async' => 'async']);
 						}
 					}
 				}
@@ -144,17 +154,17 @@ class SermondistributorViewManual_updater extends HtmlView
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				JHtml::_('stylesheet', 'media/com_sermondistributor/uikit-v3/css/uikit'.$size.'.css', ['version' => 'auto']);
+				Html::_('stylesheet', 'media/com_sermondistributor/uikit-v3/css/uikit'.$size.'.css', ['version' => 'auto']);
 			}
 			// The uikit js.
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				JHtml::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', ['version' => 'auto']);
-				JHtml::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit-icons'.$size.'.js', ['version' => 'auto']);
+				Html::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', ['version' => 'auto']);
+				Html::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit-icons'.$size.'.js', ['version' => 'auto']);
 			}
 		}
 		// add the document default css file
-		$this->document->addStyleSheet(JURI::root(true) .'/administrator/components/com_sermondistributor/assets/css/manual_updater.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		Html::_('stylesheet', 'administrator/components/com_sermondistributor/assets/css/manual_updater.css', ['version' => 'auto']);
 	}
 
 	/**
@@ -165,26 +175,26 @@ class SermondistributorViewManual_updater extends HtmlView
 		// hide the main menu
 		$this->app->input->set('hidemainmenu', true);
 		// add title to the page
-		JToolbarHelper::title(JText::_('COM_SERMONDISTRIBUTOR_MANUAL_UPDATER'),'cogs');
+		ToolbarHelper::title(Text::_('COM_SERMONDISTRIBUTOR_MANUAL_UPDATER'),'cogs');
 		// add cpanel button
-		JToolBarHelper::custom('manual_updater.dashboard', 'grid-2', '', 'COM_SERMONDISTRIBUTOR_DASH', false);
+		ToolbarHelper::custom('manual_updater.dashboard', 'grid-2', '', 'COM_SERMONDISTRIBUTOR_DASH', false);
 		if ($this->canDo->get('manual_updater.external_sources'))
 		{
 			// add External Sources button.
-			JToolBarHelper::custom('manual_updater.gotoExternalSources', 'puzzle custom-button-gotoexternalsources', '', 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCES', false);
+			ToolbarHelper::custom('manual_updater.gotoExternalSources', 'puzzle custom-button-gotoexternalsources', '', 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCES', false);
 		}
 
 		// set help url for this view if found
 		$this->help_url = SermondistributorHelper::getHelpUrl('manual_updater');
-		if (SermondistributorHelper::checkString($this->help_url))
+		if (StringHelper::check($this->help_url))
 		{
-			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
+			ToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 
 		// add the options comp button
 		if ($this->canDo->get('core.admin') || $this->canDo->get('core.options'))
 		{
-			JToolBarHelper::preferences('com_sermondistributor');
+			ToolbarHelper::preferences('com_sermondistributor');
 		}
 	}
 
@@ -198,6 +208,16 @@ class SermondistributorViewManual_updater extends HtmlView
 	public function escape($var)
 	{
 		// use the helper htmlEscape method instead.
-		return SermondistributorHelper::htmlEscape($var, $this->_charset);
+		return StringHelper::html($var, $this->_charset);
+	}
+
+	/**
+	 * Get the Document (helper method toward Joomla 4 and 5)
+	 */
+	public function getDocument()
+	{
+		$this->document ??= JFactory::getDocument();
+
+		return $this->document;
 	}
 }

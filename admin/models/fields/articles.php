@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		articles.php
@@ -25,6 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+
 // import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
@@ -37,14 +41,14 @@ class JFormFieldArticles extends JFormFieldList
 	/**
 	 * The articles field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 */
 	public $type = 'articles';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return	array    An array of JHtml options.
+	 * @return    array    An array of Html options.
 	 */
 	protected function getOptions()
 	{

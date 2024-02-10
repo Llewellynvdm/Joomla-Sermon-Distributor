@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_categorysmall.php
@@ -25,6 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+
 ?>
 <article class="uk-comment">
     <header class="uk-comment-header">
@@ -38,13 +42,13 @@ defined('_JEXEC') or die('Restricted access');
 		<?php if ($this->params->get('category_hits') || $this->params->get('category_sermon_count')): ?>
 		<div class="uk-comment-meta">
 			<?php if ($this->params->get('category_hits')): ?>
-				<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->category->hits; ?><br />
+				<?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->category->hits; ?><br />
 			<?php endif; ?>
 			<?php if ($this->params->get('category_sermon_count')): ?>
-				<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>: <?php echo $this->sermonTotal; ?><br />
+				<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>: <?php echo $this->sermonTotal; ?><br />
 			<?php endif; ?>
 			<?php if ($this->params->get('category_sermons_download_counter')): ?>
-				<?php echo JText::_('COM_SERMONDISTRIBUTOR_TOTAL_DOWNLOADS'); ?>: <?php echo $this->downloadTotal; ?><br />
+				<?php echo Text::_('COM_SERMONDISTRIBUTOR_TOTAL_DOWNLOADS'); ?>: <?php echo $this->downloadTotal; ?><br />
 			<?php endif; ?>
 		</div>
 		<?php endif; ?>

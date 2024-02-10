@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_series-list.php
@@ -24,6 +24,10 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
 
 // build the list class
 $style = $this->params->get('list_series_list_style');
@@ -50,6 +54,6 @@ switch ($style)
 ?>
 <ul class="uk-list<?php echo $listClass; ?>">
 	<?php foreach ($this->items as $item): ?>
-		<li><?php $item->params = $this->params; $item->desc = $this->escape($item->description, true, 140); echo JLayoutHelper::render('serieslistitem', $item); ?></li>
+		<li><?php $item->params = $this->params; $item->desc = $this->escape($item->description, true, 140); echo LayoutHelper::render('serieslistitem', $item); ?></li>
 	<?php endforeach; ?>
 </ul>

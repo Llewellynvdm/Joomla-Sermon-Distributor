@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -25,17 +25,24 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null, array('placeholder_text_multiple' => '- ' . JText::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_ACCESS') . ' -'));
-JHtml::_('formbehavior.chosen', 'select');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+Html::_('behavior.multiselect');
+Html::_('dropdown.init');
+Html::_('formbehavior.chosen', 'select');
+Html::_('formbehavior.chosen', '.multipleAccessLevels', null, ['placeholder_text_multiple' => '- ' . Text::_('COM_SERMONDISTRIBUTOR_FILTER_SELECT_ACCESS') . ' -']);
+
 if ($this->saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_sermondistributor&task=help_documents.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'help_documentList', 'adminForm', strtolower($this->listDirn), $saveOrderingUrl);
+	Html::_('sortablelist.sortable', 'help_documentList', 'adminForm', strtolower($this->listDirn), $saveOrderingUrl);
 }
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&view=help_documents'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo Route::_('index.php?option=com_sermondistributor&view=help_documents'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if(!empty( $this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
@@ -46,13 +53,13 @@ if ($this->saveOrder)
 <?php endif; ?>
 <?php
 	// Add the trash helper layout
-	echo JLayoutHelper::render('trashhelper', $this);
+	echo LayoutHelper::render('trashhelper', $this);
 	// Add the searchtools
-	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 ?>
 <?php if (empty($this->items)): ?>
 	<div class="alert alert-no-items">
-		<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+		<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 	</div>
 <?php else : ?>
 	<table class="table table-striped" id="help_documentList">
@@ -62,11 +69,11 @@ if ($this->saveOrder)
 	</table>
 	<?php // Load the batch processing form. ?>
 	<?php if ($this->canCreate && $this->canEdit) : ?>
-		<?php echo JHtml::_(
+		<?php echo Html::_(
 			'bootstrap.renderModal',
 			'collapseModal',
 			array(
-				'title' => JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENTS_BATCH_OPTIONS'),
+				'title' => Text::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENTS_BATCH_OPTIONS'),
 				'footer' => $this->loadTemplate('batch_footer')
 			),
 			$this->loadTemplate('batch_body')
@@ -76,5 +83,5 @@ if ($this->saveOrder)
 	</div>
 <?php endif; ?>
 	<input type="hidden" name="task" value="" />
-	<?php echo JHtml::_('form.token'); ?>
+	<?php echo Html::_('form.token'); ?>
 </form>

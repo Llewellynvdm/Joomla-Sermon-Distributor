@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_preachers-table.php
@@ -24,6 +24,10 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
 
 // Column counter
 $column_nr = 1;
@@ -65,21 +69,21 @@ switch ($color)
 <table class="footable<?php echo $tableClass; ?>" data-page-size="100">
 	<thead>
 		<tr>
-			<th data-toggle="true"><?php echo JText::_('COM_SERMONDISTRIBUTOR_NAME'); ?></th>
+			<th data-toggle="true"><?php echo Text::_('COM_SERMONDISTRIBUTOR_NAME'); ?></th>
 			<?php if ($this->params->get('preachers_desc')): ?>
-				<th data-hide="all"><?php echo JText::_('COM_SERMONDISTRIBUTOR_DESCRIPTION'); $column_nr++; ?></th>
+				<th data-hide="all"><?php echo Text::_('COM_SERMONDISTRIBUTOR_DESCRIPTION'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('preachers_website')): ?>
-				<th data-hide="all"><?php echo JText::_('COM_SERMONDISTRIBUTOR_WEBSITE'); $column_nr++; ?></th>
+				<th data-hide="all"><?php echo Text::_('COM_SERMONDISTRIBUTOR_WEBSITE'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('preachers_email')): ?>
-				<th data-hide="all"><?php echo JText::_('COM_SERMONDISTRIBUTOR_EMAIL'); $column_nr++; ?></th>
+				<th data-hide="all"><?php echo Text::_('COM_SERMONDISTRIBUTOR_EMAIL'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('preachers_hits')): ?>
-				<th data-type="numeric"><?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); $column_nr++; ?></th>
+				<th data-type="numeric"><?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('preachers_sermon_count')): ?>
-				<th data-type="numeric" data-hide="phone,tablet"><?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); $column_nr++;?></th>
+				<th data-type="numeric" data-hide="phone,tablet"><?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); $column_nr++;?></th>
 			<?php endif; ?>
 		</tr>
 	</thead>
@@ -92,7 +96,7 @@ switch ($color)
 	</tfoot>
 	<tbody>
 	<?php foreach ($this->items as $item): ?>
-		<tr><?php $item->params = $this->params; echo JLayoutHelper::render('preachersrow', $item); ?></tr>
+		<tr><?php $item->params = $this->params; echo LayoutHelper::render('preachersrow', $item); ?></tr>
 	<?php endforeach; ?>
 	</tbody>
 </table>

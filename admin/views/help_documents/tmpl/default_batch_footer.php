@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_batch_footer.php
@@ -25,12 +25,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Language\Text;
+
 ?>
 <!-- clear the batch values if cancel -->
 <button class="btn" type="button" onclick="" data-dismiss="modal">
-	<?php echo JText::_('JCANCEL'); ?>
+	<?php echo Text::_('JCANCEL'); ?>
 </button>
 <!-- post the batch values if process -->
 <button class="btn btn-success" type="submit" onclick="Joomla.submitbutton('help_document.batch');">
-	<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
+	<?php echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
 </button>

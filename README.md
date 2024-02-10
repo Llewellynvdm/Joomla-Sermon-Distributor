@@ -1,4 +1,4 @@
-# Sermon Distributor (2.1.x)
+# Sermon Distributor (3.0.x)
 
  ![Sermon Distributor image](https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/master/admin/assets/images/vdm-component.jpg "The Sermon Distributor")
 
@@ -24,38 +24,38 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 29th May, 2023
-+ *Version*: 2.1.x
++ *Last Build*: 10th February, 2024
++ *Version*: 3.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Build Time :hourglass:
 
-**210 Hours** or **26 Eight Hour Days** (actual time the author saved -
+**242 Hours** or **30 Eight Hour Days** (actual time the author saved -
 due to [Automated Component Builder](https://www.joomlacomponentbuilder.com))
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **75271**
-+ *File count*: **486**
-+ *Folder count*: **105**
++ *Line count*: **86920**
++ *File count*: **592**
++ *Folder count*: **113**
 
-**138 Hours** or **18 Eight Hour Days** (the actual time the author spent)
+**160 Hours** or **20 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
-> **debugging @52hours** = codingtime / 4;
-> **planning @30hours** = codingtime / 7;
-> **mapping @21hours** = codingtime / 10;
-> **office @35hours** = codingtime / 6;)
+> **debugging @61hours** = codingtime / 4;
+> **planning @35hours** = codingtime / 7;
+> **mapping @24hours** = codingtime / 10;
+> **office @40hours** = codingtime / 6;)
 
-**348 Hours** or **44 Eight Hour Days**
+**402 Hours** or **50 Eight Hour Days**
 (a total of the realistic time frame for this project)
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > with the normal everyday realities at the office, that includes the component planning, mapping & debugging.)
 
-Project duration: **8.8 weeks** or **1.8 months**
+Project duration: **10 weeks** or **2.1 months**
 
 > This **component** was build with a Joomla [Automated Component Builder](https://www.joomlacomponentbuilder.com).
 > Developed by [Llewellyn van der Merwe](mailto:llewellyn@joomlacomponentbuilder.com)

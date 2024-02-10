@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		externalsourcefiles.php
@@ -25,6 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+
 // import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
@@ -37,26 +41,26 @@ class JFormFieldExternalsourcefiles extends JFormFieldList
 	/**
 	 * The externalsourcefiles field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 */
 	public $type = 'externalsourcefiles';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return	array    An array of JHtml options.
+	 * @return    array    An array of Html options.
 	 */
 	protected function getOptions()
 	{
 		// set the default
-		$options[] = JHtml::_('select.option', '', JText::_('COM_SERMONDISTRIBUTOR_THE_LOCAL_LISTING_OF_THE_MANUAL_EXTERNAL_SOURCE_FOLDERS_IS_EMPTY'));
+		$options[] = Html::_('select.option', '', Text::_('COM_SERMONDISTRIBUTOR_THE_LOCAL_LISTING_OF_THE_MANUAL_EXTERNAL_SOURCE_FOLDERS_IS_EMPTY'));
 		$selection = SermondistributorHelper::getExternalSourceLink('manual', 2, false, 'select');
 		if (SermondistributorHelper::checkArray($selection))
 		{
 			$options = array();
 			foreach ($selection as $key => $name)
 			{
-				$options[] = JHtml::_('select.option', $key, $name);
+				$options[] = Html::_('select.option', $key, $name);
 			}
 		}
 		return $options;

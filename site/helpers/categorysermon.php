@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		categorysermon.php
@@ -36,7 +36,7 @@ class SermondistributorSermonCategories extends JCategories
 	 * @param   array  $options  Array of options
 	 *
 	 */
-	public function __construct($options = array())
+	public function __construct($options = [])
 	{
 		$options['table'] = '#__sermondistributor_sermon';
 		$options['extension'] = 'com_sermondistributor.sermon';

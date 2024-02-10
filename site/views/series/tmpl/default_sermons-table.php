@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_sermons-table.php
@@ -24,6 +24,10 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
 
 // Column counter
 $column_nr = 1;
@@ -66,27 +70,27 @@ switch ($color)
 <table class="footable<?php echo $tableClass; ?>" data-page-size="100">
 	<thead>
 		<tr>
-			<th data-toggle="true"><?php echo JText::_('COM_SERMONDISTRIBUTOR_NAME'); ?></th>
+			<th data-toggle="true"><?php echo Text::_('COM_SERMONDISTRIBUTOR_NAME'); ?></th>
 			<?php if ($this->params->get('series_sermons_desc')): ?>
-				<th data-hide="all"><?php echo JText::_('COM_SERMONDISTRIBUTOR_DESCRIPTION'); $column_nr++; ?></th>
+				<th data-hide="all"><?php echo Text::_('COM_SERMONDISTRIBUTOR_DESCRIPTION'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('series_sermons_preacher', 0)): ?>
-				<th data-hide="phone,tablet"><?php echo JText::_('COM_SERMONDISTRIBUTOR_PREACHER'); $column_nr++; ?></th>
+				<th data-hide="phone,tablet"><?php echo Text::_('COM_SERMONDISTRIBUTOR_PREACHER'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('series_sermons_series', 0)): ?>
-				<th data-hide="phone,tablet"><?php echo JText::_('COM_SERMONDISTRIBUTOR_SERIES'); $column_nr++; ?></th>
+				<th data-hide="phone,tablet"><?php echo Text::_('COM_SERMONDISTRIBUTOR_SERIES'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('series_sermons_category', 0)): ?>
-				<th data-hide="phone,tablet" ><?php echo JText::_('COM_SERMONDISTRIBUTOR_CATEGORY'); $column_nr++; ?></th>
+				<th data-hide="phone,tablet" ><?php echo Text::_('COM_SERMONDISTRIBUTOR_CATEGORY'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('series_sermons_downloads')): ?>
-				<th><?php echo JText::_('COM_SERMONDISTRIBUTOR_FILES'); $column_nr++; ?></th>
+				<th><?php echo Text::_('COM_SERMONDISTRIBUTOR_FILES'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('series_sermons_download_counter')): ?>
-				<th data-hide="phone,tablet" data-type="numeric"><?php echo JText::_('COM_SERMONDISTRIBUTOR_DOWNLOADS'); $column_nr++; ?></th>
+				<th data-hide="phone,tablet" data-type="numeric"><?php echo Text::_('COM_SERMONDISTRIBUTOR_DOWNLOADS'); $column_nr++; ?></th>
 			<?php endif; ?>
 			<?php if ($this->params->get('series_sermons_hits')): ?>
-				<th data-hide="phone,tablet" data-type="numeric"><?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); $column_nr++; ?></th>
+				<th data-hide="phone,tablet" data-type="numeric"><?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); $column_nr++; ?></th>
 			<?php endif; ?>
 		</tr>
 	</thead>
@@ -99,7 +103,7 @@ switch ($color)
 	</tfoot>
 	<tbody>
 	<?php foreach ($this->items as $item): ?>
-		<tr><?php $item->params = $this->params; echo JLayoutHelper::render('sermonsrow', $item); ?></tr>
+		<tr><?php $item->params = $this->params; echo LayoutHelper::render('sermonsrow', $item); ?></tr>
 	<?php endforeach; ?>
 	</tbody>
 </table>

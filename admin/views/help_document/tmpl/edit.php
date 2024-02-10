@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		edit.php
@@ -25,85 +25,84 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.formvalidator');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.keepalive');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+Html::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+Html::_('behavior.formvalidator');
+Html::_('formbehavior.chosen', 'select');
+Html::_('behavior.keepalive');
+
 $componentParams = $this->params; // will be removed just use $this->params instead
 ?>
 <script type="text/javascript">
 	// waiting spinner
-	var outerDiv = jQuery('body');
-	jQuery('<div id="loading"></div>')
-		.css("background", "rgba(255, 255, 255, .8) url('components/com_sermondistributor/assets/images/import.gif') 50% 15% no-repeat")
-		.css("top", outerDiv.position().top - jQuery(window).scrollTop())
-		.css("left", outerDiv.position().left - jQuery(window).scrollLeft())
-		.css("width", outerDiv.width())
-		.css("height", outerDiv.height())
-		.css("position", "fixed")
-		.css("opacity", "0.80")
-		.css("-ms-filter", "progid:DXImageTransform.Microsoft.Alpha(Opacity = 80)")
-		.css("filter", "alpha(opacity = 80)")
-		.css("display", "none")
-		.appendTo(outerDiv);
-	jQuery('#loading').show();
+	var outerDiv = document.querySelector('body');
+	var loadingDiv = document.createElement('div');
+	loadingDiv.id = 'loading';
+	loadingDiv.style.cssText = "background: rgba(255, 255, 255, .8) url('components/com_sermondistributor/assets/images/import.gif') 50% 15% no-repeat; top: " + (outerDiv.getBoundingClientRect().top + window.pageYOffset) + "px; left: " + (outerDiv.getBoundingClientRect().left + window.pageXOffset) + "px; width: " + outerDiv.offsetWidth + "px; height: " + outerDiv.offsetHeight + "px; position: fixed; opacity: 0.80; -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80); filter: alpha(opacity=80); display: none;";
+	outerDiv.appendChild(loadingDiv);
+	loadingDiv.style.display = 'block';
 	// when page is ready remove and show
-	jQuery(window).load(function() {
-		jQuery('#sermondistributor_loader').fadeIn('fast');
-		jQuery('#loading').hide();
+	window.addEventListener('load', function() {
+		var componentLoader = document.getElementById('sermondistributor_loader');
+		if (componentLoader) componentLoader.style.display = 'block';
+		loadingDiv.style.display = 'none';
 	});
 </script>
 <div id="sermondistributor_loader" style="display: none;">
-<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor&layout=edit&id='. (int) $this->item->id . $this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
+<form action="<?php echo Route::_('index.php?option=com_sermondistributor&layout=edit&id='. (int) $this->item->id . $this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
-	<?php echo JLayoutHelper::render('help_document.details_above', $this); ?>
+	<?php echo LayoutHelper::render('help_document.details_above', $this); ?>
 <div class="form-horizontal">
 
-	<?php echo JHtml::_('bootstrap.startTabSet', 'help_documentTab', array('active' => 'details')); ?>
+	<?php echo Html::_('bootstrap.startTabSet', 'help_documentTab', array('active' => 'details')); ?>
 
-	<?php echo JHtml::_('bootstrap.addTab', 'help_documentTab', 'details', JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_DETAILS', true)); ?>
+	<?php echo Html::_('bootstrap.addTab', 'help_documentTab', 'details', Text::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_DETAILS', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span6">
-				<?php echo JLayoutHelper::render('help_document.details_left', $this); ?>
+				<?php echo LayoutHelper::render('help_document.details_left', $this); ?>
 			</div>
 			<div class="span6">
-				<?php echo JLayoutHelper::render('help_document.details_right', $this); ?>
+				<?php echo LayoutHelper::render('help_document.details_right', $this); ?>
 			</div>
 		</div>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span12">
-				<?php echo JLayoutHelper::render('help_document.details_fullwidth', $this); ?>
+				<?php echo LayoutHelper::render('help_document.details_fullwidth', $this); ?>
 			</div>
 		</div>
-	<?php echo JHtml::_('bootstrap.endTab'); ?>
+	<?php echo Html::_('bootstrap.endTab'); ?>
 
 	<?php $this->ignore_fieldsets = array('details','metadata','vdmmetadata','accesscontrol'); ?>
 	<?php $this->tab_name = 'help_documentTab'; ?>
-	<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
+	<?php echo LayoutHelper::render('joomla.edit.params', $this); ?>
 
 	<?php if ($this->canDo->get('core.edit.created_by') || $this->canDo->get('core.edit.created') || $this->canDo->get('help_document.edit.state') || ($this->canDo->get('help_document.delete') && $this->canDo->get('help_document.edit.state'))) : ?>
-	<?php echo JHtml::_('bootstrap.addTab', 'help_documentTab', 'publishing', JText::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_PUBLISHING', true)); ?>
+	<?php echo Html::_('bootstrap.addTab', 'help_documentTab', 'publishing', Text::_('COM_SERMONDISTRIBUTOR_HELP_DOCUMENT_PUBLISHING', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span6">
-				<?php echo JLayoutHelper::render('help_document.publishing', $this); ?>
+				<?php echo LayoutHelper::render('help_document.publishing', $this); ?>
 			</div>
 			<div class="span6">
-				<?php echo JLayoutHelper::render('help_document.metadata', $this); ?>
+				<?php echo LayoutHelper::render('help_document.metadata', $this); ?>
 			</div>
 		</div>
-	<?php echo JHtml::_('bootstrap.endTab'); ?>
+	<?php echo Html::_('bootstrap.endTab'); ?>
 	<?php endif; ?>
 
-	<?php echo JHtml::_('bootstrap.endTabSet'); ?>
+	<?php echo Html::_('bootstrap.endTabSet'); ?>
 
 	<div>
 		<input type="hidden" name="task" value="help_document.edit" />
-		<?php echo JHtml::_('form.token'); ?>
+		<?php echo Html::_('form.token'); ?>
 	</div>
 </div>
 
 <div class="clearfix"></div>
-<?php echo JLayoutHelper::render('help_document.details_under', $this); ?>
+<?php echo LayoutHelper::render('help_document.details_under', $this); ?>
 </form>
 </div>
 

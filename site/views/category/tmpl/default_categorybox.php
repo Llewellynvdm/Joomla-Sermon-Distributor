@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_categorybox.php
@@ -24,6 +24,10 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
 
 // build the list class
 $style = $this->params->get('category_list_style');
@@ -89,7 +93,7 @@ elseif (!$this->params->get('category_icon'))
 			?>
 			<div class="uk-panel-badge uk-badge <?php echo $badge_class; ?>">
 				<i class="uk-icon-<?php echo $badge_icon; ?>"></i>
-				<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->category->hits; ?>
+				<?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $this->category->hits; ?>
 			</div>
 		<?php endif ;?>
 		<?php if ($this->params->get('category_icon')): ?>
@@ -105,10 +109,10 @@ elseif (!$this->params->get('category_icon'))
 			<div class="uk-panel">
 				<ul class="uk-list<?php echo $listClass; ?>">
 					<?php if ($this->params->get('category_sermon_count')): ?>
-						<li class="<?php echo $contrastClass; ?>"><?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>: <?php echo $this->sermonTotal; ?></li>
+						<li class="<?php echo $contrastClass; ?>"><?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>: <?php echo $this->sermonTotal; ?></li>
 					<?php endif; ?>
 					<?php if ($this->params->get('category_sermons_download_counter')): ?>
-						<li class="<?php echo $contrastClass; ?>"><?php echo JText::_('COM_SERMONDISTRIBUTOR_TOTAL_DOWNLOADS'); ?>: <?php echo $this->downloadTotal; ?></li>
+						<li class="<?php echo $contrastClass; ?>"><?php echo Text::_('COM_SERMONDISTRIBUTOR_TOTAL_DOWNLOADS'); ?>: <?php echo $this->downloadTotal; ?></li>
 					<?php endif; ?>
 				</ul>
 			</div>

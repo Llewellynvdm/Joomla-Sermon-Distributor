@@ -81,6 +81,7 @@
 			label="COM_SERMONDISTRIBUTOR_SERMON_VERSION_LABEL"
 			description="COM_SERMONDISTRIBUTOR_SERMON_VERSION_DESC"
 			size="6"
+			default="1"
 			readonly="true"
 			filter="unset"
 		/>
@@ -255,7 +256,6 @@
 			mode="ajax"
 			label="COM_SERMONDISTRIBUTOR_SERMON_TAGS_LABEL"
 			description="COM_SERMONDISTRIBUTOR_SERMON_TAGS_DESCRIPTION"
-			class="inputbox small"
 			published="true"
 			multiple="true"
 		/>
@@ -375,7 +375,7 @@
 			/>
 		</fieldset>
 	</fields>
-	
+
 	<!-- Access Control Fields. -->
 	<fieldset name="accesscontrol">
 		<!-- Asset Id Field. Type: Hidden (joomla) -->

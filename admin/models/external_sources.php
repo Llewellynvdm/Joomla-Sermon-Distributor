@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_sources.php
@@ -25,18 +25,27 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Helper\TagsHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\Utilities\ObjectHelper;
+use VDM\Joomla\Utilities\StringHelper;
+use VDM\Joomla\FOF\Encrypt\AES;
 
 /**
  * External_sources List Model
  */
 class SermondistributorModelExternal_sources extends ListModel
 {
-	public function __construct($config = array())
+	public function __construct($config = [])
 	{
 		if (empty($config['filter_fields']))
-        {
+		{
 			$config['filter_fields'] = array(
 				'a.id','id',
 				'a.published','published',
@@ -66,7 +75,7 @@ class SermondistributorModelExternal_sources extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		// Adjust the context to support modal layouts.
 		if ($layout = $app->input->get('layout'))
@@ -130,7 +139,7 @@ class SermondistributorModelExternal_sources extends ListModel
 		// List state information.
 		parent::populateState($ordering, $direction);
 	}
-	
+
 	/**
 	 * Method to get an array of data items.
 	 *
@@ -145,12 +154,12 @@ class SermondistributorModelExternal_sources extends ListModel
 		$items = parent::getItems();
 
 		// Set values to display correctly.
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			// Get the user object if not set.
-			if (!isset($user) || !SermondistributorHelper::checkObject($user))
+			if (!isset($user) || !ObjectHelper::check($user))
 			{
-				$user = JFactory::getUser();
+				$user = Factory::getUser();
 			}
 			foreach ($items as $nr => &$item)
 			{
@@ -164,12 +173,12 @@ class SermondistributorModelExternal_sources extends ListModel
 
 				// decode filetypes
 				$filetypesArray = json_decode($item->filetypes, true);
-				if (SermondistributorHelper::checkArray($filetypesArray))
+				if (UtilitiesArrayHelper::check($filetypesArray))
 				{
-					$filetypesNames = array();
+					$filetypesNames = [];
 					foreach ($filetypesArray as $filetypes)
 					{
-						$filetypesNames[] = JText::_($this->selectionTranslation($filetypes, 'filetypes'));
+						$filetypesNames[] = Text::_($this->selectionTranslation($filetypes, 'filetypes'));
 					}
 					$item->filetypes = implode(', ', $filetypesNames);
 				}
@@ -177,7 +186,7 @@ class SermondistributorModelExternal_sources extends ListModel
 		}
 
 		// set selection value to a translatable value
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			foreach ($items as $nr => &$item)
 			{
@@ -192,7 +201,7 @@ class SermondistributorModelExternal_sources extends ListModel
 			}
 		}
 
-        
+
 		// return items
 		return $items;
 	}
@@ -200,7 +209,7 @@ class SermondistributorModelExternal_sources extends ListModel
 	/**
 	 * Method to convert selection values to translatable string.
 	 *
-	 * @return translatable string
+	 * @return  string   The translatable string.
 	 */
 	public function selectionTranslation($value,$name)
 	{
@@ -212,7 +221,7 @@ class SermondistributorModelExternal_sources extends ListModel
 				1 => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DROPBOX'
 			);
 			// Now check if value is found in this array
-			if (isset($externalsourcesArray[$value]) && SermondistributorHelper::checkString($externalsourcesArray[$value]))
+			if (isset($externalsourcesArray[$value]) && StringHelper::check($externalsourcesArray[$value]))
 			{
 				return $externalsourcesArray[$value];
 			}
@@ -225,7 +234,7 @@ class SermondistributorModelExternal_sources extends ListModel
 				2 => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_AUTOMATIC'
 			);
 			// Now check if value is found in this array
-			if (isset($update_methodArray[$value]) && SermondistributorHelper::checkString($update_methodArray[$value]))
+			if (isset($update_methodArray[$value]) && StringHelper::check($update_methodArray[$value]))
 			{
 				return $update_methodArray[$value];
 			}
@@ -264,7 +273,7 @@ class SermondistributorModelExternal_sources extends ListModel
 				'.gif' => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_GIF'
 			);
 			// Now check if value is found in this array
-			if (isset($filetypesArray[$value]) && SermondistributorHelper::checkString($filetypesArray[$value]))
+			if (isset($filetypesArray[$value]) && StringHelper::check($filetypesArray[$value]))
 			{
 				return $filetypesArray[$value];
 			}
@@ -278,25 +287,25 @@ class SermondistributorModelExternal_sources extends ListModel
 				2 => 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_DYNAMIC_AUTOMATIC_BUILD'
 			);
 			// Now check if value is found in this array
-			if (isset($buildArray[$value]) && SermondistributorHelper::checkString($buildArray[$value]))
+			if (isset($buildArray[$value]) && StringHelper::check($buildArray[$value]))
 			{
 				return $buildArray[$value];
 			}
 		}
 		return $value;
 	}
-	
+
 	/**
 	 * Method to build an SQL query to load the list data.
 	 *
-	 * @return	string	An SQL query
+	 * @return    string    An SQL query
 	 */
 	protected function getListQuery()
 	{
 		// Get the user object.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// Create a new query object.
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = $db->getQuery(true);
 
 		// Select some fields
@@ -343,7 +352,7 @@ class SermondistributorModelExternal_sources extends ListModel
 				$query->where('a.externalsources = ' . (int) $_externalsources);
 			}
 		}
-		elseif (SermondistributorHelper::checkString($_externalsources))
+		elseif (StringHelper::check($_externalsources))
 		{
 			$query->where('a.externalsources = ' . $db->quote($db->escape($_externalsources)));
 		}
@@ -360,7 +369,7 @@ class SermondistributorModelExternal_sources extends ListModel
 				$query->where('a.update_method = ' . (int) $_update_method);
 			}
 		}
-		elseif (SermondistributorHelper::checkString($_update_method))
+		elseif (StringHelper::check($_update_method))
 		{
 			$query->where('a.update_method = ' . $db->quote($db->escape($_update_method)));
 		}
@@ -377,16 +386,18 @@ class SermondistributorModelExternal_sources extends ListModel
 				$query->where('a.build = ' . (int) $_build);
 			}
 		}
-		elseif (SermondistributorHelper::checkString($_build))
+		elseif (StringHelper::check($_build))
 		{
 			$query->where('a.build = ' . $db->quote($db->escape($_build)));
 		}
 
 		// Add the list ordering clause.
-		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'desc');
+		$orderCol = $this->getState('list.ordering', 'a.id');
+		$orderDirn = $this->getState('list.direction', 'desc');
 		if ($orderCol != '')
 		{
+			// Check that the order direction is valid encase we have a field called direction as part of filers.
+			$orderDirn = (is_string($orderDirn) && in_array(strtolower($orderDirn), ['asc', 'desc'])) ? $orderDirn : 'desc';
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
 		}
 
@@ -404,17 +415,17 @@ class SermondistributorModelExternal_sources extends ListModel
 	public function getExportData($pks, $user = null)
 	{
 		// setup the query
-		if (($pks_size = SermondistributorHelper::checkArray($pks)) !== false || 'bulk' === $pks)
+		if (($pks_size = UtilitiesArrayHelper::check($pks)) !== false || 'bulk' === $pks)
 		{
 			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
 			// Get the user object if not set.
-			if (!isset($user) || !SermondistributorHelper::checkObject($user))
+			if (!isset($user) || !ObjectHelper::check($user))
 			{
-				$user = JFactory::getUser();
+				$user = Factory::getUser();
 			}
 			// Create a new query object.
-			$db = JFactory::getDBO();
+			$db = Factory::getDBO();
 			$query = $db->getQuery(true);
 
 			// Select some fields
@@ -454,10 +465,10 @@ class SermondistributorModelExternal_sources extends ListModel
 				// Get the basic encryption key.
 				$basickey = SermondistributorHelper::getCryptKey('basic');
 				// Get the encryption object.
-				$basic = new FOFEncryptAes($basickey);
+				$basic = new AES($basickey);
 
 				// Set values to display correctly.
-				if (SermondistributorHelper::checkArray($items))
+				if (UtilitiesArrayHelper::check($items))
 				{
 					foreach ($items as $nr => &$item)
 					{
@@ -482,7 +493,7 @@ class SermondistributorModelExternal_sources extends ListModel
 				}
 				// Add headers to items array.
 				$headers = $this->getExImPortHeaders();
-				if (SermondistributorHelper::checkObject($headers))
+				if (ObjectHelper::check($headers))
 				{
 					array_unshift($items,$headers);
 				}
@@ -500,16 +511,16 @@ class SermondistributorModelExternal_sources extends ListModel
 	public function getExImPortHeaders()
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		// get the columns
 		$columns = $db->getTableColumns("#__sermondistributor_external_source");
-		if (SermondistributorHelper::checkArray($columns))
+		if (UtilitiesArrayHelper::check($columns))
 		{
 			// remove the headers you don't import/export.
 			unset($columns['asset_id']);
 			unset($columns['checked_out']);
 			unset($columns['checked_out_time']);
-			$headers = new stdClass();
+			$headers = new \stdClass();
 			foreach ($columns as $column => $type)
 			{
 				$headers->{$column} = $column;
@@ -518,7 +529,7 @@ class SermondistributorModelExternal_sources extends ListModel
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Method to get a store id based on model configuration state.
 	 *
@@ -545,19 +556,18 @@ class SermondistributorModelExternal_sources extends ListModel
 	/**
 	 * Build an SQL query to checkin all items left checked out longer then a set time.
 	 *
-	 * @return  a bool
-	 *
+	 * @return bool
+	 * @since 3.2.0
 	 */
-	protected function checkInNow()
+	protected function checkInNow(): bool
 	{
 		// Get set check in time
-		$time = JComponentHelper::getParams('com_sermondistributor')->get('check_in');
+		$time = ComponentHelper::getParams('com_sermondistributor')->get('check_in');
 
 		if ($time)
 		{
-
 			// Get a db connection.
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			// Reset query.
 			$query = $db->getQuery(true);
 			$query->select('*');
@@ -569,7 +579,7 @@ class SermondistributorModelExternal_sources extends ListModel
 			if ($db->getNumRows())
 			{
 				// Get Yesterdays date.
-				$date = JFactory::getDate()->modify($time)->toSql();
+				$date = Factory::getDate()->modify($time)->toSql();
 				// Reset query.
 				$query = $db->getQuery(true);
 
@@ -590,7 +600,7 @@ class SermondistributorModelExternal_sources extends ListModel
 
 				$db->setQuery($query);
 
-				$db->execute();
+				return $db->execute();
 			}
 		}
 

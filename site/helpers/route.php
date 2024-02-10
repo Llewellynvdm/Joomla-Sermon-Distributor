@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		route.php
@@ -24,6 +24,14 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Categories\CategoryNode;
+use Joomla\CMS\Categories\Categories;
+use VDM\Joomla\Utilities\ArrayHelper;
 
 /**
  * Sermondistributor Route Helper
@@ -57,7 +65,7 @@ abstract class SermondistributorHelperRoute
 		}
 		if ($catid > 1)
 		{
-			$categories = JCategories::getInstance('sermondistributor.sermons');
+			$categories = Categories::getInstance('sermondistributor.sermons');
 			$category = $categories->get($catid);
 			if ($category)
 			{
@@ -100,7 +108,7 @@ abstract class SermondistributorHelperRoute
 		}
 		if ($catid > 1)
 		{
-			$categories = JCategories::getInstance('sermondistributor.preachers');
+			$categories = Categories::getInstance('sermondistributor.preachers');
 			$category = $categories->get($catid);
 			if ($category)
 			{
@@ -143,7 +151,7 @@ abstract class SermondistributorHelperRoute
 		}
 		if ($catid > 1)
 		{
-			$categories = JCategories::getInstance('sermondistributor.preacher');
+			$categories = Categories::getInstance('sermondistributor.preacher');
 			$category = $categories->get($catid);
 			if ($category)
 			{
@@ -250,7 +258,7 @@ abstract class SermondistributorHelperRoute
 		}
 		if ($catid > 1)
 		{
-			$categories = JCategories::getInstance('sermondistributor.serieslist');
+			$categories = Categories::getInstance('sermondistributor.serieslist');
 			$category = $categories->get($catid);
 			if ($category)
 			{
@@ -293,7 +301,7 @@ abstract class SermondistributorHelperRoute
 		}
 		if ($catid > 1)
 		{
-			$categories = JCategories::getInstance('sermondistributor.series');
+			$categories = Categories::getInstance('sermondistributor.series');
 			$category = $categories->get($catid);
 			if ($category)
 			{
@@ -336,7 +344,7 @@ abstract class SermondistributorHelperRoute
 		}
 		if ($catid > 1)
 		{
-			$categories = JCategories::getInstance('sermondistributor.api');
+			$categories = Categories::getInstance('sermondistributor.api');
 			$category = $categories->get($catid);
 			if ($category)
 			{
@@ -357,7 +365,7 @@ abstract class SermondistributorHelperRoute
 	/**
 	 * Get the URL route for sermondistributor category from a category ID and language
 	 *
-	 * @param   mixed    $catid     The id of the items's category either an integer id or a instance of JCategoryNode
+	 * @param   mixed    $catid     The id of the items's category either an integer id or a instance of CategoryNode
 	 * @param   mixed    $language  The id of the language being used.
 	 *
 	 * @return  string  The link to the contact
@@ -366,21 +374,21 @@ abstract class SermondistributorHelperRoute
 	 */
 	public static function getCategoryRoute_keep_for_later($catid, $language = 0)
 	{
-		if ($catid instanceof JCategoryNode)
+		if ($catid instanceof CategoryNode)
 		{
-			$id = $catid->id;			
-			$category = $catid;			 
+			$id = $catid->id;
+			$category = $catid;
 		}
 		else
-		{			
-			throw new Exception('First parameter must be JCategoryNode');			
+		{
+			throw new Exception('First parameter must be CategoryNode');
 		}
-	
+
 		$views = array(
 			"com_sermondistributor.sermon" => "sermon");
 		$view = $views[$category->extension];
-       
-		if ($id < 1 || !($category instanceof JCategoryNode))
+
+		if ($id < 1 || !($category instanceof CategoryNode))
 		{
 			$link = '';
 		}
@@ -388,20 +396,20 @@ abstract class SermondistributorHelperRoute
 		{
 			//Create the link
 			$link = 'index.php?option=com_sermondistributor&view='.$view.'&category='.$category->slug;
-			
+
 			$needles = array(
 					$view => array($id),
 					'category' => array($id)
 			);
-	
-			if ($language && $language != "*" && JLanguageMultilang::isEnabled())
+
+			if ($language && $language != "*" && Multilanguage::isEnabled())
 			{
-				$db		= JFactory::getDbo();
-				$query	= $db->getQuery(true)
+				$db        = Factory::getDbo();
+				$query    = $db->getQuery(true)
 					->select('a.sef AS sef')
 					->select('a.lang_code AS lang_code')
 					->from('#__languages AS a');
-	
+
 				$db->setQuery($query);
 				$langs = $db->loadObjectList();
 				foreach ($langs as $lang)
@@ -413,11 +421,11 @@ abstract class SermondistributorHelperRoute
 					}
 				}
 			}
-	
+
 			if ($item = self::_findItem($needles,'category'))
 			{
 
-				$link .= '&Itemid='.$item;				
+				$link .= '&Itemid='.$item;
 			}
 			else
 			{
@@ -443,16 +451,16 @@ abstract class SermondistributorHelperRoute
 
 	protected static function _findItem($needles = null,$type = null)
 	{
-		$app      = JFactory::getApplication();
+		$app      = Factory::getApplication();
 		$menus    = $app->getMenu('site');
 		$language = isset($needles['language']) ? $needles['language'] : '*';
 
 		// Prepare the reverse lookup array.
 		if (!isset(self::$lookup[$language]))
 		{
-			self::$lookup[$language] = array();
+			self::$lookup[$language] = [];
 
-			$component  = JComponentHelper::getComponent('com_sermondistributor');
+			$component  = ComponentHelper::getComponent('com_sermondistributor');
 
 			$attributes = array('component_id');
 			$values     = array($component->id);
@@ -473,7 +481,7 @@ abstract class SermondistributorHelperRoute
 
 					if (!isset(self::$lookup[$language][$view]))
 					{
-						self::$lookup[$language][$view] = array();
+						self::$lookup[$language][$view] = [];
 					}
 
 					if (isset($item->query['id']))
@@ -502,7 +510,7 @@ abstract class SermondistributorHelperRoute
 			{
 				if (isset(self::$lookup[$language][$view]))
 				{
-					if (SermondistributorHelper::checkArray($ids))
+					if (ArrayHelper::check($ids))
 					{
 						foreach ($ids as $id)
 						{
@@ -523,7 +531,7 @@ abstract class SermondistributorHelperRoute
 		if ($type)
 		{
 			// Check if the global menu item has been set.
-			$params = JComponentHelper::getParams('com_sermondistributor');
+			$params = ComponentHelper::getParams('com_sermondistributor');
 			if ($item = $params->get($type.'_menu', 0))
 			{
 				return $item;
@@ -535,7 +543,7 @@ abstract class SermondistributorHelperRoute
 
 		if ($active
 			&& $active->component == 'com_sermondistributor'
-			&& ($language == '*' || in_array($active->language, array('*', $language)) || !JLanguageMultilang::isEnabled()))
+			&& ($language == '*' || in_array($active->language, array('*', $language)) || !Multilanguage::isEnabled()))
 		{
 			return $active->id;
 		}

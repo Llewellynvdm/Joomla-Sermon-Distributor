@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.json.php
@@ -25,7 +25,9 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -37,9 +39,9 @@ class SermondistributorControllerAjax extends BaseController
 	{
 		parent::__construct($config);
 		// make sure all json stuff are set
-		JFactory::getDocument()->setMimeEncoding( 'application/json' );
+		Factory::getDocument()->setMimeEncoding( 'application/json' );
 		// get the application
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$app->setHeader('Content-Disposition','attachment;filename="getajax.json"');
 		$app->setHeader('Access-Control-Allow-Origin', '*');
 		// load the tasks 
@@ -50,16 +52,16 @@ class SermondistributorControllerAjax extends BaseController
 	public function ajax()
 	{
 		// get the user for later use
-		$user 		= JFactory::getUser();
+		$user         = Factory::getUser();
 		// get the input values
-		$jinput 	= JFactory::getApplication()->input;
+		$jinput       = Factory::getApplication()->input;
 		// check if we should return raw
-		$returnRaw	= $jinput->get('raw', false, 'BOOLEAN');
+		$returnRaw    = $jinput->get('raw', false, 'BOOLEAN');
 		// return to a callback function
-		$callback	= $jinput->get('callback', null, 'CMD');
+		$callback     = $jinput->get('callback', null, 'CMD');
 		// Check Token!
-		$token 		= JSession::getFormToken();
-		$call_token	= $jinput->get('token', 0, 'ALNUM');
+		$token        = Session::getFormToken();
+		$call_token   = $jinput->get('token', 0, 'ALNUM');
 		if($jinput->get($token, 0, 'ALNUM') || $token === $call_token)
 		{
 			// get the task
@@ -74,7 +76,15 @@ class SermondistributorControllerAjax extends BaseController
 						$typeValue = $jinput->get('type', NULL, 'INT');
 						if($listValue && $tarValue && $typeValue)
 						{
-							$result = $this->getModel('ajax')->theQueue($listValue, $tarValue, $typeValue);
+							$ajaxModule = $this->getModel('ajax');
+							if ($ajaxModule)
+							{
+								$result = $ajaxModule->theQueue($listValue, $tarValue, $typeValue);
+							}
+							else
+							{
+								$result = false;
+							}
 						}
 						else
 						{
@@ -93,7 +103,7 @@ class SermondistributorControllerAjax extends BaseController
 							echo "(".json_encode($result).");";
 						}
 					}
-					catch(Exception $e)
+					catch(\Exception $e)
 					{
 						if($callback)
 						{
@@ -116,7 +126,15 @@ class SermondistributorControllerAjax extends BaseController
 						$filenameValue = $jinput->get('filename', NULL, 'CMD');
 						if($keyValue && $filenameValue)
 						{
-							$result = $this->getModel('ajax')->countDownload($keyValue, $filenameValue);
+							$ajaxModule = $this->getModel('ajax');
+							if ($ajaxModule)
+							{
+								$result = $ajaxModule->countDownload($keyValue, $filenameValue);
+							}
+							else
+							{
+								$result = false;
+							}
 						}
 						else
 						{
@@ -135,7 +153,7 @@ class SermondistributorControllerAjax extends BaseController
 							echo "(".json_encode($result).");";
 						}
 					}
-					catch(Exception $e)
+					catch(\Exception $e)
 					{
 						if($callback)
 						{
@@ -166,7 +184,7 @@ class SermondistributorControllerAjax extends BaseController
 				echo json_encode(false);
 			}
 			else
-  			{
+			  {
 				echo "(".json_encode(false).");";
 			}
 		}

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		externalsource.php
@@ -25,6 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+
 // import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
@@ -37,7 +41,7 @@ class JFormFieldExternalsource extends JFormFieldList
 	/**
 	 * The externalsource field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 */
 	public $type = 'externalsource';
 
@@ -61,7 +65,7 @@ class JFormFieldExternalsource extends JFormFieldList
 			$script = array();
 			$button_code_name = $this->getAttribute('name');
 			// get the input from url
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 			$jinput = $app->input;
 			// get the view name & id
 			$values = $jinput->getArray(array(
@@ -77,7 +81,7 @@ class JFormFieldExternalsource extends JFormFieldList
 				$ref = '&amp;ref=' . $values['view'] . '&amp;refid=' . $values['id'];
 				$refJ = '&ref=' . $values['view'] . '&refid=' . $values['id'];
 				// get the return value.
-				$_uri = (string) JUri::getInstance();
+				$_uri = (string) \Joomla\CMS\Uri\Uri::getInstance();
 				$_return = urlencode(base64_encode($_uri));
 				// load return value.
 				$ref .= '&amp;return=' . $_return;
@@ -90,20 +94,20 @@ class JFormFieldExternalsource extends JFormFieldList
 			$button_label = preg_replace("/[^A-Za-z ]/", '', $button_label);
 			$button_label = ucfirst(strtolower($button_label));
 			// get user object
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 			// only add if user allowed to create external_source
-			if ($user->authorise('external_source.create', 'com_sermondistributor') && $app->isAdmin()) // TODO for now only in admin area.
+			if ($user->authorise('external_source.create', 'com_sermondistributor') && $app->isClient('administrator')) // TODO for now only in admin area.
 			{
 				// build Create button
-				$button[] = '<a id="'.$button_code_name.'Create" class="btn btn-small btn-success hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_CREATE_NEW_S', $button_label).'" style="border-radius: 0px 4px 4px 0px; padding: 4px 4px 4px 7px;"
+				$button[] = '<a id="'.$button_code_name.'Create" class="btn btn-small btn-success hasTooltip" title="'.Text::sprintf('COM_SERMONDISTRIBUTOR_CREATE_NEW_S', $button_label).'" style="border-radius: 0px 4px 4px 0px; padding: 4px 4px 4px 7px;"
 					href="index.php?option=com_sermondistributor&amp;view=external_source&amp;layout=edit'.$ref.'" >
 					<span class="icon-new icon-white"></span></a>';
 			}
 			// only add if user allowed to edit external_source
-			if ($user->authorise('external_source.edit', 'com_sermondistributor') && $app->isAdmin()) // TODO for now only in admin area.
+			if ($user->authorise('external_source.edit', 'com_sermondistributor') && $app->isClient('administrator')) // TODO for now only in admin area.
 			{
 				// build edit button
-				$button[] = '<a id="'.$button_code_name.'Edit" class="btn btn-small hasTooltip" title="'.JText::sprintf('COM_SERMONDISTRIBUTOR_EDIT_S', $button_label).'" style="display: none; padding: 4px 4px 4px 7px;" href="#" >
+				$button[] = '<a id="'.$button_code_name.'Edit" class="btn btn-small hasTooltip" title="'.Text::sprintf('COM_SERMONDISTRIBUTOR_EDIT_S', $button_label).'" style="display: none; padding: 4px 4px 4px 7px;" href="#" >
 					<span class="icon-edit"></span></a>';
 				// build script
 				$script[] = "
@@ -136,7 +140,7 @@ class JFormFieldExternalsource extends JFormFieldList
 			if (is_array($button) && count($button) > 0)
 			{
 				// Load the needed script.
-				$document = JFactory::getDocument();
+				$document = Factory::getDocument();
 				$document->addScriptDeclaration(implode(' ',$script));
 				// return the button attached to input field.
 				return '<div class="input-append">' .$html . implode('',$button).'</div>';
@@ -148,7 +152,7 @@ class JFormFieldExternalsource extends JFormFieldList
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return	array    An array of JHtml options.
+	 * @return    array    An array of Html options.
 	 */
 	protected function getOptions()
 	{

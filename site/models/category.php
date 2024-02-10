@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		category.php
@@ -25,8 +25,16 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Helper\TagsHelper;
+use VDM\Joomla\Utilities\StringHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\Utilities\JsonHelper;
 
 /**
  * Sermondistributor List Model for Category
@@ -55,17 +63,17 @@ class SermondistributorModelCategory extends ListModel
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$this->user = JFactory::getUser();
+		$this->user = Factory::getUser();
 		$this->userId = $this->user->get('id');
 		$this->guest = $this->user->get('guest');
 		$this->groups = $this->user->get('groups');
 		$this->authorisedGroups = $this->user->getAuthorisedGroups();
 		$this->levels = $this->user->getAuthorisedViewLevels();
-		$this->app = JFactory::getApplication();
+		$this->app = Factory::getApplication();
 		$this->input = $this->app->input;
 		$this->initSet = true; 
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -96,7 +104,7 @@ class SermondistributorModelCategory extends ListModel
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
 		// Check if JRequest::getInt('id') is a string or numeric value.
 		$checkValue = JRequest::getInt('id');
-		if (isset($checkValue) && SermondistributorHelper::checkString($checkValue))
+		if (isset($checkValue) && StringHelper::check($checkValue))
 		{
 			$query->where('a.catid = ' . $db->quote($checkValue));
 		}
@@ -123,48 +131,48 @@ class SermondistributorModelCategory extends ListModel
 	 */
 	public function getItems()
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// check if this user has permission to access item
 		if (!$user->authorise('site.category.access', 'com_sermondistributor'))
 		{
-			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_CATEGORY'), 'error');
+			$app = Factory::getApplication();
+			$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_CATEGORY'), 'error');
 			// redirect away to the default view if no access allowed.
-			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
+			$app->redirect(Route::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
 		}
 		// load parent items
 		$items = parent::getItems();
 
 		// Get the global params
-		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
+		$globalParams = ComponentHelper::getParams('com_sermondistributor', true);
 
 		// Insure all item fields are adapted where needed.
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			// Load the JEvent Dispatcher
-			JPluginHelper::importPlugin('content');
-			$this->_dispatcher = JFactory::getApplication();
+			PluginHelper::importPlugin('content');
+			$this->_dispatcher = Factory::getApplication();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
-				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+				$item->slug = ($item->id ?? '0') . (isset($item->alias) ? ':' . $item->alias : '');
 				// Check if we can decode local_files
-				if (SermondistributorHelper::checkJson($item->local_files))
+				if (isset($item->local_files) && JsonHelper::check($item->local_files))
 				{
 					// Decode local_files
 					$item->local_files = json_decode($item->local_files, true);
 				}
 				// Check if we can decode manual_files
-				if (SermondistributorHelper::checkJson($item->manual_files))
+				if (isset($item->manual_files) && JsonHelper::check($item->manual_files))
 				{
 					// Decode manual_files
 					$item->manual_files = json_decode($item->manual_files, true);
 				}
 				// Check if item has params, or pass whole item.
-				$params = (isset($item->params) && SermondistributorHelper::checkJson($item->params)) ? json_decode($item->params) : $item;
+				$params = (isset($item->params) && JsonHelper::check($item->params)) ? json_decode($item->params) : $item;
 				// Make sure the content prepare plugins fire on description
-				$_description = new stdClass();
+				$_description = new \stdClass();
 				$_description->text =& $item->description; // value must be in text
 				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
 				$this->_dispatcher->triggerEvent("onContentPrepare", array('com_sermondistributor.category.description', &$_description, &$params, 0));
@@ -190,13 +198,13 @@ class SermondistributorModelCategory extends ListModel
 					$item->isNew = true;
 				}
 				$item->statisticTotal = 0;
-				if (isset($item->auto_sermons) && SermondistributorHelper::checkString($item->auto_sermons))
+				if (isset($item->auto_sermons) && StringHelper::check($item->auto_sermons))
 				{
 					// Decode the auto files
 					$item->auto_sermons = json_decode($item->auto_sermons, true);
 				}
 				// set statistic per filename if found
-				if (isset($item->idSermonStatisticE) && SermondistributorHelper::checkArray($item->idSermonStatisticE))
+				if (isset($item->idSermonStatisticE) && UtilitiesArrayHelper::check($item->idSermonStatisticE))
 				{
 					foreach ($item->idSermonStatisticE as $statistic)
 					{
@@ -233,7 +241,7 @@ class SermondistributorModelCategory extends ListModel
 	public function getIdSermonStatisticBcea_E($id)
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -269,7 +277,7 @@ class SermondistributorModelCategory extends ListModel
 
 		if (!isset($this->initSet) || !$this->initSet)
 		{
-			$this->user = JFactory::getUser();
+			$this->user = Factory::getUser();
 			$this->userId = $this->user->get('id');
 			$this->guest = $this->user->get('guest');
 			$this->groups = $this->user->get('groups');
@@ -278,7 +286,7 @@ class SermondistributorModelCategory extends ListModel
 			$this->initSet = true;
 		}
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -288,9 +296,9 @@ class SermondistributorModelCategory extends ListModel
 			array('a.id','a.parent_id','a.lft','a.rgt','a.level','a.title','a.alias','a.note','a.description','a.params','a.metadesc','a.metakey','a.metadata','a.hits','a.language','a.version'),
 			array('id','parent_id','lft','rgt','level','name','alias','note','description','params','metadesc','metakey','metadata','hits','language','version')));
 		$query->from($db->quoteName('#__categories', 'a'));
-		// Check if JRequest::getInt('id') is a string or numeric value.
-		$checkValue = JRequest::getInt('id');
-		if (isset($checkValue) && SermondistributorHelper::checkString($checkValue))
+		// Check if $this->input->getInt('id') is a string or numeric value.
+		$checkValue = $this->input->getInt('id');
+		if (isset($checkValue) && StringHelper::check($checkValue))
 		{
 			$query->where('a.id = ' . $db->quote($checkValue));
 		}
@@ -331,7 +339,7 @@ class SermondistributorModelCategory extends ListModel
 	public function getIdCatidSermonFbdf_B($id)
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -341,7 +349,7 @@ class SermondistributorModelCategory extends ListModel
 			array('b.id'),
 			array('id')));
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'b'));
-		$query->where('b.catid  = ' . $db->quote($id));
+		$query->where('b.catid = ' . $db->quote($id));
 
 		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
@@ -372,7 +380,7 @@ class SermondistributorModelCategory extends ListModel
 	public function getIdSermonStatisticFbdf_C($id)
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -405,7 +413,7 @@ class SermondistributorModelCategory extends ListModel
 	 */
 	public function getUikitComp()
 	{
-		if (isset($this->uikitComp) && SermondistributorHelper::checkArray($this->uikitComp))
+		if (isset($this->uikitComp) && UtilitiesArrayHelper::check($this->uikitComp))
 		{
 			return $this->uikitComp;
 		}

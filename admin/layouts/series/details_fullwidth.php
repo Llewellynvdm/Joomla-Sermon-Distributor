@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		details_fullwidth.php
@@ -42,7 +42,7 @@ $fields = $displayData->get($fields_tab_layout) ?: array(
 	'description'
 );
 
-$hiddenFields = $displayData->get('hidden_fields') ?: array();
+$hiddenFields = $displayData->get('hidden_fields') ?: [];
 
 ?>
 <?php if ($fields && count((array) $fields)) :?>

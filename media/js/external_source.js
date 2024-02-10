@@ -9,7 +9,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.js
@@ -26,7 +26,7 @@ jform_vvvvvwjvwd_required = false;
 jform_vvvvvwmvwe_required = false;
 
 // Initial Script
-jQuery(document).ready(function()
+document.addEventListener('DOMContentLoaded', function()
 {
 	var externalsources_vvvvvwe = jQuery("#jform_externalsources").val();
 	var permissiontype_vvvvvwe = jQuery("#jform_permissiontype input[type='radio']:checked").val();
@@ -1019,7 +1019,7 @@ function vvvvvww(update_method_vvvvvww)
 // update fields required
 function updateFieldRequired(name, status) {
 	// check if not_required exist
-	if (jQuery('#jform_not_required').length > 0) {
+	if (document.getElementById('jform_not_required')) {
 		var not_required = jQuery('#jform_not_required').val().split(",");
 
 		if(status == 1)
@@ -1135,4 +1135,4 @@ function getBuildTable(string,idName){
 function buildTable(result,idName){
 	jQuery('#table_'+idName).remove();
 	jQuery('#'+idName).closest('.control-group').append(result);
-} 
+}

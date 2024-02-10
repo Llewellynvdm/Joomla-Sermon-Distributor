@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -25,12 +25,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 // Set the heading of the page
 $heading = ($this->params->get('page_heading')) ? $this->params->get('page_heading') : ((isset($this->menu->title)) ? $this->menu->title : '');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_sermondistributor'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo Route::_('index.php?option=com_sermondistributor'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if ($this->params->get('show_page_heading')): ?>
 	<h1 class="uk-text-primary"><?php echo $heading; ?></h1>
 <?php endif; ?>
@@ -45,7 +47,7 @@ $heading = ($this->params->get('page_heading')) ? $this->params->get('page_headi
 <?php else: ?>
 	<div class="uk-alert uk-alert-warning" data-uk-alert>
 		<a href="" class="uk-alert-close uk-close"></a>
-		<p><?php echo JText::_('COM_SERMONDISTRIBUTOR_NO_PREACHERS_WERE_FOUND'); ?></p>
+		<p><?php echo Text::_('COM_SERMONDISTRIBUTOR_NO_PREACHERS_WERE_FOUND'); ?></p>
 	</div>
 <?php endif; ?>
 
@@ -58,5 +60,5 @@ $heading = ($this->params->get('page_heading')) ? $this->params->get('page_headi
 	</div>
 <?php endif; ?><?php echo $this->toolbar->render(); ?>
 <input type="hidden" name="task" value="" />
-<?php echo JHtml::_('form.token'); ?>
+<?php echo Html::_('form.token'); ?>
 </form>

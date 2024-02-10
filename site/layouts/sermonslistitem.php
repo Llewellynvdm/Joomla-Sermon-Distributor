@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermonslistitem.php
@@ -25,10 +25,15 @@
 // No direct access to this file
 defined('JPATH_BASE') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+
 
 
 ?>
-<?php echo JLayoutHelper::render('isnew', $displayData); ?> <a <?php if ($displayData->params->get($displayData->viewKey.'_sermons_download_count')): ?> data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_DOWNLOAD_COUNT'); ?>: <?php echo 4; ?>" <?php endif; ?>href="<?php echo $displayData->link; ?>"><?php echo $displayData->name; ?></a>
+<?php echo LayoutHelper::render('isnew', $displayData); ?> <a <?php if ($displayData->params->get($displayData->viewKey.'_sermons_download_count')): ?> data-uk-tooltip title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_DOWNLOAD_COUNT'); ?>: <?php echo 4; ?>" <?php endif; ?>href="<?php echo $displayData->link; ?>"><?php echo $displayData->name; ?></a>
 <?php if (('preacher' == $displayData->viewKey || 'category' == $displayData->viewKey) && $displayData->params->get($displayData->viewKey.'_sermons_series')): ?>
 	<a href="<?php echo $displayData->series_link; ?>" data-uk-tooltip title="<?php echo $displayData->series_name; ?>"><?php echo $displayData->series_name; ?></a>
 <?php endif ;?>
@@ -44,5 +49,5 @@ defined('JPATH_BASE') or die('Restricted access');
 	<?php echo $displayData->desc; ?>
 <?php endif; ?>
 <?php if ($displayData->params->get($displayData->viewKey.'_sermons_hits')): ?>
-	<em><?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?></em>
+	<em><?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?></em>
 <?php endif ;?>

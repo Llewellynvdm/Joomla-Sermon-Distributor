@@ -9,7 +9,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		submitbutton.js
@@ -25,7 +25,7 @@ Joomla.submitbutton = function(task)
 {
 	if (task == ''){
 		return false;
-	} else { 
+	} else {
 		var action = task.split('.');
 		if (action[1] == 'cancel' || action[1] == 'close' || document.formvalidator.isValid(document.getElementById("adminForm"))){
 			Joomla.submitform(task, document.getElementById("adminForm"));

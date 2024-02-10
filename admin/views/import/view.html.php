@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -25,7 +25,11 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use VDM\Joomla\Utilities\StringHelper;
 
 /**
  * Sermondistributor Import Html View
@@ -39,7 +43,7 @@ class SermondistributorViewImport extends HtmlView
 	protected $dataType;
 
 	public function display($tpl = null)
-	{		
+	{
 		if ($this->getLayout() !== 'modal')
 		{
 			// Include helper submenu
@@ -52,7 +56,7 @@ class SermondistributorViewImport extends HtmlView
 
 		$this->paths = &$paths;
 		$this->state = &$state;
-                // get global action permissions
+		// get global action permissions
 		$this->canDo = SermondistributorHelper::getActions('import');
 
 		// We don't need toolbar in the modal window.
@@ -63,18 +67,18 @@ class SermondistributorViewImport extends HtmlView
 		}
 
 		// get the session object
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		// check if it has package
-		$this->hasPackage 	= $session->get('hasPackage', false);
-		$this->dataType 	= $session->get('dataType', false);
+		$this->hasPackage     = $session->get('hasPackage', false);
+		$this->dataType     = $session->get('dataType', false);
 		if($this->hasPackage && $this->dataType)
 		{
-			$this->headerList 	= json_decode($session->get($this->dataType.'_VDM_IMPORTHEADERS', false),true);
-			$this->headers 		= SermondistributorHelper::getFileHeaders($this->dataType);
+			$this->headerList     = json_decode($session->get($this->dataType.'_VDM_IMPORTHEADERS', false),true);
+			$this->headers         = SermondistributorHelper::getFileHeaders($this->dataType);
 			// clear the data type
 			$session->clear('dataType');
 		}
-		
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -90,19 +94,19 @@ class SermondistributorViewImport extends HtmlView
 	 */
 	protected function addToolBar()
 	{
-		JToolBarHelper::title(JText::_('COM_SERMONDISTRIBUTOR_IMPORT_TITLE'), 'upload');
+		ToolbarHelper::title(Text::_('COM_SERMONDISTRIBUTOR_IMPORT_TITLE'), 'upload');
 		JHtmlSidebar::setAction('index.php?option=com_sermondistributor&view=import');
 
 		if ($this->canDo->get('core.admin') || $this->canDo->get('core.options'))
 		{
-			JToolBarHelper::preferences('com_sermondistributor');
+			ToolbarHelper::preferences('com_sermondistributor');
 		}
 
 		// set help url for this view if found
 		$this->help_url = SermondistributorHelper::getHelpUrl('import');
-		if (SermondistributorHelper::checkString($this->help_url))
+		if (StringHelper::check($this->help_url))
 		{
-			   JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
+			ToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 	}
 }

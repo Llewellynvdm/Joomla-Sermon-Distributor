@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		import.php
@@ -25,7 +25,11 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -41,21 +45,21 @@ class SermondistributorControllerImport extends BaseController
 	public function import()
 	{
 		// Check for request forgeries
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$model = $this->getModel('import');
 		if ($model->import())
 		{
-			$cache = JFactory::getCache('mod_menu');
+			$cache = Factory::getCache('mod_menu');
 			$cache->clean();
 			// TODO: Reset the users acl here as well to kill off any missing bits
 		}
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$redirect_url = $app->getUserState('com_sermondistributor.redirect_url');
 		if (empty($redirect_url))
 		{
-			$redirect_url = JRoute::_('index.php?option=com_sermondistributor&view=import', false);
+			$redirect_url = Route::_('index.php?option=com_sermondistributor&view=import', false);
 		}
 		else
 		{

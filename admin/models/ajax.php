@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ajax.php
@@ -25,8 +25,18 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
+use VDM\Joomla\Utilities\FileHelper;
+use VDM\Joomla\Utilities\StringHelper;
+use VDM\Joomla\Utilities\JsonHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\Utilities\ObjectHelper;
+use VDM\Joomla\Utilities\GetHelper;
 
 /**
  * Sermondistributor Ajax List Model
@@ -34,26 +44,32 @@ use Joomla\Utilities\ArrayHelper;
 class SermondistributorModelAjax extends ListModel
 {
 	protected $app_params;
-	
-	public function __construct() 
-	{		
-		parent::__construct();		
+
+	public function __construct()
+	{
+		parent::__construct();
 		// get params
-		$this->app_params	= JComponentHelper::getParams('com_sermondistributor');
-		
+		$this->app_params = ComponentHelper::getParams('com_sermondistributor');
+
 	}
 
 	// Used in sermon
 
 	/**
-	* 	Check and if a vdm notice is new (per/user)
-	**/
-	public function isNew($notice)
+	 * Check and if a notice is new (per/user)
+	 *
+	 * @param string|null    $notice   The current notice
+	 *
+	 * @return  bool  true if is new
+	 * @since   2.0.0
+	 */
+	public function isNew(?string $notice): bool
 	{
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('path', 'usernotice', 'md', JFactory::getUser()->username, JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = FileHelper::getPath('path', 'usernotice', 'md', Factory::getUser()->username, JPATH_COMPONENT_ADMINISTRATOR);
+
 		// check if the file is set
-		if (($content = @file_get_contents($path_filename)) !== FALSE)
+		if (($content = FileHelper::getContent($path_filename, FALSE)) !== FALSE)
 		{
 			if ($notice == $content)
 			{
@@ -64,33 +80,28 @@ class SermondistributorModelAjax extends ListModel
 	}
 
 	/**
-	* 	set That a notice has been read (per/user)
-	**/
-	public function isRead($notice)
+	 * Check if a notice has been read (per/user)
+	 *
+	 * @param string|null    $notice   The current notice
+	 *
+	 * @return  bool  true if is read
+	 * @since   2.0.0
+	 */
+	public function isRead(?string $notice): bool
 	{
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('path', 'usernotice', 'md', JFactory::getUser()->username, JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = FileHelper::getPath('path', 'usernotice', 'md', Factory::getUser()->username, JPATH_COMPONENT_ADMINISTRATOR);
+
 		// set as read if not already set
-		if (($content = @file_get_contents($path_filename)) !== FALSE)
+		if (($content = FileHelper::getContent($path_filename, FALSE)) !== FALSE)
 		{
 			if ($notice == $content)
 			{
 				return true;
 			}
 		}
-		return $this->saveFile($notice,$path_filename);
-	}
 
-	protected function saveFile($data,$path_filename)
-	{
-		if (SermondistributorHelper::checkString($data))
-		{
-			$fp = fopen($path_filename, 'w');
-			fwrite($fp, $data);
-			fclose($fp);
-			return true;
-		}
-		return false;
+		return FileHelper::write($path_filename, $notice);
 	}
 
 	// Used in external_source
@@ -113,8 +124,8 @@ class SermondistributorModelAjax extends ListModel
 	{
 		// set the headers
 		$headers = array(
-			'tsharedurl' => JText::_('COM_SERMONDISTRIBUTOR_SHAREDURL'),
-			'tfolder' => JText::_('COM_SERMONDISTRIBUTOR_TARGETED_FOLDER')
+			'tsharedurl' => Text::_('COM_SERMONDISTRIBUTOR_SHAREDURL'),
+			'tfolder' => Text::_('COM_SERMONDISTRIBUTOR_TARGETED_FOLDER')
 		);
 		// loop the array
 		foreach ($headers as $key => $lang)
@@ -128,7 +139,7 @@ class SermondistributorModelAjax extends ListModel
 		$functions = range(0,10);
 		foreach ($functions as $function)
 		{
-			$function = 'setAutoLang'.SermondistributorHelper::safeString($function, 'f');
+			$function = 'setAutoLang'.StringHelper::safe($function, 'f');
 			if (method_exists($this, $function))
 			{
 				$this->{$function}();
@@ -136,7 +147,7 @@ class SermondistributorModelAjax extends ListModel
 		}
 		foreach ($functions as $function)
 		{
-			$function = 'setAutoFunc'.SermondistributorHelper::safeString($function, 'f');
+			$function = 'setAutoFunc'.StringHelper::safe($function, 'f');
 			if (method_exists($this, $function))
 			{
 				$this->{$function}();
@@ -146,10 +157,10 @@ class SermondistributorModelAjax extends ListModel
 
 	public function getBuildTable($idName,$oject)
 	{
-		if (SermondistributorHelper::checkJson($oject) && SermondistributorHelper::checkString($idName))
+		if (JsonHelper::check($oject) && StringHelper::check($idName))
 		{
 			$array = json_decode($oject, true);
-			if (SermondistributorHelper::checkArray($array))
+			if (UtilitiesArrayHelper::check($array))
 			{ 
 				// make sure we run the autoloader to insure all is set
 				$this->autoLoader();
@@ -160,9 +171,9 @@ class SermondistributorModelAjax extends ListModel
 				$rows		= array();
 				foreach ($array as $header => $values)
 				{
-					if (SermondistributorHelper::checkArray($values))
+					if (UtilitiesArrayHelper::check($values))
 					{
-						$targetHeader = (isset($targetHeaders[$header])) ? $targetHeaders[$header] : SermondistributorHelper::safeString($header, 'W');
+						$targetHeader = (isset($targetHeaders[$header])) ? $targetHeaders[$header] : StringHelper::safe($header, 'W');
 						$table .= '<th style="padding: 10px; text-align: center; border: 1px solid rgb(221, 221, 221);" scope="col">'.$targetHeader.'</th>';
 						foreach ($values as $nr => $value)
 						{
@@ -174,7 +185,7 @@ class SermondistributorModelAjax extends ListModel
 				// close header start body
 				$table .= '</tr></thead><tbody>';
 				// add rows to table
-				if (SermondistributorHelper::checkArray($rows))
+				if (UtilitiesArrayHelper::check($rows))
 				{
 					foreach ($rows as $row)
 					{
@@ -198,7 +209,7 @@ class SermondistributorModelAjax extends ListModel
 			$value = $this->{$this->functionArray[$header]}($header,$value);
 		}
 		// if no value are set
-		if (!SermondistributorHelper::checkString($value))
+		if (!StringHelper::check($value))
 		{
 			$value = '-';
 		}
@@ -228,10 +239,10 @@ class SermondistributorModelAjax extends ListModel
 	**/
 	public function getCronPath($type)
 	{
-		$result = array('error' => '<span style="color: red;">' . JText::_('COM_SERMONDISTRIBUTOR_NO_CRONJOB_PATH_FOUND_SINCE_INCORRECT_TYPE_REQUESTED') . '</span>');
+		$result = array('error' => '<span style="color: red;">' . Text::_('COM_SERMONDISTRIBUTOR_NO_CRONJOB_PATH_FOUND_SINCE_INCORRECT_TYPE_REQUESTED') . '</span>');
 		if ('externalUpdate' === $type)
 		{
-			$result['error'] = '<span style="color: red;">' . JText::sprintf('COM_SERMONDISTRIBUTOR_NO_CRONJOB_PATH_FOUND_FOR_S', $type) . '</span>';
+			$result['error'] = '<span style="color: red;">' . Text::sprintf('COM_SERMONDISTRIBUTOR_NO_CRONJOB_PATH_FOUND_FOR_S', $type) . '</span>';
 			if ($this->hasCurl())
 			{
 				$path = '*/15 * * * * curl -s "' .JURI::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
@@ -265,14 +276,14 @@ class SermondistributorModelAjax extends ListModel
 			$type = 'auto';
 		}
 		// first get the file path
-		$path_filename = SermondistributorHelper::getFilePath('update', 'error', $id.$target.$typeID, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
+		$path_filename = FileHelper::getPath('update', 'error', $id.$target.$typeID, '.txt', JPATH_COMPONENT_ADMINISTRATOR);
 		// check "die sleutel" and the type
-		if (isset($type) && SermondistributorHelper::checkString($sleutel))
+		if (isset($type) && StringHelper::check($sleutel))
 		{
 			// get database object
-			if (!isset($this->db) || !SermondistributorHelper::checkObject($this->db))
+			if (!isset($this->db) || !ObjectHelper::check($this->db))
 			{
-				$this->db = JFactory::getDBO();
+				$this->db = Factory::getDBO();
 			}
 			// run the update
 			if (SermondistributorHelper::updateExternalSource($id, $target, $type, true, $sleutel))
@@ -292,7 +303,7 @@ class SermondistributorModelAjax extends ListModel
 			return array('error' => $error);
 		}
 		// store the error
-		$error = JText::_('COM_SERMONDISTRIBUTOR_BCOULD_NOT_USE_THE_GIVEN_TOKEN_OR_THE_GIVEN_BUILD_OPTION_DOES_NOT_EXISTB');
+		$error = Text::_('COM_SERMONDISTRIBUTOR_BCOULD_NOT_USE_THE_GIVEN_TOKEN_OR_THE_GIVEN_BUILD_OPTION_DOES_NOT_EXISTB');
 		SermondistributorHelper::writeFile($path_filename,$error);
 		return array('error' => $error);
 	}
@@ -304,12 +315,12 @@ class SermondistributorModelAjax extends ListModel
 	{
 		// check if we should update with auto listing
 		$links_dropbox_auto = SermondistributorHelper::getExternalSourceLink('auto', 2);
-		if (SermondistributorHelper::checkArray($links_dropbox_auto))
+		if (UtilitiesArrayHelper::check($links_dropbox_auto))
 		{
 			// load system aliases
 			$this->getSermonAliasesUsed();
 			// set the class var for sermons
-			$this->sermons = new stdClass();
+			$this->sermons = new \stdClass();
 			// we must first get all the preacher names
 			foreach ($links_dropbox_auto as $placeholder => $link)
 			{
@@ -353,7 +364,7 @@ class SermondistributorModelAjax extends ListModel
 	protected function setSermons()
 	{
 		// check if we have values
-		if (SermondistributorHelper::checkObject($this->sermons))
+		if (ObjectHelper::check($this->sermons))
 		{
 			foreach ($this->sermons as $sermon)
 			{
@@ -420,7 +431,7 @@ class SermondistributorModelAjax extends ListModel
 		$fields = array(
 			$this->db->quoteName('published') . ' = 0'
 		);
-		if (isset($this->allSermons) && SermondistributorHelper::checkArray($this->allSermons))
+		if (isset($this->allSermons) && UtilitiesArrayHelper::check($this->allSermons))
 		{
 			// unpublish those AUTO sermons not found in this id list
 			$conditions = array(
@@ -513,7 +524,7 @@ class SermondistributorModelAjax extends ListModel
 		else
 		{
 			// load the sermon data
-			$this->sermons->$key = new stdClass();
+			$this->sermons->$key = new \stdClass();
 		}
 		// check if this value has been set
 		if (!isset($this->sermons->$key->alias))
@@ -534,7 +545,7 @@ class SermondistributorModelAjax extends ListModel
 			$this->sermons->$key->name = $name;
 		}
 		// check if this value has been set
-		if (!isset($this->sermons->$key->short_description) && SermondistributorHelper::checkString($description))
+		if (!isset($this->sermons->$key->short_description) && StringHelper::check($description))
 		{
 			$this->sermons->$key->short_description = $description;
 		}
@@ -557,32 +568,32 @@ class SermondistributorModelAjax extends ListModel
 		if (!isset($this->sermons->$key->created))
 		{
 			// set the date object
-			$date = JFactory::getDate();
+			$date = Factory::getDate();
 			$this->sermons->$key->created = $date->toSql();
 		}		
 		// build the Download File NAme - first add the preacher name if set
 		if ($preacher)
 		{
-			$downloadName[] = SermondistributorHelper::safeString($preacherName,'U');
+			$downloadName[] = StringHelper::safe($preacherName,'U');
 		}
 		// add the series name if set
 		if ($series)
 		{
-			$downloadName[] = SermondistributorHelper::safeString($seriesName,'F');
+			$downloadName[] = StringHelper::safe($seriesName,'F');
 		}
 		// add the category name if set
 		if ($category)
 		{
-			$downloadName[] = SermondistributorHelper::safeString($categoryName, 'F');
+			$downloadName[] = StringHelper::safe($categoryName, 'F');
 		}
 		// add the main file name
-		$downloadName[] = SermondistributorHelper::safeString($name,'F');
+		$downloadName[] = StringHelper::safe($name,'F');
 		// now build the download file name
 		$downloadName = implode('__', $downloadName).'.'.$fileType;			
 		// load the placeholder to the sermon
 		$this->sermons->$key->auto_sermons[$downloadName] = $placeholder;
 		// set default metadate
-		if (!isset($this->sermons->$key->metadesc) && SermondistributorHelper::checkString($description))
+		if (!isset($this->sermons->$key->metadesc) && StringHelper::check($description))
 		{	
 			// Only process once per/sermon
 			$bad_characters = array("\"", "<", ">");
@@ -613,7 +624,7 @@ class SermondistributorModelAjax extends ListModel
 	protected function getAlias($name,$type = false)
 	{
 		// sanitize the name to an alias
-		if (JFactory::getConfig()->get('unicodeslugs') == 1)
+		if (Factory::getConfig()->get('unicodeslugs') == 1)
 		{
 			$alias = JFilterOutput::stringURLUnicodeSlug($name);
 		}
@@ -633,7 +644,7 @@ class SermondistributorModelAjax extends ListModel
 		// sanitize the name to an alias
 		$alias = $this->getAlias($name);
 		// check if there is a recored
-		if ($id = SermondistributorHelper::getVar($type, $alias, 'alias', 'id'))
+		if ($id = GetHelper::var($type, $alias, 'alias', 'id'))
 		{
 			return $id;
 		}
@@ -646,9 +657,9 @@ class SermondistributorModelAjax extends ListModel
 				$name = ucwords($name);
 			}
 			// create the record
-			$object = new stdClass();
+			$object = new \stdClass();
 			// set the date object
-			$date = JFactory::getDate();
+			$date = Factory::getDate();
 			// build the object
 			$object->name			= $name;
 			$object->alias			= $alias;

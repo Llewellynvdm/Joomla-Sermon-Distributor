@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		script.php
@@ -25,20 +25,24 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
-JHTML::_('bootstrap.renderModal');
+use Joomla\CMS\Version;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+HTML::_('bootstrap.renderModal');
 
 /**
  * Script File of Sermondistributor Component
  */
-class com_sermondistributorInstallerScript
+class Com_SermondistributorInstallerScript
 {
 	/**
 	 * Constructor
 	 *
-	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 * @param   ComponentAdapter  $parent  The object responsible for running this script
 	 */
 	public function __construct(ComponentAdapter $parent) {}
 
@@ -59,10 +63,10 @@ class com_sermondistributorInstallerScript
 	public function uninstall(ComponentAdapter $parent)
 	{
 		// Get Application object
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		// Get The Database object
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -92,7 +96,7 @@ class com_sermondistributorInstallerScript
 			if ($preacher_done)
 			{
 				// If successfully remove Preacher add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove Preacher items from the contentitem tag map table
@@ -107,7 +111,7 @@ class com_sermondistributorInstallerScript
 			if ($preacher_done)
 			{
 				// If successfully remove Preacher add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove Preacher items from the ucm content table
@@ -122,7 +126,7 @@ class com_sermondistributorInstallerScript
 			if ($preacher_done)
 			{
 				// If successfully removed Preacher add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.preacher) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the Preacher items are cleared from DB
@@ -178,7 +182,7 @@ class com_sermondistributorInstallerScript
 			if ($sermon_done)
 			{
 				// If successfully remove Sermon add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove Sermon items from the contentitem tag map table
@@ -193,7 +197,7 @@ class com_sermondistributorInstallerScript
 			if ($sermon_done)
 			{
 				// If successfully remove Sermon add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove Sermon items from the ucm content table
@@ -208,7 +212,7 @@ class com_sermondistributorInstallerScript
 			if ($sermon_done)
 			{
 				// If successfully removed Sermon add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.sermon) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the Sermon items are cleared from DB
@@ -264,7 +268,7 @@ class com_sermondistributorInstallerScript
 			if ($sermon_catid_done)
 			{
 				// If successfully remove Sermon catid add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove Sermon catid items from the contentitem tag map table
@@ -279,7 +283,7 @@ class com_sermondistributorInstallerScript
 			if ($sermon_catid_done)
 			{
 				// If successfully remove Sermon catid add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove Sermon catid items from the ucm content table
@@ -294,7 +298,7 @@ class com_sermondistributorInstallerScript
 			if ($sermon_catid_done)
 			{
 				// If successfully removed Sermon catid add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.sermon.category) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the Sermon catid items are cleared from DB
@@ -350,7 +354,7 @@ class com_sermondistributorInstallerScript
 			if ($series_done)
 			{
 				// If successfully remove Series add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.series) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove Series items from the contentitem tag map table
@@ -365,7 +369,7 @@ class com_sermondistributorInstallerScript
 			if ($series_done)
 			{
 				// If successfully remove Series add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.series) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove Series items from the ucm content table
@@ -380,7 +384,7 @@ class com_sermondistributorInstallerScript
 			if ($series_done)
 			{
 				// If successfully removed Series add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.series) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.series) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the Series items are cleared from DB
@@ -436,7 +440,7 @@ class com_sermondistributorInstallerScript
 			if ($statistic_done)
 			{
 				// If successfully remove Statistic add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove Statistic items from the contentitem tag map table
@@ -451,7 +455,7 @@ class com_sermondistributorInstallerScript
 			if ($statistic_done)
 			{
 				// If successfully remove Statistic add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove Statistic items from the ucm content table
@@ -466,7 +470,7 @@ class com_sermondistributorInstallerScript
 			if ($statistic_done)
 			{
 				// If successfully removed Statistic add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.statistic) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the Statistic items are cleared from DB
@@ -522,7 +526,7 @@ class com_sermondistributorInstallerScript
 			if ($external_source_done)
 			{
 				// If successfully remove External_source add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove External_source items from the contentitem tag map table
@@ -537,7 +541,7 @@ class com_sermondistributorInstallerScript
 			if ($external_source_done)
 			{
 				// If successfully remove External_source add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove External_source items from the ucm content table
@@ -552,7 +556,7 @@ class com_sermondistributorInstallerScript
 			if ($external_source_done)
 			{
 				// If successfully removed External_source add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.external_source) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the External_source items are cleared from DB
@@ -608,7 +612,7 @@ class com_sermondistributorInstallerScript
 			if ($local_listing_done)
 			{
 				// If successfully remove Local_listing add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove Local_listing items from the contentitem tag map table
@@ -623,7 +627,7 @@ class com_sermondistributorInstallerScript
 			if ($local_listing_done)
 			{
 				// If successfully remove Local_listing add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove Local_listing items from the ucm content table
@@ -638,7 +642,7 @@ class com_sermondistributorInstallerScript
 			if ($local_listing_done)
 			{
 				// If successfully removed Local_listing add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.local_listing) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the Local_listing items are cleared from DB
@@ -694,7 +698,7 @@ class com_sermondistributorInstallerScript
 			if ($help_document_done)
 			{
 				// If successfully remove Help_document add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__content_type</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
 			// Remove Help_document items from the contentitem tag map table
@@ -709,7 +713,7 @@ class com_sermondistributorInstallerScript
 			if ($help_document_done)
 			{
 				// If successfully remove Help_document add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
 			// Remove Help_document items from the ucm content table
@@ -724,7 +728,7 @@ class com_sermondistributorInstallerScript
 			if ($help_document_done)
 			{
 				// If successfully removed Help_document add queued success message.
-				$app->enqueueMessage(JText::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__ucm_content</b> table'));
+				$app->enqueueMessage(Text::_('The (com_sermondistributor.help_document) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
 			// Make sure that all the Help_document items are cleared from DB
@@ -753,8 +757,8 @@ class com_sermondistributorInstallerScript
 		}
 
 		// If All related items was removed queued success message.
-		$app->enqueueMessage(JText::_('All related items was removed from the <b>#__ucm_base</b> table'));
-		$app->enqueueMessage(JText::_('All related items was removed from the <b>#__ucm_history</b> table'));
+		$app->enqueueMessage(Text::_('All related items was removed from the <b>#__ucm_base</b> table'));
+		$app->enqueueMessage(Text::_('All related items was removed from the <b>#__ucm_history</b> table'));
 
 		// Remove sermondistributor assets from the assets table
 		$sermondistributor_condition = array( $db->quoteName('name') . ' LIKE ' . $db->quote('com_sermondistributor%') );
@@ -768,7 +772,7 @@ class com_sermondistributorInstallerScript
 		if ($help_document_done)
 		{
 			// If successfully removed sermondistributor add queued success message.
-			$app->enqueueMessage(JText::_('All related items was removed from the <b>#__assets</b> table'));
+			$app->enqueueMessage(Text::_('All related items was removed from the <b>#__assets</b> table'));
 		}
 
 		// Get the biggest rule column in the assets table at this point.
@@ -784,24 +788,24 @@ class com_sermondistributorInstallerScript
 				$revert_rule = "ALTER TABLE `#__assets` CHANGE `rules` `rules` varchar(5120) NOT NULL COMMENT 'JSON encoded access control.';";
 				$db->setQuery($revert_rule);
 				$db->execute();
-				$app->enqueueMessage(JText::_('Reverted the <b>#__assets</b> table rules column back to its default size of varchar(5120)'));
+				$app->enqueueMessage(Text::_('Reverted the <b>#__assets</b> table rules column back to its default size of varchar(5120)'));
 			}
 			else
 			{
 
-				$app->enqueueMessage(JText::_('Could not revert the <b>#__assets</b> table rules column back to its default size of varchar(5120), since there is still one or more components that still requires the column to be larger.'));
+				$app->enqueueMessage(Text::_('Could not revert the <b>#__assets</b> table rules column back to its default size of varchar(5120), since there is still one or more components that still requires the column to be larger.'));
 			}
 		}
 
 		// Set db if not set already.
 		if (!isset($db))
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 		}
 		// Set app if not set already.
 		if (!isset($app))
 		{
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 		}
 		// Remove Sermondistributor from the action_logs_extensions table
 		$sermondistributor_action_logs_extensions = array( $db->quoteName('extension') . ' = ' . $db->quote('com_sermondistributor') );
@@ -815,18 +819,18 @@ class com_sermondistributorInstallerScript
 		if ($sermondistributor_removed_done)
 		{
 			// If successfully remove Sermondistributor add queued success message.
-			$app->enqueueMessage(JText::_('The com_sermondistributor extension was removed from the <b>#__action_logs_extensions</b> table'));
+			$app->enqueueMessage(Text::_('The com_sermondistributor extension was removed from the <b>#__action_logs_extensions</b> table'));
 		}
 
 		// Set db if not set already.
 		if (!isset($db))
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 		}
 		// Set app if not set already.
 		if (!isset($app))
 		{
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 		}
 		// Remove Sermondistributor Preacher from the action_log_config table
 		$preacher_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.preacher') );
@@ -840,18 +844,18 @@ class com_sermondistributorInstallerScript
 		if ($preacher_action_log_config_done)
 		{
 			// If successfully removed Sermondistributor Preacher add queued success message.
-			$app->enqueueMessage(JText::_('The com_sermondistributor.preacher type alias was removed from the <b>#__action_log_config</b> table'));
+			$app->enqueueMessage(Text::_('The com_sermondistributor.preacher type alias was removed from the <b>#__action_log_config</b> table'));
 		}
 
 		// Set db if not set already.
 		if (!isset($db))
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 		}
 		// Set app if not set already.
 		if (!isset($app))
 		{
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 		}
 		// Remove Sermondistributor Sermon from the action_log_config table
 		$sermon_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermon') );
@@ -865,18 +869,18 @@ class com_sermondistributorInstallerScript
 		if ($sermon_action_log_config_done)
 		{
 			// If successfully removed Sermondistributor Sermon add queued success message.
-			$app->enqueueMessage(JText::_('The com_sermondistributor.sermon type alias was removed from the <b>#__action_log_config</b> table'));
+			$app->enqueueMessage(Text::_('The com_sermondistributor.sermon type alias was removed from the <b>#__action_log_config</b> table'));
 		}
 
 		// Set db if not set already.
 		if (!isset($db))
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 		}
 		// Set app if not set already.
 		if (!isset($app))
 		{
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 		}
 		// Remove Sermondistributor Series from the action_log_config table
 		$series_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.series') );
@@ -890,18 +894,18 @@ class com_sermondistributorInstallerScript
 		if ($series_action_log_config_done)
 		{
 			// If successfully removed Sermondistributor Series add queued success message.
-			$app->enqueueMessage(JText::_('The com_sermondistributor.series type alias was removed from the <b>#__action_log_config</b> table'));
+			$app->enqueueMessage(Text::_('The com_sermondistributor.series type alias was removed from the <b>#__action_log_config</b> table'));
 		}
 
 		// Set db if not set already.
 		if (!isset($db))
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 		}
 		// Set app if not set already.
 		if (!isset($app))
 		{
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 		}
 		// Remove Sermondistributor Statistic from the action_log_config table
 		$statistic_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.statistic') );
@@ -915,18 +919,18 @@ class com_sermondistributorInstallerScript
 		if ($statistic_action_log_config_done)
 		{
 			// If successfully removed Sermondistributor Statistic add queued success message.
-			$app->enqueueMessage(JText::_('The com_sermondistributor.statistic type alias was removed from the <b>#__action_log_config</b> table'));
+			$app->enqueueMessage(Text::_('The com_sermondistributor.statistic type alias was removed from the <b>#__action_log_config</b> table'));
 		}
 
 		// Set db if not set already.
 		if (!isset($db))
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 		}
 		// Set app if not set already.
 		if (!isset($app))
 		{
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 		}
 		// Remove Sermondistributor External_source from the action_log_config table
 		$external_source_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.external_source') );
@@ -940,18 +944,18 @@ class com_sermondistributorInstallerScript
 		if ($external_source_action_log_config_done)
 		{
 			// If successfully removed Sermondistributor External_source add queued success message.
-			$app->enqueueMessage(JText::_('The com_sermondistributor.external_source type alias was removed from the <b>#__action_log_config</b> table'));
+			$app->enqueueMessage(Text::_('The com_sermondistributor.external_source type alias was removed from the <b>#__action_log_config</b> table'));
 		}
 
 		// Set db if not set already.
 		if (!isset($db))
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 		}
 		// Set app if not set already.
 		if (!isset($app))
 		{
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 		}
 		// Remove Sermondistributor Local_listing from the action_log_config table
 		$local_listing_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.local_listing') );
@@ -965,18 +969,18 @@ class com_sermondistributorInstallerScript
 		if ($local_listing_action_log_config_done)
 		{
 			// If successfully removed Sermondistributor Local_listing add queued success message.
-			$app->enqueueMessage(JText::_('The com_sermondistributor.local_listing type alias was removed from the <b>#__action_log_config</b> table'));
+			$app->enqueueMessage(Text::_('The com_sermondistributor.local_listing type alias was removed from the <b>#__action_log_config</b> table'));
 		}
 
 		// Set db if not set already.
 		if (!isset($db))
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 		}
 		// Set app if not set already.
 		if (!isset($app))
 		{
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 		}
 		// Remove Sermondistributor Help_document from the action_log_config table
 		$help_document_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.help_document') );
@@ -990,7 +994,7 @@ class com_sermondistributorInstallerScript
 		if ($help_document_action_log_config_done)
 		{
 			// If successfully removed Sermondistributor Help_document add queued success message.
-			$app->enqueueMessage(JText::_('The com_sermondistributor.help_document type alias was removed from the <b>#__action_log_config</b> table'));
+			$app->enqueueMessage(Text::_('The com_sermondistributor.help_document type alias was removed from the <b>#__action_log_config</b> table'));
 		}
 		// little notice as after service, in case of bad experience with component.
 		echo '<h2>Did something go wrong? Are you disappointed?</h2>
@@ -1020,14 +1024,14 @@ class com_sermondistributorInstallerScript
 	public function preflight($type, ComponentAdapter $parent)
 	{
 		// get application
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		// is redundant or so it seems ...hmmm let me know if it works again
 		if ($type === 'uninstall')
 		{
 			return true;
 		}
 		// the default for both install and update
-		$jversion = new JVersion();
+		$jversion = new Version();
 		if (!$jversion->isCompatible('3.8.0'))
 		{
 			$app->enqueueMessage('Please upgrade to at least Joomla! 3.8.0 before continuing!', 'error');
@@ -1078,7 +1082,7 @@ class com_sermondistributorInstallerScript
 						// only update if it was fixed
 						if (SermondistributorHelper::checkArray($files))
 						{
-							$object = new stdClass();
+							$object = new \stdClass();
 							// make sure the files are set to json
 							$object->manual_files = json_encode($files);
 							$object->id = $id;
@@ -1224,7 +1228,7 @@ class com_sermondistributorInstallerScript
 	public function postflight($type, ComponentAdapter $parent)
 	{
 		// get application
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		// We check if we have dynamic folders to copy
 		$this->setDynamicF0ld3rs($app, $parent);
 		// set the default component settings
@@ -1232,34 +1236,34 @@ class com_sermondistributorInstallerScript
 		{
 
 			// Get The Database object
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 
 			// Create the preacher content type object.
-			$preacher = new stdClass();
+			$preacher = new \stdClass();
 			$preacher->type_title = 'Sermondistributor Preacher';
 			$preacher->type_alias = 'com_sermondistributor.preacher';
 			$preacher->table = '{"special": {"dbtable": "#__sermondistributor_preacher","key": "id","type": "Preacher","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$preacher->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","website":"website","email":"email","icon":"icon","alias":"alias"}}';
 			$preacher->router = 'SermondistributorHelperRoute::getPreacherRoute';
-			$preacher->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+			$preacher->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Set the object into the content types table.
 			$preacher_Inserted = $db->insertObject('#__content_types', $preacher);
 
 			// Create the sermon content type object.
-			$sermon = new stdClass();
+			$sermon = new \stdClass();
 			$sermon->type_title = 'Sermondistributor Sermon';
 			$sermon->type_alias = 'com_sermondistributor.sermon';
 			$sermon->table = '{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "Sermon","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$sermon->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "catid","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","preacher":"preacher","series":"series","short_description":"short_description","link_type":"link_type","source":"source","local_files":"local_files","alias":"alias","description":"description","tags":"tags","icon":"icon","build":"build","manual_files":"manual_files","auto_sermons":"auto_sermons","url":"url","scripture":"scripture"}}';
 			$sermon->router = 'SermondistributorHelperRoute::getSermonRoute';
-			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
+			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","preacher","series","catid","link_type","source","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Set the object into the content types table.
 			$sermon_Inserted = $db->insertObject('#__content_types', $sermon);
 
 			// Create the sermon category content type object.
-			$sermon_category = new stdClass();
+			$sermon_category = new \stdClass();
 			$sermon_category->type_title = 'Sermondistributor Sermon Catid';
 			$sermon_category->type_alias = 'com_sermondistributor.sermon.category';
 			$sermon_category->table = '{"special":{"dbtable":"#__categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
@@ -1271,67 +1275,84 @@ class com_sermondistributorInstallerScript
 			$sermon_category_Inserted = $db->insertObject('#__content_types', $sermon_category);
 
 			// Create the series content type object.
-			$series = new stdClass();
+			$series = new \stdClass();
 			$series->type_title = 'Sermondistributor Series';
 			$series->type_alias = 'com_sermondistributor.series';
 			$series->table = '{"special": {"dbtable": "#__sermondistributor_series","key": "id","type": "Series","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$series->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","scripture":"scripture","icon":"icon","alias":"alias"}}';
 			$series->router = 'SermondistributorHelperRoute::getSeriesRoute';
-			$series->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/series.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+			$series->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/series.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Set the object into the content types table.
 			$series_Inserted = $db->insertObject('#__content_types', $series);
 
 			// Create the statistic content type object.
-			$statistic = new stdClass();
+			$statistic = new \stdClass();
 			$statistic->type_title = 'Sermondistributor Statistic';
 			$statistic->type_alias = 'com_sermondistributor.statistic';
 			$statistic->table = '{"special": {"dbtable": "#__sermondistributor_statistic","key": "id","type": "Statistic","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$statistic->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "filename","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"filename":"filename","sermon":"sermon","preacher":"preacher","series":"series","counter":"counter"}}';
 			$statistic->router = 'SermondistributorHelperRoute::getStatisticRoute';
-			$statistic->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/statistic.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","sermon","preacher","series","counter"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
+			$statistic->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/statistic.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","sermon","preacher","series","counter"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Set the object into the content types table.
 			$statistic_Inserted = $db->insertObject('#__content_types', $statistic);
 
 			// Create the external_source content type object.
-			$external_source = new stdClass();
+			$external_source = new \stdClass();
 			$external_source->type_title = 'Sermondistributor External_source';
 			$external_source->type_alias = 'com_sermondistributor.external_source';
 			$external_source->table = '{"special": {"dbtable": "#__sermondistributor_external_source","key": "id","type": "External_source","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$external_source->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","not_required":"not_required","update_timer":"update_timer","dropboxoptions":"dropboxoptions","permissiontype":"permissiontype","oauthtoken":"oauthtoken"}}';
 			$external_source->router = 'SermondistributorHelperRoute::getExternal_sourceRoute';
-			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","externalsources","update_method","build","not_required","update_timer","dropboxoptions"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","externalsources","update_method","build","not_required","update_timer","dropboxoptions"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Set the object into the content types table.
 			$external_source_Inserted = $db->insertObject('#__content_types', $external_source);
 
 			// Create the local_listing content type object.
-			$local_listing = new stdClass();
+			$local_listing = new \stdClass();
 			$local_listing->type_title = 'Sermondistributor Local_listing';
 			$local_listing->type_alias = 'com_sermondistributor.local_listing';
 			$local_listing->table = '{"special": {"dbtable": "#__sermondistributor_local_listing","key": "id","type": "Local_listing","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$local_listing->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","build":"build","size":"size","external_source":"external_source","key":"key","url":"url"}}';
 			$local_listing->router = 'SermondistributorHelperRoute::getLocal_listingRoute';
-			$local_listing->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/local_listing.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","build","size","external_source"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "external_source","targetTable": "#__sermondistributor_external_source","targetColumn": "id","displayColumn": "description"}]}';
+			$local_listing->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/local_listing.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","build","size","external_source"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "external_source","targetTable": "#__sermondistributor_external_source","targetColumn": "id","displayColumn": "description"}]}';
 
 			// Set the object into the content types table.
 			$local_listing_Inserted = $db->insertObject('#__content_types', $local_listing);
 
 			// Create the help_document content type object.
-			$help_document = new stdClass();
+			$help_document = new \stdClass();
 			$help_document->type_title = 'Sermondistributor Help_document';
 			$help_document->type_alias = 'com_sermondistributor.help_document';
 			$help_document->table = '{"special": {"dbtable": "#__sermondistributor_help_document","key": "id","type": "Help_document","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}';
 			$help_document->router = 'SermondistributorHelperRoute::getHelp_documentRoute';
-			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
+			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
 
 			// Set the object into the content types table.
 			$help_document_Inserted = $db->insertObject('#__content_types', $help_document);
 
 
-			// Install the global extenstion assets permission.
+			// Get the biggest rule column in the assets table at this point.
+			$get_rule_length = "SELECT CHAR_LENGTH(`rules`) as rule_size FROM #__assets ORDER BY rule_size DESC LIMIT 1";
+			$db->setQuery($get_rule_length);
+			if ($db->execute())
+			{
+				$rule_length = $db->loadResult();
+				// Check the size of the rules column
+				if ($rule_length <= 22240)
+				{
+					// Fix the assets table rules column size
+					$fix_rules_size = "ALTER TABLE `#__assets` CHANGE `rules` `rules` TEXT NOT NULL COMMENT 'JSON encoded access control. Enlarged to TEXT by JCB';";
+					$db->setQuery($fix_rules_size);
+					$db->execute();
+					$app->enqueueMessage(Text::_('The <b>#__assets</b> table rules column was resized to the TEXT datatype for the components possible large permission rules.'));
+				}
+			}
+			// Install the global extension assets permission.
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true);
 			// Field to update.
 			$fields = array(
@@ -1349,7 +1370,7 @@ class com_sermondistributorInstallerScript
 			$query = $db->getQuery(true);
 			// Field to update.
 			$fields = array(
-				$db->quoteName('params') . ' = ' . $db->quote('{"autorName":"Llewellyn van der Merwe","autorEmail":"joomla@vdm.io","player":"1","add_to_button":"0","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"0","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"0","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"1","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","max_execution_time":"500","check_in":"-1 day","save_history":"1","history_limit":"10","uikit_version":"2","uikit_load":"1","uikit_min":"","uikit_style":""}'),
+				$db->quoteName('params') . ' = ' . $db->quote('{"autorName":"Llewellyn van der Merwe","autorEmail":"joomla@vdm.io","player":"1","add_to_button":"0","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"0","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"0","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"1","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","max_execution_time":"500","check_in":"-1 day","save_history":"1","history_limit":"10","add_jquery_framework":"1","uikit_version":"2","uikit_load":"1","uikit_min":"","uikit_style":""}'),
 			);
 			// Condition.
 			$conditions = array(
@@ -1359,33 +1380,18 @@ class com_sermondistributorInstallerScript
 			$db->setQuery($query);
 			$allDone = $db->execute();
 
-			// Get the biggest rule column in the assets table at this point.
-			$get_rule_length = "SELECT CHAR_LENGTH(`rules`) as rule_size FROM #__assets ORDER BY rule_size DESC LIMIT 1";
-			$db->setQuery($get_rule_length);
-			if ($db->execute())
-			{
-				$rule_length = $db->loadResult();
-				// Check the size of the rules column
-				if ($rule_length <= 22240)
-				{
-					// Fix the assets table rules column size
-					$fix_rules_size = "ALTER TABLE `#__assets` CHANGE `rules` `rules` TEXT NOT NULL COMMENT 'JSON encoded access control. Enlarged to TEXT by JCB';";
-					$db->setQuery($fix_rules_size);
-					$db->execute();
-					$app->enqueueMessage(JText::_('The <b>#__assets</b> table rules column was resized to the TEXT datatype for the components possible large permission rules.'));
-				}
-			}
-			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
+
+			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
-				</a>';
+				</a></div>';
 
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the sermondistributor action logs extensions object.
-			$sermondistributor_action_logs_extensions = new stdClass();
+			$sermondistributor_action_logs_extensions = new \stdClass();
 			$sermondistributor_action_logs_extensions->extension = 'com_sermondistributor';
 
 			// Set the object into the action logs extensions table.
@@ -1394,10 +1400,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the preacher action log config object.
-			$preacher_action_log_config = new stdClass();
+			$preacher_action_log_config = new \stdClass();
 			$preacher_action_log_config->type_title = 'PREACHER';
 			$preacher_action_log_config->type_alias = 'com_sermondistributor.preacher';
 			$preacher_action_log_config->id_holder = 'id';
@@ -1411,10 +1417,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the sermon action log config object.
-			$sermon_action_log_config = new stdClass();
+			$sermon_action_log_config = new \stdClass();
 			$sermon_action_log_config->type_title = 'SERMON';
 			$sermon_action_log_config->type_alias = 'com_sermondistributor.sermon';
 			$sermon_action_log_config->id_holder = 'id';
@@ -1428,10 +1434,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the series action log config object.
-			$series_action_log_config = new stdClass();
+			$series_action_log_config = new \stdClass();
 			$series_action_log_config->type_title = 'SERIES';
 			$series_action_log_config->type_alias = 'com_sermondistributor.series';
 			$series_action_log_config->id_holder = 'id';
@@ -1445,10 +1451,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the statistic action log config object.
-			$statistic_action_log_config = new stdClass();
+			$statistic_action_log_config = new \stdClass();
 			$statistic_action_log_config->type_title = 'STATISTIC';
 			$statistic_action_log_config->type_alias = 'com_sermondistributor.statistic';
 			$statistic_action_log_config->id_holder = 'id';
@@ -1462,10 +1468,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the external_source action log config object.
-			$external_source_action_log_config = new stdClass();
+			$external_source_action_log_config = new \stdClass();
 			$external_source_action_log_config->type_title = 'EXTERNAL_SOURCE';
 			$external_source_action_log_config->type_alias = 'com_sermondistributor.external_source';
 			$external_source_action_log_config->id_holder = 'id';
@@ -1479,10 +1485,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the local_listing action log config object.
-			$local_listing_action_log_config = new stdClass();
+			$local_listing_action_log_config = new \stdClass();
 			$local_listing_action_log_config->type_title = 'LOCAL_LISTING';
 			$local_listing_action_log_config->type_alias = 'com_sermondistributor.local_listing';
 			$local_listing_action_log_config->id_holder = 'id';
@@ -1496,10 +1502,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the help_document action log config object.
-			$help_document_action_log_config = new stdClass();
+			$help_document_action_log_config = new \stdClass();
 			$help_document_action_log_config->type_title = 'HELP_DOCUMENT';
 			$help_document_action_log_config->type_alias = 'com_sermondistributor.help_document';
 			$help_document_action_log_config->id_holder = 'id';
@@ -1515,16 +1521,16 @@ class com_sermondistributorInstallerScript
 		{
 
 			// Get The Database object
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 
 			// Create the preacher content type object.
-			$preacher = new stdClass();
+			$preacher = new \stdClass();
 			$preacher->type_title = 'Sermondistributor Preacher';
 			$preacher->type_alias = 'com_sermondistributor.preacher';
 			$preacher->table = '{"special": {"dbtable": "#__sermondistributor_preacher","key": "id","type": "Preacher","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$preacher->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","website":"website","email":"email","icon":"icon","alias":"alias"}}';
 			$preacher->router = 'SermondistributorHelperRoute::getPreacherRoute';
-			$preacher->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+			$preacher->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Check if preacher type is already in content_type DB.
 			$preacher_id = null;
@@ -1547,13 +1553,13 @@ class com_sermondistributorInstallerScript
 			}
 
 			// Create the sermon content type object.
-			$sermon = new stdClass();
+			$sermon = new \stdClass();
 			$sermon->type_title = 'Sermondistributor Sermon';
 			$sermon->type_alias = 'com_sermondistributor.sermon';
 			$sermon->table = '{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "Sermon","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$sermon->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "catid","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","preacher":"preacher","series":"series","short_description":"short_description","link_type":"link_type","source":"source","local_files":"local_files","alias":"alias","description":"description","tags":"tags","icon":"icon","build":"build","manual_files":"manual_files","auto_sermons":"auto_sermons","url":"url","scripture":"scripture"}}';
 			$sermon->router = 'SermondistributorHelperRoute::getSermonRoute';
-			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","preacher","series","catid","link_type","source","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
+			$sermon->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","preacher","series","catid","link_type","source","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Check if sermon type is already in content_type DB.
 			$sermon_id = null;
@@ -1576,7 +1582,7 @@ class com_sermondistributorInstallerScript
 			}
 
 			// Create the sermon category content type object.
-			$sermon_category = new stdClass();
+			$sermon_category = new \stdClass();
 			$sermon_category->type_title = 'Sermondistributor Sermon Catid';
 			$sermon_category->type_alias = 'com_sermondistributor.sermon.category';
 			$sermon_category->table = '{"special":{"dbtable":"#__categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
@@ -1605,13 +1611,13 @@ class com_sermondistributorInstallerScript
 			}
 
 			// Create the series content type object.
-			$series = new stdClass();
+			$series = new \stdClass();
 			$series->type_title = 'Sermondistributor Series';
 			$series->type_alias = 'com_sermondistributor.series';
 			$series->table = '{"special": {"dbtable": "#__sermondistributor_series","key": "id","type": "Series","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$series->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","scripture":"scripture","icon":"icon","alias":"alias"}}';
 			$series->router = 'SermondistributorHelperRoute::getSeriesRoute';
-			$series->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/series.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+			$series->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/series.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Check if series type is already in content_type DB.
 			$series_id = null;
@@ -1634,13 +1640,13 @@ class com_sermondistributorInstallerScript
 			}
 
 			// Create the statistic content type object.
-			$statistic = new stdClass();
+			$statistic = new \stdClass();
 			$statistic->type_title = 'Sermondistributor Statistic';
 			$statistic->type_alias = 'com_sermondistributor.statistic';
 			$statistic->table = '{"special": {"dbtable": "#__sermondistributor_statistic","key": "id","type": "Statistic","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$statistic->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "filename","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"filename":"filename","sermon":"sermon","preacher":"preacher","series":"series","counter":"counter"}}';
 			$statistic->router = 'SermondistributorHelperRoute::getStatisticRoute';
-			$statistic->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/statistic.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","sermon","preacher","series","counter"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
+			$statistic->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/statistic.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","sermon","preacher","series","counter"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Check if statistic type is already in content_type DB.
 			$statistic_id = null;
@@ -1663,13 +1669,13 @@ class com_sermondistributorInstallerScript
 			}
 
 			// Create the external_source content type object.
-			$external_source = new stdClass();
+			$external_source = new \stdClass();
 			$external_source->type_title = 'Sermondistributor External_source';
 			$external_source->type_alias = 'com_sermondistributor.external_source';
 			$external_source->table = '{"special": {"dbtable": "#__sermondistributor_external_source","key": "id","type": "External_source","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$external_source->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","not_required":"not_required","update_timer":"update_timer","dropboxoptions":"dropboxoptions","permissiontype":"permissiontype","oauthtoken":"oauthtoken"}}';
 			$external_source->router = 'SermondistributorHelperRoute::getExternal_sourceRoute';
-			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","externalsources","update_method","build","not_required","update_timer","dropboxoptions"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
+			$external_source->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","externalsources","update_method","build","not_required","update_timer","dropboxoptions"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}';
 
 			// Check if external_source type is already in content_type DB.
 			$external_source_id = null;
@@ -1692,13 +1698,13 @@ class com_sermondistributorInstallerScript
 			}
 
 			// Create the local_listing content type object.
-			$local_listing = new stdClass();
+			$local_listing = new \stdClass();
 			$local_listing->type_title = 'Sermondistributor Local_listing';
 			$local_listing->type_alias = 'com_sermondistributor.local_listing';
 			$local_listing->table = '{"special": {"dbtable": "#__sermondistributor_local_listing","key": "id","type": "Local_listing","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$local_listing->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","build":"build","size":"size","external_source":"external_source","key":"key","url":"url"}}';
 			$local_listing->router = 'SermondistributorHelperRoute::getLocal_listingRoute';
-			$local_listing->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/local_listing.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","build","size","external_source"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "external_source","targetTable": "#__sermondistributor_external_source","targetColumn": "id","displayColumn": "description"}]}';
+			$local_listing->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/local_listing.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","build","size","external_source"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "external_source","targetTable": "#__sermondistributor_external_source","targetColumn": "id","displayColumn": "description"}]}';
 
 			// Check if local_listing type is already in content_type DB.
 			$local_listing_id = null;
@@ -1721,13 +1727,13 @@ class com_sermondistributorInstallerScript
 			}
 
 			// Create the help_document content type object.
-			$help_document = new stdClass();
+			$help_document = new \stdClass();
 			$help_document->type_title = 'Sermondistributor Help_document';
 			$help_document->type_alias = 'com_sermondistributor.help_document';
 			$help_document->table = '{"special": {"dbtable": "#__sermondistributor_help_document","key": "id","type": "Help_document","prefix": "sermondistributorTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
 			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}';
 			$help_document->router = 'SermondistributorHelperRoute::getHelp_documentRoute';
-			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
+			$help_document->content_history_options = '{"formFile": "administrator/components/com_sermondistributor/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
 
 			// Check if help_document type is already in content_type DB.
 			$help_document_id = null;
@@ -1776,7 +1782,7 @@ class com_sermondistributorInstallerScript
 							$buildOption = 2;
 						}
 						$urls = '"'.implode('", "', $urls).'"';
-						$data = new stdClass();
+						$data = new \stdClass();
 						if (SermondistributorHelper::checkArray($dropbox_filetypes))
 						{
 							$data->filetypes = json_encode($dropbox_filetypes);
@@ -1810,7 +1816,7 @@ class com_sermondistributorInstallerScript
 							$buildOption = 2;
 						}
 						$folder = '"'.implode('", "', $folder).'"';
-						$data = new stdClass();
+						$data = new \stdClass();
 						if (SermondistributorHelper::checkArray($dropbox_filetypes))
 						{
 							$data->filetypes = json_encode($dropbox_filetypes);
@@ -1837,18 +1843,19 @@ class com_sermondistributorInstallerScript
 				$app = JFactory::getApplication();
 				$app->enqueueMessage('Your Dropbox integration has been moved, and can now be viewed at the new external source view. You will now need an APP token to update your local listing of the Dropbox files. Please review the Wiki tab when creating/editing the external source, or open an issue on github if you experience any more difficulties.', 'Info');
 			}
-			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
+
+			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 2.1.1 Was Successful! Let us know if anything is not working as expected.</h3>';
+				<h3>Upgrade to Version 3.0.0 Was Successful! Let us know if anything is not working as expected.</h3></div>';
 
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the sermondistributor action logs extensions object.
-			$sermondistributor_action_logs_extensions = new stdClass();
+			$sermondistributor_action_logs_extensions = new \stdClass();
 			$sermondistributor_action_logs_extensions->extension = 'com_sermondistributor';
 
 			// Check if sermondistributor action log extension is already in action logs extensions DB.
@@ -1868,10 +1875,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the preacher action log config object.
-			$preacher_action_log_config = new stdClass();
+			$preacher_action_log_config = new \stdClass();
 			$preacher_action_log_config->id = null;
 			$preacher_action_log_config->type_title = 'PREACHER';
 			$preacher_action_log_config->type_alias = 'com_sermondistributor.preacher';
@@ -1902,10 +1909,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the sermon action log config object.
-			$sermon_action_log_config = new stdClass();
+			$sermon_action_log_config = new \stdClass();
 			$sermon_action_log_config->id = null;
 			$sermon_action_log_config->type_title = 'SERMON';
 			$sermon_action_log_config->type_alias = 'com_sermondistributor.sermon';
@@ -1936,10 +1943,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the series action log config object.
-			$series_action_log_config = new stdClass();
+			$series_action_log_config = new \stdClass();
 			$series_action_log_config->id = null;
 			$series_action_log_config->type_title = 'SERIES';
 			$series_action_log_config->type_alias = 'com_sermondistributor.series';
@@ -1970,10 +1977,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the statistic action log config object.
-			$statistic_action_log_config = new stdClass();
+			$statistic_action_log_config = new \stdClass();
 			$statistic_action_log_config->id = null;
 			$statistic_action_log_config->type_title = 'STATISTIC';
 			$statistic_action_log_config->type_alias = 'com_sermondistributor.statistic';
@@ -2004,10 +2011,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the external_source action log config object.
-			$external_source_action_log_config = new stdClass();
+			$external_source_action_log_config = new \stdClass();
 			$external_source_action_log_config->id = null;
 			$external_source_action_log_config->type_title = 'EXTERNAL_SOURCE';
 			$external_source_action_log_config->type_alias = 'com_sermondistributor.external_source';
@@ -2038,10 +2045,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the local_listing action log config object.
-			$local_listing_action_log_config = new stdClass();
+			$local_listing_action_log_config = new \stdClass();
 			$local_listing_action_log_config->id = null;
 			$local_listing_action_log_config->type_title = 'LOCAL_LISTING';
 			$local_listing_action_log_config->type_alias = 'com_sermondistributor.local_listing';
@@ -2072,10 +2079,10 @@ class com_sermondistributorInstallerScript
 			// Set db if not set already.
 			if (!isset($db))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 			}
 			// Create the help_document action log config object.
-			$help_document_action_log_config = new stdClass();
+			$help_document_action_log_config = new \stdClass();
 			$help_document_action_log_config->id = null;
 			$help_document_action_log_config->type_title = 'HELP_DOCUMENT';
 			$help_document_action_log_config->type_alias = 'com_sermondistributor.help_document';
@@ -2108,12 +2115,12 @@ class com_sermondistributorInstallerScript
 
 	/**
 	 * Remove folders with files
-	 * 
+	 *
 	 * @param   string   $dir     The path to folder to remove
 	 * @param   boolean  $ignore  The folders and files to ignore and not remove
 	 *
 	 * @return  boolean   True in all is removed
-	 * 
+	 *
 	 */
 	protected function removeFolder($dir, $ignore = false)
 	{
@@ -2182,7 +2189,7 @@ class com_sermondistributorInstallerScript
 	/**
 	 * Check if have an array with a length
 	 *
-	 * @input	array   The array to check
+	 * @input    array   The array to check
 	 *
 	 * @returns bool/int  number of items in array on success
 	 */
@@ -2214,13 +2221,13 @@ class com_sermondistributorInstallerScript
 	 */
 	protected function setDynamicF0ld3rs($app, $parent)
 	{
-		// get the instalation path
+		// get the installation path
 		$installer = $parent->getParent();
 		$installPath = $installer->getPath('source');
 		// get all the folders
 		$folders = Folder::folders($installPath);
 		// check if we have folders we may want to copy
-		$doNotCopy = array('media','admin','site'); // Joomla already deals with these
+		$doNotCopy = ['media','admin','site']; // Joomla already deals with these
 		if (count((array) $folders) > 1)
 		{
 			foreach ($folders as $folder)

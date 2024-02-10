@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		localfiles.php
@@ -25,6 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+
 // import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
@@ -37,36 +41,33 @@ class JFormFieldLocalfiles extends JFormFieldList
 	/**
 	 * The localfiles field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 */
 	public $type = 'localfiles';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return	array    An array of JHtml options.
+	 * @return    array    An array of Html options.
 	 */
 	protected function getOptions()
 	{
 		// get local folder
-		$localfolder = JComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images');
+		$localfolder = ComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images');
 		// set the default
-		$options[] = JHtml::_('select.option', '', JText::sprintf('COM_SERMONDISTRIBUTOR_PLEASE_ADD_FILES_TO_S',$localfolder));
-		// inport all needed classes
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
+		$options[] = Html::_('select.option', '', Text::sprintf('COM_SERMONDISTRIBUTOR_PLEASE_ADD_FILES_TO_S', $localfolder));
 		// setup the folder if it does not exist
-		if (!JFolder::exists($localfolder))
+		if (!\Joomla\CMS\Filesystem\Folder::exists($localfolder))
 		{
-			JFolder::create($localfolder);
+			\Joomla\CMS\Filesystem\Folder::create($localfolder);
 		}
 		// now check if there are files in the folder
-		if ($files = JFolder::files($localfolder))
+		if ($files = \Joomla\CMS\Filesystem\Folder::files($localfolder))
 		{
 			$options = array();
 			foreach ($files as $file)
 			{
-				$options[] = JHtml::_('select.option', $file, $file);
+				$options[] = Html::_('select.option', $file, $file);
 			}
 		}
 		return $options;

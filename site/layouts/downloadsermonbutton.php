@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		downloadsermonbutton.php
@@ -25,18 +25,23 @@
 // No direct access to this file
 defined('JPATH_BASE') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+
 
 
 ?>
 <?php if (isset($displayData->download_links) && count($displayData->download_links) == 1): ?>
 	<?php foreach ($displayData->download_links as $filename => $link): ?>
 		<a class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-success"<?php echo $displayData->onclick[$filename]; ?> href="<?php echo $link; ?>" title="<?php echo $filename; ?>">
-			<i class="uk-icon-download"></i> <?php echo JText::_('COM_SERMONDISTRIBUTOR_DOWNLOAD'); ?>
+			<i class="uk-icon-download"></i> <?php echo Text::_('COM_SERMONDISTRIBUTOR_DOWNLOAD'); ?>
 		</a>
 	<?php endforeach; ?>
 <?php elseif (isset($displayData->download_links) && count($displayData->download_links) > 1): ?>
 	<?php $modalId = SermondistributorHelper::randomkey(5); ?>
-	<button class="uk-button uk-width-1-1 uk-button-success" data-uk-modal="{target:'#download-<?php echo $modalId; ?>'}" ><i class="uk-icon-download"></i> <?php echo JText::_('COM_SERMONDISTRIBUTOR_DOWNLOADS'); ?></button>
+	<button class="uk-button uk-width-1-1 uk-button-success" data-uk-modal="{target:'#download-<?php echo $modalId; ?>'}" ><i class="uk-icon-download"></i> <?php echo Text::_('COM_SERMONDISTRIBUTOR_DOWNLOADS'); ?></button>
 	<div id="download-<?php echo $modalId; ?>" class="uk-modal">
 		<div class="uk-modal-dialog">
 			<a class="uk-modal-close uk-close"></a>
@@ -44,9 +49,9 @@ defined('JPATH_BASE') or die('Restricted access');
 			<?php $num = 'A'; foreach ($displayData->download_links as $filename => $link): ?>
 				<li>
 					<a class="uk-button uk-margin-small-bottom uk-width-1-1 uk-button-success"<?php echo $displayData->onclick[$filename]; ?> href="<?php echo $link; ?>" title="<?php echo $filename; ?>">
-						<i class="uk-icon-download"></i> <?php echo JText::_('COM_SERMONDISTRIBUTOR_DOWNLOAD').' '.$num; $num++;?>
+						<i class="uk-icon-download"></i> <?php echo Text::_('COM_SERMONDISTRIBUTOR_DOWNLOAD').' '.$num; $num++;?>
 						<?php if ($displayData->params->get($displayData->viewKey.'_sermons_download_counter') && isset($displayData->statistic[$filename])): ?>
-							<span data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_DOWNLOAD_COUNTER'); ?>">(<?php echo $displayData->statistic[$filename]; ?>)</span>
+							<span data-uk-tooltip title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_DOWNLOAD_COUNTER'); ?>">(<?php echo $displayData->statistic[$filename]; ?>)</span>
 						<?php endif; ?>
 					</a>
 				</li>

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermon.php
@@ -25,8 +25,18 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Helper\TagsHelper;
+use VDM\Joomla\Utilities\JsonHelper;
+use VDM\Joomla\Utilities\StringHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
 
 /**
  * Sermondistributor Sermon Item Model
@@ -70,7 +80,7 @@ class SermondistributorModelSermon extends ItemModel
 	 */
 	protected function populateState()
 	{
-		$this->app = JFactory::getApplication();
+		$this->app = Factory::getApplication();
 		$this->input = $this->app->input;
 		// Get the itme main id
 		$id = $this->input->getInt('id', null);
@@ -91,14 +101,14 @@ class SermondistributorModelSermon extends ItemModel
 	 */
 	public function getItem($pk = null)
 	{
-		$this->user = JFactory::getUser();
+		$this->user = Factory::getUser();
 		// check if this user has permission to access item
 		if (!$this->user->authorise('site.sermon.access', 'com_sermondistributor'))
 		{
-			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_SERMON'), 'error');
+			$app = Factory::getApplication();
+			$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_SERMON'), 'error');
 			// redirect away to the default view if no access allowed.
-			$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
+			$app->redirect(Route::_('index.php?option=com_sermondistributor&view=preachers'));
 			return false;
 		}
 		$this->userId = $this->user->get('id');
@@ -109,10 +119,10 @@ class SermondistributorModelSermon extends ItemModel
 		$this->initSet = true;
 
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('sermon.id');
-		
+
 		if ($this->_item === null)
 		{
-			$this->_item = array();
+			$this->_item = [];
 		}
 
 		if (!isset($this->_item[$pk]))
@@ -120,7 +130,7 @@ class SermondistributorModelSermon extends ItemModel
 			try
 			{
 				// Get a db connection.
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 
 				// Create a new query object.
 				$query = $db->getQuery(true);
@@ -161,31 +171,31 @@ class SermondistributorModelSermon extends ItemModel
 
 				if (empty($data))
 				{
-					$app = JFactory::getApplication();
+					$app = Factory::getApplication();
 					// If no data is found redirect to default page and show warning.
-					$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_FOUND_OR_ACCESS_DENIED'), 'warning');
-					$app->redirect(JRoute::_('index.php?option=com_sermondistributor&view=preachers'));
+					$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_NOT_FOUND_OR_ACCESS_DENIED'), 'warning');
+					$app->redirect(Route::_('index.php?option=com_sermondistributor&view=preachers'));
 					return false;
 				}
 			// Load the JEvent Dispatcher
-			JPluginHelper::importPlugin('content');
-			$this->_dispatcher = JFactory::getApplication();
+			PluginHelper::importPlugin('content');
+			$this->_dispatcher = Factory::getApplication();
 				// Check if we can decode local_files
-				if (SermondistributorHelper::checkJson($data->local_files))
+				if (isset($data->local_files) && JsonHelper::check($data->local_files))
 				{
 					// Decode local_files
 					$data->local_files = json_decode($data->local_files, true);
 				}
 				// Check if we can decode manual_files
-				if (SermondistributorHelper::checkJson($data->manual_files))
+				if (isset($data->manual_files) && JsonHelper::check($data->manual_files))
 				{
 					// Decode manual_files
 					$data->manual_files = json_decode($data->manual_files, true);
 				}
 				// Check if item has params, or pass whole item.
-				$params = (isset($data->params) && SermondistributorHelper::checkJson($data->params)) ? json_decode($data->params) : $data;
+				$params = (isset($data->params) && JsonHelper::check($data->params)) ? json_decode($data->params) : $data;
 				// Make sure the content prepare plugins fire on description
-				$_description = new stdClass();
+				$_description = new \stdClass();
 				$_description->text =& $data->description; // value must be in text
 				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
 				$this->_dispatcher->triggerEvent("onContentPrepare", array('com_sermondistributor.sermon.description', &$_description, &$params, 0));
@@ -204,7 +214,7 @@ class SermondistributorModelSermon extends ItemModel
 				if ($e->getCode() == 404)
 				{
 					// Need to go thru the error handler to allow Redirect to work.
-					JError::raiseWarning(404, $e->getMessage());
+					JError::raiseError(404, $e->getMessage());
 				}
 				else
 				{
@@ -219,13 +229,13 @@ class SermondistributorModelSermon extends ItemModel
 			// set some default tottals
 			$this->_item[$pk]->statisticTotal = 0;
 			// set the auto links if found
-			if (isset($this->_item[$pk]->auto_sermons) && SermondistributorHelper::checkString($this->_item[$pk]->auto_sermons))
+			if (isset($this->_item[$pk]->auto_sermons) && StringHelper::check($this->_item[$pk]->auto_sermons))
 			{
 				// Decode the auto files
 				$this->_item[$pk]->auto_sermons = json_decode($this->_item[$pk]->auto_sermons, true);
 			}
 			// set statistic per filename if found
-			if (isset($this->_item[$pk]->idSermonStatisticD) && SermondistributorHelper::checkArray($this->_item[$pk]->idSermonStatisticD))
+			if (isset($this->_item[$pk]->idSermonStatisticD) && UtilitiesArrayHelper::check($this->_item[$pk]->idSermonStatisticD))
 			{
 				foreach ($this->_item[$pk]->idSermonStatisticD as $statistic)
 				{
@@ -246,7 +256,7 @@ class SermondistributorModelSermon extends ItemModel
 			// build the download links
 			SermondistributorHelper::getDownloadLinks($this->_item[$pk]);
 			// fix the scripture links that they will show
-			if (isset($this->_item[$pk]->scripture) && SermondistributorHelper::checkString($this->_item[$pk]->scripture))
+			if (isset($this->_item[$pk]->scripture) && StringHelper::check($this->_item[$pk]->scripture))
 			{
 				if (strpos(",",$this->_item[$pk]->scripture) !== false)
 				{
@@ -262,7 +272,7 @@ class SermondistributorModelSermon extends ItemModel
 				}
 				// now load the getBible taging
 				$scripture = '<p><span class="getBible">'.implode(' [in]</span></p><p><span class="getBible">',$scripture).' [in]</span></p>';
-				$this->_item[$pk]->scripture = JHtml::_('content.prepare', $scripture);
+				$this->_item[$pk]->scripture = Html::_('content.prepare', $scripture);
 			}
 		}
 
@@ -278,7 +288,7 @@ class SermondistributorModelSermon extends ItemModel
 	public function getIdSermonStatisticEbbd_D($id)
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -311,7 +321,7 @@ class SermondistributorModelSermon extends ItemModel
 	 */
 	public function getUikitComp()
 	{
-		if (isset($this->uikitComp) && SermondistributorHelper::checkArray($this->uikitComp))
+		if (isset($this->uikitComp) && UtilitiesArrayHelper::check($this->uikitComp))
 		{
 			return $this->uikitComp;
 		}

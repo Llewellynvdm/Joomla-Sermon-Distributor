@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -25,10 +25,12 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 ?>
 
 <div class="uk-alert uk-alert-danger" data-uk-alert>
-    <h2><?php echo JText::_('COM_SERMONDISTRIBUTOR_WHAT_ARE_YOU_DOING_HERE'); ?></h2>
-    <p><?php echo JText::_('COM_SERMONDISTRIBUTOR_YOU_ARE_BEING_WATCHED'); ?></p>
+    <h2><?php echo Text::_('COM_SERMONDISTRIBUTOR_WHAT_ARE_YOU_DOING_HERE'); ?></h2>
+    <p><?php echo Text::_('COM_SERMONDISTRIBUTOR_YOU_ARE_BEING_WATCHED'); ?></p>
 </div>

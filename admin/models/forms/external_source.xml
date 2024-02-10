@@ -73,6 +73,7 @@
 			label="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_VERSION_LABEL"
 			description="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_VERSION_DESC"
 			size="6"
+			default="1"
 			readonly="true"
 			filter="unset"
 		/>
@@ -357,7 +358,7 @@
 			hint="COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_OAUTHTOKEN_HINT"
 		/>
 	</fieldset>
-	
+
 	<!-- Access Control Fields. -->
 	<fieldset name="accesscontrol">
 		<!-- Asset Id Field. Type: Hidden (joomla) -->

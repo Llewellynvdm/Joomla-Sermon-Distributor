@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermondistributor.php
@@ -25,8 +25,62 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+// register additional namespace
+\spl_autoload_register(function ($class) {
+	// project-specific base directories and namespace prefix
+	$search = [
+		'libraries/jcb_powers/VDM.Joomla.FOF' => 'VDM\\Joomla\\FOF',
+		'libraries/jcb_powers/VDM.Joomla' => 'VDM\\Joomla'
+	];
+	// Start the search and load if found
+	$found = false;
+	$found_base_dir = "";
+	$found_len = 0;
+	foreach ($search as $base_dir => $prefix)
+	{
+		// does the class use the namespace prefix?
+		$len = strlen($prefix);
+		if (strncmp($prefix, $class, $len) === 0)
+		{
+			// we have a match so load the values
+			$found = true;
+			$found_base_dir = $base_dir;
+			$found_len = $len;
+			// done here
+			break;
+		}
+	}
+	// check if we found a match
+	if (!$found)
+	{
+		// not found so move to the next registered autoloader
+		return;
+	}
+	// get the relative class name
+	$relative_class = substr($class, $found_len);
+	// replace the namespace prefix with the base directory, replace namespace
+	// separators with directory separators in the relative class name, append
+	// with .php
+	$file = JPATH_ROOT . '/' . $found_base_dir . '/src' . str_replace('\\', '/', $relative_class) . '.php';
+	// if the file exists, require it
+	if (file_exists($file))
+	{
+		require $file;
+	}
+});
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Access\Access;
+use Joomla\CMS\Access\Rules as AccessRules;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Language;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Version;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
@@ -34,6 +88,15 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Joomla\CMS\Filesystem\Folder;
+use VDM\Joomla\Utilities\FileHelper;
+use VDM\Joomla\Utilities\MimeHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\Utilities\StringHelper as UtilitiesStringHelper;
+use VDM\Joomla\Utilities\ObjectHelper;
+use VDM\Joomla\FOF\Encrypt\AES;
+use VDM\Joomla\Utilities\GetHelper;
+use VDM\Joomla\Utilities\JsonHelper;
+use VDM\Joomla\Utilities\FormHelper;
 
 /**
  * Sermondistributor component helper.
@@ -42,14 +105,14 @@ abstract class SermondistributorHelper
 {
 	/**
 	 * Composer Switch
-	 * 
+	 *
 	 * @var      array
 	 */
-	protected static $composer = array();
+	protected static $composer = [];
 
 	/**
 	 * The Main Active Language
-	 * 
+	 *
 	 * @var      string
 	 */
 	public static $langTag;
@@ -134,7 +197,7 @@ abstract class SermondistributorHelper
 		// decrypt the urls
 		$safe = new FOFEncryptAes($localkey, 128);
 		// internal download url
-		$keyCounter = new stdClass;
+		$keyCounter = new \stdClass;
 		$keyCounter->sermon = $sermon->id;
 		if ($sermon->preacher)
 		{
@@ -147,7 +210,7 @@ abstract class SermondistributorHelper
 		$keyCounterRAW = $safe->encryptString(json_encode($keyCounter));
 		$keyCounter = self::base64_urlencode($keyCounterRAW);
 		$token = JSession::getFormToken();
-		$downloadURL = JURI::root().'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
+		$downloadURL = Uri::root().'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
 		// check if local .htaccess should be set
 		$setHtaccess = false;
 		$onclick = ' onclick="sermonCounter(\''.$keyCounterRAW.'\',\'FILENAME\');"';
@@ -162,7 +225,7 @@ abstract class SermondistributorHelper
 				if (2 == $sermon->link_type && strpos($localFolder, JPATH_ROOT) !== false)
 				{
 					$allowDirect = true;
-					$localFolderURL = JURI::root().str_replace(JPATH_ROOT, '', $localFolder);
+					$localFolderURL = Uri::root().str_replace(JPATH_ROOT, '', $localFolder);
 					// insure no double // is in the URL
 					$localFolderURL = str_replace('//', '/', $localFolderURL);
 					$localFolderURL = str_replace(':/', '://', $localFolderURL);
@@ -388,112 +451,37 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Get the file path or url
-	*
-	* @param  string   $type              The (url/path) type to return
-	* @param  string   $target            The Params Target name (if set)
-	* @param  string   $fileType          The kind of filename to generate (if not set no file name is generated)
-	* @param  string   $key               The key to adjust the filename (if not set ignored)
-	* @param  string   $default           The default path if not set in Params (fallback path)
-	* @param  bool     $createIfNotSet    The switch to create the folder if not found
-	*
-	* @return  string    On success the path or url is returned based on the type requested
-	*
-	*/
+	 * Get the file path or url
+	 *
+	 * @param  string   $type              The (url/path) type to return
+	 * @param  string   $target            The Params Target name (if set)
+	 * @param  string   $fileType          The kind of filename to generate (if not set no file name is generated)
+	 * @param  string   $key               The key to adjust the filename (if not set ignored)
+	 * @param  string   $default           The default path if not set in Params (fallback path)
+	 * @param  bool     $createIfNotSet    The switch to create the folder if not found
+	 *
+	 * @return  string    On success the path or url is returned based on the type requested
+	 * @deprecated 3.3 Use FileHelper::getPath(...);
+	 */
 	public static function getFilePath($type = 'path', $target = 'filepath', $fileType = null, $key = '', $default = '', $createIfNotSet = true)
 	{
-		// make sure to always have a string/path
-		if(!self::checkString($default))
-		{
-			$default = JPATH_SITE . '/images/';
-		}
-		// get the global settings
-		if (!self::checkObject(self::$params))
-		{
-			self::$params = JComponentHelper::getParams('com_sermondistributor');
-		}
-		$filePath = self::$params->get($target, $default);
-		// check the file path (revert to default only of not a hidden file path)
-		if ('hiddenfilepath' !== $target && strpos($filePath, JPATH_SITE) === false)
-		{
-			$filePath = $default;
-		}
-		// create the folder if it does not exist
-		if ($createIfNotSet && !Folder::exists($filePath))
-		{
-			Folder::create($filePath);
-		}
-		// setup the file name
-		$fileName = '';
-		// Get basic key
-		$basickey = 'Th!s_iS_n0t_sAfe_buT_b3tter_then_n0thiug';
-		if (method_exists(get_called_class(), "getCryptKey")) 
-		{
-			$basickey = self::getCryptKey('basic', $basickey);
-		}
-		// check the key
-		if (!self::checkString($key))
-		{
-			$key = 'vDm';
-		}
-		// set the file name
-		if (self::checkString($fileType))
-		{
-			// set the name
-			$fileName = trim(md5($type.$target.$basickey.$key) . '.' . trim($fileType, '.'));
-		}
-		else
-		{
-			$fileName = trim(md5($type.$target.$basickey.$key)) . '.txt';
-		}
-		// return the url
-		if ('url' === $type)
-		{
-			if (strpos($filePath, JPATH_SITE) !== false)
-			{
-				$filePath = trim( str_replace( JPATH_SITE, '', $filePath), '/');
-				return JURI::root() . $filePath . '/' . $fileName;
-			}
-			// since the path is behind the root folder of the site, return only the root url (may be used to build the link)
-			return JURI::root();
-		}
-		// sanitize the path
-		return '/' . trim( $filePath, '/' ) . '/' . $fileName;
+		// Get the file path or url
+		return FileHelper::getPath($type, $target, $fileType, $key, $default, $createIfNotSet);
 	}
-
 
 	/**
-	* Write a file to the server
-	*
-	* @param  string   $path    The path and file name where to safe the data
-	* @param  string   $data    The data to safe
-	*
-	* @return  bool true   On success
-	*
-	*/
+	 * Write a file to the server
+	 *
+	 * @param  string   $path    The path and file name where to safe the data
+	 * @param  string   $data    The data to safe
+	 *
+	 * @return  bool true   On success
+	 * @deprecated 3.3 Use FileHelper::write(...);
+	 */
 	public static function writeFile($path, $data)
 	{
-		$klaar = false;
-		if (self::checkString($data))
-		{
-			// open the file
-			$fh = fopen($path, "w");
-			if (!is_resource($fh))
-			{
-				return $klaar;
-			}
-			// write to the file
-			if (fwrite($fh, $data))
-			{
-				// has been done
-				$klaar = true;
-			}
-			// close file.
-			fclose($fh);
-		}
-		return $klaar;
+		return FileHelper::write($path, $data);
 	}
-
 	protected static function saveFile($data, $path_filename)
 	{
 		return self::writeFile($path_filename, $data);
@@ -684,1100 +672,12 @@ abstract class SermondistributorHelper
 				// get the size of the file
 				$info['filesize'] = $db->loadResult();
 				// get the mime type
-				$info['type'] = self::mimeType($key);
+				$info['type'] = MimeHelper::mimeType($key);
 				// return info
 				return $info;
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * File Extensions to Mimetypes
-	 * https://gist.github.com/Llewellynvdm/74be373357e131b8775a7582c3de508b
-	 * http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
-	 *
-	 * @var     array
-	 */
-	protected static $fileExtensionToMimeType = array(
-		'123'			=> 'application/vnd.lotus-1-2-3',
-		'3dml'			=> 'text/vnd.in3d.3dml',
-		'3ds'			=> 'image/x-3ds',
-		'3g2'			=> 'video/3gpp2',
-		'3gp'			=> 'video/3gpp',
-		'7z'			=> 'application/x-7z-compressed',
-		'aab'			=> 'application/x-authorware-bin',
-		'aac'			=> 'audio/x-aac',
-		'aam'			=> 'application/x-authorware-map',
-		'aas'			=> 'application/x-authorware-seg',
-		'abw'			=> 'application/x-abiword',
-		'ac'			=> 'application/pkix-attr-cert',
-		'acc'			=> 'application/vnd.americandynamics.acc',
-		'ace'			=> 'application/x-ace-compressed',
-		'acu'			=> 'application/vnd.acucobol',
-		'acutc'			=> 'application/vnd.acucorp',
-		'adp'			=> 'audio/adpcm',
-		'aep'			=> 'application/vnd.audiograph',
-		'afm'			=> 'application/x-font-type1',
-		'afp'			=> 'application/vnd.ibm.modcap',
-		'ahead'			=> 'application/vnd.ahead.space',
-		'ai'			=> 'application/postscript',
-		'aif'			=> 'audio/x-aiff',
-		'aifc'			=> 'audio/x-aiff',
-		'aiff'			=> 'audio/x-aiff',
-		'air'			=> 'application/vnd.adobe.air-application-installer-package+zip',
-		'ait'			=> 'application/vnd.dvb.ait',
-		'ami'			=> 'application/vnd.amiga.ami',
-		'apk'			=> 'application/vnd.android.package-archive',
-		'appcache'		=> 'text/cache-manifest',
-		'application'	=> 'application/x-ms-application',
-		'apr'			=> 'application/vnd.lotus-approach',
-		'arc'			=> 'application/x-freearc',
-		'asc'			=> 'application/pgp-signature',
-		'asf'			=> 'video/x-ms-asf',
-		'asm'			=> 'text/x-asm',
-		'aso'			=> 'application/vnd.accpac.simply.aso',
-		'asx'			=> 'video/x-ms-asf',
-		'atc'			=> 'application/vnd.acucorp',
-		'atom'			=> 'application/atom+xml',
-		'atomcat'		=> 'application/atomcat+xml',
-		'atomsvc'		=> 'application/atomsvc+xml',
-		'atx'			=> 'application/vnd.antix.game-component',
-		'au'			=> 'audio/basic',
-		'avi'			=> 'video/x-msvideo',
-		'aw'			=> 'application/applixware',
-		'azf'			=> 'application/vnd.airzip.filesecure.azf',
-		'azs'			=> 'application/vnd.airzip.filesecure.azs',
-		'azw'			=> 'application/vnd.amazon.ebook',
-		'bat'			=> 'application/x-msdownload',
-		'bcpio'			=> 'application/x-bcpio',
-		'bdf'			=> 'application/x-font-bdf',
-		'bdm'			=> 'application/vnd.syncml.dm+wbxml',
-		'bed'			=> 'application/vnd.realvnc.bed',
-		'bh2'			=> 'application/vnd.fujitsu.oasysprs',
-		'bin'			=> 'application/octet-stream',
-		'blb'			=> 'application/x-blorb',
-		'blorb'			=> 'application/x-blorb',
-		'bmi'			=> 'application/vnd.bmi',
-		'bmp'			=> 'image/bmp',
-		'book'			=> 'application/vnd.framemaker',
-		'box'			=> 'application/vnd.previewsystems.box',
-		'boz'			=> 'application/x-bzip2',
-		'bpk'			=> 'application/octet-stream',
-		'btif'			=> 'image/prs.btif',
-		'bz'			=> 'application/x-bzip',
-		'bz2'			=> 'application/x-bzip2',
-		'c'				=> 'text/x-c',
-		'c11amc'		=> 'application/vnd.cluetrust.cartomobile-config',
-		'c11amz'		=> 'application/vnd.cluetrust.cartomobile-config-pkg',
-		'c4d'			=> 'application/vnd.clonk.c4group',
-		'c4f'			=> 'application/vnd.clonk.c4group',
-		'c4g'			=> 'application/vnd.clonk.c4group',
-		'c4p'			=> 'application/vnd.clonk.c4group',
-		'c4u'			=> 'application/vnd.clonk.c4group',
-		'cab'			=> 'application/vnd.ms-cab-compressed',
-		'caf'			=> 'audio/x-caf',
-		'cap'			=> 'application/vnd.tcpdump.pcap',
-		'car'			=> 'application/vnd.curl.car',
-		'cat'			=> 'application/vnd.ms-pki.seccat',
-		'cb7'			=> 'application/x-cbr',
-		'cba'			=> 'application/x-cbr',
-		'cbr'			=> 'application/x-cbr',
-		'cbt'			=> 'application/x-cbr',
-		'cbz'			=> 'application/x-cbr',
-		'cc'			=> 'text/x-c',
-		'cct'			=> 'application/x-director',
-		'ccxml'			=> 'application/ccxml+xml',
-		'cdbcmsg'		=> 'application/vnd.contact.cmsg',
-		'cdf'			=> 'application/x-netcdf',
-		'cdkey'			=> 'application/vnd.mediastation.cdkey',
-		'cdmia'			=> 'application/cdmi-capability',
-		'cdmic'			=> 'application/cdmi-container',
-		'cdmid'			=> 'application/cdmi-domain',
-		'cdmio'			=> 'application/cdmi-object',
-		'cdmiq'			=> 'application/cdmi-queue',
-		'cdx'			=> 'chemical/x-cdx',
-		'cdxml'			=> 'application/vnd.chemdraw+xml',
-		'cdy'			=> 'application/vnd.cinderella',
-		'cer'			=> 'application/pkix-cert',
-		'cfs'			=> 'application/x-cfs-compressed',
-		'cgm'			=> 'image/cgm',
-		'chat'			=> 'application/x-chat',
-		'chm'			=> 'application/vnd.ms-htmlhelp',
-		'chrt'			=> 'application/vnd.kde.kchart',
-		'cif'			=> 'chemical/x-cif',
-		'cii'			=> 'application/vnd.anser-web-certificate-issue-initiation',
-		'cil'			=> 'application/vnd.ms-artgalry',
-		'cla'			=> 'application/vnd.claymore',
-		'class'			=> 'application/java-vm',
-		'clkk'			=> 'application/vnd.crick.clicker.keyboard',
-		'clkp'			=> 'application/vnd.crick.clicker.palette',
-		'clkt'			=> 'application/vnd.crick.clicker.template',
-		'clkw'			=> 'application/vnd.crick.clicker.wordbank',
-		'clkx'			=> 'application/vnd.crick.clicker',
-		'clp'			=> 'application/x-msclip',
-		'cmc'			=> 'application/vnd.cosmocaller',
-		'cmdf'			=> 'chemical/x-cmdf',
-		'cml'			=> 'chemical/x-cml',
-		'cmp'			=> 'application/vnd.yellowriver-custom-menu',
-		'cmx'			=> 'image/x-cmx',
-		'cod'			=> 'application/vnd.rim.cod',
-		'com'			=> 'application/x-msdownload',
-		'conf'			=> 'text/plain',
-		'cpio'			=> 'application/x-cpio',
-		'cpp'			=> 'text/x-c',
-		'cpt'			=> 'application/mac-compactpro',
-		'crd'			=> 'application/x-mscardfile',
-		'crl'			=> 'application/pkix-crl',
-		'crt'			=> 'application/x-x509-ca-cert',
-		'cryptonote'	=> 'application/vnd.rig.cryptonote',
-		'csh'			=> 'application/x-csh',
-		'csml'			=> 'chemical/x-csml',
-		'csp'			=> 'application/vnd.commonspace',
-		'css'			=> 'text/css',
-		'cst'			=> 'application/x-director',
-		'csv'			=> 'text/csv',
-		'cu'			=> 'application/cu-seeme',
-		'curl'			=> 'text/vnd.curl',
-		'cww'			=> 'application/prs.cww',
-		'cxt'			=> 'application/x-director',
-		'cxx'			=> 'text/x-c',
-		'dae'			=> 'model/vnd.collada+xml',
-		'daf'			=> 'application/vnd.mobius.daf',
-		'dart'			=> 'application/vnd.dart',
-		'dataless'		=> 'application/vnd.fdsn.seed',
-		'davmount'		=> 'application/davmount+xml',
-		'dbk'			=> 'application/docbook+xml',
-		'dcr'			=> 'application/x-director',
-		'dcurl'			=> 'text/vnd.curl.dcurl',
-		'dd2'			=> 'application/vnd.oma.dd2+xml',
-		'ddd'			=> 'application/vnd.fujixerox.ddd',
-		'deb'			=> 'application/x-debian-package',
-		'def'			=> 'text/plain',
-		'deploy'		=> 'application/octet-stream',
-		'der'			=> 'application/x-x509-ca-cert',
-		'dfac'			=> 'application/vnd.dreamfactory',
-		'dgc'			=> 'application/x-dgc-compressed',
-		'dic'			=> 'text/x-c',
-		'dir'			=> 'application/x-director',
-		'dis'			=> 'application/vnd.mobius.dis',
-		'dist'			=> 'application/octet-stream',
-		'distz'			=> 'application/octet-stream',
-		'djv'			=> 'image/vnd.djvu',
-		'djvu'			=> 'image/vnd.djvu',
-		'dll'			=> 'application/x-msdownload',
-		'dmg'			=> 'application/x-apple-diskimage',
-		'dmp'			=> 'application/vnd.tcpdump.pcap',
-		'dms'			=> 'application/octet-stream',
-		'dna'			=> 'application/vnd.dna',
-		'doc'			=> 'application/msword',
-		'docm'			=> 'application/vnd.ms-word.document.macroenabled.12',
-		'docx'			=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-		'dot'			=> 'application/msword',
-		'dotm'			=> 'application/vnd.ms-word.template.macroenabled.12',
-		'dotx'			=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-		'dp'			=> 'application/vnd.osgi.dp',
-		'dpg'			=> 'application/vnd.dpgraph',
-		'dra'			=> 'audio/vnd.dra',
-		'dsc'			=> 'text/prs.lines.tag',
-		'dssc'			=> 'application/dssc+der',
-		'dtb'			=> 'application/x-dtbook+xml',
-		'dtd'			=> 'application/xml-dtd',
-		'dts'			=> 'audio/vnd.dts',
-		'dtshd'			=> 'audio/vnd.dts.hd',
-		'dump'			=> 'application/octet-stream',
-		'dvb'			=> 'video/vnd.dvb.file',
-		'dvi'			=> 'application/x-dvi',
-		'dwf'			=> 'model/vnd.dwf',
-		'dwg'			=> 'image/vnd.dwg',
-		'dxf'			=> 'image/vnd.dxf',
-		'dxp'			=> 'application/vnd.spotfire.dxp',
-		'dxr'			=> 'application/x-director',
-		'ecelp4800'		=> 'audio/vnd.nuera.ecelp4800',
-		'ecelp7470'		=> 'audio/vnd.nuera.ecelp7470',
-		'ecelp9600'		=> 'audio/vnd.nuera.ecelp9600',
-		'ecma'			=> 'application/ecmascript',
-		'edm'			=> 'application/vnd.novadigm.edm',
-		'edx'			=> 'application/vnd.novadigm.edx',
-		'efif'			=> 'application/vnd.picsel',
-		'ei6'			=> 'application/vnd.pg.osasli',
-		'elc'			=> 'application/octet-stream',
-		'emf'			=> 'application/x-msmetafile',
-		'eml'			=> 'message/rfc822',
-		'emma'			=> 'application/emma+xml',
-		'emz'			=> 'application/x-msmetafile',
-		'eol'			=> 'audio/vnd.digital-winds',
-		'eot'			=> 'application/vnd.ms-fontobject',
-		'eps'			=> 'application/postscript',
-		'epub'			=> 'application/epub+zip',
-		'es3'			=> 'application/vnd.eszigno3+xml',
-		'esa'			=> 'application/vnd.osgi.subsystem',
-		'esf'			=> 'application/vnd.epson.esf',
-		'et3'			=> 'application/vnd.eszigno3+xml',
-		'etx'			=> 'text/x-setext',
-		'eva'			=> 'application/x-eva',
-		'evy'			=> 'application/x-envoy',
-		'exe'			=> 'application/x-msdownload',
-		'exi'			=> 'application/exi',
-		'ext'			=> 'application/vnd.novadigm.ext',
-		'ez'			=> 'application/andrew-inset',
-		'ez2'			=> 'application/vnd.ezpix-album',
-		'ez3'			=> 'application/vnd.ezpix-package',
-		'f'				=> 'text/x-fortran',
-		'f4v'			=> 'video/x-f4v',
-		'f77'			=> 'text/x-fortran',
-		'f90'			=> 'text/x-fortran',
-		'fbs'			=> 'image/vnd.fastbidsheet',
-		'fcdt'			=> 'application/vnd.adobe.formscentral.fcdt',
-		'fcs'			=> 'application/vnd.isac.fcs',
-		'fdf'			=> 'application/vnd.fdf',
-		'fe_launch'		=> 'application/vnd.denovo.fcselayout-link',
-		'fg5'			=> 'application/vnd.fujitsu.oasysgp',
-		'fgd'			=> 'application/x-director',
-		'fh'			=> 'image/x-freehand',
-		'fh4'			=> 'image/x-freehand',
-		'fh5'			=> 'image/x-freehand',
-		'fh7'			=> 'image/x-freehand',
-		'fhc'			=> 'image/x-freehand',
-		'fig'			=> 'application/x-xfig',
-		'flac'			=> 'audio/x-flac',
-		'fli'			=> 'video/x-fli',
-		'flo'			=> 'application/vnd.micrografx.flo',
-		'flv'			=> 'video/x-flv',
-		'flw'			=> 'application/vnd.kde.kivio',
-		'flx'			=> 'text/vnd.fmi.flexstor',
-		'fly'			=> 'text/vnd.fly',
-		'fm'			=> 'application/vnd.framemaker',
-		'fnc'			=> 'application/vnd.frogans.fnc',
-		'for'			=> 'text/x-fortran',
-		'fpx'			=> 'image/vnd.fpx',
-		'frame'			=> 'application/vnd.framemaker',
-		'fsc'			=> 'application/vnd.fsc.weblaunch',
-		'fst'			=> 'image/vnd.fst',
-		'ftc'			=> 'application/vnd.fluxtime.clip',
-		'fti'			=> 'application/vnd.anser-web-funds-transfer-initiation',
-		'fvt'			=> 'video/vnd.fvt',
-		'fxp'			=> 'application/vnd.adobe.fxp',
-		'fxpl'			=> 'application/vnd.adobe.fxp',
-		'fzs'			=> 'application/vnd.fuzzysheet',
-		'g2w'			=> 'application/vnd.geoplan',
-		'g3'			=> 'image/g3fax',
-		'g3w'			=> 'application/vnd.geospace',
-		'gac'			=> 'application/vnd.groove-account',
-		'gam'			=> 'application/x-tads',
-		'gbr'			=> 'application/rpki-ghostbusters',
-		'gca'			=> 'application/x-gca-compressed',
-		'gdl'			=> 'model/vnd.gdl',
-		'geo'			=> 'application/vnd.dynageo',
-		'gex'			=> 'application/vnd.geometry-explorer',
-		'ggb'			=> 'application/vnd.geogebra.file',
-		'ggt'			=> 'application/vnd.geogebra.tool',
-		'ghf'			=> 'application/vnd.groove-help',
-		'gif'			=> 'image/gif',
-		'gim'			=> 'application/vnd.groove-identity-message',
-		'gml'			=> 'application/gml+xml',
-		'gmx'			=> 'application/vnd.gmx',
-		'gnumeric'		=> 'application/x-gnumeric',
-		'gph'			=> 'application/vnd.flographit',
-		'gpx'			=> 'application/gpx+xml',
-		'gqf'			=> 'application/vnd.grafeq',
-		'gqs'			=> 'application/vnd.grafeq',
-		'gram'			=> 'application/srgs',
-		'gramps'		=> 'application/x-gramps-xml',
-		'gre'			=> 'application/vnd.geometry-explorer',
-		'grv'			=> 'application/vnd.groove-injector',
-		'grxml'			=> 'application/srgs+xml',
-		'gsf'			=> 'application/x-font-ghostscript',
-		'gtar'			=> 'application/x-gtar',
-		'gtm'			=> 'application/vnd.groove-tool-message',
-		'gtw'			=> 'model/vnd.gtw',
-		'gv'			=> 'text/vnd.graphviz',
-		'gxf'			=> 'application/gxf',
-		'gxt'			=> 'application/vnd.geonext',
-		'h'				=> 'text/x-c',
-		'h261'			=> 'video/h261',
-		'h263'			=> 'video/h263',
-		'h264'			=> 'video/h264',
-		'hal'			=> 'application/vnd.hal+xml',
-		'hbci'			=> 'application/vnd.hbci',
-		'hdf'			=> 'application/x-hdf',
-		'hh'			=> 'text/x-c',
-		'hlp'			=> 'application/winhlp',
-		'hpgl'			=> 'application/vnd.hp-hpgl',
-		'hpid'			=> 'application/vnd.hp-hpid',
-		'hps'			=> 'application/vnd.hp-hps',
-		'hqx'			=> 'application/mac-binhex40',
-		'htke'			=> 'application/vnd.kenameaapp',
-		'htm'			=> 'text/html',
-		'html'			=> 'text/html',
-		'hvd'			=> 'application/vnd.yamaha.hv-dic',
-		'hvp'			=> 'application/vnd.yamaha.hv-voice',
-		'hvs'			=> 'application/vnd.yamaha.hv-script',
-		'i2g'			=> 'application/vnd.intergeo',
-		'icc'			=> 'application/vnd.iccprofile',
-		'ice'			=> 'x-conference/x-cooltalk',
-		'icm'			=> 'application/vnd.iccprofile',
-		'ico'			=> 'image/x-icon',
-		'ics'			=> 'text/calendar',
-		'ief'			=> 'image/ief',
-		'ifb'			=> 'text/calendar',
-		'ifm'			=> 'application/vnd.shana.informed.formdata',
-		'iges'			=> 'model/iges',
-		'igl'			=> 'application/vnd.igloader',
-		'igm'			=> 'application/vnd.insors.igm',
-		'igs'			=> 'model/iges',
-		'igx'			=> 'application/vnd.micrografx.igx',
-		'iif'			=> 'application/vnd.shana.informed.interchange',
-		'imp'			=> 'application/vnd.accpac.simply.imp',
-		'ims'			=> 'application/vnd.ms-ims',
-		'in'			=> 'text/plain',
-		'ink'			=> 'application/inkml+xml',
-		'inkml'			=> 'application/inkml+xml',
-		'install'		=> 'application/x-install-instructions',
-		'iota'			=> 'application/vnd.astraea-software.iota',
-		'ipfix'			=> 'application/ipfix',
-		'ipk'			=> 'application/vnd.shana.informed.package',
-		'irm'			=> 'application/vnd.ibm.rights-management',
-		'irp'			=> 'application/vnd.irepository.package+xml',
-		'iso'			=> 'application/x-iso9660-image',
-		'itp'			=> 'application/vnd.shana.informed.formtemplate',
-		'ivp'			=> 'application/vnd.immervision-ivp',
-		'ivu'			=> 'application/vnd.immervision-ivu',
-		'jad'			=> 'text/vnd.sun.j2me.app-descriptor',
-		'jam'			=> 'application/vnd.jam',
-		'jar'			=> 'application/java-archive',
-		'java'			=> 'text/x-java-source',
-		'jisp'			=> 'application/vnd.jisp',
-		'jlt'			=> 'application/vnd.hp-jlyt',
-		'jnlp'			=> 'application/x-java-jnlp-file',
-		'joda'			=> 'application/vnd.joost.joda-archive',
-		'jpe'			=> 'image/jpeg',
-		'jpeg'			=> 'image/jpeg',
-		'jpg'			=> 'image/jpeg',
-		'jpgm'			=> 'video/jpm',
-		'jpgv'			=> 'video/jpeg',
-		'jpm'			=> 'video/jpm',
-		'js'			=> 'application/javascript',
-		'json'			=> 'application/json',
-		'jsonml'		=> 'application/jsonml+json',
-		'kar'			=> 'audio/midi',
-		'karbon'		=> 'application/vnd.kde.karbon',
-		'kfo'			=> 'application/vnd.kde.kformula',
-		'kia'			=> 'application/vnd.kidspiration',
-		'kml'			=> 'application/vnd.google-earth.kml+xml',
-		'kmz'			=> 'application/vnd.google-earth.kmz',
-		'kne'			=> 'application/vnd.kinar',
-		'knp'			=> 'application/vnd.kinar',
-		'kon'			=> 'application/vnd.kde.kontour',
-		'kpr'			=> 'application/vnd.kde.kpresenter',
-		'kpt'			=> 'application/vnd.kde.kpresenter',
-		'kpxx'			=> 'application/vnd.ds-keypoint',
-		'ksp'			=> 'application/vnd.kde.kspread',
-		'ktr'			=> 'application/vnd.kahootz',
-		'ktx'			=> 'image/ktx',
-		'ktz'			=> 'application/vnd.kahootz',
-		'kwd'			=> 'application/vnd.kde.kword',
-		'kwt'			=> 'application/vnd.kde.kword',
-		'lasxml'		=> 'application/vnd.las.las+xml',
-		'latex'			=> 'application/x-latex',
-		'lbd'			=> 'application/vnd.llamagraphics.life-balance.desktop',
-		'lbe'			=> 'application/vnd.llamagraphics.life-balance.exchange+xml',
-		'les'			=> 'application/vnd.hhe.lesson-player',
-		'lha'			=> 'application/x-lzh-compressed',
-		'link66'		=> 'application/vnd.route66.link66+xml',
-		'list'			=> 'text/plain',
-		'list3820'		=> 'application/vnd.ibm.modcap',
-		'listafp'		=> 'application/vnd.ibm.modcap',
-		'lnk'			=> 'application/x-ms-shortcut',
-		'log'			=> 'text/plain',
-		'lostxml'		=> 'application/lost+xml',
-		'lrf'			=> 'application/octet-stream',
-		'lrm'			=> 'application/vnd.ms-lrm',
-		'ltf'			=> 'application/vnd.frogans.ltf',
-		'lvp'			=> 'audio/vnd.lucent.voice',
-		'lwp'			=> 'application/vnd.lotus-wordpro',
-		'lzh'			=> 'application/x-lzh-compressed',
-		'm13'			=> 'application/x-msmediaview',
-		'm14'			=> 'application/x-msmediaview',
-		'm1v'			=> 'video/mpeg',
-		'm21'			=> 'application/mp21',
-		'm2a'			=> 'audio/mpeg',
-		'm2v'			=> 'video/mpeg',
-		'm3a'			=> 'audio/mpeg',
-		'm3u'			=> 'audio/x-mpegurl',
-		'm3u8'			=> 'application/vnd.apple.mpegurl',
-		'm4a'			=> 'audio/mp4',
-		'm4u'			=> 'video/vnd.mpegurl',
-		'm4v'			=> 'video/x-m4v',
-		'ma'			=> 'application/mathematica',
-		'mads'			=> 'application/mads+xml',
-		'mag'			=> 'application/vnd.ecowin.chart',
-		'maker'			=> 'application/vnd.framemaker',
-		'man'			=> 'text/troff',
-		'mar'			=> 'application/octet-stream',
-		'mathml'		=> 'application/mathml+xml',
-		'mb'			=> 'application/mathematica',
-		'mbk'			=> 'application/vnd.mobius.mbk',
-		'mbox'			=> 'application/mbox',
-		'mc1'			=> 'application/vnd.medcalcdata',
-		'mcd'			=> 'application/vnd.mcd',
-		'mcurl'			=> 'text/vnd.curl.mcurl',
-		'mdb'			=> 'application/x-msaccess',
-		'mdi'			=> 'image/vnd.ms-modi',
-		'me'			=> 'text/troff',
-		'mesh'			=> 'model/mesh',
-		'meta4'			=> 'application/metalink4+xml',
-		'metalink'		=> 'application/metalink+xml',
-		'mets'			=> 'application/mets+xml',
-		'mfm'			=> 'application/vnd.mfmp',
-		'mft'			=> 'application/rpki-manifest',
-		'mgp'			=> 'application/vnd.osgeo.mapguide.package',
-		'mgz'			=> 'application/vnd.proteus.magazine',
-		'mid'			=> 'audio/midi',
-		'midi'			=> 'audio/midi',
-		'mie'			=> 'application/x-mie',
-		'mif'			=> 'application/vnd.mif',
-		'mime'			=> 'message/rfc822',
-		'mj2'			=> 'video/mj2',
-		'mjp2'			=> 'video/mj2',
-		'mk3d'			=> 'video/x-matroska',
-		'mka'			=> 'audio/x-matroska',
-		'mks'			=> 'video/x-matroska',
-		'mkv'			=> 'video/x-matroska',
-		'mlp'			=> 'application/vnd.dolby.mlp',
-		'mmd'			=> 'application/vnd.chipnuts.karaoke-mmd',
-		'mmf'			=> 'application/vnd.smaf',
-		'mmr'			=> 'image/vnd.fujixerox.edmics-mmr',
-		'mng'			=> 'video/x-mng',
-		'mny'			=> 'application/x-msmoney',
-		'mobi'			=> 'application/x-mobipocket-ebook',
-		'mods'			=> 'application/mods+xml',
-		'mov'			=> 'video/quicktime',
-		'movie'			=> 'video/x-sgi-movie',
-		'mp2'			=> 'audio/mpeg',
-		'mp21'			=> 'application/mp21',
-		'mp2a'			=> 'audio/mpeg',
-		'mp3'			=> 'audio/mpeg',
-		'mp4'			=> 'video/mp4',
-		'mp4a'			=> 'audio/mp4',
-		'mp4s'			=> 'application/mp4',
-		'mp4v'			=> 'video/mp4',
-		'mpc'			=> 'application/vnd.mophun.certificate',
-		'mpe'			=> 'video/mpeg',
-		'mpeg'			=> 'video/mpeg',
-		'mpg'			=> 'video/mpeg',
-		'mpg4'			=> 'video/mp4',
-		'mpga'			=> 'audio/mpeg',
-		'mpkg'			=> 'application/vnd.apple.installer+xml',
-		'mpm'			=> 'application/vnd.blueice.multipass',
-		'mpn'			=> 'application/vnd.mophun.application',
-		'mpp'			=> 'application/vnd.ms-project',
-		'mpt'			=> 'application/vnd.ms-project',
-		'mpy'			=> 'application/vnd.ibm.minipay',
-		'mqy'			=> 'application/vnd.mobius.mqy',
-		'mrc'			=> 'application/marc',
-		'mrcx'			=> 'application/marcxml+xml',
-		'ms'			=> 'text/troff',
-		'mscml'			=> 'application/mediaservercontrol+xml',
-		'mseed'			=> 'application/vnd.fdsn.mseed',
-		'mseq'			=> 'application/vnd.mseq',
-		'msf'			=> 'application/vnd.epson.msf',
-		'msh'			=> 'model/mesh',
-		'msi'			=> 'application/x-msdownload',
-		'msl'			=> 'application/vnd.mobius.msl',
-		'msty'			=> 'application/vnd.muvee.style',
-		'mts'			=> 'model/vnd.mts',
-		'mus'			=> 'application/vnd.musician',
-		'musicxml'		=> 'application/vnd.recordare.musicxml+xml',
-		'mvb'			=> 'application/x-msmediaview',
-		'mwf'			=> 'application/vnd.mfer',
-		'mxf'			=> 'application/mxf',
-		'mxl'			=> 'application/vnd.recordare.musicxml',
-		'mxml'			=> 'application/xv+xml',
-		'mxs'			=> 'application/vnd.triscape.mxs',
-		'mxu'			=> 'video/vnd.mpegurl',
-		'n-gage'		=> 'application/vnd.nokia.n-gage.symbian.install',
-		'n3'			=> 'text/n3',
-		'nb'			=> 'application/mathematica',
-		'nbp'			=> 'application/vnd.wolfram.player',
-		'nc'			=> 'application/x-netcdf',
-		'ncx'			=> 'application/x-dtbncx+xml',
-		'nfo'			=> 'text/x-nfo',
-		'ngdat'			=> 'application/vnd.nokia.n-gage.data',
-		'nitf'			=> 'application/vnd.nitf',
-		'nlu'			=> 'application/vnd.neurolanguage.nlu',
-		'nml'			=> 'application/vnd.enliven',
-		'nnd'			=> 'application/vnd.noblenet-directory',
-		'nns'			=> 'application/vnd.noblenet-sealer',
-		'nnw'			=> 'application/vnd.noblenet-web',
-		'npx'			=> 'image/vnd.net-fpx',
-		'nsc'			=> 'application/x-conference',
-		'nsf'			=> 'application/vnd.lotus-notes',
-		'ntf'			=> 'application/vnd.nitf',
-		'nzb'			=> 'application/x-nzb',
-		'oa2'			=> 'application/vnd.fujitsu.oasys2',
-		'oa3'			=> 'application/vnd.fujitsu.oasys3',
-		'oas'			=> 'application/vnd.fujitsu.oasys',
-		'obd'			=> 'application/x-msbinder',
-		'obj'			=> 'application/x-tgif',
-		'oda'			=> 'application/oda',
-		'odb'			=> 'application/vnd.oasis.opendocument.database',
-		'odc'			=> 'application/vnd.oasis.opendocument.chart',
-		'odf'			=> 'application/vnd.oasis.opendocument.formula',
-		'odft'			=> 'application/vnd.oasis.opendocument.formula-template',
-		'odg'			=> 'application/vnd.oasis.opendocument.graphics',
-		'odi'			=> 'application/vnd.oasis.opendocument.image',
-		'odm'			=> 'application/vnd.oasis.opendocument.text-master',
-		'odp'			=> 'application/vnd.oasis.opendocument.presentation',
-		'ods'			=> 'application/vnd.oasis.opendocument.spreadsheet',
-		'odt'			=> 'application/vnd.oasis.opendocument.text',
-		'oga'			=> 'audio/ogg',
-		'ogg'			=> 'audio/ogg',
-		'ogv'			=> 'video/ogg',
-		'ogx'			=> 'application/ogg',
-		'omdoc'			=> 'application/omdoc+xml',
-		'onepkg'		=> 'application/onenote',
-		'onetmp'		=> 'application/onenote',
-		'onetoc'		=> 'application/onenote',
-		'onetoc2'		=> 'application/onenote',
-		'opf'			=> 'application/oebps-package+xml',
-		'opml'			=> 'text/x-opml',
-		'oprc'			=> 'application/vnd.palm',
-		'opus'			=> 'audio/ogg',
-		'org'			=> 'application/vnd.lotus-organizer',
-		'osf'			=> 'application/vnd.yamaha.openscoreformat',
-		'osfpvg'		=> 'application/vnd.yamaha.openscoreformat.osfpvg+xml',
-		'otc'			=> 'application/vnd.oasis.opendocument.chart-template',
-		'otf'			=> 'font/otf',
-		'otg'			=> 'application/vnd.oasis.opendocument.graphics-template',
-		'oth'			=> 'application/vnd.oasis.opendocument.text-web',
-		'oti'			=> 'application/vnd.oasis.opendocument.image-template',
-		'otp'			=> 'application/vnd.oasis.opendocument.presentation-template',
-		'ots'			=> 'application/vnd.oasis.opendocument.spreadsheet-template',
-		'ott'			=> 'application/vnd.oasis.opendocument.text-template',
-		'oxps'			=> 'application/oxps',
-		'oxt'			=> 'application/vnd.openofficeorg.extension',
-		'p'				=> 'text/x-pascal',
-		'p10'			=> 'application/pkcs10',
-		'p12'			=> 'application/x-pkcs12',
-		'p7b'			=> 'application/x-pkcs7-certificates',
-		'p7c'			=> 'application/pkcs7-mime',
-		'p7m'			=> 'application/pkcs7-mime',
-		'p7r'			=> 'application/x-pkcs7-certreqresp',
-		'p7s'			=> 'application/pkcs7-signature',
-		'p8'			=> 'application/pkcs8',
-		'pas'			=> 'text/x-pascal',
-		'paw'			=> 'application/vnd.pawaafile',
-		'pbd'			=> 'application/vnd.powerbuilder6',
-		'pbm'			=> 'image/x-portable-bitmap',
-		'pcap'			=> 'application/vnd.tcpdump.pcap',
-		'pcf'			=> 'application/x-font-pcf',
-		'pcl'			=> 'application/vnd.hp-pcl',
-		'pclxl'			=> 'application/vnd.hp-pclxl',
-		'pct'			=> 'image/x-pict',
-		'pcurl'			=> 'application/vnd.curl.pcurl',
-		'pcx'			=> 'image/x-pcx',
-		'pdb'			=> 'application/vnd.palm',
-		'pdf'			=> 'application/pdf',
-		'pfa'			=> 'application/x-font-type1',
-		'pfb'			=> 'application/x-font-type1',
-		'pfm'			=> 'application/x-font-type1',
-		'pfr'			=> 'application/font-tdpfr',
-		'pfx'			=> 'application/x-pkcs12',
-		'pgm'			=> 'image/x-portable-graymap',
-		'pgn'			=> 'application/x-chess-pgn',
-		'pgp'			=> 'application/pgp-encrypted',
-		'pic'			=> 'image/x-pict',
-		'pkg'			=> 'application/octet-stream',
-		'pki'			=> 'application/pkixcmp',
-		'pkipath'		=> 'application/pkix-pkipath',
-		'plb'			=> 'application/vnd.3gpp.pic-bw-large',
-		'plc'			=> 'application/vnd.mobius.plc',
-		'plf'			=> 'application/vnd.pocketlearn',
-		'pls'			=> 'application/pls+xml',
-		'pml'			=> 'application/vnd.ctc-posml',
-		'png'			=> 'image/png',
-		'pnm'			=> 'image/x-portable-anymap',
-		'portpkg'		=> 'application/vnd.macports.portpkg',
-		'pot'			=> 'application/vnd.ms-powerpoint',
-		'potm'			=> 'application/vnd.ms-powerpoint.template.macroenabled.12',
-		'potx'			=> 'application/vnd.openxmlformats-officedocument.presentationml.template',
-		'ppam'			=> 'application/vnd.ms-powerpoint.addin.macroenabled.12',
-		'ppd'			=> 'application/vnd.cups-ppd',
-		'ppm'			=> 'image/x-portable-pixmap',
-		'pps'			=> 'application/vnd.ms-powerpoint',
-		'ppsm'			=> 'application/vnd.ms-powerpoint.slideshow.macroenabled.12',
-		'ppsx'			=> 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-		'ppt'			=> 'application/vnd.ms-powerpoint',
-		'pptm'			=> 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
-		'pptx'			=> 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-		'pqa'			=> 'application/vnd.palm',
-		'prc'			=> 'application/x-mobipocket-ebook',
-		'pre'			=> 'application/vnd.lotus-freelance',
-		'prf'			=> 'application/pics-rules',
-		'ps'			=> 'application/postscript',
-		'psb'			=> 'application/vnd.3gpp.pic-bw-small',
-		'psd'			=> 'image/vnd.adobe.photoshop',
-		'psf'			=> 'application/x-font-linux-psf',
-		'pskcxml'		=> 'application/pskc+xml',
-		'ptid'			=> 'application/vnd.pvi.ptid1',
-		'pub'			=> 'application/x-mspublisher',
-		'pvb'			=> 'application/vnd.3gpp.pic-bw-var',
-		'pwn'			=> 'application/vnd.3m.post-it-notes',
-		'pya'			=> 'audio/vnd.ms-playready.media.pya',
-		'pyv'			=> 'video/vnd.ms-playready.media.pyv',
-		'qam'			=> 'application/vnd.epson.quickanime',
-		'qbo'			=> 'application/vnd.intu.qbo',
-		'qfx'			=> 'application/vnd.intu.qfx',
-		'qps'			=> 'application/vnd.publishare-delta-tree',
-		'qt'			=> 'video/quicktime',
-		'qwd'			=> 'application/vnd.quark.quarkxpress',
-		'qwt'			=> 'application/vnd.quark.quarkxpress',
-		'qxb'			=> 'application/vnd.quark.quarkxpress',
-		'qxd'			=> 'application/vnd.quark.quarkxpress',
-		'qxl'			=> 'application/vnd.quark.quarkxpress',
-		'qxt'			=> 'application/vnd.quark.quarkxpress',
-		'ra'			=> 'audio/x-pn-realaudio',
-		'ram'			=> 'audio/x-pn-realaudio',
-		'rar'			=> 'application/x-rar-compressed',
-		'ras'			=> 'image/x-cmu-raster',
-		'rcprofile'		=> 'application/vnd.ipunplugged.rcprofile',
-		'rdf'			=> 'application/rdf+xml',
-		'rdz'			=> 'application/vnd.data-vision.rdz',
-		'rep'			=> 'application/vnd.businessobjects',
-		'res'			=> 'application/x-dtbresource+xml',
-		'rgb'			=> 'image/x-rgb',
-		'rif'			=> 'application/reginfo+xml',
-		'rip'			=> 'audio/vnd.rip',
-		'ris'			=> 'application/x-research-info-systems',
-		'rl'			=> 'application/resource-lists+xml',
-		'rlc'			=> 'image/vnd.fujixerox.edmics-rlc',
-		'rld'			=> 'application/resource-lists-diff+xml',
-		'rm'			=> 'application/vnd.rn-realmedia',
-		'rmi'			=> 'audio/midi',
-		'rmp'			=> 'audio/x-pn-realaudio-plugin',
-		'rms'			=> 'application/vnd.jcp.javame.midlet-rms',
-		'rmvb'			=> 'application/vnd.rn-realmedia-vbr',
-		'rnc'			=> 'application/relax-ng-compact-syntax',
-		'roa'			=> 'application/rpki-roa',
-		'roff'			=> 'text/troff',
-		'rp9'			=> 'application/vnd.cloanto.rp9',
-		'rpss'			=> 'application/vnd.nokia.radio-presets',
-		'rpst'			=> 'application/vnd.nokia.radio-preset',
-		'rq'			=> 'application/sparql-query',
-		'rs'			=> 'application/rls-services+xml',
-		'rsd'			=> 'application/rsd+xml',
-		'rss'			=> 'application/rss+xml',
-		'rtf'			=> 'application/rtf',
-		'rtx'			=> 'text/richtext',
-		's'				=> 'text/x-asm',
-		's3m'			=> 'audio/s3m',
-		'saf'			=> 'application/vnd.yamaha.smaf-audio',
-		'sbml'			=> 'application/sbml+xml',
-		'sc'			=> 'application/vnd.ibm.secure-container',
-		'scd'			=> 'application/x-msschedule',
-		'scm'			=> 'application/vnd.lotus-screencam',
-		'scq'			=> 'application/scvp-cv-request',
-		'scs'			=> 'application/scvp-cv-response',
-		'scurl'			=> 'text/vnd.curl.scurl',
-		'sda'			=> 'application/vnd.stardivision.draw',
-		'sdc'			=> 'application/vnd.stardivision.calc',
-		'sdd'			=> 'application/vnd.stardivision.impress',
-		'sdkd'			=> 'application/vnd.solent.sdkm+xml',
-		'sdkm'			=> 'application/vnd.solent.sdkm+xml',
-		'sdp'			=> 'application/sdp',
-		'sdw'			=> 'application/vnd.stardivision.writer',
-		'see'			=> 'application/vnd.seemail',
-		'seed'			=> 'application/vnd.fdsn.seed',
-		'sema'			=> 'application/vnd.sema',
-		'semd'			=> 'application/vnd.semd',
-		'semf'			=> 'application/vnd.semf',
-		'ser'			=> 'application/java-serialized-object',
-		'setpay'		=> 'application/set-payment-initiation',
-		'setreg'		=> 'application/set-registration-initiation',
-		'sfd-hdstx'		=> 'application/vnd.hydrostatix.sof-data',
-		'sfs'			=> 'application/vnd.spotfire.sfs',
-		'sfv'			=> 'text/x-sfv',
-		'sgi'			=> 'image/sgi',
-		'sgl'			=> 'application/vnd.stardivision.writer-global',
-		'sgm'			=> 'text/sgml',
-		'sgml'			=> 'text/sgml',
-		'sh'			=> 'application/x-sh',
-		'shar'			=> 'application/x-shar',
-		'shf'			=> 'application/shf+xml',
-		'sid'			=> 'image/x-mrsid-image',
-		'sig'			=> 'application/pgp-signature',
-		'sil'			=> 'audio/silk',
-		'silo'			=> 'model/mesh',
-		'sis'			=> 'application/vnd.symbian.install',
-		'sisx'			=> 'application/vnd.symbian.install',
-		'sit'			=> 'application/x-stuffit',
-		'sitx'			=> 'application/x-stuffitx',
-		'skd'			=> 'application/vnd.koan',
-		'skm'			=> 'application/vnd.koan',
-		'skp'			=> 'application/vnd.koan',
-		'skt'			=> 'application/vnd.koan',
-		'sldm'			=> 'application/vnd.ms-powerpoint.slide.macroenabled.12',
-		'sldx'			=> 'application/vnd.openxmlformats-officedocument.presentationml.slide',
-		'slt'			=> 'application/vnd.epson.salt',
-		'sm'			=> 'application/vnd.stepmania.stepchart',
-		'smf'			=> 'application/vnd.stardivision.math',
-		'smi'			=> 'application/smil+xml',
-		'smil'			=> 'application/smil+xml',
-		'smv'			=> 'video/x-smv',
-		'smzip'			=> 'application/vnd.stepmania.package',
-		'snd'			=> 'audio/basic',
-		'snf'			=> 'application/x-font-snf',
-		'so'			=> 'application/octet-stream',
-		'spc'			=> 'application/x-pkcs7-certificates',
-		'spf'			=> 'application/vnd.yamaha.smaf-phrase',
-		'spl'			=> 'application/x-futuresplash',
-		'spot'			=> 'text/vnd.in3d.spot',
-		'spp'			=> 'application/scvp-vp-response',
-		'spq'			=> 'application/scvp-vp-request',
-		'spx'			=> 'audio/ogg',
-		'sql'			=> 'application/x-sql',
-		'src'			=> 'application/x-wais-source',
-		'srt'			=> 'application/x-subrip',
-		'sru'			=> 'application/sru+xml',
-		'srx'			=> 'application/sparql-results+xml',
-		'ssdl'			=> 'application/ssdl+xml',
-		'sse'			=> 'application/vnd.kodak-descriptor',
-		'ssf'			=> 'application/vnd.epson.ssf',
-		'ssml'			=> 'application/ssml+xml',
-		'st'			=> 'application/vnd.sailingtracker.track',
-		'stc'			=> 'application/vnd.sun.xml.calc.template',
-		'std'			=> 'application/vnd.sun.xml.draw.template',
-		'stf'			=> 'application/vnd.wt.stf',
-		'sti'			=> 'application/vnd.sun.xml.impress.template',
-		'stk'			=> 'application/hyperstudio',
-		'stl'			=> 'application/vnd.ms-pki.stl',
-		'str'			=> 'application/vnd.pg.format',
-		'stw'			=> 'application/vnd.sun.xml.writer.template',
-		'sub'			=> 'text/vnd.dvb.subtitle',
-		'sus'			=> 'application/vnd.sus-calendar',
-		'susp'			=> 'application/vnd.sus-calendar',
-		'sv4cpio'		=> 'application/x-sv4cpio',
-		'sv4crc'		=> 'application/x-sv4crc',
-		'svc'			=> 'application/vnd.dvb.service',
-		'svd'			=> 'application/vnd.svd',
-		'svg'			=> 'image/svg+xml',
-		'svgz'			=> 'image/svg+xml',
-		'swa'			=> 'application/x-director',
-		'swf'			=> 'application/x-shockwave-flash',
-		'swi'			=> 'application/vnd.aristanetworks.swi',
-		'sxc'			=> 'application/vnd.sun.xml.calc',
-		'sxd'			=> 'application/vnd.sun.xml.draw',
-		'sxg'			=> 'application/vnd.sun.xml.writer.global',
-		'sxi'			=> 'application/vnd.sun.xml.impress',
-		'sxm'			=> 'application/vnd.sun.xml.math',
-		'sxw'			=> 'application/vnd.sun.xml.writer',
-		't'				=> 'text/troff',
-		't3'			=> 'application/x-t3vm-image',
-		'taglet'		=> 'application/vnd.mynfc',
-		'tao'			=> 'application/vnd.tao.intent-module-archive',
-		'tar'			=> 'application/x-tar',
-		'tcap'			=> 'application/vnd.3gpp2.tcap',
-		'tcl'			=> 'application/x-tcl',
-		'teacher'		=> 'application/vnd.smart.teacher',
-		'tei'			=> 'application/tei+xml',
-		'teicorpus'		=> 'application/tei+xml',
-		'tex'			=> 'application/x-tex',
-		'texi'			=> 'application/x-texinfo',
-		'texinfo'		=> 'application/x-texinfo',
-		'text'			=> 'text/plain',
-		'tfi'			=> 'application/thraud+xml',
-		'tfm'			=> 'application/x-tex-tfm',
-		'tga'			=> 'image/x-tga',
-		'thmx'			=> 'application/vnd.ms-officetheme',
-		'tif'			=> 'image/tiff',
-		'tiff'			=> 'image/tiff',
-		'tmo'			=> 'application/vnd.tmobile-livetv',
-		'torrent'		=> 'application/x-bittorrent',
-		'tpl'			=> 'application/vnd.groove-tool-template',
-		'tpt'			=> 'application/vnd.trid.tpt',
-		'tr'			=> 'text/troff',
-		'tra'			=> 'application/vnd.trueapp',
-		'trm'			=> 'application/x-msterminal',
-		'tsd'			=> 'application/timestamped-data',
-		'tsv'			=> 'text/tab-separated-values',
-		'ttc'			=> 'font/collection',
-		'ttf'			=> 'font/ttf',
-		'ttl'			=> 'text/turtle',
-		'twd'			=> 'application/vnd.simtech-mindmapper',
-		'twds'			=> 'application/vnd.simtech-mindmapper',
-		'txd'			=> 'application/vnd.genomatix.tuxedo',
-		'txf'			=> 'application/vnd.mobius.txf',
-		'txt'			=> 'text/plain',
-		'u32'			=> 'application/x-authorware-bin',
-		'udeb'			=> 'application/x-debian-package',
-		'ufd'			=> 'application/vnd.ufdl',
-		'ufdl'			=> 'application/vnd.ufdl',
-		'ulx'			=> 'application/x-glulx',
-		'umj'			=> 'application/vnd.umajin',
-		'unityweb'		=> 'application/vnd.unity',
-		'uoml'			=> 'application/vnd.uoml+xml',
-		'uri'			=> 'text/uri-list',
-		'uris'			=> 'text/uri-list',
-		'urls'			=> 'text/uri-list',
-		'ustar'			=> 'application/x-ustar',
-		'utz'			=> 'application/vnd.uiq.theme',
-		'uu'			=> 'text/x-uuencode',
-		'uva'			=> 'audio/vnd.dece.audio',
-		'uvd'			=> 'application/vnd.dece.data',
-		'uvf'			=> 'application/vnd.dece.data',
-		'uvg'			=> 'image/vnd.dece.graphic',
-		'uvh'			=> 'video/vnd.dece.hd',
-		'uvi'			=> 'image/vnd.dece.graphic',
-		'uvm'			=> 'video/vnd.dece.mobile',
-		'uvp'			=> 'video/vnd.dece.pd',
-		'uvs'			=> 'video/vnd.dece.sd',
-		'uvt'			=> 'application/vnd.dece.ttml+xml',
-		'uvu'			=> 'video/vnd.uvvu.mp4',
-		'uvv'			=> 'video/vnd.dece.video',
-		'uvva'			=> 'audio/vnd.dece.audio',
-		'uvvd'			=> 'application/vnd.dece.data',
-		'uvvf'			=> 'application/vnd.dece.data',
-		'uvvg'			=> 'image/vnd.dece.graphic',
-		'uvvh'			=> 'video/vnd.dece.hd',
-		'uvvi'			=> 'image/vnd.dece.graphic',
-		'uvvm'			=> 'video/vnd.dece.mobile',
-		'uvvp'			=> 'video/vnd.dece.pd',
-		'uvvs'			=> 'video/vnd.dece.sd',
-		'uvvt'			=> 'application/vnd.dece.ttml+xml',
-		'uvvu'			=> 'video/vnd.uvvu.mp4',
-		'uvvv'			=> 'video/vnd.dece.video',
-		'uvvx'			=> 'application/vnd.dece.unspecified',
-		'uvvz'			=> 'application/vnd.dece.zip',
-		'uvx'			=> 'application/vnd.dece.unspecified',
-		'uvz'			=> 'application/vnd.dece.zip',
-		'vcard'			=> 'text/vcard',
-		'vcd'			=> 'application/x-cdlink',
-		'vcf'			=> 'text/x-vcard',
-		'vcg'			=> 'application/vnd.groove-vcard',
-		'vcs'			=> 'text/x-vcalendar',
-		'vcx'			=> 'application/vnd.vcx',
-		'vis'			=> 'application/vnd.visionary',
-		'viv'			=> 'video/vnd.vivo',
-		'vob'			=> 'video/x-ms-vob',
-		'vor'			=> 'application/vnd.stardivision.writer',
-		'vox'			=> 'application/x-authorware-bin',
-		'vrml'			=> 'model/vrml',
-		'vsd'			=> 'application/vnd.visio',
-		'vsf'			=> 'application/vnd.vsf',
-		'vss'			=> 'application/vnd.visio',
-		'vst'			=> 'application/vnd.visio',
-		'vsw'			=> 'application/vnd.visio',
-		'vtu'			=> 'model/vnd.vtu',
-		'vxml'			=> 'application/voicexml+xml',
-		'w3d'			=> 'application/x-director',
-		'wad'			=> 'application/x-doom',
-		'wav'			=> 'audio/x-wav',
-		'wax'			=> 'audio/x-ms-wax',
-		'wbmp'			=> 'image/vnd.wap.wbmp',
-		'wbs'			=> 'application/vnd.criticaltools.wbs+xml',
-		'wbxml'			=> 'application/vnd.wap.wbxml',
-		'wcm'			=> 'application/vnd.ms-works',
-		'wdb'			=> 'application/vnd.ms-works',
-		'wdp'			=> 'image/vnd.ms-photo',
-		'weba'			=> 'audio/webm',
-		'webm'			=> 'video/webm',
-		'webp'			=> 'image/webp',
-		'wg'			=> 'application/vnd.pmi.widget',
-		'wgt'			=> 'application/widget',
-		'wks'			=> 'application/vnd.ms-works',
-		'wm'			=> 'video/x-ms-wm',
-		'wma'			=> 'audio/x-ms-wma',
-		'wmd'			=> 'application/x-ms-wmd',
-		'wmf'			=> 'application/x-msmetafile',
-		'wml'			=> 'text/vnd.wap.wml',
-		'wmlc'			=> 'application/vnd.wap.wmlc',
-		'wmls'			=> 'text/vnd.wap.wmlscript',
-		'wmlsc'			=> 'application/vnd.wap.wmlscriptc',
-		'wmv'			=> 'video/x-ms-wmv',
-		'wmx'			=> 'video/x-ms-wmx',
-		'wmz'			=> 'application/x-msmetafile',
-		'woff'			=> 'font/woff',
-		'woff2'			=> 'font/woff2',
-		'wpd'			=> 'application/vnd.wordperfect',
-		'wpl'			=> 'application/vnd.ms-wpl',
-		'wps'			=> 'application/vnd.ms-works',
-		'wqd'			=> 'application/vnd.wqd',
-		'wri'			=> 'application/x-mswrite',
-		'wrl'			=> 'model/vrml',
-		'wsdl'			=> 'application/wsdl+xml',
-		'wspolicy'		=> 'application/wspolicy+xml',
-		'wtb'			=> 'application/vnd.webturbo',
-		'wvx'			=> 'video/x-ms-wvx',
-		'x32'			=> 'application/x-authorware-bin',
-		'x3d'			=> 'model/x3d+xml',
-		'x3db'			=> 'model/x3d+binary',
-		'x3dbz'			=> 'model/x3d+binary',
-		'x3dv'			=> 'model/x3d+vrml',
-		'x3dvz'			=> 'model/x3d+vrml',
-		'x3dz'			=> 'model/x3d+xml',
-		'xaml'			=> 'application/xaml+xml',
-		'xap'			=> 'application/x-silverlight-app',
-		'xar'			=> 'application/vnd.xara',
-		'xbap'			=> 'application/x-ms-xbap',
-		'xbd'			=> 'application/vnd.fujixerox.docuworks.binder',
-		'xbm'			=> 'image/x-xbitmap',
-		'xdf'			=> 'application/xcap-diff+xml',
-		'xdm'			=> 'application/vnd.syncml.dm+xml',
-		'xdp'			=> 'application/vnd.adobe.xdp+xml',
-		'xdssc'			=> 'application/dssc+xml',
-		'xdw'			=> 'application/vnd.fujixerox.docuworks',
-		'xenc'			=> 'application/xenc+xml',
-		'xer'			=> 'application/patch-ops-error+xml',
-		'xfdf'			=> 'application/vnd.adobe.xfdf',
-		'xfdl'			=> 'application/vnd.xfdl',
-		'xht'			=> 'application/xhtml+xml',
-		'xhtml'			=> 'application/xhtml+xml',
-		'xhvml'			=> 'application/xv+xml',
-		'xif'			=> 'image/vnd.xiff',
-		'xla'			=> 'application/vnd.ms-excel',
-		'xlam'			=> 'application/vnd.ms-excel.addin.macroenabled.12',
-		'xlc'			=> 'application/vnd.ms-excel',
-		'xlf'			=> 'application/x-xliff+xml',
-		'xlm'			=> 'application/vnd.ms-excel',
-		'xls'			=> 'application/vnd.ms-excel',
-		'xlsb'			=> 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
-		'xlsm'			=> 'application/vnd.ms-excel.sheet.macroenabled.12',
-		'xlsx'			=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-		'xlt'			=> 'application/vnd.ms-excel',
-		'xltm'			=> 'application/vnd.ms-excel.template.macroenabled.12',
-		'xltx'			=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-		'xlw'			=> 'application/vnd.ms-excel',
-		'xm'			=> 'audio/xm',
-		'xml'			=> 'application/xml',
-		'xo'			=> 'application/vnd.olpc-sugar',
-		'xop'			=> 'application/xop+xml',
-		'xpi'			=> 'application/x-xpinstall',
-		'xpl'			=> 'application/xproc+xml',
-		'xpm'			=> 'image/x-xpixmap',
-		'xpr'			=> 'application/vnd.is-xpr',
-		'xps'			=> 'application/vnd.ms-xpsdocument',
-		'xpw'			=> 'application/vnd.intercon.formnet',
-		'xpx'			=> 'application/vnd.intercon.formnet',
-		'xsl'			=> 'application/xml',
-		'xslt'			=> 'application/xslt+xml',
-		'xsm'			=> 'application/vnd.syncml+xml',
-		'xspf'			=> 'application/xspf+xml',
-		'xul'			=> 'application/vnd.mozilla.xul+xml',
-		'xvm'			=> 'application/xv+xml',
-		'xvml'			=> 'application/xv+xml',
-		'xwd'			=> 'image/x-xwindowdump',
-		'xyz'			=> 'chemical/x-xyz',
-		'xz'			=> 'application/x-xz',
-		'yang'			=> 'application/yang',
-		'yin'			=> 'application/yin+xml',
-		'z1'			=> 'application/x-zmachine',
-		'z2'			=> 'application/x-zmachine',
-		'z3'			=> 'application/x-zmachine',
-		'z4'			=> 'application/x-zmachine',
-		'z5'			=> 'application/x-zmachine',
-		'z6'			=> 'application/x-zmachine',
-		'z7'			=> 'application/x-zmachine',
-		'z8'			=> 'application/x-zmachine',
-		'zaz'			=> 'application/vnd.zzazz.deck+xml',
-		'zip'			=> 'application/zip',
-		'zir'			=> 'application/vnd.zul',
-		'zirz'			=> 'application/vnd.zul',
-		'zmm'			=> 'application/vnd.handheld-entertainment+xml'
-	);
-
-	/**
-	 * Get the mime type based on file extension
-	 * 
-	 * @param   string   $file The file name or path
-	 *
-	 * @return  string the mime type on success
-	 * 
-	 */
-	public static function mimeType($file)
-	{
-		/**
-		 *                  **DISCLAIMER**
-		 * This will just match the file extension to the following
-		 * array. It does not guarantee that the file is TRULY that
-		 * of the extension that this function returns.
-		 * https://gist.github.com/Llewellynvdm/74be373357e131b8775a7582c3de508b
-		 */		
-
-		// get the extension form file
-		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-		// check if we have the extension listed
-		if (isset(self::$fileExtensionToMimeType[$extension]))
-		{
-			return self::$fileExtensionToMimeType[$extension];
-		}
-		elseif (function_exists('mime_content_type'))
-		{
-			return mime_content_type($file);
-		}
-		elseif (function_exists('finfo_open'))
-		{
-			$finfo	= finfo_open(FILEINFO_MIME);
-			$mimetype = finfo_file($finfo, $file);
-			finfo_close($finfo);
-			return $mimetype;
-		}
-		return 'application/octet-stream';
-	}
-
-	/**
-	 * Get the file extensions
-	 * 
-	 * @param   string    $target   The targeted/filter option
-	 * @param   boolean   $sorted   The multidimensional grouping sort (only if targeted filter is used)
-	 *
-	 * @return  array     All the extensions (targeted & sorted)
-	 * 
-	 */
-	public static function getFileExtensions($target = null, $sorted = false)
-	{
-		// we have some in-house grouping/filters :)
-		$filters = array(
-			'image' => array('image', 'font', 'model'),
-			'document' => array('application', 'text', 'chemical', 'message'),
-			'media' => array('video', 'audio'),
-			'file' => array('image', 'application', 'text', 'video', 'audio'),
-			'all' => array('application', 'text', 'chemical', 'message', 'image', 'font', 'model', 'video', 'audio', 'x-conference')
-		);
-		// sould we filter
-		if ($target)
-		{
-			// the bucket to get extensions
-			$fileextensions = array();
-			// check if filter exist (if not return empty array)
-			if (isset($filters[$target]))
-			{
-				foreach (self::$fileExtensionToMimeType as $extension => $mimetype)
-				{
-					// get the key mime type
-					$mimearr = explode("/", $mimetype, 2);
-					// check if this file extension should be added
-					if (in_array($mimearr[0], $filters[$target]))
-					{
-						if ($sorted)
-						{
-							if (!isset($fileextensions[$mimearr[0]]))
-							{
-								$fileextensions[$mimearr[0]] = array();
-							}
-							$fileextensions[$mimearr[0]][$extension] = $extension;
-						}
-						else
-						{
-							$fileextensions[$extension] = $extension;
-						}
-					}
-				}
-			}
-			return $fileextensions;
-		}
-		// we just return all file extensions
-		return array_keys(self::$fileExtensionToMimeType);
 	}
 
 	protected static function getDownloadFileName(&$sermon, $file, $type)
@@ -2217,44 +1117,48 @@ abstract class SermondistributorHelper
 
 
 	/**
-	* 	Workers to load tasks
-	*
-	*	@var array 
-	*/
-	protected static $worker = array();
+	 * Workers to load tasks
+	 *
+	 * @var array
+	 * @since   3.1
+	 */
+	protected static array $worker = [];
 
 	/**
-	*	Set a worker dynamic URLs
-	*
-	* 	@var array 
-	*/
-	protected static $workerURL = array();	
+	 * Set a worker dynamic URLs
+	 *
+	 * @var array 
+	 * @since   3.1
+	 */
+	protected static array $workerURL = [];	
 
 	/**
-	*	Set a worker dynamic HEADERs
-	*
-	* 	@var array 
-	*/
-	protected static $workerHEADER = array();
+	 * Set a worker dynamic HEADERs
+	 *
+	 * @var array 
+	 * @since   3.1
+	 */
+	protected static array $workerHEADER = [];
 
 	/**
-	* 	Curl Error Notice
-	*
-	*	@var bool 
-	*/
-	protected static $curlErrorLoaded = false;
+	 * 	Curl Error Notice
+	 *
+	 * @var bool 
+	 * @since   3.1
+	 */
+	protected static bool $curlErrorLoaded = false;
 
 	/**
-	* 	check if a worker has more work
-	* 
-	*	@param  string   $function    The function to target to perform the task
-	*
-	* 	@return  bool
-	* 
-	*/
-	public static function hasWork(&$function)
+	 * check if a worker has more work
+	 * 
+	 * @param  string   $function    The function to target to perform the task
+	 *
+	 * @return  bool
+	 * @since   3.1
+	 */
+	public static function hasWork(string $function): bool
 	{
-		if (isset(self::$worker[$function]) && self::checkArray(self::$worker[$function]))
+		if (isset(self::$worker[$function]) && UtilitiesArrayHelper::check(self::$worker[$function]))
 		{
 			return count( (array) self::$worker[$function]);
 		}
@@ -2262,18 +1166,18 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* 	Set a worker url
-	* 
-	*	@param  string   $function    The function to target to perform the task
-	*	@param  string   $url            The url of where the task is to be performed
-	*
-	* 	@return  void
-	* 
-	*/
-	public static function setWorkerUrl(&$function, &$url)
+	 * Set a worker url
+	 * 
+	 * @param  string   $function    The function to target to perform the task
+	 * @param  string   $url            The url of where the task is to be performed
+	 *
+	 * @return  void
+	 * @since   3.1
+	  */
+	public static function setWorkerUrl(string $function, string $url): void
 	{
 		// set the URL if found
-		if (self::checkString($url))
+		if (UtilitiesStringHelper::check($url))
 		{
 			// make sure task function url is up
 			self::$workerURL[$function] = $url;
@@ -2281,18 +1185,18 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* 	Set a worker headers
-	* 
-	*	@param  string   $function    The function to target to perform the task
-	*	@param  array    $headers    The headers needed for these workers/function
-	*
-	* 	@return  void
-	* 
-	*/
-	public static function setWorkerHeaders(&$function, &$headers)
+	 * Set a worker headers
+	 * 
+	 * @param  string      $function    The function to target to perform the task
+	 * @param  array|null  $headers    The headers needed for these workers/function
+	 *
+	 * @return  void
+	 * @since   3.1
+	 */
+	public static function setWorkerHeaders(string $function, ?array $headers): void
 	{
 		// set the Headers if found
-		if (self::checkArray($headers))
+		if (UtilitiesArrayHelper::check($headers))
 		{
 			// make sure task function headers are set
 			self::$workerHEADER[$function] = $headers;
@@ -2300,30 +1204,33 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* 	Set a worker that needs to perform a task
-	* 
-	*	@param  mixed   $data         The data to pass to the task
-	*	@param  string   $function    The function to target to perform the task
-	*	@param  string   $url            The url of where the task is to be performed
-	*	@param  array    $headers    The headers needed for these workers/function
-	*
-	* 	@return  void
-	* 
-	*/
-	public static function setWorker($data, $function, $url = null, $headers = null)
+	 * Set a worker that needs to perform a task
+	 * 
+	 * @param  mixed    $data        The data to pass to the task
+	 * @param  string   $function    The function to target to perform the task
+	 * @param  string   $url         The url of where the task is to be performed
+	 * @param  array    $headers     The headers needed for these workers/function
+	 *
+	 * @return  void
+	 * @since   3.1
+	 */
+	public static function setWorker($data, string $function, ?string $url = null, ?array $headers = null)
 	{
 		// make sure task function is up
 		if (!isset(self::$worker[$function]))
 		{
-			self::$worker[$function] = array();
+			self::$worker[$function] = [];
 		}
+
 		// load the task
 		self::$worker[$function][] = self::lock($data);
+
 		// set the Headers if found
 		if ($headers && !isset(self::$workerHEADER[$function]))
 		{
 			self::setWorkerHeaders($function, $headers);
 		}
+
 		// set the URL if found
 		if ($url && !isset(self::$workerURL[$function]))
 		{
@@ -2332,24 +1239,24 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Run set Workers
-	*
-	*	@param  string      $function    The function to target to perform the task
-	*	@param  string      $perTask    The amount of task per worker
-	* 	@param  function   $callback   The option to do a call back when task is completed
-	*	@param  int           $threadSize   The size of the thread
-	*
-	*	@return  bool true   On success
-	*
-	*/
-	public static function runWorker($function, $perTask = 50, $callback = null, $threadSize = 20)
+	 * Run set Workers
+	 *
+	 * @param  string      $function    The function to target to perform the task
+	 * @param  string      $perTask    The amount of task per worker
+	 * @param  function    $callback   The option to do a call back when task is completed
+	 * @param  int         $threadSize   The size of the thread
+	 *
+	 * @return  bool true   On success
+	 * @since   3.1
+	 */
+	public static function runWorker(string $function, $perTask = 50, $callback = null, $threadSize = 20): bool
 	{
 		// set task
 		$task = self::lock($function);
 		// build headers
 		$headers = array('VDM-TASK: ' .$task);
 		// build dynamic headers
-		if (isset(self::$workerHEADER[$function]) && self::checkArray(self::$workerHEADER[$function]))
+		if (isset(self::$workerHEADER[$function]) && UtilitiesArrayHelper::check(self::$workerHEADER[$function]))
 		{
 			foreach (self::$workerHEADER[$function] as $header)
 			{
@@ -2359,7 +1266,7 @@ abstract class SermondistributorHelper
 		// build worker options
 		$options = array();
 		// make sure worker is up
-		if (isset(self::$worker[$function]) && self::checkArray(self::$worker[$function]))
+		if (isset(self::$worker[$function]) && UtilitiesArrayHelper::check(self::$worker[$function]))
 		{
 			// this load method is for each
 			if (1 == $perTask)
@@ -2388,7 +1295,7 @@ abstract class SermondistributorHelper
 			self::$worker[$function] = array();
 		}
 		// do the execution
-		if (self::checkArray($options))
+		if (UtilitiesArrayHelper::check($options))
 		{
 			if (isset(self::$workerURL[$function]))
 			{
@@ -2396,7 +1303,7 @@ abstract class SermondistributorHelper
 			}
 			else
 			{
-				$url = JURI::root() . '/index.php?option=com_sermondistributor&task=api.worker';
+				$url = Uri::root() . '/index.php?option=com_sermondistributor&task=api.worker';
 			}
 			return self::curlMultiExec($url, $options, $callback, $threadSize);
 		}
@@ -2404,16 +1311,16 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	*	Do a multi curl execution of tasks
-	*
-	* 	@param  string      $url               The url of where the task is to be performed
-	*  	@param  array       $_options      The array of curl options/headers to set
-	*	@param  function   $callback      The option to do a call back when task is completed
-	*	@param  int           $threadSize   The size of the thread
-	*
-	* 	@return  bool true   On success
-	*
-	*/
+	 *	Do a multi curl execution of tasks
+	 *
+	 * @param  string      $url               The url of where the task is to be performed
+	 * @param  array       $_options      The array of curl options/headers to set
+	 * @param  function   $callback      The option to do a call back when task is completed
+	 * @param  int           $threadSize   The size of the thread
+	 *
+	 * @return  bool true   On success
+	 * @since   3.1
+	 */
 	public static function curlMultiExec(&$url, &$_options, $callback = null, $threadSize = 20)
 	{
 		// make sure we have curl available
@@ -2422,14 +1329,14 @@ abstract class SermondistributorHelper
 			if (!self::$curlErrorLoaded)
 			{
 				// set the notice
-				JFactory::getApplication()->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_HTWOCURL_NOT_FOUNDHTWOPPLEASE_SETUP_CURL_ON_YOUR_SYSTEM_OR_BSERMONDISTRIBUTORB_WILL_NOT_FUNCTION_CORRECTLYP'), 'Error');
+				Factory::getApplication()->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_HTWOCURL_NOT_FOUNDHTWOPPLEASE_SETUP_CURL_ON_YOUR_SYSTEM_OR_BSERMONDISTRIBUTORB_WILL_NOT_FUNCTION_CORRECTLYP'), 'Error');
 				// load the notice only once
 				self::$curlErrorLoaded = true;
 			}
 			return false;
 		}
 		// make sure we have an url
-		if (self::checkString($url))
+		if (UtilitiesStringHelper::check($url))
 		{
 			// make sure the thread size isn't greater than the # of _options
 			$threadSize = (count($_options) < $threadSize) ? count($_options) : $threadSize;
@@ -2503,42 +1410,45 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* the locker
-	*
-	* @var array 
-	**/
-	protected static $locker = array();
+	 * the locker
+	 *
+	 * @var array
+	 * @since   3.1
+	 */
+	protected static array $locker = [];
 
 	/**
-	* the dynamic replacement salt
-	*
-	* @var array 
-	**/
-	protected static $globalSalt = array();
+	 * the dynamic replacement salt
+	 *
+	 * @var array
+	 * @since   3.1
+	 */
+	protected static array $globalSalt = [];
 
 	/**
-	* the timer
-	*
-	* @var object
-	**/
+	 * the timer
+	 *
+	 * @var object
+	 * @since   3.1
+	 */
 	protected static $keytimer;
 
 	/**
-	* To Lock string
-	*
-	* @param string   $string     The string/array to lock
-	* @param string   $key        The custom key to use
-	* @param int      $salt       The switch to add salt and type of salt
-	* @param int      $dynamic    The dynamic replacement array of salt build string
-	* @param int      $urlencode  The switch to control url encoding
-	*
-	* @return string    Encrypted String
-	*
-	**/
-	public static function lock($string, $key = null, $salt = 2, $dynamic = null, $urlencode = true)
+	 * To Lock string
+	 *
+	 * @param string       $string     The string/array to lock
+	 * @param string|null  $key        The custom key to use
+	 * @param int          $salt       The switch to add salt and type of salt
+	 * @param int|null     $dynamic    The dynamic replacement array of salt build string
+	 * @param int          $urlencode  The switch to control url encoding
+	 *
+	 * @return string    Encrypted String
+	 * @since   3.1
+	 */
+	public static function lock(string $string, ?string $key = null, int $salt = 2, ?int $dynamic = null, $urlencode = true): string
 	{
 		// get the global settings
-		if (!$key || !self::checkString($key))
+		if (!$key || !UtilitiesStringHelper::check($key))
 		{
 			// set temp timer
 			$timer = 2;
@@ -2562,12 +1472,12 @@ abstract class SermondistributorHelper
 			$key .= self::salt($salt, $dynamic);
 		}
 		// get the locker settings
-		if (!isset(self::$locker[$key]) || !self::checkObject(self::$locker[$key]))
+		if (!isset(self::$locker[$key]) || !ObjectHelper::check(self::$locker[$key]))
 		{
-			self::$locker[$key] = new FOFEncryptAes($key, 128);
+			self::$locker[$key] = new AES($key, 128);
 		}
 		// convert array or object to string
-		if (self::checkArray($string) || self::checkObject($string))
+		if (UtilitiesArrayHelper::check($string) || ObjectHelper::check($string))
 		{
 			$string = serialize($string);
 		}
@@ -2580,21 +1490,21 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* To un-Lock string
-	*
-	* @param string  $string       The string to unlock
-	* @param string  $key          The custom key to use
-	* @param int      $salt           The switch to add salt and type of salt
-	* @param int      $dynamic    The dynamic replacement array of salt build string
-	* @param int      $urlencode  The switch to control url decoding
-	*
-	* @return string    Decrypted String
-	*
-	**/
-	public static function unlock($string, $key = null, $salt = 2, $dynamic = null, $urlencode = true)
+	 * To un-Lock string
+	 *
+	 * @param string  $string       The string to unlock
+	 * @param string  $key          The custom key to use
+	 * @param int      $salt           The switch to add salt and type of salt
+	 * @param int      $dynamic    The dynamic replacement array of salt build string
+	 * @param int      $urlencode  The switch to control url decoding
+	 *
+	 * @return string    Decrypted String
+	 * @since   3.1
+	 */
+	public static function unlock($string, $key = null, $salt = 2, $dynamic = null, $urlencode = true): string
 	{
 		// get the global settings
-		if (!$key || !self::checkString($key))
+		if (!$key || !UtilitiesStringHelper::check($key))
 		{
 			// set temp timer
 			$timer = 2;
@@ -2618,9 +1528,9 @@ abstract class SermondistributorHelper
 			$key .= self::salt($salt, $dynamic);
 		}
 		// get the locker settings
-		if (!isset(self::$locker[$key]) || !self::checkObject(self::$locker[$key]))
+		if (!isset(self::$locker[$key]) || !ObjectHelper::check(self::$locker[$key]))
 		{
-			self::$locker[$key] = new FOFEncryptAes($key, 128);
+			self::$locker[$key] = new AES($key, 128);
 		}
 		// make sure we have real base64
 		if ($urlencode && method_exists(get_called_class(), "base64_urldecode"))
@@ -2637,24 +1547,25 @@ abstract class SermondistributorHelper
 				$string = unserialize($string);
 			}
 		}
+
 		return $string;
 	}
 
 	/**
-	* The Salt
-	*
-	* @param int   $type      The type of length the salt should be valid
-	* @param int   $dynamic   The dynamic replacement array of salt build string
-	*
-	* @return string
-	*
-	**/
-	public static function salt($type = 1, $dynamic = null)
+	 * The Salt
+	 *
+	 * @param int   $type      The type of length the salt should be valid
+	 * @param int   $dynamic   The dynamic replacement array of salt build string
+	 *
+	 * @return string
+	 * @since   3.1
+	 */
+	public static function salt(int $type = 1, $dynamic = null): string
 	{
 		// get dynamic replacement salt
 		$dynamic = self::getDynamicSalt($dynamic);
 		// get the key timer
-		if (!self::checkObject(self::$keytimer))
+		if (!ObjectHelper::check(self::$keytimer))
 		{
 			// load the date time object
 			self::$keytimer = new DateTime;
@@ -2684,7 +1595,7 @@ abstract class SermondistributorHelper
 			$format = 'Y-m-d \o\n H:' . self::periodFix(self::$keytimer->format('i'));
 		}
 		// get key
-		if (self::checkArray($dynamic))
+		if (UtilitiesArrayHelper::check($dynamic))
 		{
 			return md5(str_replace(array_keys($dynamic), array_values($dynamic), self::$keytimer->format($format) . ' @ VDM.I0'));
 		}
@@ -2692,35 +1603,37 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* The function to insure the salt is valid within the given period (third try)
-	*
-	* @param int $main    The main number
-	*/
-	protected static function periodFix($main)
+	 * The function to insure the salt is valid within the given period (third try)
+	 *
+	 * @param   int $main    The main number
+	 * @since   3.1
+	 */
+	protected static function periodFix(int $main): int
 	{
 		return round($main / 3) * 3;
 	}
 
 	/**
-	* Check if a string is serialized
-	*
-	* @param  string   $string
-	*
-	* @return Boolean
-	*
-	*/
-	public static function is_serial($string)
+	 * Check if a string is serialized
+	 *
+	 * @param  string   $string
+	 *
+	 * @return Boolean
+	 * @since   3.1
+	 */
+	public static function is_serial(string $string): bool
 	{
 		return (@unserialize($string) !== false);
 	}
 
 	/**
-	* Get dynamic replacement salt
-	*/
+	 * Get dynamic replacement salt
+	 * @since   3.1
+	 */
 	public static function getDynamicSalt($dynamic = null)
 	{
 		// load global if not manually set
-		if (!self::checkArray($dynamic))
+		if (!UtilitiesArrayHelper::check($dynamic))
 		{
 			return self::getGlobalSalt();
 		}
@@ -2732,8 +1645,9 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* The random or dynamic secret salt
-	*/
+	 * The random or dynamic secret salt
+	 * @since   3.1
+	 */
 	public static function getSecretSalt($string = null, $size = 9)
 	{
 		// set the string
@@ -2743,7 +1657,7 @@ abstract class SermondistributorHelper
 			$string = self::randomkey($size);
 		}
 		// convert string to array
-		$string = self::safeString($string);
+		$string = UtilitiesStringHelper::safe($string);
 		// convert string to array
 		$array = str_split($string);
 		// insure only unique values are used
@@ -2755,24 +1669,25 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Get global replacement salt
-	*/
+	 * Get global replacement salt
+	 * @since   3.1
+	 */
 	public static function getGlobalSalt()
 	{
 		// load from memory if found
-		if (!self::checkArray(self::$globalSalt))
+		if (!UtilitiesArrayHelper::check(self::$globalSalt))
 		{
 			// get the global settings
-			if (!self::checkObject(self::$params))
+			if (!ObjectHelper::check(self::$params))
 			{
-				self::$params = JComponentHelper::getParams('com_sermondistributor');
+				self::$params = ComponentHelper::getParams('com_sermondistributor');
 			}
 			// check if we have a global dynamic replacement array available (format -->  ' 1->!,3->E,4->A')
 			$tmp = self::$params->get('dynamic_salt', null);
-			if (self::checkString($tmp) && strpos($tmp, ',') !== false && strpos($tmp, '->') !== false)
+			if (UtilitiesStringHelper::check($tmp) && strpos($tmp, ',') !== false && strpos($tmp, '->') !== false)
 			{
 				$salt = array_map('trim', (array) explode(',', $tmp));
-				if (self::checkArray($salt ))
+				if (UtilitiesArrayHelper::check($salt ))
 				{
 					foreach($salt as $replace)
 					{
@@ -2786,7 +1701,7 @@ abstract class SermondistributorHelper
 			}
 		}
 		// return global if found
-		if (self::checkArray(self::$globalSalt))
+		if (UtilitiesArrayHelper::check(self::$globalSalt))
 		{
 			return self::$globalSalt;
 		}
@@ -2795,8 +1710,9 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Close public protocol
-	*/
+	 * Close public protocol
+	 * @since   3.1
+	 */
 	public static function closePublicProtocol($id, $public)
 	{
 		// get secret salt
@@ -2822,8 +1738,9 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	* Open public protocol
-	*/
+	 * Open public protocol
+	 * @since   3.1
+	 */
 	public static function openPublicProtocol($SECRET, $ID, $PUBLIC)
 	{
 		// get secret salt
@@ -2855,7 +1772,7 @@ abstract class SermondistributorHelper
 		if (!isset(self::$composer[$target]))
 		{
 			// get the function name
-			$functionName = self::safeString('compose' . $target);
+			$functionName = UtilitiesStringHelper::safe('compose' . $target);
 			// check if method exist
 			if (method_exists(__CLASS__, $functionName))
 			{
@@ -2877,7 +1794,7 @@ abstract class SermondistributorHelper
 
 	/**
 	 * Joomla version object
-	 */	
+	 */
 	protected static $JVersion;
 
 	/**
@@ -2886,9 +1803,9 @@ abstract class SermondistributorHelper
 	public static function jVersion()
 	{
 		// check if set
-		if (!self::checkObject(self::$JVersion))
+		if (!ObjectHelper::check(self::$JVersion))
 		{
-			self::$JVersion = new JVersion();
+			self::$JVersion = new Version();
 		}
 		return self::$JVersion;
 	}
@@ -2899,18 +1816,18 @@ abstract class SermondistributorHelper
 	public static function getContributors()
 	{
 		// get params
-		$params	= JComponentHelper::getParams('com_sermondistributor');
+		$params    = ComponentHelper::getParams('com_sermondistributor');
 		// start contributors array
-		$contributors = array();
+		$contributors = [];
 		// get all Contributors (max 20)
 		$searchArray = range('0','20');
 		foreach($searchArray as $nr)
- 		{
+		{
 			if ((NULL !== $params->get("showContributor".$nr)) && ($params->get("showContributor".$nr) == 1 || $params->get("showContributor".$nr) == 3))
 			{
 				// set link based of selected option
 				if($params->get("useContributor".$nr) == 1)
-         		{
+				{
 					$link_front = '<a href="mailto:'.$params->get("emailContributor".$nr).'" target="_blank">';
 					$link_back = '</a>';
 				}
@@ -2924,8 +1841,8 @@ abstract class SermondistributorHelper
 					$link_front = '';
 					$link_back = '';
 				}
-				$contributors[$nr]['title']	= self::htmlEscape($params->get("titleContributor".$nr));
-				$contributors[$nr]['name']	= $link_front.self::htmlEscape($params->get("nameContributor".$nr)).$link_back;
+				$contributors[$nr]['title']   = UtilitiesStringHelper::html($params->get("titleContributor".$nr));
+				$contributors[$nr]['name']    = $link_front.UtilitiesStringHelper::html($params->get("nameContributor".$nr)).$link_back;
 			}
 		}
 		return $contributors;
@@ -2936,9 +1853,9 @@ abstract class SermondistributorHelper
 	 **/
 	public static function getHelpUrl($view)
 	{
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 		$groups = $user->get('groups');
-		$db	= JFactory::getDbo();
+		$db	= Factory::getDbo();
 		$query	= $db->getQuery(true);
 		$query->select(array('a.id','a.groups','a.target','a.type','a.article','a.url'));
 		$query->from('#__sermondistributor_help_document AS a');
@@ -2950,7 +1867,7 @@ abstract class SermondistributorHelper
 		if($db->getNumRows())
 		{
 			$helps = $db->loadObjectList();
-			if (self::checkArray($helps))
+			if (UtilitiesArrayHelper::check($helps))
 			{
 				foreach ($helps as $nr => $help)
 				{
@@ -2991,7 +1908,7 @@ abstract class SermondistributorHelper
 	 **/
 	protected static function loadArticleLink($id)
 	{
-		return JURI::root().'index.php?option=com_content&view=article&id='.$id.'&tmpl=component&layout=modal';
+		return Uri::root() . 'index.php?option=com_content&view=article&id='.$id.'&tmpl=component&layout=modal';
 	}
 
 	/**
@@ -2999,8 +1916,8 @@ abstract class SermondistributorHelper
 	 **/
 	protected static function loadHelpTextLink($id)
 	{
-		$token = JSession::getFormToken();
-		return 'index.php?option=com_sermondistributor&task=help.getText&id=' . (int) $id . '&token=' . $token;
+		$token = Session::getFormToken();
+		return 'index.php?option=com_sermondistributor&task=help.getText&id=' . (int) $id . '&' . $token . '=1';
 	}
 
 	/**
@@ -3009,42 +1926,42 @@ abstract class SermondistributorHelper
 	public static function addSubmenu($submenu)
 	{
 		// load user for access menus
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// load the submenus to sidebar
-		JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_DASHBOARD'), 'index.php?option=com_sermondistributor&view=sermondistributor', $submenu === 'sermondistributor');
+		JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_DASHBOARD'), 'index.php?option=com_sermondistributor&view=sermondistributor', $submenu === 'sermondistributor');
 		if ($user->authorise('preacher.access', 'com_sermondistributor') && $user->authorise('preacher.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_PREACHERS'), 'index.php?option=com_sermondistributor&view=preachers', $submenu === 'preachers');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_PREACHERS'), 'index.php?option=com_sermondistributor&view=preachers', $submenu === 'preachers');
 		}
 		if ($user->authorise('sermon.access', 'com_sermondistributor') && $user->authorise('sermon.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERMONS'), 'index.php?option=com_sermondistributor&view=sermons', $submenu === 'sermons');
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'), 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.sermon', $submenu === 'categories.sermon');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERMONS'), 'index.php?option=com_sermondistributor&view=sermons', $submenu === 'sermons');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'), 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.sermon', $submenu === 'categories.sermon');
 		}
 		if ($user->authorise('series.access', 'com_sermondistributor') && $user->authorise('series.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERIES_LIST'), 'index.php?option=com_sermondistributor&view=series_list', $submenu === 'series_list');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERIES_LIST'), 'index.php?option=com_sermondistributor&view=series_list', $submenu === 'series_list');
 		}
 		if ($user->authorise('statistic.access', 'com_sermondistributor') && $user->authorise('statistic.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_STATISTICS'), 'index.php?option=com_sermondistributor&view=statistics', $submenu === 'statistics');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_STATISTICS'), 'index.php?option=com_sermondistributor&view=statistics', $submenu === 'statistics');
 		}
 		if ($user->authorise('external_source.access', 'com_sermondistributor') && $user->authorise('external_source.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_EXTERNAL_SOURCES'), 'index.php?option=com_sermondistributor&view=external_sources', $submenu === 'external_sources');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_EXTERNAL_SOURCES'), 'index.php?option=com_sermondistributor&view=external_sources', $submenu === 'external_sources');
 		}
 		// Access control (manual_updater.access && manual_updater.submenu).
 		if ($user->authorise('manual_updater.access', 'com_sermondistributor') && $user->authorise('manual_updater.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_MANUAL_UPDATER'), 'index.php?option=com_sermondistributor&view=manual_updater', $submenu === 'manual_updater');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_MANUAL_UPDATER'), 'index.php?option=com_sermondistributor&view=manual_updater', $submenu === 'manual_updater');
 		}
 		if ($user->authorise('local_listing.access', 'com_sermondistributor') && $user->authorise('local_listing.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_LOCAL_LISTINGS'), 'index.php?option=com_sermondistributor&view=local_listings', $submenu === 'local_listings');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_LOCAL_LISTINGS'), 'index.php?option=com_sermondistributor&view=local_listings', $submenu === 'local_listings');
 		}
 		if ($user->authorise('help_document.access', 'com_sermondistributor') && $user->authorise('help_document.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(JText::_('COM_SERMONDISTRIBUTOR_SUBMENU_HELP_DOCUMENTS'), 'index.php?option=com_sermondistributor&view=help_documents', $submenu === 'help_documents');
+			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_HELP_DOCUMENTS'), 'index.php?option=com_sermondistributor&view=help_documents', $submenu === 'help_documents');
 		}
 	}
 
@@ -3118,7 +2035,7 @@ abstract class SermondistributorHelper
 		if (strpos($content,'class="uk-') !== false)
 		{
 			// reset
-			$temp = array();
+			$temp = [];
 			foreach (self::$uk_components as $looking => $add)
 			{
 				if (strpos($content,$looking) !== false)
@@ -3132,10 +2049,10 @@ abstract class SermondistributorHelper
 				self::$uikit = true;
 			}
 			// sorter
-			if (self::checkArray($temp))
+			if (UtilitiesArrayHelper::check($temp))
 			{
 				// merger
-				if (self::checkArray($classes))
+				if (UtilitiesArrayHelper::check($classes))
 				{
 					$newTemp = array_merge($temp,$classes);
 					$temp = array_unique($newTemp);
@@ -3143,7 +2060,7 @@ abstract class SermondistributorHelper
 				return $temp;
 			}
 		}
-		if (self::checkArray($classes))
+		if (UtilitiesArrayHelper::check($classes))
 		{
 			return $classes;
 		}
@@ -3156,11 +2073,11 @@ abstract class SermondistributorHelper
 	public static function xls($rows, $fileName = null, $title = null, $subjectTab = null, $creator = 'Vast Development Method', $description = null, $category = null,$keywords = null, $modified = null)
 	{
 		// set the user
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// set fileName if not set
 		if (!$fileName)
 		{
-			$fileName = 'exported_'.JFactory::getDate()->format('jS_F_Y');
+			$fileName = 'exported_'.Factory::getDate()->format('jS_F_Y');
 		}
 		// set modified if not set
 		if (!$modified)
@@ -3232,7 +2149,7 @@ abstract class SermondistributorHelper
 		));
 
 		// Add some data
-		if (($size = self::checkArray($rows)) !== false)
+		if (($size = UtilitiesArrayHelper::check($rows)) !== false)
 		{
 			$i = 1;
 
@@ -3315,7 +2232,7 @@ abstract class SermondistributorHelper
 		// make sure we have the composer classes loaded
 		self::composerAutoload('phpspreadsheet');
 		// get session object
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$package = $session->get('package', null);
 		$package = json_decode($package, true);
 		// set the headers
@@ -3332,7 +2249,7 @@ abstract class SermondistributorHelper
 			$excelReader->setReadDataOnly(true);
 			// load the rows (only first three)
 			$excelObj = $excelReader->load($package['dir']);
-			$headers = array();
+			$headers = [];
 			foreach ($excelObj->getActiveSheet()->getRowIterator() as $row)
 			{
 				if($row->getRowIndex() == 1)
@@ -3370,7 +2287,7 @@ abstract class SermondistributorHelper
 	}
 
 	/**
-	 * Get a Variable 
+	 * Get a Variable
 	 *
 	 * @param   string   $table        The table from which to get the variable
 	 * @param   string   $where        The value where
@@ -3380,46 +2297,18 @@ abstract class SermondistributorHelper
 	 * @param   string   $main         The component in which the table is found
 	 *
 	 * @return  mix string/int/float
-	 *
+	 * @deprecated 3.3 Use GetHelper::var(...);
 	 */
 	public static function getVar($table, $where = null, $whereString = 'user', $what = 'id', $operator = '=', $main = 'sermondistributor')
 	{
-		if(!$where)
-		{
-			$where = JFactory::getUser()->id;
-		}
-		// Get a db connection.
-		$db = JFactory::getDbo();
-		// Create a new query object.
-		$query = $db->getQuery(true);
-		$query->select($db->quoteName(array($what)));
-		if (empty($table))
-		{
-			$query->from($db->quoteName('#__'.$main));
-		}
-		else
-		{
-			$query->from($db->quoteName('#__'.$main.'_'.$table));
-		}
-		if (is_numeric($where))
-		{
-			$query->where($db->quoteName($whereString) . ' '.$operator.' '.(int) $where);
-		}
-		elseif (is_string($where))
-		{
-			$query->where($db->quoteName($whereString) . ' '.$operator.' '. $db->quote((string)$where));
-		}
-		else
-		{
-			return false;
-		}
-		$db->setQuery($query);
-		$db->execute();
-		if ($db->getNumRows())
-		{
-			return $db->loadResult();
-		}
-		return false;
+		return GetHelper::var(
+			$table,
+			$where,
+			$whereString,
+			$what,
+			$operator,
+			$main
+		);
 	}
 
 	/**
@@ -3434,110 +2323,38 @@ abstract class SermondistributorHelper
 	 * @param   bool     $unique       The switch to return a unique array
 	 *
 	 * @return  array
-	 *
+	 * @deprecated 3.3 Use GetHelper::vars(...);
 	 */
 	public static function getVars($table, $where = null, $whereString = 'user', $what = 'id', $operator = 'IN', $main = 'sermondistributor', $unique = true)
 	{
-		if(!$where)
-		{
-			$where = JFactory::getUser()->id;
-		}
-
-		if (!self::checkArray($where) && $where > 0)
-		{
-			$where = array($where);
-		}
-
-		if (self::checkArray($where))
-		{
-			// prep main <-- why? well if $main='' is empty then $table can be categories or users
-			if (self::checkString($main))
-			{
-				$main = '_'.ltrim($main, '_');
-			}
-			// Get a db connection.
-			$db = JFactory::getDbo();
-			// Create a new query object.
-			$query = $db->getQuery(true);
-
-			$query->select($db->quoteName(array($what)));
-			if (empty($table))
-			{
-				$query->from($db->quoteName('#__'.$main));
-			}
-			else
-			{
-				$query->from($db->quoteName('#_'.$main.'_'.$table));
-			}
-			// add strings to array search
-			if ('IN_STRINGS' === $operator || 'NOT IN_STRINGS' === $operator)
-			{
-				$query->where($db->quoteName($whereString) . ' ' . str_replace('_STRINGS', '', $operator) . ' ("' . implode('","',$where) . '")');
-			}
-			else
-			{
-				$query->where($db->quoteName($whereString) . ' ' . $operator . ' (' . implode(',',$where) . ')');
-			}
-			$db->setQuery($query);
-			$db->execute();
-			if ($db->getNumRows())
-			{
-				if ($unique)
-				{
-					return array_unique($db->loadColumn());
-				}
-				return $db->loadColumn();
-			}
-		}
-		return false;
+		return GetHelper::vars(
+			$table,
+			$where,
+			$whereString,
+			$what,
+			$operator,
+			$main,
+			$unique
+		);
 	}
 
+	/**
+	 * Convert a json object to a string
+	 *
+	 * @input    string  $value  The json string to convert
+	 *
+	 * @returns a string
+	 * @deprecated 3.3 Use JsonHelper::string(...);
+	 */
 	public static function jsonToString($value, $sperator = ", ", $table = null, $id = 'id', $name = 'name')
 	{
-		// do some table foot work
-		$external = false;
-		if (strpos($table, '#__') !== false)
-		{
-			$external = true;
-			$table = str_replace('#__', '', $table);
-		}
-		// check if string is JSON
-		$result = json_decode($value, true);
-		if (json_last_error() === JSON_ERROR_NONE)
-		{
-			// is JSON
-			if (self::checkArray($result))
-			{
-				if (self::checkString($table))
-				{
-					$names = array();
-					foreach ($result as $val)
-					{
-						if ($external)
-						{
-							if ($_name = self::getVar(null, $val, $id, $name, '=', $table))
-							{
-								$names[] = $_name;
-							}
-						}
-						else
-						{
-							if ($_name = self::getVar($table, $val, $id, $name))
-							{
-								$names[] = $_name;
-							}
-						}
-					}
-					if (self::checkArray($names))
-					{
-						return (string) implode($sperator,$names);
-					}	
-				}
-				return (string) implode($sperator,$result);
-			}
-			return (string) json_decode($value);
-		}
-		return $value;
+		return JsonHelper::string(
+			$value,
+			$sperator,
+			$table,
+			$id,
+			$name
+		);
 	}
 
 	public static function isPublished($id,$type)
@@ -3546,7 +2363,7 @@ abstract class SermondistributorHelper
 		{
 			$type = 'item';
 		}
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select(array('a.published'));
 		$query->from('#__sermondistributor_'.$type.' AS a');
@@ -3564,7 +2381,7 @@ abstract class SermondistributorHelper
 
 	public static function getGroupName($id)
 	{
-		$db = JFactory::getDBO();
+		$db = Factory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select(array('a.title'));
 		$query->from('#__usergroups AS a');
@@ -3573,7 +2390,7 @@ abstract class SermondistributorHelper
 		$db->execute();
 		$found = $db->getNumRows();
 		if($found)
-  		{
+		  {
 			return $db->loadResult();
 		}
 		return $id;
@@ -3589,39 +2406,39 @@ abstract class SermondistributorHelper
 	 * @param  string   $component   The target component
 	 * @param  object   $user        The user whose permissions we are loading
 	 *
-	 * @return  object   The JObject of permission/authorised actions
-	 * 
+	 * @return  object   The CMSObject of permission/authorised actions
+	 *
 	 */
 	public static function getActions($view, &$record = null, $views = null, $target = null, $component = 'sermondistributor', $user = 'null')
 	{
 		// load the user if not given
-		if (!self::checkObject($user))
+		if (!ObjectHelper::check($user))
 		{
 			// get the user object
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 		}
-		// load the JObject
-		$result = new JObject;
+		// load the CMSObject
+		$result = new CMSObject;
 		// make view name safe (just incase)
-		$view = self::safeString($view);
-		if (self::checkString($views))
+		$view = UtilitiesStringHelper::safe($view);
+		if (UtilitiesStringHelper::check($views))
 		{
-			$views = self::safeString($views);
- 		}
+			$views = UtilitiesStringHelper::safe($views);
+		 }
 		// get all actions from component
-		$actions = JAccess::getActionsFromFile(
+		$actions = Access::getActionsFromFile(
 			JPATH_ADMINISTRATOR . '/components/com_' . $component . '/access.xml',
 			"/access/section[@name='component']/"
 		);
-		// if non found then return empty JObject
+		// if non found then return empty CMSObject
 		if (empty($actions))
 		{
 			return $result;
 		}
 		// get created by if not found
-		if (self::checkObject($record) && !isset($record->created_by) && isset($record->id))
+		if (ObjectHelper::check($record) && !isset($record->created_by) && isset($record->id))
 		{
-			$record->created_by = self::getVar($view, $record->id, 'id', 'created_by', '=', $component);
+			$record->created_by = GetHelper::var($view, $record->id, 'id', 'created_by', '=', $component);
 		}
 		// set actions only set in component settings
 		$componentActions = array('core.admin', 'core.manage', 'core.options', 'core.export');
@@ -3630,12 +2447,12 @@ abstract class SermondistributorHelper
 		if ($target)
 		{
 			// convert to an array
-			if (self::checkString($target))
+			if (UtilitiesStringHelper::check($target))
 			{
 				$target = array($target);
 			}
 			// check if we are good to go
-			if (self::checkArray($target))
+			if (UtilitiesArrayHelper::check($target))
 			{
 				$checkTarget = true;
 			}
@@ -3656,7 +2473,7 @@ abstract class SermondistributorHelper
 			// set area
 			$area = 'comp';
 			// check if the record has an ID and the action is item related (not a component action)
-			if (self::checkObject($record) && isset($record->id) && $record->id > 0 && !in_array($action->name, $componentActions) &&
+			if (ObjectHelper::check($record) && isset($record->id) && $record->id > 0 && !in_array($action->name, $componentActions) &&
 				(strpos($action->name, 'core.') !== false || strpos($action->name, $view . '.') !== false))
 			{
 				// we are in item
@@ -3689,7 +2506,7 @@ abstract class SermondistributorHelper
 						}
 					}
 				}
-				elseif (self::checkString($views) && isset($record->catid) && $record->catid > 0)
+				elseif (UtilitiesStringHelper::check($views) && isset($record->catid) && $record->catid > 0)
 				{
 					// we are in item
 					$area = 'category';
@@ -3761,7 +2578,7 @@ abstract class SermondistributorHelper
 	 * @param  array    $targets  The array of target actions
 	 *
 	 * @return  boolean   true if action should be filtered out
-	 * 
+	 *
 	 */
 	protected static function filterActions(&$view, &$action, &$targets)
 	{
@@ -3780,22 +2597,22 @@ abstract class SermondistributorHelper
 	/**
 	 * Get any component's model
 	 */
-	public static function getModel($name, $path = JPATH_COMPONENT_ADMINISTRATOR, $Component = 'Sermondistributor', $config = array())
+	public static function getModel($name, $path = JPATH_COMPONENT_ADMINISTRATOR, $Component = 'Sermondistributor', $config = [])
 	{
 		// fix the name
-		$name = self::safeString($name);
+		$name = UtilitiesStringHelper::safe($name);
 		// full path to models
 		$fullPathModels = $path . '/models';
 		// load the model file
-		JModelLegacy::addIncludePath($fullPathModels, $Component . 'Model');
+		BaseDatabaseModel::addIncludePath($fullPathModels, $Component . 'Model');
 		// make sure the table path is loaded
-		if (!isset($config['table_path']) || !self::checkString($config['table_path']))
+		if (!isset($config['table_path']) || !UtilitiesStringHelper::check($config['table_path']))
 		{
 			// This is the JCB default path to tables in Joomla 3.x
 			$config['table_path'] = JPATH_ADMINISTRATOR . '/components/com_' . strtolower($Component) . '/tables';
 		}
 		// get instance
-		$model = JModelLegacy::getInstance($name, $Component . 'Model', $config);
+		$model = BaseDatabaseModel::getInstance($name, $Component . 'Model', $config);
 		// if model not found (strange)
 		if ($model == false)
 		{
@@ -3830,14 +2647,14 @@ abstract class SermondistributorHelper
 	 */
 	public static function setAsset($id, $table, $inherit = true)
 	{
-		$parent = JTable::getInstance('Asset');
+		$parent = Table::getInstance('Asset');
 		$parent->loadByName('com_sermondistributor');
-		
+
 		$parentId = $parent->id;
 		$name     = 'com_sermondistributor.'.$table.'.'.$id;
 		$title    = '';
 
-		$asset = JTable::getInstance('Asset');
+		$asset = Table::getInstance('Asset');
 		$asset->loadByName($name);
 
 		// Check for an error.
@@ -3861,14 +2678,14 @@ abstract class SermondistributorHelper
 			$asset->title     = $title;
 			// get the default asset rules
 			$rules = self::getDefaultAssetRules('com_sermondistributor', $table, $inherit);
-			if ($rules instanceof JAccessRules)
+			if ($rules instanceof AccessRules)
 			{
 				$asset->rules = (string) $rules;
 			}
 
 			if (!$asset->check() || !$asset->store())
 			{
-				JFactory::getApplication()->enqueueMessage($asset->getError(), 'warning');
+				Factory::getApplication()->enqueueMessage($asset->getError(), 'warning');
 				return false;
 			}
 			else
@@ -3881,7 +2698,7 @@ abstract class SermondistributorHelper
 				$object->asset_id = (int) $asset->id;
 
 				// Update their asset_id to link to the asset table.
-				return JFactory::getDbo()->updateObject('#__sermondistributor_'.$table, $object, 'id');
+				return Factory::getDbo()->updateObject('#__sermondistributor_'.$table, $object, 'id');
 			}
 		}
 		return false;
@@ -3898,7 +2715,7 @@ abstract class SermondistributorHelper
 		if (!$inherit)
 		{
 			// Need to find the asset id by the name of the component.
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true)
 				->select($db->quoteName('id'))
 				->from($db->quoteName('#__assets'))
@@ -3913,8 +2730,8 @@ abstract class SermondistributorHelper
 			}
 		}
 		// get asset rules
-		$result =  JAccess::getAssetRules($assetId);
-		if ($result instanceof JAccessRules)
+		$result =  Access::getAssetRules($assetId);
+		if ($result instanceof AccessRules)
 		{
 			$_result = (string) $result;
 			$_result = json_decode($_result);
@@ -3929,7 +2746,7 @@ abstract class SermondistributorHelper
 				elseif ($inherit)
 				{
 					// clear the value since we inherit
-					$rule = array();
+					$rule = [];
 				}
 			}
 			// check if there are any view values remaining
@@ -3937,8 +2754,8 @@ abstract class SermondistributorHelper
 			{
 				$_result = json_encode($_result);
 				$_result = array($_result);
-				// Instantiate and return the JAccessRules object for the asset rules.
-				$rules = new JAccessRules($_result);
+				// Instantiate and return the AccessRules object for the asset rules.
+				$rules = new AccessRules($_result);
 				// return filtered rules
 				return $rules;
 			}
@@ -3952,35 +2769,12 @@ abstract class SermondistributorHelper
 	 * @param   SimpleXMLElement   $xml      The XML element reference in which to inject a comment
 	 * @param   mixed              $node     A SimpleXMLElement node to append to the XML element reference, or a stdClass object containing a comment attribute to be injected before the XML node and a fieldXML attribute containing a SimpleXMLElement
 	 *
-	 * @return  null
-	 *
+	 * @return  void
+	 * @deprecated 3.3 Use FormHelper::append($xml, $node);
 	 */
 	public static function xmlAppend(&$xml, $node)
 	{
-		if (!$node)
-		{
-			// element was not returned
-			return;
-		}
-		switch (get_class($node))
-		{
-			case 'stdClass':
-				if (property_exists($node, 'comment'))
-				{
-					self::xmlComment($xml, $node->comment);
-				}
-				if (property_exists($node, 'fieldXML'))
-				{
-					self::xmlAppend($xml, $node->fieldXML);
-				}
-				break;
-			case 'SimpleXMLElement':
-				$domXML = dom_import_simplexml($xml);
-				$domNode = dom_import_simplexml($node);
-				$domXML->appendChild($domXML->ownerDocument->importNode($domNode, true));
-				$xml = simplexml_import_dom($domXML);
-				break;
-		}
+		FormHelper::append($xml, $node);
 	}
 
 	/**
@@ -3989,16 +2783,12 @@ abstract class SermondistributorHelper
 	 * @param   SimpleXMLElement   $xml        The XML element reference in which to inject a comment
 	 * @param   string             $comment    The comment to inject
 	 *
-	 * @return  null
-	 *
+	 * @return  void
+	 * @deprecated 3.3 Use FormHelper::comment($xml, $comment);
 	 */
 	public static function xmlComment(&$xml, $comment)
 	{
-		$domXML = dom_import_simplexml($xml);
-		$domComment = new DOMComment($comment);
-		$nodeTarget = $domXML->ownerDocument->importNode($domComment, true);
-		$domXML->appendChild($nodeTarget);
-		$xml = simplexml_import_dom($domXML);
+		FormHelper::comment($xml, $comment);
 	}
 
 	/**
@@ -4008,14 +2798,11 @@ abstract class SermondistributorHelper
 	 * @param   array              $attributes   The attributes to apply to the XML element
 	 *
 	 * @return  null
-	 *
+	 * @deprecated 3.3 Use FormHelper::attributes($xml, $attributes);
 	 */
-	public static function xmlAddAttributes(&$xml, $attributes = array())
+	public static function xmlAddAttributes(&$xml, $attributes = [])
 	{
-		foreach ($attributes as $key => $value)
-		{
-			$xml->addAttribute($key, $value);
-		}
+		FormHelper::attributes($xml, $attributes);
 	}
 
 	/**
@@ -4025,16 +2812,11 @@ abstract class SermondistributorHelper
 	 * @param   array              $options      The options to apply to the XML element
 	 *
 	 * @return  void
-	 *
+	 * @deprecated 3.3 Use FormHelper::options($xml, $options);
 	 */
-	public static function xmlAddOptions(&$xml, $options = array())
+	public static function xmlAddOptions(&$xml, $options = [])
 	{
-		foreach ($options as $key => $value)
-		{
-			$addOption = $xml->addChild('option');
-			$addOption->addAttribute('value', $key);
-			$addOption[] = $value;
-		}
+		FormHelper::options($xml, $options);
 	}
 
 	/**
@@ -4045,28 +2827,11 @@ abstract class SermondistributorHelper
 	 * @param   array      $options      The options to apply to the XML element
 	 *
 	 * @return  object
-	 *
+	 * @deprecated 3.3 Use FormHelper::field($attributes, $default, $options);
 	 */
 	public static function getFieldObject(&$attributes, $default = '', $options = null)
 	{
-		// make sure we have attributes and a type value
-		if (self::checkArray($attributes) && isset($attributes['type']))
-		{
-			// make sure the form helper class is loaded
-			if (!method_exists('JFormHelper', 'loadFieldType'))
-			{
-				jimport('joomla.form.form');
-			}
-			// get field type
-			$field = JFormHelper::loadFieldType($attributes['type'], true);
-			// get field xml
-			$XML = self::getFieldXML($attributes, $options);
-			// setup the field
-			$field->setup($XML, $default);
-			// return the field object
-			return $field;
-		}
-		return false;
+		return FormHelper::field($attributes, $default, $options);
 	}
 
 	/**
@@ -4076,27 +2841,11 @@ abstract class SermondistributorHelper
 	 * @param   array      $options      The options to apply to the XML element
 	 *
 	 * @return  object
-	 *
+	 * @deprecated 3.3 Use FormHelper::xml($attributes, $options);
 	 */
 	public static function getFieldXML(&$attributes, $options = null)
 	{
-		// make sure we have attributes and a type value
-		if (self::checkArray($attributes))
-		{
-			// start field xml
-			$XML = new SimpleXMLElement('<field/>');
-			// load the attributes
-			self::xmlAddAttributes($XML, $attributes);
-			// check if we have options
-			if (self::checkArray($options))
-			{
-				// load the options
-				self::xmlAddOptions($XML, $options);
-			}
-			// return the field xml
-			return $XML;
-		}
-		return false;
+		return FormHelper::xml($attributes, $options);
 	}
 
 	/**
@@ -4120,94 +2869,69 @@ abstract class SermondistributorHelper
 		// button attributes
 		$buttonAttributes = array(
 			'type' => 'radio',
-			'name' => isset($args[0]) ? self::htmlEscape($args[0]) : 'bool_button',
-			'label' => isset($args[0]) ? self::safeString(self::htmlEscape($args[0]), 'Ww') : 'Bool Button', // not seen anyway
+			'name' => isset($args[0]) ? UtilitiesStringHelper::html($args[0]) : 'bool_button',
+			'label' => isset($args[0]) ? UtilitiesStringHelper::safe(UtilitiesStringHelper::html($args[0]), 'Ww') : 'Bool Button', // not seen anyway
 			'class' => 'btn-group',
 			'filter' => 'INT',
 			'default' => isset($args[2]) ? (int) $args[2] : 0);
 		// set the button options
 		$buttonOptions = array(
-			'1' => isset($args[3]) ? self::htmlEscape($args[3]) : 'JYES',
-			'0' => isset($args[4]) ? self::htmlEscape($args[4]) : 'JNO');
+			'1' => isset($args[3]) ? UtilitiesStringHelper::html($args[3]) : 'JYES',
+			'0' => isset($args[4]) ? UtilitiesStringHelper::html($args[4]) : 'JNO');
 		// return the input
-		return self::getFieldObject($buttonAttributes, $buttonAttributes['default'], $buttonOptions)->input;
+		return FormHelper::field($buttonAttributes, $buttonAttributes['default'], $buttonOptions)->input;
 	}
 
 	/**
 	 * Check if have an json string
 	 *
-	 * @input	string   The json string to check
+	 * @input    string   The json string to check
 	 *
 	 * @returns bool true on success
+	 * @deprecated 3.3 Use JsonHelper::check($string);
 	 */
 	public static function checkJson($string)
 	{
-		if (self::checkString($string))
-		{
-			json_decode($string);
-			return (json_last_error() === JSON_ERROR_NONE);
-		}
-		return false;
+		return JsonHelper::check($string);
 	}
 
 	/**
 	 * Check if have an object with a length
 	 *
-	 * @input	object   The object to check
+	 * @input    object   The object to check
 	 *
 	 * @returns bool true on success
+	 * @deprecated 3.3 Use ObjectHelper::check($object);
 	 */
 	public static function checkObject($object)
 	{
-		if (isset($object) && is_object($object))
-		{
-			return count((array)$object) > 0;
-		}
-		return false;
+		return ObjectHelper::check($object);
 	}
 
 	/**
 	 * Check if have an array with a length
 	 *
-	 * @input	array   The array to check
+	 * @input    array   The array to check
 	 *
 	 * @returns bool/int  number of items in array on success
+	 * @deprecated 3.3 Use UtilitiesArrayHelper::check($array, $removeEmptyString);
 	 */
 	public static function checkArray($array, $removeEmptyString = false)
 	{
-		if (isset($array) && is_array($array) && ($nr = count((array)$array)) > 0)
-		{
-			// also make sure the empty strings are removed
-			if ($removeEmptyString)
-			{
-				foreach ($array as $key => $string)
-				{
-					if (empty($string))
-					{
-						unset($array[$key]);
-					}
-				}
-				return self::checkArray($array, false);
-			}
-			return $nr;
-		}
-		return false;
+		return UtilitiesArrayHelper::check($array, $removeEmptyString);
 	}
 
 	/**
 	 * Check if have a string with a length
 	 *
-	 * @input	string   The string to check
+	 * @input    string   The string to check
 	 *
 	 * @returns bool true on success
+	 * @deprecated 3.3 Use UtilitiesStringHelper::check($string);
 	 */
 	public static function checkString($string)
 	{
-		if (isset($string) && is_string($string) && strlen($string) > 0)
-		{
-			return true;
-		}
-		return false;
+		return UtilitiesStringHelper::check($string);
 	}
 
 	/**
@@ -4219,8 +2943,8 @@ abstract class SermondistributorHelper
 	public static function isConnected()
 	{
 		// If example.com is down, then probably the whole internet is down, since IANA maintains the domain. Right?
-		$connected = @fsockopen("www.example.com", 80); 
-                // website, port  (try 80 or 443)
+		$connected = @fsockopen("www.example.com", 80);
+		// website, port  (try 80 or 443)
 		if ($connected)
 		{
 			//action when connected
@@ -4238,25 +2962,14 @@ abstract class SermondistributorHelper
 	/**
 	 * Merge an array of array's
 	 *
-	 * @input	array   The arrays you would like to merge
+	 * @input    array   The arrays you would like to merge
 	 *
 	 * @returns array on success
+	 * @deprecated 3.3 Use UtilitiesArrayHelper::merge($arrays);
 	 */
 	public static function mergeArrays($arrays)
 	{
-		if(self::checkArray($arrays))
-		{
-			$arrayBuket = array();
-			foreach ($arrays as $array)
-			{
-				if (self::checkArray($array))
-				{
-					$arrayBuket = array_merge($arrayBuket, $array);
-				}
-			}
-			return $arrayBuket;
-		}
-		return false;
+		return UtilitiesArrayHelper::merge($arrays);
 	}
 
 	// typo sorry!
@@ -4268,310 +2981,101 @@ abstract class SermondistributorHelper
 	/**
 	 * Shorten a string
 	 *
-	 * @input	string   The you would like to shorten
+	 * @input    string   The you would like to shorten
 	 *
 	 * @returns string on success
+	 * @deprecated 3.3 Use UtilitiesStringHelper::shorten(...);
 	 */
 	public static function shorten($string, $length = 40, $addTip = true)
 	{
-		if (self::checkString($string))
-		{
-			$initial = strlen($string);
-			$words = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
-			$words_count = count((array)$words);
-
-			$word_length = 0;
-			$last_word = 0;
-			for (; $last_word < $words_count; ++$last_word)
-			{
-				$word_length += strlen($words[$last_word]);
-				if ($word_length > $length)
-				{
-					break;
-				}
-			}
-
-			$newString	= implode(array_slice($words, 0, $last_word));
-			$final	= strlen($newString);
-			if ($initial != $final && $addTip)
-			{
-				$title = self::shorten($string, 400 , false);
-				return '<span class="hasTip" title="'.$title.'" style="cursor:help">'.trim($newString).'...</span>';
-			}
-			elseif ($initial != $final && !$addTip)
-			{
-				return trim($newString).'...';
-			}
-		}
-		return $string;
+		return UtilitiesStringHelper::shorten($string, $length, $addTip);
 	}
 
 	/**
 	 * Making strings safe (various ways)
 	 *
-	 * @input	string   The you would like to make safe
+	 * @input    string   The you would like to make safe
 	 *
 	 * @returns string on success
+	 * @deprecated 3.3 Use UtilitiesStringHelper::safe(...);
 	 */
 	public static function safeString($string, $type = 'L', $spacer = '_', $replaceNumbers = true, $keepOnlyCharacters = true)
 	{
-		if ($replaceNumbers === true)
-		{
-			// remove all numbers and replace with english text version (works well only up to millions)
-			$string = self::replaceNumbers($string);
-		}
-		// 0nly continue if we have a string
-		if (self::checkString($string))
-		{
-			// create file name without the extention that is safe
-			if ($type === 'filename')
-			{
-				// make sure VDM is not in the string
-				$string = str_replace('VDM', 'vDm', $string);
-				// Remove anything which isn't a word, whitespace, number
-				// or any of the following caracters -_()
-				// If you don't need to handle multi-byte characters
-				// you can use preg_replace rather than mb_ereg_replace
-				// Thanks @Łukasz Rysiak!
-				// $string = mb_ereg_replace("([^\w\s\d\-_\(\)])", '', $string);
-				$string = preg_replace("([^\w\s\d\-_\(\)])", '', $string);
-				// http://stackoverflow.com/a/2021729/1429677
-				return preg_replace('/\s+/', ' ', $string);
-			}
-			// remove all other characters
-			$string = trim($string);
-			$string = preg_replace('/'.$spacer.'+/', ' ', $string);
-			$string = preg_replace('/\s+/', ' ', $string);
-			// Transliterate string
-			$string = self::transliterate($string);
-			// remove all and keep only characters
-			if ($keepOnlyCharacters)
-			{
-				$string = preg_replace("/[^A-Za-z ]/", '', $string);
-			}
-			// keep both numbers and characters
-			else
-			{
-				$string = preg_replace("/[^A-Za-z0-9 ]/", '', $string);
-			}
-			// select final adaptations
-			if ($type === 'L' || $type === 'strtolower')
-			{
-				// replace white space with underscore
-				$string = preg_replace('/\s+/', $spacer, $string);
-				// default is to return lower
-				return strtolower($string);
-			}
-			elseif ($type === 'W')
-			{
-				// return a string with all first letter of each word uppercase(no undersocre)
-				return ucwords(strtolower($string));
-			}
-			elseif ($type === 'w' || $type === 'word')
-			{
-				// return a string with all lowercase(no undersocre)
-				return strtolower($string);
-			}
-			elseif ($type === 'Ww' || $type === 'Word')
-			{
-				// return a string with first letter of the first word uppercase and all the rest lowercase(no undersocre)
-				return ucfirst(strtolower($string));
-			}
-			elseif ($type === 'WW' || $type === 'WORD')
-			{
-				// return a string with all the uppercase(no undersocre)
-				return strtoupper($string);
-			}
-			elseif ($type === 'U' || $type === 'strtoupper')
-			{
-					// replace white space with underscore
-					$string = preg_replace('/\s+/', $spacer, $string);
-					// return all upper
-					return strtoupper($string);
-			}
-			elseif ($type === 'F' || $type === 'ucfirst')
-			{
-					// replace white space with underscore
-					$string = preg_replace('/\s+/', $spacer, $string);
-					// return with first caracter to upper
-					return ucfirst(strtolower($string));
-			}
-			elseif ($type === 'cA' || $type === 'cAmel' || $type === 'camelcase')
-			{
-				// convert all words to first letter uppercase
-				$string = ucwords(strtolower($string));
-				// remove white space
-				$string = preg_replace('/\s+/', '', $string);
-				// now return first letter lowercase
-				return lcfirst($string);
-			}
-			// return string
-			return $string;
-		}
-		// not a string
-		return '';
+		return UtilitiesStringHelper::safe(
+			$string,
+			$type,
+			$spacer,
+			$replaceNumbers,
+			$keepOnlyCharacters
+		);
 	}
 
+	/**
+	 * Convert none English strings to code usable string
+	 *
+	 * @input    an string
+	 *
+	 * @returns a string
+	 * @deprecated 3.3 Use UtilitiesStringHelper::transliterate($string);
+	 */
 	public static function transliterate($string)
 	{
-		// set tag only once
-		if (!self::checkString(self::$langTag))
-		{
-			// get global value
-			self::$langTag = JComponentHelper::getParams('com_sermondistributor')->get('language', 'en-GB');
-		}
-		// Transliterate on the language requested
-		$lang = Language::getInstance(self::$langTag);
-		return $lang->transliterate($string);
+		return UtilitiesStringHelper::transliterate($string);
 	}
 
+	/**
+	 * make sure a string is HTML save
+	 *
+	 * @input    an html string
+	 *
+	 * @returns a string
+	 * @deprecated 3.3 Use UtilitiesStringHelper::html(...);
+	 */
 	public static function htmlEscape($var, $charset = 'UTF-8', $shorten = false, $length = 40)
 	{
-		if (self::checkString($var))
-		{
-			$filter = new JFilterInput();
-			$string = $filter->clean(html_entity_decode(htmlentities($var, ENT_COMPAT, $charset)), 'HTML');
-			if ($shorten)
-			{
-                                return self::shorten($string,$length);
-			}
-			return $string;
-		}
-		else
-		{
-			return '';
-		}
+		return UtilitiesStringHelper::html(
+			$var,
+			$charset,
+			$shorten,
+			$length
+		);
 	}
 
+	/**
+	 * Convert all int in a string to an English word string
+	 *
+	 * @input    an string with numbers
+	 *
+	 * @returns a string
+	 * @deprecated 3.3 Use UtilitiesStringHelper::numbers($string);
+	 */
 	public static function replaceNumbers($string)
 	{
-		// set numbers array
-		$numbers = array();
-		// first get all numbers
-		preg_match_all('!\d+!', $string, $numbers);
-		// check if we have any numbers
-		if (isset($numbers[0]) && self::checkArray($numbers[0]))
-		{
-			foreach ($numbers[0] as $number)
-			{
-				$searchReplace[$number] = self::numberToString((int)$number);
-			}
-			// now replace numbers in string
-			$string = str_replace(array_keys($searchReplace), array_values($searchReplace),$string);
-			// check if we missed any, strange if we did.
-			return self::replaceNumbers($string);
-		}
-		// return the string with no numbers remaining.
-		return $string;
+		return UtilitiesStringHelper::numbers($string);
 	}
 
 	/**
 	 * Convert an integer into an English word string
 	 * Thanks to Tom Nicholson <http://php.net/manual/en/function.strval.php#41988>
 	 *
-	 * @input	an int
+	 * @input    an int
 	 * @returns a string
+	 * @deprecated 3.3 Use UtilitiesStringHelper::number($x);
 	 */
 	public static function numberToString($x)
 	{
-		$nwords = array( "zero", "one", "two", "three", "four", "five", "six", "seven",
-			"eight", "nine", "ten", "eleven", "twelve", "thirteen",
-			"fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
-			"nineteen", "twenty", 30 => "thirty", 40 => "forty",
-			50 => "fifty", 60 => "sixty", 70 => "seventy", 80 => "eighty",
-			90 => "ninety" );
-
-		if(!is_numeric($x))
-		{
-			$w = $x;
-		}
-		elseif(fmod($x, 1) != 0)
-		{
-			$w = $x;
-		}
-		else
-		{
-			if($x < 0)
-			{
-				$w = 'minus ';
-				$x = -$x;
-			}
-			else
-			{
-				$w = '';
-				// ... now $x is a non-negative integer.
-			}
-
-			if($x < 21)   // 0 to 20
-			{
-				$w .= $nwords[$x];
-			}
-			elseif($x < 100)  // 21 to 99
-			{ 
-				$w .= $nwords[10 * floor($x/10)];
-				$r = fmod($x, 10);
-				if($r > 0)
-				{
-					$w .= ' '. $nwords[$r];
-				}
-			}
-			elseif($x < 1000)  // 100 to 999
-			{
-				$w .= $nwords[floor($x/100)] .' hundred';
-				$r = fmod($x, 100);
-				if($r > 0)
-				{
-					$w .= ' and '. self::numberToString($r);
-				}
-			}
-			elseif($x < 1000000)  // 1000 to 999999
-			{
-				$w .= self::numberToString(floor($x/1000)) .' thousand';
-				$r = fmod($x, 1000);
-				if($r > 0)
-				{
-					$w .= ' ';
-					if($r < 100)
-					{
-						$w .= 'and ';
-					}
-					$w .= self::numberToString($r);
-				}
-			} 
-			else //  millions
-			{    
-				$w .= self::numberToString(floor($x/1000000)) .' million';
-				$r = fmod($x, 1000000);
-				if($r > 0)
-				{
-					$w .= ' ';
-					if($r < 100)
-					{
-						$w .= 'and ';
-					}
-					$w .= self::numberToString($r);
-				}
-			}
-		}
-		return $w;
+		return UtilitiesStringHelper::number($x);
 	}
 
 	/**
 	 * Random Key
 	 *
 	 * @returns a string
+	 * @deprecated 3.3 Use UtilitiesStringHelper::random($size);
 	 */
 	public static function randomkey($size)
 	{
-		$bag = "abcefghijknopqrstuwxyzABCDDEFGHIJKLLMMNOPQRSTUVVWXYZabcddefghijkllmmnopqrstuvvwxyzABCEFGHIJKNOPQRSTUWXYZ";
-		$key = array();
-		$bagsize = strlen($bag) - 1;
-		for ($i = 0; $i < $size; $i++)
-		{
-			$get = rand(0, $bagsize);
-			$key[] = $bag[$get];
-		}
-		return implode($key);
+		return UtilitiesStringHelper::random($size);
 	}
 
 	/**
@@ -4586,12 +3090,12 @@ abstract class SermondistributorHelper
 	public static function getCryptKey($type, $default = false)
 	{
 		// Get the global params
-		$params = JComponentHelper::getParams('com_sermondistributor', true);
+		$params = ComponentHelper::getParams('com_sermondistributor', true);
 		// Basic Encryption Type
 		if ('basic' === $type)
 		{
 			$basic_key = $params->get('basic_key', $default);
-			if (self::checkString($basic_key))
+			if (UtilitiesStringHelper::check($basic_key))
 			{
 				return $basic_key;
 			}
@@ -4600,4 +3104,3 @@ abstract class SermondistributorHelper
 		return $default;
 	}
 }
-

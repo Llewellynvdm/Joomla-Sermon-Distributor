@@ -9,7 +9,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		help_document.js
@@ -29,7 +29,7 @@ jform_vvvvvxavwi_required = false;
 jform_vvvvvxcvwj_required = false;
 
 // Initial Script
-jQuery(document).ready(function()
+document.addEventListener('DOMContentLoaded', function()
 {
 	var location_vvvvvwx = jQuery("#jform_location input[type='radio']:checked").val();
 	vvvvvwx(location_vvvvvwx);
@@ -299,7 +299,7 @@ function vvvvvxc(target_vvvvvxc)
 // update fields required
 function updateFieldRequired(name, status) {
 	// check if not_required exist
-	if (jQuery('#jform_not_required').length > 0) {
+	if (document.getElementById('jform_not_required')) {
 		var not_required = jQuery('#jform_not_required').val().split(",");
 
 		if(status == 1)
@@ -345,4 +345,4 @@ function isSet(val)
 		return true;
 	}
 	return false;
-} 
+}

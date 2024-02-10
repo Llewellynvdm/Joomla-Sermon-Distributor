@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_batch_body.php
@@ -25,7 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+
 ?>
 
-<p><?php echo JText::_('COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCES_BATCH_TIP'); ?></p>
+<p><?php echo Text::_('COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCES_BATCH_TIP'); ?></p>
 <?php echo $this->batchDisplay; ?>

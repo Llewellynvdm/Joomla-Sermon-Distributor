@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		external_source.php
@@ -25,8 +25,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 /**
  * External_source Form Controller
@@ -49,7 +55,7 @@ class SermondistributorControllerExternal_source extends FormController
 	 *
 	 * @since   1.6
 	 */
-	public function __construct($config = array())
+	public function __construct($config = [])
 	{
 		$this->view_list = 'External_sources'; // safeguard for setting the return view listing to the main view.
 		parent::__construct($config);
@@ -58,26 +64,26 @@ class SermondistributorControllerExternal_source extends FormController
 	public function clearLocalListing() 
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		// get the data
 		$originalData = $this->input->post->get('jform', array(), 'array');
 		if (isset($originalData['id']) && $originalData['id'] > 0)
 		{			
 			// get the needed
-			$app   	= JFactory::getApplication();
-			$lang  	= JFactory::getLanguage();
+			$app   	= Factory::getApplication();
+			$lang  	= Factory::getLanguage();
 			$model 	= $this->getModel();
-			$user 	= JFactory::getUser();
+			$user 	= Factory::getUser();
 			$context = "$this->option.edit.$this->context";
 			if (!$user->authorise('external_source.clear_local_listing', 'com_sermondistributor'))
 			{
 				// force production is not permitted
-				$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_YOU_DO_NOT_HAVE_PERMISSION_TO_CLEAR_LOCAL_LISTING'), 'error');
+				$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_YOU_DO_NOT_HAVE_PERMISSION_TO_CLEAR_LOCAL_LISTING'), 'error');
 				// Save the data in the session.
 				$app->setUserState($context . '.data', $originalData);
 				// Redirect back to the edit screen.
 				$this->setRedirect(
-					JRoute::_(
+					Route::_(
 						'index.php?option=' . $this->option . '&view=' . $this->view_item
 						. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
 					)
@@ -89,12 +95,12 @@ class SermondistributorControllerExternal_source extends FormController
 			if (!$cleared)
 			{
 				// force production is not permitted
-				$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_WAS_NOT_CLEARED'), 'error');
+				$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_WAS_NOT_CLEARED'), 'error');
 				// Save the data in the session.
 				$app->setUserState($context . '.data', $originalData);
 				// Redirect back to the edit screen.
 				$this->setRedirect(
-					JRoute::_(
+					Route::_(
 						'index.php?option=' . $this->option . '&view=' . $this->view_item
 						. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
 					)
@@ -102,23 +108,23 @@ class SermondistributorControllerExternal_source extends FormController
 				return false;
 			}
 			// force production is not permitted
-			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_WAS_CLEARED_SUCCESSFULLY'), 'success');
+			$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_LOCAL_LISTING_WAS_CLEARED_SUCCESSFULLY'), 'success');
 			// Save the data in the session.
 			$app->setUserState($context . '.data', $originalData);
 			// Redirect back to the edit screen.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
 				)
 			);
 			return true;
 		}
-		$this->setError(JText::_('COM_SERMONDISTRIBUTOR_CLEARING_LOCAL_LISTING_CAN_NOT_BE_DONE'));
+		$this->setError(Text::_('COM_SERMONDISTRIBUTOR_CLEARING_LOCAL_LISTING_CAN_NOT_BE_DONE'));
 		$this->setMessage($this->getError(), 'error');
 		// Redirect back to the list screen.
 		$this->setRedirect(
-			JRoute::_(
+			Route::_(
 				'index.php?option=' . $this->option . '&view=' . $this->view_list
 				. $this->getRedirectToListAppend(), false
 			)
@@ -129,26 +135,26 @@ class SermondistributorControllerExternal_source extends FormController
 	public function resetUpdateStatus() 
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		// get the data
 		$originalData = $this->input->post->get('jform', array(), 'array');
 		if (isset($originalData['id']) && $originalData['id'] > 0)
 		{			
 			// get the needed
-			$app   	= JFactory::getApplication();
-			$lang  	= JFactory::getLanguage();
+			$app   	= Factory::getApplication();
+			$lang  	= Factory::getLanguage();
 			$model 	= $this->getModel();
-			$user 	= JFactory::getUser();
+			$user 	= Factory::getUser();
 			$context = "$this->option.edit.$this->context";
 			if (!$user->authorise('external_source.reset_update_status', 'com_sermondistributor'))
 			{
 				// force production is not permitted
-				$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_YOU_DO_NOT_HAVE_PERMISSION_TO_RESET_UPDATE_STATUS'), 'error');
+				$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_YOU_DO_NOT_HAVE_PERMISSION_TO_RESET_UPDATE_STATUS'), 'error');
 				// Save the data in the session.
 				$app->setUserState($context . '.data', $originalData);
 				// Redirect back to the edit screen.
 				$this->setRedirect(
-					JRoute::_(
+					Route::_(
 						'index.php?option=' . $this->option . '&view=' . $this->view_item
 						. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
 					)
@@ -165,7 +171,7 @@ class SermondistributorControllerExternal_source extends FormController
 				$app->setUserState($context . '.data', $originalData);
 				// Redirect back to the edit screen.
 				$this->setRedirect(
-					JRoute::_(
+					Route::_(
 						'index.php?option=' . $this->option . '&view=' . $this->view_item
 						. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
 					)
@@ -173,23 +179,23 @@ class SermondistributorControllerExternal_source extends FormController
 				return false;
 			}
 			// reset update status success
-			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_RESETTING_THE_UPDATE_STATUS_WAS_SUCCESSFUL'), 'success');
+			$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_RESETTING_THE_UPDATE_STATUS_WAS_SUCCESSFUL'), 'success');
 			// Save the data in the session.
 			$app->setUserState($context . '.data', $originalData);
 			// Redirect back to the edit screen.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($originalData['id'], 'id'), false
 				)
 			);
 			return true;
 		}
-		$this->setError(JText::_('COM_SERMONDISTRIBUTOR_RESET_UPDATE_STATUS_CAN_NOT_BE_DONE'));
+		$this->setError(Text::_('COM_SERMONDISTRIBUTOR_RESET_UPDATE_STATUS_CAN_NOT_BE_DONE'));
 		$this->setMessage($this->getError(), 'error');
 		// Redirect back to the list screen.
 		$this->setRedirect(
-			JRoute::_(
+			Route::_(
 				'index.php?option=' . $this->option . '&view=' . $this->view_list
 				. $this->getRedirectToListAppend(), false
 			)
@@ -197,7 +203,7 @@ class SermondistributorControllerExternal_source extends FormController
 		return false;
 	}
 
-        /**
+	/**
 	 * Method override to check if you can add a new record.
 	 *
 	 * @param   array  $data  An array of input data.
@@ -206,10 +212,10 @@ class SermondistributorControllerExternal_source extends FormController
 	 *
 	 * @since   1.6
 	 */
-	protected function allowAdd($data = array())
+	protected function allowAdd($data = [])
 	{
 		// Get user object.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// Access check.
 		$access = $user->authorise('external_source.access', 'com_sermondistributor');
 		if (!$access)
@@ -217,7 +223,7 @@ class SermondistributorControllerExternal_source extends FormController
 			return false;
 		}
 
-		// In the absense of better information, revert to the component permissions.
+		// In the absence of better information, revert to the component permissions.
 		return $user->authorise('external_source.create', $this->option);
 	}
 
@@ -231,16 +237,16 @@ class SermondistributorControllerExternal_source extends FormController
 	 *
 	 * @since   1.6
 	 */
-	protected function allowEdit($data = array(), $key = 'id')
+	protected function allowEdit($data = [], $key = 'id')
 	{
 		// get user object.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// get record id.
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
 
 
 		// Access check.
-		$access = ($user->authorise('external_source.access', 'com_sermondistributor.external_source.' . (int) $recordId) &&  $user->authorise('external_source.access', 'com_sermondistributor'));
+		$access = ($user->authorise('external_source.access', 'com_sermondistributor.external_source.' . (int) $recordId) && $user->authorise('external_source.access', 'com_sermondistributor'));
 		if (!$access)
 		{
 			return false;
@@ -305,12 +311,12 @@ class SermondistributorControllerExternal_source extends FormController
 
 		// set the referral options
 		if ($refid && $ref)
-                {
-			$append = '&ref=' . (string)$ref . '&refid='. (int)$refid . $append;
+		{
+			$append = '&ref=' . (string) $ref . '&refid='. (int) $refid . $append;
 		}
 		elseif ($ref)
 		{
-			$append = '&ref='. (string)$ref . $append;
+			$append = '&ref='. (string) $ref . $append;
 		}
 
 		return $append;
@@ -327,13 +333,13 @@ class SermondistributorControllerExternal_source extends FormController
 	 */
 	public function batch($model = null)
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		// Set the model
-		$model = $this->getModel('External_source', '', array());
+		$model = $this->getModel('External_source', '', []);
 
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=external_sources' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=external_sources' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
 	}
@@ -358,13 +364,13 @@ class SermondistributorControllerExternal_source extends FormController
 
 		$cancel = parent::cancel($key);
 
-		if (!is_null($return) && JUri::isInternal(base64_decode($return)))
+		if (!is_null($return) && Uri::isInternal(base64_decode($return)))
 		{
 			$redirect = base64_decode($return);
 
 			// Redirect to the return value.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					$redirect, false
 				)
 			);
@@ -375,7 +381,7 @@ class SermondistributorControllerExternal_source extends FormController
 
 			// Redirect to the item screen.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . $redirect, false
 				)
 			);
@@ -386,7 +392,7 @@ class SermondistributorControllerExternal_source extends FormController
 
 			// Redirect to the list screen.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . $redirect, false
 				)
 			);
@@ -412,7 +418,7 @@ class SermondistributorControllerExternal_source extends FormController
 
 		// Check if there is a return value
 		$return = $this->input->get('return', null, 'base64');
-		$canReturn = (!is_null($return) && JUri::isInternal(base64_decode($return)));
+		$canReturn = (!is_null($return) && Uri::isInternal(base64_decode($return)));
 
 		if ($this->ref || $this->refid || $canReturn)
 		{
@@ -430,29 +436,29 @@ class SermondistributorControllerExternal_source extends FormController
 
 			// Redirect to the return value.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					$redirect, false
 				)
 			);
 		}
 		elseif ($this->refid && $this->ref)
 		{
-			$redirect = '&view=' . (string)$this->ref . '&layout=edit&id=' . (int)$this->refid;
+			$redirect = '&view=' . (string) $this->ref . '&layout=edit&id=' . (int) $this->refid;
 
 			// Redirect to the item screen.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . $redirect, false
 				)
 			);
 		}
 		elseif ($this->ref)
 		{
-			$redirect = '&view=' . (string)$this->ref;
+			$redirect = '&view=' . (string) $this->ref;
 
 			// Redirect to the list screen.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . $redirect, false
 				)
 			);
@@ -464,16 +470,15 @@ class SermondistributorControllerExternal_source extends FormController
 	 * Function that allows child controller access to model data
 	 * after the data has been saved.
 	 *
-	 * @param   JModel  &$model     The data model object.
-	 * @param   array   $validData  The validated data.
+	 * @param   BaseDatabaseModel  &$model     The data model object.
+	 * @param   array              $validData  The validated data.
 	 *
 	 * @return  void
 	 *
 	 * @since   11.1
 	 */
-	protected function postSaveHook(JModelLegacy $model, $validData = array())
+	protected function postSaveHook(BaseDatabaseModel $model, $validData = [])
 	{
 		return;
 	}
-
 }

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preachers.php
@@ -25,8 +25,15 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Helper\TagsHelper;
+use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use VDM\Joomla\Utilities\JsonHelper;
 
 /**
  * Sermondistributor List Model for Preachers
@@ -55,17 +62,17 @@ class SermondistributorModelPreachers extends ListModel
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$this->user = JFactory::getUser();
+		$this->user = Factory::getUser();
 		$this->userId = $this->user->get('id');
 		$this->guest = $this->user->get('guest');
 		$this->groups = $this->user->get('groups');
 		$this->authorisedGroups = $this->user->getAuthorisedGroups();
 		$this->levels = $this->user->getAuthorisedViewLevels();
-		$this->app = JFactory::getApplication();
+		$this->app = Factory::getApplication();
 		$this->input = $this->app->input;
 		$this->initSet = true; 
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -91,36 +98,36 @@ class SermondistributorModelPreachers extends ListModel
 	 */
 	public function getItems()
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		// check if this user has permission to access item
 		if (!$user->authorise('site.preachers.access', 'com_sermondistributor'))
 		{
-			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_PREACHERS'), 'error');
+			$app = Factory::getApplication();
+			$app->enqueueMessage(Text::_('COM_SERMONDISTRIBUTOR_NOT_AUTHORISED_TO_VIEW_PREACHERS'), 'error');
 			// redirect away to the home page if no access allowed.
-			$app->redirect(JURI::root());
+			$app->redirect(Uri::root());
 			return false;
 		}
 		// load parent items
 		$items = parent::getItems();
 
 		// Get the global params
-		$globalParams = JComponentHelper::getParams('com_sermondistributor', true);
+		$globalParams = ComponentHelper::getParams('com_sermondistributor', true);
 
 		// Insure all item fields are adapted where needed.
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			// Load the JEvent Dispatcher
-			JPluginHelper::importPlugin('content');
-			$this->_dispatcher = JFactory::getApplication();
+			PluginHelper::importPlugin('content');
+			$this->_dispatcher = Factory::getApplication();
 			foreach ($items as $nr => &$item)
 			{
 				// Always create a slug for sef URL's
-				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
+				$item->slug = ($item->id ?? '0') . (isset($item->alias) ? ':' . $item->alias : '');
 				// Check if item has params, or pass whole item.
-				$params = (isset($item->params) && SermondistributorHelper::checkJson($item->params)) ? json_decode($item->params) : $item;
+				$params = (isset($item->params) && JsonHelper::check($item->params)) ? json_decode($item->params) : $item;
 				// Make sure the content prepare plugins fire on description
-				$_description = new stdClass();
+				$_description = new \stdClass();
 				$_description->text =& $item->description; // value must be in text
 				// Since all values are now in text (Joomla Limitation), we also add the field name (description) to context
 				$this->_dispatcher->triggerEvent("onContentPrepare", array('com_sermondistributor.preacher.description', &$_description, &$params, 0));
@@ -132,11 +139,11 @@ class SermondistributorModelPreachers extends ListModel
 		}
 
 
-		if (SermondistributorHelper::checkArray($items))
+		if (UtilitiesArrayHelper::check($items))
 		{
 			foreach ($items as $nr => &$item)
 			{
-				if (!SermondistributorHelper::checkArray($item->idPreacherSermonB))
+				if (!UtilitiesArrayHelper::check($item->idPreacherSermonB))
 				{
 					// remove empty preacher
 					unset($items[$nr]);
@@ -157,7 +164,7 @@ class SermondistributorModelPreachers extends ListModel
 	public function getIdPreacherSermonDcaa_B($id)
 	{
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -193,7 +200,7 @@ class SermondistributorModelPreachers extends ListModel
 	 */
 	public function getUikitComp()
 	{
-		if (isset($this->uikitComp) && SermondistributorHelper::checkArray($this->uikitComp))
+		if (isset($this->uikitComp) && UtilitiesArrayHelper::check($this->uikitComp))
 		{
 			return $this->uikitComp;
 		}

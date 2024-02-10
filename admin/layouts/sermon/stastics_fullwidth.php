@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		stastics_fullwidth.php
@@ -25,22 +25,28 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use VDM\Joomla\Utilities\StringHelper;
+use VDM\Joomla\Utilities\ArrayHelper;
+
 // set the defaults
 $items = $displayData->vwbstastics;
-$user = JFactory::getUser();
+$user = Factory::getUser();
 $id = $displayData->item->id;
 // set the edit URL
 $edit = "index.php?option=com_sermondistributor&view=statistics&task=statistic.edit";
 // set a return value
 $return = ($id) ? "index.php?option=com_sermondistributor&view=sermon&layout=edit&id=" . $id : "";
 // check for a return value
-$jinput = JFactory::getApplication()->input;
+$jinput = Factory::getApplication()->input;
 if ($_return = $jinput->get('return', null, 'base64'))
 {
 	$return .= "&return=" . $_return;
 }
 // check if return value was set
-if (SermondistributorHelper::checkString($return))
+if (StringHelper::check($return))
 {
 	// set the referral values
 	$ref = ($id) ? "&ref=sermon&refid=" . $id . "&return=" . urlencode(base64_encode($return)) : "&return=" . urlencode(base64_encode($return));
@@ -52,30 +58,30 @@ else
 
 ?>
 <div class="form-vertical">
-<?php if (SermondistributorHelper::checkArray($items)): ?>
+<?php if (ArrayHelper::check($items)): ?>
 <table class="footable table data statistics metro-blue" data-page-size="20" data-filter="#filter_statistics">
 <thead>
 	<tr>
 		<th data-toggle="true">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_FILENAME_LABEL'); ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_STATISTIC_FILENAME_LABEL'); ?>
 		</th>
 		<th data-hide="phone">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL'); ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL'); ?>
 		</th>
 		<th data-hide="phone">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL'); ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL'); ?>
 		</th>
 		<th data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL'); ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL'); ?>
 		</th>
 		<th data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_COUNTER_LABEL'); ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_STATISTIC_COUNTER_LABEL'); ?>
 		</th>
 		<th width="10" data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_STATUS'); ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_STATISTIC_STATUS'); ?>
 		</th>
 		<th width="5" data-type="numeric" data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_STATISTIC_ID'); ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_STATISTIC_ID'); ?>
 		</th>
 	</tr>
 </thead>
@@ -83,7 +89,7 @@ else
 <?php foreach ($items as $i => $item): ?>
 	<?php
 		$canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->id || $item->checked_out == 0;
-		$userChkOut = JFactory::getUser($item->checked_out);
+		$userChkOut = Factory::getUser($item->checked_out);
 		$canDo = SermondistributorHelper::getActions('statistic',$item,'statistics');
 	?>
 	<tr>
@@ -91,7 +97,7 @@ else
 			<?php if ($canDo->get('statistic.edit')): ?>
 				<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?><?php echo $ref; ?>"><?php echo $item->filename; ?></a>
 				<?php if ($item->checked_out): ?>
-					<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'statistics.', $canCheckin); ?>
+					<?php echo Html::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'statistics.', $canCheckin); ?>
 				<?php endif; ?>
 			<?php else: ?>
 				<?php echo $item->filename; ?>
@@ -119,26 +125,26 @@ else
 		</td>
 		<?php if ($item->published == 1): ?>
 			<td class="center"  data-value="1">
-				<span class="status-metro status-published" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_PUBLISHED');  ?>">
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_PUBLISHED'); ?>
+				<span class="status-metro status-published" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_PUBLISHED');  ?>">
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_PUBLISHED'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == 0): ?>
 			<td class="center"  data-value="2">
-				<span class="status-metro status-inactive" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_INACTIVE');  ?>">
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_INACTIVE'); ?>
+				<span class="status-metro status-inactive" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_INACTIVE');  ?>">
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_INACTIVE'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == 2): ?>
 			<td class="center"  data-value="3">
-				<span class="status-metro status-archived" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_ARCHIVED');  ?>">
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_ARCHIVED'); ?>
+				<span class="status-metro status-archived" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_ARCHIVED');  ?>">
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_ARCHIVED'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == -2): ?>
 			<td class="center"  data-value="4">
-				<span class="status-metro status-trashed" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_TRASHED');  ?>">
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_TRASHED'); ?>
+				<span class="status-metro status-trashed" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_TRASHED');  ?>">
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_TRASHED'); ?>
 				</span>
 			</td>
 		<?php endif; ?>
@@ -158,7 +164,7 @@ else
 </table>
 <?php else: ?>
 	<div class="alert alert-no-items">
-		<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+		<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 	</div>
 <?php endif; ?>
 </div>

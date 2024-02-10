@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -25,7 +25,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use VDM\Joomla\Utilities\StringHelper;
 ?>
 
 <?php if ($this->item): ?>
@@ -36,7 +39,7 @@ defined('_JEXEC') or die('Restricted access');
 	<?php else: ?>
 		<?php echo $this->loadTemplate('sermonbig'); ?>
 	<?php endif; ?>
-	<?php if (isset($this->item->scripture) && SermondistributorHelper::checkString($this->item->scripture)): ?>
+	<?php if (isset($this->item->scripture) && StringHelper::check($this->item->scripture)): ?>
 		<div><?php echo $this->item->scripture; ?></div>
 	<?php endif; ?>
 	<script>
@@ -68,6 +71,6 @@ defined('_JEXEC') or die('Restricted access');
 <?php else: ?>
 	<div class="uk-alert uk-alert-warning" data-uk-alert>
 		<a href="" class="uk-alert-close uk-close"></a>
-		<p><?php echo JText::_('COM_SERMONDISTRIBUTOR_NO_SERMON_WAS_FOUND'); ?></p>
+		<p><?php echo Text::_('COM_SERMONDISTRIBUTOR_NO_SERMON_WAS_FOUND'); ?></p>
 	</div>
 <?php endif; ?><?php echo $this->toolbar->render(); ?>

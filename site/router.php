@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		router.php
@@ -25,13 +25,16 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Component\ComponentHelper;
+
 /**
  * Routing class from com_sermondistributor
  *
  * @since  3.3
  */
 class SermondistributorRouter extends JComponentRouterBase
-{	
+{
 	/**
 	 * Build the route for the com_sermondistributor component
 	 *
@@ -43,11 +46,11 @@ class SermondistributorRouter extends JComponentRouterBase
 	 */
 	public function build(&$query)
 	{
-		$segments = array();
+		$segments = [];
 
 		// Get a menu item based on Itemid or currently active
-		$params = JComponentHelper::getParams('com_sermondistributor');
-		
+		$params = ComponentHelper::getParams('com_sermondistributor');
+
 		if (empty($query['Itemid']))
 		{
 			$menuItem = $this->menu->getActive();
@@ -71,7 +74,7 @@ class SermondistributorRouter extends JComponentRouterBase
 
 			unset($query['view']);
 		}
-		
+
 		// Are we dealing with a item that is attached to a menu item?
 		if (isset($view) && ($mView == $view) and (isset($query['id'])) and ($mId == (int) $query['id']))
 		{
@@ -101,7 +104,7 @@ class SermondistributorRouter extends JComponentRouterBase
 			}
 			unset($query['id']);
 		}
-		
+
 		$total = count($segments);
 
 		for ($i = 0; $i < $total; $i++)
@@ -109,8 +112,8 @@ class SermondistributorRouter extends JComponentRouterBase
 			$segments[$i] = str_replace(':', '-', $segments[$i]);
 		}
 
-		return $segments; 
-		
+		return $segments;
+
 	}
 
 	/**
@@ -123,10 +126,10 @@ class SermondistributorRouter extends JComponentRouterBase
 	 * @since   3.3
 	 */
 	public function parse(&$segments)
-	{		
+	{
 		$count = count($segments);
-		$vars = array();
-		
+		$vars = [];
+
 		// Handle View and Identifier
 		switch($segments[0])
 		{
@@ -253,7 +256,7 @@ class SermondistributorRouter extends JComponentRouterBase
 		}
 
 		return $vars;
-	} 
+	}
 
 	protected function getVar($table, $where = null, $whereString = null, $what = null, $category = false, $operator = '=', $main = 'sermondistributor')
 	{
@@ -262,7 +265,7 @@ class SermondistributorRouter extends JComponentRouterBase
 			return false;
 		}
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		// Create a new query object.
 		$query = $db->getQuery(true);
 
@@ -278,7 +281,7 @@ class SermondistributorRouter extends JComponentRouterBase
 		{
 			// we must check if the table exist (TODO not ideal)
 			$tables = $db->getTableList();
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 			$prefix = $app->get('dbprefix');
 			$check = $prefix.$main.'_'.$table;
 			if (in_array($check, $tables))
@@ -320,7 +323,7 @@ class SermondistributorRouter extends JComponentRouterBase
 		}
 		return false;
 	}
-	
+
 	protected function checkString($string)
 	{
 		if (isset($string) && is_string($string) && strlen($string) > 0)
@@ -334,7 +337,7 @@ class SermondistributorRouter extends JComponentRouterBase
 function SermondistributorBuildRoute(&$query)
 {
 	$router = new SermondistributorRouter;
-	
+
 	return $router->build($query);
 }
 

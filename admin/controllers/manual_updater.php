@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		manual_updater.php
@@ -25,8 +25,12 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 
 /**
  * Manual_updater Admin Controller
@@ -43,9 +47,9 @@ class SermondistributorControllerManual_updater extends AdminController
 
 	/**
 	 * Proxy for getModel.
-	 * @since	2.5
+	 * @since    2.5
 	 */
-	public function getModel($name = 'Manual_updater', $prefix = 'SermondistributorModel', $config = array())
+	public function getModel($name = 'Manual_updater', $prefix = 'SermondistributorModel', $config = [])
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 
@@ -54,14 +58,14 @@ class SermondistributorControllerManual_updater extends AdminController
 
 	public function dashboard()
 	{
-		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor', false));
+		$this->setRedirect(Route::_('index.php?option=com_sermondistributor', false));
 		return;
 	}
 
-        public function gotoExternalSources()
+	public function gotoExternalSources()
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		$this->setRedirect(JRoute::_('index.php?option=com_sermondistributor&view=external_sources', false));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=external_sources', false));
 		return;
 	}
 }

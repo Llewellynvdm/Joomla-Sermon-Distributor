@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		3.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		view.html.php
@@ -25,7 +25,16 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use VDM\Joomla\Utilities\StringHelper;
 
 /**
  * Sermondistributor Html View class for the Api
@@ -34,13 +43,13 @@ class SermondistributorViewApi extends HtmlView
 {
 	// Overwriting JView display method
 	function display($tpl = null)
-	{		
+	{
 		// get combined params of both component and menu
-		$this->app = JFactory::getApplication();
+		$this->app = Factory::getApplication();
 		$this->params = $this->app->getParams();
 		$this->menu = $this->app->getMenu()->getActive();
 		// get the user object
-		$this->user = JFactory::getUser();
+		$this->user = Factory::getUser();
 		// Initialise variables.
 		$this->items = $this->get('Items');
 				// do not load the display
@@ -49,13 +58,13 @@ class SermondistributorViewApi extends HtmlView
 		// Set the toolbar
 		$this->addToolBar();
 
-		// set the document
+		// Set the html view document stuff
 		$this->_prepareDocument();
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			throw new Exception(implode(PHP_EOL, $errors), 500);
+			throw new \Exception(implode(PHP_EOL, $errors), 500);
 		}
 
 		parent::display($tpl);
@@ -67,12 +76,15 @@ class SermondistributorViewApi extends HtmlView
 	protected function _prepareDocument()
 	{
 
-		// always make sure jquery is loaded.
-		JHtml::_('jquery.framework');
+		// Only load jQuery if needed. (default is true)
+		if ($this->params->get('add_jquery_framework', 1) == 1)
+		{
+			Html::_('jquery.framework');
+		}
 		// Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
 		// Initialize the header checker.
-		$HeaderCheck = new sermondistributorHeaderCheck;
+		$HeaderCheck = new sermondistributorHeaderCheck();
 
 		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');
@@ -91,12 +103,12 @@ class SermondistributorViewApi extends HtmlView
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				JHtml::_('stylesheet', 'media/com_sermondistributor/uikit-v2/css/uikit'.$style.$size.'.css', ['version' => 'auto']);
+				Html::_('stylesheet', 'media/com_sermondistributor/uikit-v2/css/uikit'.$style.$size.'.css', ['version' => 'auto']);
 			}
 			// The uikit js.
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				JHtml::_('script', 'media/com_sermondistributor/uikit-v2/js/uikit'.$size.'.js', ['version' => 'auto']);
+				Html::_('script', 'media/com_sermondistributor/uikit-v2/js/uikit'.$size.'.js', ['version' => 'auto']);
 			}
 		}
 		// Use Uikit Version 3
@@ -105,17 +117,17 @@ class SermondistributorViewApi extends HtmlView
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				JHtml::_('stylesheet', 'media/com_sermondistributor/uikit-v3/css/uikit'.$size.'.css', ['version' => 'auto']);
+				Html::_('stylesheet', 'media/com_sermondistributor/uikit-v3/css/uikit'.$size.'.css', ['version' => 'auto']);
 			}
 			// The uikit js.
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				JHtml::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', ['version' => 'auto']);
-				JHtml::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit-icons'.$size.'.js', ['version' => 'auto']);
+				Html::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', ['version' => 'auto']);
+				Html::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit-icons'.$size.'.js', ['version' => 'auto']);
 			}
 		}
 		// add the document default css file
-		$this->document->addStyleSheet(JURI::root(true) .'/components/com_sermondistributor/assets/css/api.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		Html::_('stylesheet', 'components/com_sermondistributor/assets/css/api.css', ['version' => 'auto']);
 	}
 
 	/**
@@ -123,15 +135,15 @@ class SermondistributorViewApi extends HtmlView
 	 */
 	protected function addToolBar()
 	{
-		
+
 		// set help url for this view if found
 		$this->help_url = SermondistributorHelper::getHelpUrl('api');
-		if (SermondistributorHelper::checkString($this->help_url))
+		if (StringHelper::check($this->help_url))
 		{
-			JToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
+			ToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 		// now initiate the toolbar
-		$this->toolbar = JToolbar::getInstance();
+		$this->toolbar = Toolbar::getInstance();
 	}
 
 	/**
@@ -144,6 +156,16 @@ class SermondistributorViewApi extends HtmlView
 	public function escape($var, $sorten = false, $length = 40)
 	{
 		// use the helper htmlEscape method instead.
-		return SermondistributorHelper::htmlEscape($var, $this->_charset, $sorten, $length);
+		return StringHelper::html($var, $this->_charset, $sorten, $length);
+	}
+
+	/**
+	 * Get the Document (helper method toward Joomla 4 and 5)
+	 */
+	public function getDocument()
+	{
+		$this->document ??= JFactory::getDocument();
+
+		return $this->document;
 	}
 }
