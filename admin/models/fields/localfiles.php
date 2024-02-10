@@ -53,7 +53,7 @@ class JFormFieldLocalfiles extends JFormFieldList
 	protected function getOptions()
 	{
 		// get local folder
-		$localfolder = ComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images');
+		$localfolder = \Joomla\CMS\Component\ComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images');
 		// set the default
 		$options[] = Html::_('select.option', '', Text::sprintf('COM_SERMONDISTRIBUTOR_PLEASE_ADD_FILES_TO_S', $localfolder));
 		// setup the folder if it does not exist

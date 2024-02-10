@@ -28,6 +28,7 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper as Html;
 ?>
 <form action="<?php echo Route::_('index.php?option=com_sermondistributor'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if ($this->category): ?>

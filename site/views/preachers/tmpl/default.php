@@ -28,6 +28,7 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper as Html;
 
 // Set the heading of the page
 $heading = ($this->params->get('page_heading')) ? $this->params->get('page_heading') : ((isset($this->menu->title)) ? $this->menu->title : '');
