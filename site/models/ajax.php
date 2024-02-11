@@ -171,7 +171,7 @@ class SermondistributorModelAjax extends ListModel
 				// make sure the lock is removed
 				unset($sermon->lock);
 				// convert the placeholders to json object
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadArray($sermon->auto_sermons);
 				$sermon->auto_sermons = (string) $registry;
 				// always the same
@@ -397,23 +397,23 @@ class SermondistributorModelAjax extends ListModel
 		{	
 			// Only process once per/sermon
 			$bad_characters = array("\"", "<", ">");
-			$this->sermons->$key->metadesc = JString::str_ireplace($bad_characters, "", $description); // just to be save
+			$this->sermons->$key->metadesc = \JString::str_ireplace($bad_characters, "", $description); // just to be save
 		}
 		// Array of characters to remove.
 		$bad_characters = array("\n", "\r", "\"", "<", ">");
 		// set the meta key words
-		$this->sermons->$key->metakey[] = trim(JString::str_ireplace($bad_characters, '', $name)); // just to be save
+		$this->sermons->$key->metakey[] = trim(\JString::str_ireplace($bad_characters, '', $name)); // just to be save
 		if ($series)
 		{
-			$this->sermons->$key->metakey[] = trim(JString::str_ireplace($bad_characters, '', $seriesName)); // just to be save
+			$this->sermons->$key->metakey[] = trim(\JString::str_ireplace($bad_characters, '', $seriesName)); // just to be save
 		}
 		if ($preacher)
 		{
-			$this->sermons->$key->metakey[] = trim(JString::str_ireplace($bad_characters, '', $preacherName)); // just to be save
+			$this->sermons->$key->metakey[] = trim(\JString::str_ireplace($bad_characters, '', $preacherName)); // just to be save
 		}
 		if ($category)
 		{
-			$this->sermons->$key->metakey[] = trim(JString::str_ireplace($bad_characters, '', $categoryName)); // just to be save
+			$this->sermons->$key->metakey[] = trim(\JString::str_ireplace($bad_characters, '', $categoryName)); // just to be save
 		}
 		$author = ($preacher) ? trim($preacherName): '';
 		$this->sermons->$key->metadata = '{"robots":"","author":"'.$author.'","rights":"See our site terms."}';
@@ -426,11 +426,11 @@ class SermondistributorModelAjax extends ListModel
 		// sanitize the name to an alias
 		if (Factory::getConfig()->get('unicodeslugs') == 1)
 		{
-			$alias = JFilterOutput::stringURLUnicodeSlug($name);
+			$alias = \JFilterOutput::stringURLUnicodeSlug($name);
 		}
 		else
 		{
-			$alias = JFilterOutput::stringURLSafe($name);
+			$alias = \JFilterOutput::stringURLSafe($name);
 		}
 		if ($type)
 		{
@@ -537,8 +537,8 @@ class SermondistributorModelAjax extends ListModel
 	protected function createCategory($name,$alias)
 	{
 		// load the category table
-		JTable::addIncludePath(JPATH_LIBRARIES . '/joomla/database/table');
-		$category = JTable::getInstance('Category');
+		\JTable::addIncludePath(JPATH_LIBRARIES . '/joomla/database/table');
+		$category = \JTable::getInstance('Category');
 		$category->extension = 'com_sermondistributor.sermons';
 		$category->title = $name;
 		$category->alias = $alias;
@@ -568,7 +568,7 @@ class SermondistributorModelAjax extends ListModel
 		// insure the filed is always uniqe
 		while (isset($this->uniqeValueArray[$type][$field][$value]))
 		{
-			$value = JString::increment($value, 'dash');
+			$value = \JString::increment($value, 'dash');
 		}
 		$this->uniqeValueArray[$type][$field][$value] = $value;
 		return $value;

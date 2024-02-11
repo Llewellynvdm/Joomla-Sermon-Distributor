@@ -135,7 +135,6 @@ class SermondistributorViewSeries extends HtmlView
 		return false;
 	}
 
-
 	/**
 	 * Prepares the document
 	 */

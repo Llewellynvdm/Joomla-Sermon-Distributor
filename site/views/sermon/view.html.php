@@ -109,7 +109,6 @@ class SermondistributorViewSermon extends HtmlView
 		return false;
 	}
 
-
 	/**
 	 * Prepares the document
 	 */

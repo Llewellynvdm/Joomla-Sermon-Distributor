@@ -1847,7 +1847,7 @@ class Com_SermondistributorInstallerScript
 			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 3.0.2 Was Successful! Let us know if anything is not working as expected.</h3></div>';
+				<h3>Upgrade to Version 3.0.3 Was Successful! Let us know if anything is not working as expected.</h3></div>';
 
 			// Set db if not set already.
 			if (!isset($db))

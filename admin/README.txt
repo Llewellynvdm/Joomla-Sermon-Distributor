@@ -24,7 +24,7 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 10th February, 2024
++ *Last Build*: 11th February, 2024
 + *Version*: 3.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
@@ -37,8 +37,8 @@ due to [Automated Component Builder](https://www.joomlacomponentbuilder.com))
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **86974**
-+ *File count*: **594**
++ *Line count*: **87039**
++ *File count*: **595**
 + *Folder count*: **113**
 
 **160 Hours** or **20 Eight Hour Days** (the actual time the author spent)

@@ -137,8 +137,8 @@ class SermondistributorModelSermon extends ItemModel
 
 				// Get from #__sermondistributor_sermon as a
 				$query->select($db->quoteName(
-			array('a.id','a.asset_id','a.name','a.alias','a.preacher','a.short_description','a.icon','a.scripture','a.series','a.catid','a.description','a.link_type','a.source','a.build','a.manual_files','a.local_files','a.url','a.not_required','a.auto_sermons','a.published','a.created_by','a.modified_by','a.created','a.modified','a.version','a.hits','a.ordering','a.metadesc','a.metakey','a.metadata'),
-			array('id','asset_id','name','alias','preacher','short_description','icon','scripture','series','catid','description','link_type','source','build','manual_files','local_files','url','not_required','auto_sermons','published','created_by','modified_by','created','modified','version','hits','ordering','metadesc','metakey','metadata')));
+			array('a.id','a.asset_id','a.name','a.alias','a.preacher','a.short_description','a.icon','a.scripture','a.series','a.catid','a.description','a.link_type','a.source','a.build','a.manual_files','a.local_files','a.url','a.auto_sermons','a.published','a.created_by','a.modified_by','a.created','a.modified','a.version','a.hits','a.ordering','a.metadesc','a.metakey','a.metadata'),
+			array('id','asset_id','name','alias','preacher','short_description','icon','scripture','series','catid','description','link_type','source','build','manual_files','local_files','url','auto_sermons','published','created_by','modified_by','created','modified','version','hits','ordering','metadesc','metakey','metadata')));
 				$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
 
 				// Get from #__sermondistributor_series as b

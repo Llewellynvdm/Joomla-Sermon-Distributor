@@ -60,7 +60,7 @@ class SermondistributorViewPreachers extends HtmlView
 		{
 			foreach ($this->items as $nr => &$item)
 			{
-				$item->link = JRoute::_(SermondistributorHelperRoute::getPreacherRoute($item->slug));
+				$item->link = \JRoute::_(SermondistributorHelperRoute::getPreacherRoute($item->slug));
 			}
 		}
 		// set the FooTable style

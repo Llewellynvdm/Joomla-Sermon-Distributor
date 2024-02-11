@@ -54,20 +54,31 @@ use Joomla\CMS\HTML\HTMLHelper as Html;
 		<?php echo $this->loadTemplate('sermons-list'); ?>
 	<?php endif; ?>
 	<script>
-	function sermonCounter(key,filename)
-	{
-		var getUrl = "index.php?option=com_sermondistributor&task=ajax.countDownload&format=json";
-		if (key.length > 0 && filename.length > 0)
-		{
-			var request = 'token=<?php echo JSession::getFormToken(); ?>&key='+key+'&filename='+filename;
+
+	function sermonCounter(key, filename) {
+		const getUrl = "index.php?option=com_sermondistributor&task=ajax.countDownload&format=json&raw=true";
+		let requestUrl = '';
+
+		if (key.length > 0 && filename.length > 0) {
+			request = getUrl + '&<?php echo \JSession::getFormToken(); ?>=1&key=' + encodeURIComponent(key) + '&filename=' + encodeURIComponent(filename);
+		} else {
+			return;
 		}
-		return jQuery.ajax({
-			type: 'POST',
-			url: getUrl,
-			dataType: 'jsonp',
-			data: request,
-			jsonp: 'callback'
-		});
+
+		// Using Fetch API for the AJAX call
+		return fetch(requestUrl, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			}
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.catch(error => console.error('There was a problem with your fetch operation:', error));
 	}
 	</script>
 <?php else: ?>

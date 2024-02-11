@@ -60,7 +60,7 @@ class SermondistributorViewSerieslist extends HtmlView
 		{
 			foreach ($this->items as $nr => &$item)
 			{
-				$item->link = JRoute::_(SermondistributorHelperRoute::getSeriesRoute($item->slug));
+				$item->link = \JRoute::_(SermondistributorHelperRoute::getSeriesRoute($item->slug));
 			}
 		}
 		// set the FooTable style

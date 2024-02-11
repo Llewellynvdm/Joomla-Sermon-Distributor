@@ -109,7 +109,7 @@ class SermondistributorViewCategory extends HtmlView
 		parent::display($tpl);
 	}
 
-	 /**
+	/**
 	 * Increment the hit counter for the category.
 	 *
 	 * @param   integer  $pk  Primary key of the category to increment.
