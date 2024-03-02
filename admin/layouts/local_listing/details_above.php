@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		details_above.php
@@ -23,7 +23,7 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // get the form
 $form = $displayData->getForm();
@@ -38,21 +38,29 @@ $layout_path_array = explode('.', $this->getLayoutId());
 $fields_tab_layout = 'fields_' . $layout_path_array[1];
 
 // get the fields
-$fields = $displayData->get($fields_tab_layout) ?: array(
+$fields = $displayData->get($fields_tab_layout) ?: [
 	'name',
 	'size'
-);
+];
 
-$hiddenFields = $displayData->get('hidden_fields') ?: array();
+// Ensure $fields is treated as an array and count its size.
+$size = count((array) $fields);
+
+// Use a ternary operator to determine the class.
+// If there are 1 to 4 fields, set the class to divide the 12-grid column equally among the fields.
+// For more than 4 fields, default to four columns (3-grid each) for medium and larger screens.
+$css_class = ($size > 0 && $size <= 4) ? 'col-12 col-md-' . round(12 / $size) : 'col-12 col-md-3';
+
+$hiddenFields = $displayData->get('hidden_fields') ?: [];
 
 ?>
 <?php if ($fields && count((array) $fields)) :?>
-<div class="form-inline form-inline-header">
+<div class="row title-alias form-vertical mb-3">
 	<?php foreach($fields as $field): ?>
 		<?php if (in_array($field, $hiddenFields)) : ?>
 			<?php $form->setFieldAttribute($field, 'type', 'hidden'); ?>
 		<?php endif; ?>
-		<?php echo $form->renderField($field, null, null, array('class' => 'control-wrapper-' . $field)); ?>
+		<?php echo $form->renderField($field, null, null, ['class' => $css_class . ' control-wrapper-' . $field]); ?>
 	<?php endforeach; ?>
 </div>
 <?php endif; ?>

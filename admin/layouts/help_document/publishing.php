@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		publishing.php
@@ -23,7 +23,7 @@
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // get the form
 $form = $displayData->getForm();
@@ -51,7 +51,7 @@ $fields = $displayData->get($fields_tab_layout) ?: array(
 	'id'
 );
 
-$hiddenFields = $displayData->get('hidden_fields') ?: array();
+$hiddenFields = $displayData->get('hidden_fields') ?: [];
 
 ?>
 <?php if ($fields && count((array) $fields)) :?>

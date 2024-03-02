@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+	<layout title="COM_SERMONDISTRIBUTOR_MENU_SERIES_TITLE" option="COM_SERMONDISTRIBUTOR_MENU_SERIES_OPTION">
+		<message>
+			<![CDATA[COM_SERMONDISTRIBUTOR_MENU_SERIES_DESC]]>
+		</message>
+	</layout>
+	<!-- Add fields to the request variables for the layout. -->
+	<fields name="request">
+		<fieldset name="request"
+			addruleprefix="TrueChristianChurch\Component\Sermondistributor\Site\Rule"
+			addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Site\Field">
+			
+		<!-- Series_request_id Field. Type: Series. (custom) -->
+		<field
+			type="series"
+			name="id"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_REQUEST_ID_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_REQUEST_ID_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			default="0"
+			button="false"
+		/>
+		</fieldset>
+	</fields>
+	<!-- Adding page parameters -->
+	<fields name="params">
+		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR"
+			addruleprefix="TrueChristianChurch\Component\Sermondistributor\Site\Rule"
+			addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Site\Field">
+		<!-- Series_default_icon Field. Type: Media. (joomla) -->
+		<field
+			type="media"
+			name="series_default_icon"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_DEFAULT_ICON_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_DEFAULT_ICON_DESCRIPTION"
+			directory="Set the default icon for series."
+		/>			
+		<!-- Series_display Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_display"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_DISPLAY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_DISPLAY_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_PANEL</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_BOX</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_SMALL</option>
+		</field>			
+		<!-- Series_box_contrast Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_box_contrast"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_BOX_CONTRAST_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_BOX_CONTRAST_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_list_style Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="series_list_style"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_LIST_STYLE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_LIST_STYLE_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="string"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_PLAIN</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_LINES</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_STRIPED</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
+		</field>			
+		<!-- Series_icon Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_icon"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_ICON_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_ICON_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_desc Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_desc"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_DESC_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_DESC_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_sermon_count Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermon_count"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMON_COUNT_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMON_COUNT_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_hits Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_hits"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_HITS_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_HITS_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Spacer_hr_3 Field. Type: Spacer. A None Database Field. (joomla) -->
+		<field type="spacer" name="spacer_hr_3" hr="true" class="spacer_hr_3" />			
+		<!-- Series_sermons_display Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_display"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_DISPLAY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_DISPLAY_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_TABLE</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_GRID</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_LIST</option>
+		</field>			
+		<!-- Series_sermons_list_style Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="series_sermons_list_style"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_LIST_STYLE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_LIST_STYLE_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="string"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_PLAIN</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_LINES</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_STRIPED</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
+		</field>			
+		<!-- Series_sermons_table_color Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="series_sermons_table_color"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_TABLE_COLOR_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_TABLE_COLOR_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="string"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_BLUE</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_RED</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_PURPLE</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_GREEN</option>
+			<option value="4">
+				COM_SERMONDISTRIBUTOR_CONFIG_DARK_BLUE</option>
+			<option value="5">
+				COM_SERMONDISTRIBUTOR_CONFIG_LEGACY</option>
+			<option value="6">
+				COM_SERMONDISTRIBUTOR_CONFIG_UIKIT</option>
+			<option value="7">
+				COM_SERMONDISTRIBUTOR_CONFIG_CUSTOM</option>
+			<option value="8">
+				COM_SERMONDISTRIBUTOR_CONFIG_NONE</option>
+		</field>			
+		<!-- Series_sermons_icon Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_icon"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_ICON_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_ICON_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_sermons_desc Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_desc"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_DESC_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_DESC_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_sermons_preacher Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_preacher"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_PREACHER_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_PREACHER_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_sermons_category Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_category"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_CATEGORY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_CATEGORY_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_sermons_download_counter Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_download_counter"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_DOWNLOAD_COUNTER_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_DOWNLOAD_COUNTER_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_sermons_hits Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_hits"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_HITS_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_HITS_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_sermons_downloads Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_downloads"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_DOWNLOADS_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_DOWNLOADS_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Series_sermons_open Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="series_sermons_open"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_OPEN_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_SERIES_SERMONS_OPEN_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>
+		</fieldset>
+	</fields>
+</metadata>

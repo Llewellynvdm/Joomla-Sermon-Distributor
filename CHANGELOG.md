@@ -1,3 +1,11 @@
-# v2.1.1
+# v5.0.0-beta1
 
-- Moved over to a Joomla Package
+- First release of [[[Component]]] towards Joomla 5
+
+# v3.0.3
+
+- Removed the not_required field from the sermon model. #36
+
+# v3.0.2
+
+- Add the HTML class to the site default layout.

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addruleprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Field"
+>
+	<fields name="filter">
+		<field
+			type="text"
+			name="search"
+			inputmode="search"
+			label="COM_SERMONDISTRIBUTOR_FILTER_SEARCH"
+			description="COM_SERMONDISTRIBUTOR_FILTER_SEARCH_STATISTICS"
+			hint="JSEARCH_FILTER"
+		/>
+		<field
+			type="status"
+			name="published"
+			label="COM_SERMONDISTRIBUTOR_FILTER_PUBLISHED"
+			description="COM_SERMONDISTRIBUTOR_FILTER_PUBLISHED_STATISTICS"
+			class="js-select-submit-on-change"
+		>
+			<option value="">JOPTION_SELECT_PUBLISHED</option>
+		</field>
+		<field
+			type="accesslevel"
+			name="access"
+			label="JGRID_HEADING_ACCESS"
+			hint="JOPTION_SELECT_ACCESS"
+			multiple="true"
+			class="js-select-submit-on-change"
+			layout="joomla.form.field.list-fancy-select"
+		/>
+		<field
+			type="sermon"
+			name="sermon"
+			label="COM_SERMONDISTRIBUTOR_STATISTIC_SERMON_LABEL"
+			multiple="false"
+			class="js-select-submit-on-change"
+		/>
+		<field
+			type="preachers"
+			name="preacher"
+			label="COM_SERMONDISTRIBUTOR_STATISTIC_PREACHER_LABEL"
+			multiple="false"
+			class="js-select-submit-on-change"
+		/>
+		<field
+			type="series"
+			name="series"
+			label="COM_SERMONDISTRIBUTOR_STATISTIC_SERIES_LABEL"
+			multiple="false"
+			class="js-select-submit-on-change"
+		/>
+		<input type="hidden" name="form_submited" value="1"/>
+	</fields>
+
+	<fields name="list">
+		<field
+			name="fullordering"
+			type="list"
+			label="JGLOBAL_SORT_BY"
+			class="js-select-submit-on-change"
+			default="a.id DESC"
+			validate="options"
+		>
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+			<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+			<option value="a.published ASC">JSTATUS_ASC</option>
+			<option value="a.published DESC">JSTATUS_DESC</option>
+			<option value="a.filename ASC">COM_SERMONDISTRIBUTOR_FILTER_FILE_NAME_ASCENDING</option>
+			<option value="a.filename DESC">COM_SERMONDISTRIBUTOR_FILTER_FILE_NAME_DESCENDING</option>
+			<option value="g.name ASC">COM_SERMONDISTRIBUTOR_FILTER_SERMON_ASCENDING</option>
+			<option value="g.name DESC">COM_SERMONDISTRIBUTOR_FILTER_SERMON_DESCENDING</option>
+			<option value="h.name ASC">COM_SERMONDISTRIBUTOR_FILTER_PREACHER_ASCENDING</option>
+			<option value="h.name DESC">COM_SERMONDISTRIBUTOR_FILTER_PREACHER_DESCENDING</option>
+			<option value="i.name ASC">COM_SERMONDISTRIBUTOR_FILTER_SERIES_ASCENDING</option>
+			<option value="i.name DESC">COM_SERMONDISTRIBUTOR_FILTER_SERIES_DESCENDING</option>
+			<option value="a.counter ASC">COM_SERMONDISTRIBUTOR_FILTER_COUNTER_ASCENDING</option>
+			<option value="a.counter DESC">COM_SERMONDISTRIBUTOR_FILTER_COUNTER_DESCENDING</option>
+			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+
+		<field
+			name="limit"
+			type="limitbox"
+			label="JGLOBAL_LIST_LIMIT"
+			default="25"
+			class="js-select-submit-on-change"
+		/>
+	</fields>
+</form>

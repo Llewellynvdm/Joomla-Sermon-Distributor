@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermonsrow.php
@@ -22,8 +22,16 @@
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
+
 // No direct access to this file
-defined('JPATH_BASE') or die('Restricted access');
+defined('JPATH_BASE') or die;
 
 
 
@@ -34,8 +42,8 @@ defined('JPATH_BASE') or die('Restricted access');
 	<?php else: ?>
 		<?php echo $displayData->name; ?>
 	<?php endif; ?>
-	<?php echo JLayoutHelper::render('isnew', $displayData); ?>
-	<?php echo JLayoutHelper::render('addtodropboxicon', $displayData); ?>
+	<?php echo LayoutHelper::render('isnew', $displayData); ?>
+	<?php echo LayoutHelper::render('addtodropboxicon', $displayData); ?>
 </td>
 <?php if ($displayData->params->get($displayData->viewKey.'_sermons_desc')): ?>
 <td>
@@ -75,7 +83,7 @@ defined('JPATH_BASE') or die('Restricted access');
 <?php endif; ?>
 <?php if ($displayData->params->get($displayData->viewKey.'_sermons_downloads')): ?>
 <td>
-	<?php echo JLayoutHelper::render('downloadsermonbutton', $displayData); ?>
+	<?php echo LayoutHelper::render('downloadsermonbutton', $displayData); ?>
 </td>
 <?php endif; ?>
 <?php if ($displayData->params->get($displayData->viewKey.'_sermons_download_counter')): ?>
@@ -87,7 +95,7 @@ defined('JPATH_BASE') or die('Restricted access');
 	?>
 	
 	<div class="uk-badge uk-badge <?php echo $counter_class; ?>">
-		<span data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_TOTAL_DOWNLOADS'); ?>">
+		<span data-uk-tooltip title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_TOTAL_DOWNLOADS'); ?>">
 		<i class="uk-icon-<?php echo $counter_icon; ?>"></i>
 		<?php echo $displayData->statisticTotal; ?>
 		</span>

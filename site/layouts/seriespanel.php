@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		seriespanel.php
@@ -22,8 +22,16 @@
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
+
 // No direct access to this file
-defined('JPATH_BASE') or die('Restricted access');
+defined('JPATH_BASE') or die;
 
 
 
@@ -37,11 +45,11 @@ defined('JPATH_BASE') or die('Restricted access');
 		?>
 		<div class="uk-panel-badge uk-badge <?php echo $badge_class; ?>">
 			<i class="uk-icon-<?php echo $badge_icon; ?>"></i>
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?>
 		</div>
 	<?php endif ;?>
 	<h3 class="uk-panel-title">
-		<a href="<?php echo $displayData->link; ?>" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_OPEN'); ?> <?php echo $displayData->name; ?>">
+		<a href="<?php echo $displayData->link; ?>" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_OPEN'); ?> <?php echo $displayData->name; ?>">
 			<?php echo $displayData->name; ?>
 		</a>
 	</h3>
@@ -59,9 +67,9 @@ defined('JPATH_BASE') or die('Restricted access');
 		<hr />
 	<?php endif; ?>
 	<a class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-success" href="<?php echo $displayData->link; ?>">
-		<?php echo JText::_('COM_SERMONDISTRIBUTOR_OPEN'); ?>
+		<?php echo Text::_('COM_SERMONDISTRIBUTOR_OPEN'); ?>
 		<?php if ($displayData->params->get('list_series_sermon_count')): ?>
-			<span data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>">(<?php echo count($displayData->idSeriesSermonB); ?>)</span>
+			<span data-uk-tooltip title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>">(<?php echo count($displayData->idSeriesSermonB); ?>)</span>
 		<?php endif; ?>
 	</a>
 </div>

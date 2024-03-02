@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<fieldset
-		addrulepath="/administrator/components/com_sermondistributor/models/rules"
-		addfieldpath="/administrator/components/com_sermondistributor/models/fields"
+		addruleprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Rule"
+		addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Field"
 		name="global_config"
 		label="COM_SERMONDISTRIBUTOR_CONFIG_GLOBAL_LABEL"
 		description="COM_SERMONDISTRIBUTOR_CONFIG_GLOBAL_DESC">
@@ -301,17 +301,17 @@
 		name="uikit_config"
 		label="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_LABEL"
 		description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_DESC">
-		<field name="uikit_version"
+		<field name="add_jquery_framework"
 			type="radio"
-			label="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_VERSION_LABEL"
-			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_VERSION_DESC"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_JQUERY_LOAD_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_JQUERY_LOAD_DESC"
 			class="btn-group btn-group-yesno"
-			default="2">
+			default="">
 			<!-- Option Set. -->
-			<option value="2">
-				COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_V2</option>"
-			<option value="3">
-				COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_V3</option>"
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_JQUERY_REMOVE</option>"
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_JQUERY_LOAD</option>"
 		</field>
 		<field name="uikit_load"
 			type="radio"
@@ -324,8 +324,6 @@
 				COM_SERMONDISTRIBUTOR_CONFIG_AUTO_LOAD</option>"
 			<option value="1">
 				COM_SERMONDISTRIBUTOR_CONFIG_FORCE_LOAD</option>"
-			<option value="3">
-				COM_SERMONDISTRIBUTOR_CONFIG_ONLY_EXTRA</option>"
 			<option value="2">
 				COM_SERMONDISTRIBUTOR_CONFIG_DONT_LOAD</option>"
 		</field>
@@ -340,21 +338,6 @@
 				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>"
 			<option value=".min">
 				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>"
-		</field>
-		<field name="uikit_style"
-			type="radio"
-			label="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_STYLE_LABEL"
-			description="COM_SERMONDISTRIBUTOR_CONFIG_UIKIT_STYLE_DESC"
-			class="btn-group btn-group-yesno"
-			showon="uikit_version:2"
-			default="">
-			<!-- Option Set. -->
-			<option value="">
-				COM_SERMONDISTRIBUTOR_CONFIG_FLAT_LOAD</option>"
-			<option value=".almost-flat">
-				COM_SERMONDISTRIBUTOR_CONFIG_ALMOST_FLAT_LOAD</option>"
-			<option value=".gradient">
-				COM_SERMONDISTRIBUTOR_CONFIG_GRADIANT_LOAD</option>"
 		</field>
 	</fieldset>
 	<fieldset

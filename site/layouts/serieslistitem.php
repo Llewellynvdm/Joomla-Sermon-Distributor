@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		serieslistitem.php
@@ -22,16 +22,24 @@
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
+
 // No direct access to this file
-defined('JPATH_BASE') or die('Restricted access');
+defined('JPATH_BASE') or die;
 
 
 
 ?>
-<a <?php if ($displayData->params->get('list_series_sermon_count')): ?> data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>: <?php echo count($displayData->idSeriesSermonB); ?>" <?php endif; ?>href="<?php echo $displayData->link; ?>"><?php echo $displayData->name; ?></a>
+<a <?php if ($displayData->params->get('list_series_sermon_count')): ?> data-uk-tooltip title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>: <?php echo count($displayData->idSeriesSermonB); ?>" <?php endif; ?>href="<?php echo $displayData->link; ?>"><?php echo $displayData->name; ?></a>
 <?php if ($displayData->params->get('list_series_desc') && $displayData->desc): ?>
 	<?php echo $displayData->desc; ?>
 <?php endif; ?>
 <?php if ($displayData->params->get('list_series_hits')): ?>
-	<em><?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?></em>
+	<em><?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?></em>
 <?php endif ;?>

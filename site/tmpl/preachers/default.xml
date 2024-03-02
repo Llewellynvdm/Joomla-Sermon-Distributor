@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+	<layout title="COM_SERMONDISTRIBUTOR_MENU_PREACHERS_TITLE" option="COM_SERMONDISTRIBUTOR_MENU_PREACHERS_OPTION">
+		<message>
+			<![CDATA[COM_SERMONDISTRIBUTOR_MENU_PREACHERS_DESC]]>
+		</message>
+	</layout>
+	<!-- Adding page parameters -->
+	<fields name="params">
+		<fieldset name="basic" label="COM_SERMONDISTRIBUTOR"
+			addruleprefix="TrueChristianChurch\Component\Sermondistributor\Site\Rule"
+			addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Site\Field">
+		<!-- Preachers_display Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="preachers_display"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_DISPLAY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_DISPLAY_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_TABLE</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_GRID</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_LIST</option>
+		</field>			
+		<!-- Preachers_list_style Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="preachers_list_style"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_LIST_STYLE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_LIST_STYLE_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="string"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_PLAIN</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_LINES</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_STRIPED</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_SPACED</option>
+		</field>			
+		<!-- Preachers_table_color Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="preachers_table_color"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_TABLE_COLOR_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_TABLE_COLOR_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="string"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_BLUE</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_RED</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_CONFIG_PURPLE</option>
+			<option value="3">
+				COM_SERMONDISTRIBUTOR_CONFIG_GREEN</option>
+			<option value="4">
+				COM_SERMONDISTRIBUTOR_CONFIG_DARK_BLUE</option>
+			<option value="5">
+				COM_SERMONDISTRIBUTOR_CONFIG_LEGACY</option>
+			<option value="6">
+				COM_SERMONDISTRIBUTOR_CONFIG_UIKIT</option>
+			<option value="7">
+				COM_SERMONDISTRIBUTOR_CONFIG_CUSTOM</option>
+			<option value="8">
+				COM_SERMONDISTRIBUTOR_CONFIG_NONE</option>
+		</field>			
+		<!-- Preachers_icon Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="preachers_icon"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_ICON_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_ICON_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Preachers_desc Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="preachers_desc"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_DESC_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_DESC_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Preachers_sermon_count Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="preachers_sermon_count"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_SERMON_COUNT_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_SERMON_COUNT_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Preachers_hits Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="preachers_hits"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_HITS_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_HITS_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Preachers_website Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="preachers_website"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_WEBSITE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_WEBSITE_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>			
+		<!-- Preachers_email Field. Type: Radio. (joomla) -->
+		<field
+			type="radio"
+			name="preachers_email"
+			label="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_EMAIL_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CONFIG_PREACHERS_EMAIL_DESCRIPTION"
+			class="btn-group btn-group-yesno"
+			default="">
+			<!--  Global & Option Set. -->
+			<option value="">
+				JGLOBAL_USE_GLOBAL</option>
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_CONFIG_YES</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_CONFIG_NO</option>
+		</field>
+		</fieldset>
+	</fields>
+</metadata>

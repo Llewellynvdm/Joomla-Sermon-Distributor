@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		preacherspanel.php
@@ -22,8 +22,16 @@
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
+
 // No direct access to this file
-defined('JPATH_BASE') or die('Restricted access');
+defined('JPATH_BASE') or die;
 
 // build the list class
 $style = $displayData->params->get('preachers_list_style');
@@ -57,18 +65,18 @@ switch ($style)
 		?>
 		<div class="uk-panel-badge uk-badge <?php echo $badge_class; ?>">
 			<i class="uk-icon-<?php echo $badge_icon; ?>"></i>
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_HITS'); ?>: <?php echo $displayData->hits; ?>
 		</div>
 	<?php endif ;?>
 	<h3 class="uk-panel-title">
-		<a href="<?php echo $displayData->link; ?>" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_OPEN'); ?> <?php echo $displayData->name; ?>">
+		<a href="<?php echo $displayData->link; ?>" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_OPEN'); ?> <?php echo $displayData->name; ?>">
 			<?php echo $displayData->name; ?>
 		</a>
 	</h3>
 	<?php if ($displayData->params->get('preachers_icon')): ?>
 		<?php $displayData->icon = ($displayData->icon) ? $displayData->icon : $displayData->params->get('preacher_default_icon'); ?>
 		<?php if ($displayData->icon): ?>
-			<a href="<?php echo $displayData->link; ?>" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_OPEN'); ?> <?php echo $displayData->name; ?>">
+			<a href="<?php echo $displayData->link; ?>" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_OPEN'); ?> <?php echo $displayData->name; ?>">
 			<img class="uk-thumbnail uk-thumbnail-expand" src="<?php echo $displayData->icon; ?>" alt="<?php echo $displayData->name; ?>">
 			</a>
 			<?php if ($displayData->params->get('preachers_desc') && $displayData->desc): ?>
@@ -84,19 +92,19 @@ switch ($style)
 	<?php if (($displayData->params->get('preachers_website') && $displayData->website) || ($displayData->params->get('preachers_email') && $displayData->email)): ?>
 		<ul class="uk-list<?php echo $listClass; ?>">
 			<?php if ($displayData->params->get('preachers_website') && $displayData->website): ?>
-				<li><i class="uk-icon-external-link"></i> <a href="<?php echo $displayData->website; ?>" target="_blank" data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_GO_TO_WEBSITE_OF'); ?> <?php echo $displayData->name; ?>"><?php echo $displayData->website; ?></a></li>
+				<li><i class="uk-icon-external-link"></i> <a href="<?php echo $displayData->website; ?>" target="_blank" data-uk-tooltip title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_GO_TO_WEBSITE_OF'); ?> <?php echo $displayData->name; ?>"><?php echo $displayData->website; ?></a></li>
 			<?php endif; ?>
 			<?php if ($displayData->params->get('preachers_email') && $displayData->email): ?>
-				<li><i class="uk-icon-envelope-o"></i> <a href="mailto:<?php echo $displayData->email; ?>" data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SEND_EMAIL_TO'); ?> <?php echo $displayData->name; ?>"><?php echo $displayData->email; ?></a></li>
+				<li><i class="uk-icon-envelope-o"></i> <a href="mailto:<?php echo $displayData->email; ?>" data-uk-tooltip title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_SEND_EMAIL_TO'); ?> <?php echo $displayData->name; ?>"><?php echo $displayData->email; ?></a></li>
 			<?php endif; ?>
 		</ul>
 	<?php elseif ($displayData->params->get('preachers_desc') && $displayData->desc): ?>
 		<hr />
 	<?php endif; ?>
 	<a class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-success" href="<?php echo $displayData->link; ?>" title="<?php echo $displayData->name; ?>">
-		<?php echo JText::_('COM_SERMONDISTRIBUTOR_OPEN'); ?>
+		<?php echo Text::_('COM_SERMONDISTRIBUTOR_OPEN'); ?>
 		<?php if ($displayData->params->get('preachers_sermon_count')): ?>
-			<span data-uk-tooltip title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>">(<?php echo count($displayData->idPreacherSermonB); ?>)</span>
+			<span data-uk-tooltip title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_COUNT'); ?>">(<?php echo count($displayData->idPreacherSermonB); ?>)</span>
 		<?php endif; ?>
 	</a>
 </div>

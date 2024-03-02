@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		sermons_fullwidth.php
@@ -22,25 +22,32 @@
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use VDM\Joomla\Utilities\StringHelper;
+use VDM\Joomla\Utilities\ArrayHelper;
+
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // set the defaults
 $items = $displayData->vvvsermons;
-$user = JFactory::getUser();
+$user = Factory::getApplication()->getIdentity();
 $id = $displayData->item->id;
 // set the edit URL
 $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 // set a return value
 $return = ($id) ? "index.php?option=com_sermondistributor&view=preacher&layout=edit&id=" . $id : "";
 // check for a return value
-$jinput = JFactory::getApplication()->input;
+$jinput = Factory::getApplication()->input;
 if ($_return = $jinput->get('return', null, 'base64'))
 {
 	$return .= "&return=" . $_return;
 }
 // check if return value was set
-if (SermondistributorHelper::checkString($return))
+if (StringHelper::check($return))
 {
 	// set the referral values
 	$ref = ($id) ? "&ref=preacher&refid=" . $id . "&return=" . urlencode(base64_encode($return)) : "&return=" . urlencode(base64_encode($return));
@@ -60,40 +67,40 @@ $can = SermondistributorHelper::getActions('sermon');
 <div class="form-vertical">
 <?php if ($can->get('sermon.create')): ?>
 	<div class="btn-group">
-		<a class="btn btn-small btn-success" href="<?php echo $new; ?>"><span class="icon-new icon-white"></span> <?php echo JText::_('COM_SERMONDISTRIBUTOR_NEW'); ?></a>
-		<a class="btn btn-small" onclick="Joomla.submitbutton('preacher.cancel');" href="<?php echo $close_new; ?>"><span class="icon-new"></span> <?php echo JText::_('COM_SERMONDISTRIBUTOR_CLOSE_NEW'); ?></a>
+		<a class="btn btn-small btn-success" href="<?php echo $new; ?>"><span class="icon-new icon-white"></span> <?php echo Text::_('COM_SERMONDISTRIBUTOR_NEW'); ?></a>
+		<a class="btn btn-small" onclick="Joomla.submitbutton('preacher.cancel');" href="<?php echo $close_new; ?>"><span class="icon-new"></span> <?php echo Text::_('COM_SERMONDISTRIBUTOR_CLOSE_NEW'); ?></a>
 	</div><br /><br />
 <?php endif; ?>
-<?php if (SermondistributorHelper::checkArray($items)): ?>
-<table class="footable table data sermons metro-blue" data-page-size="20" data-filter="#filter_sermons">
+<?php if (ArrayHelper::check($items)): ?>
+<table class="footable table data sermons" data-show-toggle="true" data-toggle-column="first" data-sorting="true" data-paging="true" data-paging-size="20" data-filtering="true">
 <thead>
 	<tr>
-		<th data-toggle="true">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_NAME_LABEL'); ?>
+		<th data-type="html" data-sort-use="text">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_NAME_LABEL'); ?>
 		</th>
-		<th data-hide="phone">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL'); ?>
+		<th data-breakpoints="xs sm" data-type="html" data-sort-use="text">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL'); ?>
 		</th>
-		<th data-hide="phone">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL'); ?>
+		<th data-breakpoints="xs sm" data-type="html" data-sort-use="text">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL'); ?>
 		</th>
-		<th data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_LABEL'); ?>
+		<th data-breakpoints="xs sm md" data-type="html" data-sort-use="text">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_LABEL'); ?>
 		</th>
-		<th data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'); ?>
+		<th data-breakpoints="xs sm md" data-type="html" data-sort-use="text">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'); ?>
 		</th>
-		<th data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL'); ?>
+		<th data-breakpoints="xs sm md" data-type="html" data-sort-use="text">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL'); ?>
 		</th>
-		<th data-hide="all">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL'); ?>
+		<th data-breakpoints="all" data-type="html" data-sort-use="text">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL'); ?>
 		</th>
-		<th width="10" data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_STATUS'); ?>
+		<th width="10" data-breakpoints="xs sm md">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_STATUS'); ?>
 		</th>
-		<th width="5" data-type="numeric" data-hide="phone,tablet">
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_SERMON_ID'); ?>
+		<th width="5" data-type="number" data-breakpoints="xs sm md">
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_SERMON_ID'); ?>
 		</th>
 	</tr>
 </thead>
@@ -101,7 +108,9 @@ $can = SermondistributorHelper::getActions('sermon');
 <?php foreach ($items as $i => $item): ?>
 	<?php
 		$canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->id || $item->checked_out == 0;
-		$userChkOut = JFactory::getUser($item->checked_out);
+		$userChkOut = Factory::getContainer()->
+			get(\Joomla\CMS\User\UserFactoryInterface::class)->
+				loadUserById($item->checked_out);
 		$canDo = SermondistributorHelper::getActions('sermon',$item,'sermons');
 	?>
 	<tr>
@@ -109,7 +118,7 @@ $can = SermondistributorHelper::getActions('sermon');
 			<?php if ($canDo->get('sermon.edit')): ?>
 				<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?><?php echo $ref; ?>"><?php echo $displayData->escape($item->name); ?></a>
 				<?php if ($item->checked_out): ?>
-					<?php echo JHtml::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'sermons.', $canCheckin); ?>
+					<?php echo Html::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'sermons.', $canCheckin); ?>
 				<?php endif; ?>
 			<?php else: ?>
 				<?php echo $displayData->escape($item->name); ?>
@@ -136,33 +145,33 @@ $can = SermondistributorHelper::getActions('sermon');
 			<?php endif; ?>
 		</td>
 		<td>
-			<?php echo JText::_($item->link_type); ?>
+			<?php echo Text::_($item->link_type); ?>
 		</td>
 		<td>
-			<?php echo JText::_($item->source); ?>
+			<?php echo Text::_($item->source); ?>
 		</td>
 		<?php if ($item->published == 1): ?>
-			<td class="center"  data-value="1">
-				<span class="status-metro status-published" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_PUBLISHED');  ?>">
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_PUBLISHED'); ?>
+			<td class="center"  data-sort-value="1">
+				<span class="status-metro status-published" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_PUBLISHED');  ?>">
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_PUBLISHED'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == 0): ?>
-			<td class="center"  data-value="2">
-				<span class="status-metro status-inactive" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_INACTIVE');  ?>">
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_INACTIVE'); ?>
+			<td class="center"  data-sort-value="2">
+				<span class="status-metro status-inactive" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_INACTIVE');  ?>">
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_INACTIVE'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == 2): ?>
-			<td class="center"  data-value="3">
-				<span class="status-metro status-archived" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_ARCHIVED');  ?>">
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_ARCHIVED'); ?>
+			<td class="center"  data-sort-value="3">
+				<span class="status-metro status-archived" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_ARCHIVED');  ?>">
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_ARCHIVED'); ?>
 				</span>
 			</td>
 		<?php elseif ($item->published == -2): ?>
-			<td class="center"  data-value="4">
-				<span class="status-metro status-trashed" title="<?php echo JText::_('COM_SERMONDISTRIBUTOR_TRASHED');  ?>">
-					<?php echo JText::_('COM_SERMONDISTRIBUTOR_TRASHED'); ?>
+			<td class="center"  data-sort-value="4">
+				<span class="status-metro status-trashed" title="<?php echo Text::_('COM_SERMONDISTRIBUTOR_TRASHED');  ?>">
+					<?php echo Text::_('COM_SERMONDISTRIBUTOR_TRASHED'); ?>
 				</span>
 			</td>
 		<?php endif; ?>
@@ -172,17 +181,10 @@ $can = SermondistributorHelper::getActions('sermon');
 	</tr>
 <?php endforeach; ?>
 </tbody>
-<tfoot class="hide-if-no-paging">
-	<tr>
-		<td colspan="9">
-			<div class="pagination pagination-centered"></div>
-		</td>
-	</tr>
-</tfoot>
 </table>
 <?php else: ?>
 	<div class="alert alert-no-items">
-		<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+		<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 	</div>
 <?php endif; ?>
 </div>

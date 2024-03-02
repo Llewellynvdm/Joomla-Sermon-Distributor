@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		isnew.php
@@ -22,10 +22,18 @@
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
-// No direct access to this file
-defined('JPATH_BASE') or die('Restricted access');
 
-$display = '<span class="uk-button uk-button-danger uk-button-mini">'.JText::_('COM_SERMONDISTRIBUTOR_NEW').'</span>';
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
+
+// No direct access to this file
+defined('JPATH_BASE') or die;
+
+$display = '<span class="uk-button uk-button-danger uk-button-mini">'.Text::_('COM_SERMONDISTRIBUTOR_NEW').'</span>';
 
 ?>
 <?php echo ($displayData->isNew) ? $display:''; ?>

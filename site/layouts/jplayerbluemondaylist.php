@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		jplayerbluemondaylist.php
@@ -22,11 +22,21 @@
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
-// No direct access to this file
-defined('JPATH_BASE') or die('Restricted access');
 
-$random = SermondistributorHelper::randomkey(5);
-if (isset($displayData['script']) && SermondistributorHelper::checkArray($displayData['script']))
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Layout\LayoutHelper;
+use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
+use VDM\Joomla\Utilities\StringHelper;
+use VDM\Joomla\Utilities\ArrayHelper;
+
+// No direct access to this file
+defined('JPATH_BASE') or die;
+
+$random = StringHelper::random(5);
+if (isset($displayData['script']) && ArrayHelper::check($displayData['script']))
 {
 	$script = array();
 	$script[] = 'jQuery(document).ready(function(){';
@@ -45,7 +55,7 @@ if (isset($displayData['script']) && SermondistributorHelper::checkArray($displa
 	$script[] = 'keyEnabled: true';
 	$script[] = '}); });';
 	// get the document
-	$document = JFactory::getDocument();
+	$document = Factory::getDocument();
 	// add script to document header
 	$document->addScriptDeclaration(implode("\n", $script));
 }
@@ -56,10 +66,10 @@ if (isset($displayData['script']) && SermondistributorHelper::checkArray($displa
 	<div class="jp-type-playlist">
 		<div class="jp-gui jp-interface">
 			<div class="jp-controls">
-				<button class="jp-previous" role="button" tabindex="0"><?php echo JText::_('COM_SERMONDISTRIBUTOR_PREVIOUS'); ?></button>
-				<button class="jp-play" role="button" tabindex="0"><?php echo JText::_('COM_SERMONDISTRIBUTOR_PLAY'); ?></button>
-				<button class="jp-next" role="button" tabindex="0"><?php echo JText::_('COM_SERMONDISTRIBUTOR_NEXT'); ?></button>
-				<button class="jp-stop" role="button" tabindex="0"><?php echo JText::_('COM_SERMONDISTRIBUTOR_STOP'); ?></button>
+				<button class="jp-previous" role="button" tabindex="0"><?php echo Text::_('COM_SERMONDISTRIBUTOR_PREVIOUS'); ?></button>
+				<button class="jp-play" role="button" tabindex="0"><?php echo Text::_('COM_SERMONDISTRIBUTOR_PLAY'); ?></button>
+				<button class="jp-next" role="button" tabindex="0"><?php echo Text::_('COM_SERMONDISTRIBUTOR_NEXT'); ?></button>
+				<button class="jp-stop" role="button" tabindex="0"><?php echo Text::_('COM_SERMONDISTRIBUTOR_STOP'); ?></button>
 			</div>
 			<div class="jp-progress">
 				<div class="jp-seek-bar">
@@ -67,8 +77,8 @@ if (isset($displayData['script']) && SermondistributorHelper::checkArray($displa
 				</div>
 			</div>
 			<div class="jp-volume-controls">
-				<button class="jp-mute" role="button" tabindex="0"><?php echo JText::_('COM_SERMONDISTRIBUTOR_MUTE'); ?></button>
-				<button class="jp-volume-max" role="button" tabindex="0"><?php echo JText::_('COM_SERMONDISTRIBUTOR_MAX_VOLUME'); ?></button>
+				<button class="jp-mute" role="button" tabindex="0"><?php echo Text::_('COM_SERMONDISTRIBUTOR_MUTE'); ?></button>
+				<button class="jp-volume-max" role="button" tabindex="0"><?php echo Text::_('COM_SERMONDISTRIBUTOR_MAX_VOLUME'); ?></button>
 				<div class="jp-volume-bar">
 					<div class="jp-volume-bar-value"></div>
 				</div>
@@ -78,8 +88,8 @@ if (isset($displayData['script']) && SermondistributorHelper::checkArray($displa
 				<div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
 			</div>
 			<div class="jp-toggles">
-				<button class="jp-repeat" role="button" tabindex="0"><?php echo JText::_('COM_SERMONDISTRIBUTOR_REPEAT'); ?></button>
-				<button class="jp-shuffle" role="button" tabindex="0"><?php echo JText::_('COM_SERMONDISTRIBUTOR_SHUFFLE'); ?></button>
+				<button class="jp-repeat" role="button" tabindex="0"><?php echo Text::_('COM_SERMONDISTRIBUTOR_REPEAT'); ?></button>
+				<button class="jp-shuffle" role="button" tabindex="0"><?php echo Text::_('COM_SERMONDISTRIBUTOR_SHUFFLE'); ?></button>
 			</div>
 		</div>
 		<div class="jp-playlist">
@@ -88,8 +98,8 @@ if (isset($displayData['script']) && SermondistributorHelper::checkArray($displa
 			</ul>
 		</div>
 		<div class="jp-no-solution">
-			<span><?php echo JText::_('COM_SERMONDISTRIBUTOR_UPDATE_REQUIRED'); ?></span>
-			<?php echo JText::_('COM_SERMONDISTRIBUTOR_TO_PLAY_THE_MEDIA_YOU_WILL_NEED_TO_EITHER_UPDATE_YOUR_BROWSER_TO_A_RECENT_VERSION_OR_UPDATE_YOUR'); ?> <a href="http://get.adobe.com/flashplayer/" target="_blank"><?php echo JText::_('COM_SERMONDISTRIBUTOR_FLASH_PLUGIN'); ?></a>.
+			<span><?php echo Text::_('COM_SERMONDISTRIBUTOR_UPDATE_REQUIRED'); ?></span>
+			<?php echo Text::_('COM_SERMONDISTRIBUTOR_TO_PLAY_THE_MEDIA_YOU_WILL_NEED_TO_EITHER_UPDATE_YOUR_BROWSER_TO_A_RECENT_VERSION_OR_UPDATE_YOUR'); ?> <a href="http://get.adobe.com/flashplayer/" target="_blank"><?php echo Text::_('COM_SERMONDISTRIBUTOR_FLASH_PLUGIN'); ?></a>.
 		</div>
 	</div>
 </div>

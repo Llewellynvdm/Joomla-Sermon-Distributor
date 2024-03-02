@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		2.1.x
+	@version		5.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		metadata.php
@@ -22,8 +22,10 @@
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
+use Joomla\CMS\Language\Text;
+
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 $form = $displayData->getForm();
 
@@ -33,7 +35,7 @@ $fieldSets = $form->getFieldsets('metadata');
 
 <?php foreach ($fieldSets as $name => $fieldSet) : ?>
 	<?php if (isset($fieldSet->description) && trim($fieldSet->description)) : ?>
-		<p class="alert alert-info"><?php echo $this->escape(JText::_($fieldSet->description)); ?></p>
+		<p class="alert alert-info"><?php echo $this->escape(Text::_($fieldSet->description)); ?></p>
 	<?php endif; ?>
 
 	<?php
