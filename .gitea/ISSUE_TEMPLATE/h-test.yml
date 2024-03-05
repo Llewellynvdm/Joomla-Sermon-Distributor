@@ -35,7 +35,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: joomla_sermon_distributor_version
+    id: sermon_distributor_version
     attributes:
       label: Which Joomla Sermon Distributor version is this testing issue related to?
       multiple: true
