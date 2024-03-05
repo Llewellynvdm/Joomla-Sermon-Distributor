@@ -21,7 +21,7 @@ body:
       value: |
         # Affected Systems        
   - type: dropdown
-    id: system
+    id: joomla_version
     attributes:
       label: Which Joomla version could potentially be affected?
       multiple: true
@@ -35,7 +35,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: system
+    id: sermon_distributor_version
     attributes:
       label: Which Joomla Sermon Distributor version could potentially be affected?
       multiple: true
