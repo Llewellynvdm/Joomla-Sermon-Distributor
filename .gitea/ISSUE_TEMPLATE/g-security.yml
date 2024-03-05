@@ -26,9 +26,25 @@ body:
       label: Which Joomla version could potentially be affected?
       multiple: true
       options:
+        - Latest
         - Joomla 5
         - Joomla 4
         - Joomla 3
+        - All
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: system
+    attributes:
+      label: Which Joomla Sermon Distributor version could potentially be affected?
+      multiple: true
+      options:
+        - Latest
+        - v5.0
+        - v3.0
+        - v2.1
+        - v2.0
         - All
         - Other
     validations:
