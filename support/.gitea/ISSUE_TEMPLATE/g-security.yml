@@ -1,0 +1,48 @@
+name: Security Issue
+about: Identify a possible security risk.
+title: "[SECURITY]: "
+labels:
+  - security
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **⚠️ CRITICAL: Avoid sharing any sensitive or confidential details in this message.** Should you suspect a security flaw, please contact us directly at [example@abc.io].               
+  - type: textarea
+    id: security-general-description
+    attributes:
+      label: General Description
+      description: Offer a broad overview of the security concern, ensuring not to disclose any sensitive information.
+      placeholder: Provide a general description of the security problem.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        # Affected Systems        
+  - type: dropdown
+    id: system
+    attributes:
+      label: Which system could potentially be affected?
+      multiple: true
+      options:
+	- Joomla 5
+	- Joomla 4
+	- Joomla 3
+	- All
+	- Other
+    validations:
+      required: true
+  - type: textarea
+    id: non-sensitive-details
+    attributes:
+      label: Non-Sensitive Details
+      description: If applicable, please offer further non-sensitive information or general observations regarding the security concern.
+      placeholder: Provide any relevant non-sensitive details or observations.
+    validations:
+      required: false
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional Comments
+      description: Feel free to include any further comments or pertinent details that might assist us.

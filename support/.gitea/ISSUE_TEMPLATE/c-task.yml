@@ -1,0 +1,83 @@
+name: Task
+about: Create a task for project management
+title: "[TASK]: "
+labels:
+  - task
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for setting up the task! Tasks assist us in arranging and ranking our work. Kindly provide comprehensive details about the task for clarity and efficient tracking.               
+  - type: textarea
+    id: task-details
+    attributes:
+      label: Task Details
+      description: Please describe the task. What are the specific actions required?
+      placeholder: Provide a detailed description of the task.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        # Task Context and Priority
+  - type: dropdown
+    id: system
+    attributes:
+      label: Which Joomla version is this task related to?
+      multiple: true
+      options:
+        - Joomla 5
+        - Joomla 4
+        - Joomla 3
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area of the system does this task impact?
+      multiple: true
+      options:
+	- Dashboard(admin_view)
+	- Preachers(admin_views)
+	- Preacher(admin_view)
+	- Sermons(admin_views)
+	- Sermon(admin_view)
+	- Sermon Categories(admin_views)
+	- Series List(admin_views)
+	- Series(admin_view)
+	- Statistics(admin_view)
+	- External Sources(admin_views)
+	- External Source(admin_view)
+	- Manual Updater(admin_view)
+	- Local Listings(admin_views)
+	- Help Documents(admin_views)
+	- Categories(site_views)
+	- Category(site_view)
+	- Preachers(site_views)
+	- Preacher(site_view)
+	- Series(site_view)
+	- Series List(site_views)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: task-objective
+    attributes:
+      label: Task Objective
+      description: What's the aim or purpose of this task? How will it contribute to the project or system's success?
+      placeholder: Describe the goal and anticipated result of the task.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Please share any extra context, files, or screenshots that could aid in comprehending or carrying out the task.
+    validations:
+      required: false
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional Comments
+      description: Feel free to include any further comments or pertinent details that might assist us.

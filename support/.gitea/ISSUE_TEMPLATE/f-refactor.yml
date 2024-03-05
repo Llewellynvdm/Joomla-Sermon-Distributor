@@ -1,0 +1,86 @@
+name: Refactoring Task
+about: Recommend or identify the necessity for code refactoring.
+title: "[REFACTOR]: "
+labels:
+  - refactor
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We appreciate your commitment to enhancing the maintainability and quality of our codebase! Code refactoring plays a crucial role in ensuring our system remains efficient and easy to manage. To assist us effectively, please share comprehensive details about the refactoring task you are suggesting or identifying.                
+  - type: textarea
+    id: refactoring-details
+    attributes:
+      label: Refactoring Details
+      description: Outline the refactoring task, specifying which code segment requires attention and the reasons behind this need. What improvements are expected from this refactoring?
+      placeholder: Provide an in-depth explanation of the refactoring task?
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        # Affected Components and Context        
+  - type: dropdown
+    id: system
+    attributes:
+      label: Which Joomla version does this refactoring task relate to?
+      multiple: true
+      options:
+	- Joomla 5
+	- Joomla 4
+	- Joomla 3
+	- Other
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area of the system will be impacted by this refactoring?
+      multiple: true
+      options:
+	- Dashboard(admin_view)
+	- Preachers(admin_views)
+	- Preacher(admin_view)
+	- Sermons(admin_views)
+	- Sermon(admin_view)
+	- Sermon Categories(admin_views)
+	- Series List(admin_views)
+	- Series(admin_view)
+	- Statistics(admin_view)
+	- External Sources(admin_views)
+	- External Source(admin_view)
+	- Manual Updater(admin_view)
+	- Local Listings(admin_views)
+	- Help Documents(admin_views)
+	- Categories(site_views)
+	- Category(site_view)
+	- Preachers(site_views)
+	- Preacher(site_view)
+	- Series(site_view)
+	- Series List(site_views)
+	- Back-end (Just Code)
+	- Front-end (Just GUI)
+	- All
+	- Other
+    validations:
+      required: true
+  - type: textarea
+    id: expected-outcome
+    attributes:
+      label: Expected Outcome
+      description: What benefits do you anticipate from this refactoring? How will it enhance the codebase or overall system?
+      placeholder: Explain the expected results of this refactoring.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Share any further details or information, like code snippets, that could aid in comprehending or executing the refactoring task.
+    validations:
+      required: false
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional Comments
+      description: Feel free to include any further comments or pertinent details that might assist us.

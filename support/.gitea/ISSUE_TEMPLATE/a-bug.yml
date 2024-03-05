@@ -1,0 +1,96 @@
+name: Bug Report
+about: Draft a report to aid in our Debugging efforts.
+title: "[BUG]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We value your effort in reporting an bug! Your feedback is essential for us to address and fix the problem.                
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What Happened?
+      description: Please provide a detailed description of the issue and explain what outcome you anticipate.
+      placeholder: Describe the issue you experienced.
+      value: ""
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        # Environment Details                
+  - type: dropdown
+    id: system
+    attributes:
+      label: Which Joomla version were you using?
+      multiple: true
+      options:
+        - Joomla 5
+        - Joomla 4
+        - Joomla 3
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where did this issue occur?
+      multiple: true
+      options:
+	- Dashboard(admin_view)
+	- Preachers(admin_views)
+	- Preacher(admin_view)
+	- Sermons(admin_views)
+	- Sermon(admin_view)
+	- Sermon Categories(admin_views)
+	- Series List(admin_views)
+	- Series(admin_view)
+	- Statistics(admin_view)
+	- External Sources(admin_views)
+	- External Source(admin_view)
+	- Manual Updater(admin_view)
+	- Local Listings(admin_views)
+	- Help Documents(admin_views)
+	- Categories(site_views)
+	- Category(site_view)
+	- Preachers(site_views)
+	- Preacher(site_view)
+	- Series(site_view)
+	- Series List(site_views)
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: On which browsers did you encounter the issue?
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Microsoft Edge
+        - Safari
+        - Opera
+        - Brave
+        - Vivaldi
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: What operating system are you currently using?
+      multiple: true
+      options:
+        - Windows (Desktop)
+        - macOS (Desktop)
+        - Linux (Desktop)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional Comments
+      description: Feel free to include any further comments or pertinent details that might assist us.
