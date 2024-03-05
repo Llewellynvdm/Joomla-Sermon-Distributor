@@ -22,7 +22,7 @@ body:
       value: |
         # Affected Components and Context        
   - type: dropdown
-    id: Joomla version
+    id: joomla_version
     attributes:
       label: Which Joomla version is this testing issue related to?
       multiple: true
@@ -35,7 +35,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: Joomla Sermon Distributor version
+    id: joomla_sermon_distributor_version
     attributes:
       label: Which Joomla Sermon Distributor version is this testing issue related to?
       multiple: true
@@ -49,7 +49,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: PHP version
+    id: php_version
     attributes:
       label: Which PHP version is this testing issue related to?
       multiple: true
@@ -64,7 +64,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: Apache version
+    id: apache_version
     attributes:
       label: Which Apache version is this testing issue related to?
       multiple: true
