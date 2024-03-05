@@ -1,0 +1,126 @@
+name: Performance Issue
+about: Recommend or propose performance improvements
+title: "[PERFORMANCE]: "
+labels:
+  - performance
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Appreciation for tackling performance challenges! Optimizing performance is vital for our system's efficiency and the user experience. Could you offer more comprehensive details to aid in identifying and resolving the suggested performance issue or improvement?                
+  - type: textarea
+    id: performance-details
+    attributes:
+      label: Performance Details
+      description: Please outline the performance problem or the enhancements you propose. Is it related to speed, resource usage, responsiveness, or something else?
+      placeholder: Offer an in-depth explanation of the performance challenge or improvement.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        # Affected Systems and Context        
+  - type: dropdown
+    id: system
+    attributes:
+      label: Which Joomla version is affected by this performance issue?
+      multiple: true
+      options:
+        - Joomla 5
+	- Joomla 4
+	- Joomla 3
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the system will be affected by this performance issue?
+      multiple: true
+      options:
+	- Dashboard(admin_view)
+	- Preachers(admin_views)
+	- Preacher(admin_view)
+	- Sermons(admin_views)
+	- Sermon(admin_view)
+	- Sermons Categories(admin_views)
+	- Series List(admin_view)
+	- Series(admin_views)
+	- Statistics(admin_views)
+	- External Sources(admin_views)
+	- External Source(admin_view)
+	- Manual Updater(admin_view)
+	- Local Listings(admin_views)
+	- Help Documents(admin_views)
+	- Categories(site_views)
+	- Category(site_view)
+	- Preacher(site_view)
+	- Preachers(site_views)
+	- Series(site_view)
+	- Series List(site_views)
+	- Other
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Which browsers did you experience the performance problem on?
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Microsoft Edge
+        - Safari
+        - Opera
+        - Brave
+        - Vivaldi
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Which operating system are you using?
+      multiple: true
+      options:
+        - Windows (Desktop)
+        - macOS (Desktop)
+        - Linux (Desktop)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: replication-steps
+    attributes:
+      label: Steps to Replicate
+      description: If possible, share a step-by-step guide to replicate the performance problem.
+      placeholder: Explain how to replicate the problem.
+    validations:
+      required: false
+  - type: textarea
+    id: impact-assessment
+    attributes:
+      label: Impact Assessment
+      description: How does the performance problem impact the system or its users? How severe is its effect?
+      placeholder: Explain the impact of the performance problem.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-solutions
+    attributes:
+      label: Proposed Solutions or Ideas
+      description: If you have any suggestions or ideas for resolving the performance problem, please share them here.
+      placeholder: Share any potential solutions or improvement problem.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Provide any additional context, benchmarks, logs, or screenshots that might help in understanding or addressing the performance problem.
+    validations:
+      required: false
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional Comments
+      description: Feel free to include any further comments or pertinent details that might assist us.
