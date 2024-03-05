@@ -20,11 +20,12 @@
     "author_url": "https://io.vdm.dev/",
     "description": "The Sermon Distributor.",
     "version_id": "com_sermondistributor",
-    "update_servers": "https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/master/sermondistributor_update_server.xml"
+    "update_servers": "https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/3.x/sermondistributor_update_server.xml"
   },
   "repository": {
     "owner": "christian",
-    "repo": "pkg-sermondistributor"
+    "repo": "pkg-sermondistributor",
+    "branch": "3.x"
   },
   "files": [
     {
@@ -32,19 +33,19 @@
       "repo": "Joomla-Sermon-Distributor",
       "id": "com_sermondistributor",
       "type": "component",
-      "mode": "master"
+      "mode": "3.x"
     },
     {
-      "owner": "christian",
-      "repo": "mod_dailylight",
+      "owner": "getBible",
+      "repo": "daily-light-module",
       "id": "mod_dailylight",
       "type": "module",
       "client": "site",
       "mode": "master"
     },
     {
-      "owner": "christian",
-      "repo": "mod_dailyscripture",
+      "owner": "getBible",
+      "repo": "daily-scripture-module",
       "id": "mod_dailyscripture",
       "type": "module",
       "client": "site",
@@ -66,4 +67,3 @@
     }
   ]
 }
-
