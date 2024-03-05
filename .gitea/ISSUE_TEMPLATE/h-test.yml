@@ -22,14 +22,57 @@ body:
       value: |
         # Affected Components and Context        
   - type: dropdown
-    id: system
+    id: version
     attributes:
       label: Which Joomla version is this testing issue related to?
       multiple: true
       options:
+        - Latest
         - Joomla 5
         - Joomla 4
         - Joomla 3
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Which Joomla Sermon Distributor version is this testing issue related to?
+      multiple: true
+      options:
+        - Latest
+        - v5.0
+        - v3.0
+        - v2.1
+        - v2.0
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Which PHP version is this testing issue related to?
+      multiple: true
+      options:
+        - Latest
+        - PHP 8.3
+        - PHP 8.2
+        - PHP 8.1
+        - PHP 8.0
+        - PHP 7.4
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Which Apache version is this testing issue related to?
+      multiple: true
+      options:
+        - Latest
+        - Apache 2.4
+        - Apache 2.2
+        - Apache 2.0
         - Other
     validations:
       required: true
