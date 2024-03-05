@@ -35,29 +35,29 @@ body:
   - type: dropdown
     id: area
     attributes:
-      label: Which area of the system does this task impact?
+      label: Which area of the extension does this task impact?
       multiple: true
       options:
-	- Dashboard(admin_view)
-	- Preachers(admin_views)
-	- Preacher(admin_view)
-	- Sermons(admin_views)
-	- Sermon(admin_view)
-	- Sermon Categories(admin_views)
-	- Series List(admin_views)
-	- Series(admin_view)
-	- Statistics(admin_view)
-	- External Sources(admin_views)
-	- External Source(admin_view)
-	- Manual Updater(admin_view)
-	- Local Listings(admin_views)
-	- Help Documents(admin_views)
-	- Categories(site_views)
-	- Category(site_view)
-	- Preachers(site_views)
-	- Preacher(site_view)
-	- Series(site_view)
-	- Series List(site_views)
+        - Dashboard(admin_view)
+        - Preachers(admin_views)
+        - Preacher(admin_view)
+        - Sermons(admin_views)
+        - Sermon(admin_view)
+        - Sermon Categories(admin_views)
+        - Series List(admin_views)
+        - Series(admin_view)
+        - Statistics(admin_view)
+        - External Sources(admin_views)
+        - External Source(admin_view)
+        - Manual Updater(admin_view)
+        - Local Listings(admin_views)
+        - Help Documents(admin_views)
+        - Categories(site_views)
+        - Category(site_view)
+        - Preachers(site_views)
+        - Preacher(site_view)
+        - Series(site_view)
+        - Series List(site_views)
         - Other
     validations:
       required: true
