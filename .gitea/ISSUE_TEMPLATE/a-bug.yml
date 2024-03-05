@@ -22,7 +22,7 @@ body:
       value: |
         # Environment Details                
   - type: dropdown
-    id: system
+    id: joomla_version
     attributes:
       label: Which Joomla version are you using?
       multiple: true
@@ -35,7 +35,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: system
+    id: sermon_distributor_version
     attributes:
       label: Which Joomla Sermon Distributor version are you using?
       multiple: true
@@ -49,7 +49,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: system
+    id: php_version
     attributes:
       label: Which PHP version are you using?
       multiple: true
@@ -64,7 +64,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: system
+    id: apache_version
     attributes:
       label: Which Apache version are you using?
       multiple: true
