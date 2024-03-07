@@ -9,7 +9,7 @@
     "name": "PKG_SERMONDISTRIBUTOR",
     "code_name": "sermondistributor",
     "package_name": "pkg_sermondistributor",
-    "min_joomla_version": "4.3",
+    "min_joomla_version": "5.0",
     "max_joomla_version": "5.1",
     "copyright": "Copyright (C) 2015 Llewellyn van der Merwe. All rights reserved.",
     "copyright_year": "2015",
@@ -20,12 +20,12 @@
     "author_url": "https://io.vdm.dev/",
     "description": "The Sermon Distributor.",
     "version_id": "com_sermondistributor",
-    "update_servers": "https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/5.0/sermondistributor_update_server.xml"
+    "update_servers": "https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/5.x/sermondistributor_update_server.xml"
   },
   "repository": {
     "owner": "christian",
     "repo": "pkg-sermondistributor",
-    "branch": "5.0"
+    "branch": "5.x"
   },
   "files": [
     {
@@ -33,7 +33,7 @@
       "repo": "Joomla-Sermon-Distributor",
       "id": "com_sermondistributor",
       "type": "component",
-      "mode": "5.0"
+      "mode": "5.x"
     },
     {
       "owner": "getBible",
