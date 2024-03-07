@@ -2,6 +2,10 @@
 
 - First release of Sermon Distributor towards Joomla 5
 
+# v4.0.0-beta1
+
+- First release of Sermon Distributor towards Joomla 4
+
 # v3.0.4
 
 - Add the getDocument method call to view

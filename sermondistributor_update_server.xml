@@ -23,6 +23,24 @@
 		<element>pkg_sermondistributor</element>
 		<type>package</type>
 		<client>site</client>
+		<version>4.0.0-beta1</version>
+		<infourl title="Sermon Distributor!">https://www.vdm.io/</infourl>
+		<downloads>
+			<downloadurl type="full" format="zip">https://git.vdm.dev/api/v1/repos/christian/pkg-sermondistributor/archive/v4.0.0-beta1.zip</downloadurl>
+		</downloads>
+		<tags>
+			<tag>beta</tag>
+		</tags>
+		<maintainer>Llewellyn van der Merwe</maintainer>
+		<maintainerurl>https://www.vdm.io/</maintainerurl>
+		<targetplatform name="joomla" version="4\.[01234]"/>
+	</update>
+	<update>
+		<name>Sermon Distributor</name>
+		<description>A sermon distributor that links to Dropbox.</description>
+		<element>pkg_sermondistributor</element>
+		<type>package</type>
+		<client>site</client>
 		<version>5.0.0-beta1</version>
 		<infourl title="Sermon Distributor!">https://www.vdm.io/</infourl>
 		<downloads>
