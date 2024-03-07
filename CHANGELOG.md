@@ -1,11 +1,9 @@
-# v5.0.0-beta1
+# v4.0.0-beta1
 
-- First release of Sermon Distributor towards Joomla 5
+- First release of Sermon Distributor towards Joomla 4
 
-# v3.0.3
+# v3.0.4
 
-- Removed the not_required field from the sermon model. #36
-
-# v3.0.2
-
-- Add the HTML class to the site default layout.
+- Add the getDocument method call to view
+- Add recall tab memory to view tabs
+- Add root class calls like \JRoute
