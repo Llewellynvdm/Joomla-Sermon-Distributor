@@ -102,8 +102,8 @@ class SermondistributorModelCategory extends ListModel
 			array('category')));
 		$query->join('LEFT', ($db->quoteName('#__categories', 'b')) . ' ON (' . $db->quoteName('a.catid') . ' = ' . $db->quoteName('b.id') . ')');
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
-		// Check if JRequest::getInt('id') is a string or numeric value.
-		$checkValue = JRequest::getInt('id');
+		// Check if $this->input->getInt('id', 0) is a string or numeric value.
+		$checkValue = $this->input->getInt('id', 0);
 		if (isset($checkValue) && StringHelper::check($checkValue))
 		{
 			$query->where('a.catid = ' . $db->quote($checkValue));
@@ -219,9 +219,9 @@ class SermondistributorModelCategory extends ListModel
 				// build series slug
 				$item->series_slug = (isset($item->series_alias)) ? $item->series.':'.$item->series_alias : $item->series;
 				// build needed links
-				$item->link = JRoute::_(SermondistributorHelperRoute::getSermonRoute($item->slug));
-				$item->preacher_link = JRoute::_(SermondistributorHelperRoute::getPreacherRoute($item->preacher_slug));
-				$item->series_link = JRoute::_(SermondistributorHelperRoute::getSeriesRoute($item->series_slug));
+				$item->link = \JRoute::_(SermondistributorHelperRoute::getSermonRoute($item->slug));
+				$item->preacher_link = \JRoute::_(SermondistributorHelperRoute::getPreacherRoute($item->preacher_slug));
+				$item->series_link = \JRoute::_(SermondistributorHelperRoute::getSeriesRoute($item->series_slug));
 				// set view key
 				$item->viewKey = 'category';
 				SermondistributorHelper::getDownloadLinks($item);
@@ -296,8 +296,8 @@ class SermondistributorModelCategory extends ListModel
 			array('a.id','a.parent_id','a.lft','a.rgt','a.level','a.title','a.alias','a.note','a.description','a.params','a.metadesc','a.metakey','a.metadata','a.hits','a.language','a.version'),
 			array('id','parent_id','lft','rgt','level','name','alias','note','description','params','metadesc','metakey','metadata','hits','language','version')));
 		$query->from($db->quoteName('#__categories', 'a'));
-		// Check if $this->input->getInt('id') is a string or numeric value.
-		$checkValue = $this->input->getInt('id');
+		// Check if $this->input->getInt('id', 0) is a string or numeric value.
+		$checkValue = $this->input->getInt('id', 0);
 		if (isset($checkValue) && StringHelper::check($checkValue))
 		{
 			$query->where('a.id = ' . $db->quote($checkValue));

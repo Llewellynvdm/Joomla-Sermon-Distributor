@@ -79,12 +79,12 @@ abstract class Helper
 	/**
 	 * Set the component option
 	 *
-	 * @param   string     $option  The option
+	 * @param   string|null     $option  The option
 	 *
 	 * @return  void
 	 * @since   3.2.0
 	 */
-	public static function setOption(string $option): void
+	public static function setOption(?string $option): void
 	{
 		self::$option = $option;
 	}
@@ -97,7 +97,7 @@ abstract class Helper
 	 * @return  string|null      A component option
 	 * @since   3.0.11
 	 */
-	public static function getOption(string $default = 'empty'): ?string
+	public static function getOption(?string $default = 'empty'): ?string
 	{
 		if (empty(self::$option))
 		{
@@ -160,7 +160,7 @@ abstract class Helper
 	 *
 	 * @since   3.0.11
 	 */
-	public static function get(string $option = null, string $default = null): ?string
+	public static function get(?string $option = null, ?string $default = null): ?string
 	{
 		// check that we have an option
 		// and get the code name from it
@@ -260,7 +260,7 @@ abstract class Helper
 	 *
 	 * @since   3.0.11
 	 */
-	public static function methodExists(string $method, string $option = null): bool
+	public static function methodExists(string $method, ?string $option = null): bool
 	{
 		// get the helper class
 		return ($helper = self::get($option, null)) !== null &&

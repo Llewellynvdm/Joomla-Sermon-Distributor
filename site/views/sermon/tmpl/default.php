@@ -72,7 +72,7 @@ use VDM\Joomla\Utilities\StringHelper;
 	}
 	<?php if (1 == $this->item->playerKey) : ?>
 		soundManager.setup({
-			url: '<?php echo JURI::root(true); ?>/media/com_sermondistributor/soundmanager/swf',
+			url: '<?php echo \JUri::root(true); ?>/media/com_sermondistributor/soundmanager/swf',
 			flashVersion: 9,
 			onready: function() {
 				// Ready to use; soundManager.createSound() etc. can now be called.

@@ -209,7 +209,7 @@ abstract class SermondistributorHelper
 		}
 		$keyCounterRAW = $safe->encryptString(json_encode($keyCounter));
 		$keyCounter = self::base64_urlencode($keyCounterRAW);
-		$token = JSession::getFormToken();
+		$token = \JSession::getFormToken();
 		$downloadURL = Uri::root().'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
 		// check if local .htaccess should be set
 		$setHtaccess = false;
@@ -219,7 +219,7 @@ abstract class SermondistributorHelper
 		{
 			case 1:
 				// local file get local folder and check if outside root (if not then allow direct)
-				$localFolder = JComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images').'/';
+				$localFolder = \JComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images').'/';
 				// should we allow direct downloads
 				$allowDirect = false;
 				if (2 == $sermon->link_type && strpos($localFolder, JPATH_ROOT) !== false)
@@ -257,7 +257,7 @@ abstract class SermondistributorHelper
 				break;
 			case 2:
 				// Dropbox get global dropbox switch 
-				$addToButton = JComponentHelper::getParams('com_sermondistributor')->get('add_to_button', 0);
+				$addToButton = \JComponentHelper::getParams('com_sermondistributor')->get('add_to_button', 0);
 				if (1 == $sermon->build)
 				{
 					if (self::checkArray($sermon->manual_files))
@@ -777,7 +777,7 @@ abstract class SermondistributorHelper
 		if (!isset(self::$localkey[$type]))
 		{
 			// get the main key
-			self::$localkey[$type] = JComponentHelper::getParams('com_sermondistributor')->get($type, 'localKey34fdWEkl');
+			self::$localkey[$type] = \JComponentHelper::getParams('com_sermondistributor')->get($type, 'localKey34fdWEkl');
 		}
 		return self::$localkey[$type];
 	}
@@ -1928,40 +1928,40 @@ abstract class SermondistributorHelper
 		// load user for access menus
 		$user = Factory::getUser();
 		// load the submenus to sidebar
-		JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_DASHBOARD'), 'index.php?option=com_sermondistributor&view=sermondistributor', $submenu === 'sermondistributor');
+		\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_DASHBOARD'), 'index.php?option=com_sermondistributor&view=sermondistributor', $submenu === 'sermondistributor');
 		if ($user->authorise('preacher.access', 'com_sermondistributor') && $user->authorise('preacher.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_PREACHERS'), 'index.php?option=com_sermondistributor&view=preachers', $submenu === 'preachers');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_PREACHERS'), 'index.php?option=com_sermondistributor&view=preachers', $submenu === 'preachers');
 		}
 		if ($user->authorise('sermon.access', 'com_sermondistributor') && $user->authorise('sermon.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERMONS'), 'index.php?option=com_sermondistributor&view=sermons', $submenu === 'sermons');
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'), 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.sermon', $submenu === 'categories.sermon');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERMONS'), 'index.php?option=com_sermondistributor&view=sermons', $submenu === 'sermons');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES'), 'index.php?option=com_categories&view=categories&extension=com_sermondistributor.sermon', $submenu === 'categories.sermon');
 		}
 		if ($user->authorise('series.access', 'com_sermondistributor') && $user->authorise('series.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERIES_LIST'), 'index.php?option=com_sermondistributor&view=series_list', $submenu === 'series_list');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_SERIES_LIST'), 'index.php?option=com_sermondistributor&view=series_list', $submenu === 'series_list');
 		}
 		if ($user->authorise('statistic.access', 'com_sermondistributor') && $user->authorise('statistic.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_STATISTICS'), 'index.php?option=com_sermondistributor&view=statistics', $submenu === 'statistics');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_STATISTICS'), 'index.php?option=com_sermondistributor&view=statistics', $submenu === 'statistics');
 		}
 		if ($user->authorise('external_source.access', 'com_sermondistributor') && $user->authorise('external_source.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_EXTERNAL_SOURCES'), 'index.php?option=com_sermondistributor&view=external_sources', $submenu === 'external_sources');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_EXTERNAL_SOURCES'), 'index.php?option=com_sermondistributor&view=external_sources', $submenu === 'external_sources');
 		}
 		// Access control (manual_updater.access && manual_updater.submenu).
 		if ($user->authorise('manual_updater.access', 'com_sermondistributor') && $user->authorise('manual_updater.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_MANUAL_UPDATER'), 'index.php?option=com_sermondistributor&view=manual_updater', $submenu === 'manual_updater');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_MANUAL_UPDATER'), 'index.php?option=com_sermondistributor&view=manual_updater', $submenu === 'manual_updater');
 		}
 		if ($user->authorise('local_listing.access', 'com_sermondistributor') && $user->authorise('local_listing.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_LOCAL_LISTINGS'), 'index.php?option=com_sermondistributor&view=local_listings', $submenu === 'local_listings');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_LOCAL_LISTINGS'), 'index.php?option=com_sermondistributor&view=local_listings', $submenu === 'local_listings');
 		}
 		if ($user->authorise('help_document.access', 'com_sermondistributor') && $user->authorise('help_document.submenu', 'com_sermondistributor'))
 		{
-			JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_HELP_DOCUMENTS'), 'index.php?option=com_sermondistributor&view=help_documents', $submenu === 'help_documents');
+			\JHtmlSidebar::addEntry(Text::_('COM_SERMONDISTRIBUTOR_SUBMENU_HELP_DOCUMENTS'), 'index.php?option=com_sermondistributor&view=help_documents', $submenu === 'help_documents');
 		}
 	}
 

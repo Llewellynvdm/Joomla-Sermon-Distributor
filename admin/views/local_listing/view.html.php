@@ -212,7 +212,7 @@ class SermondistributorViewLocal_listing extends HtmlView
 		$this->getDocument()->setTitle(Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_NEW' : 'COM_SERMONDISTRIBUTOR_LOCAL_LISTING_EDIT'));
 		Html::_('stylesheet', "administrator/components/com_sermondistributor/assets/css/local_listing.css", ['version' => 'auto']);
 		// Add Ajax Token
-		$this->document->addScriptDeclaration("var token = '" . Session::getFormToken() . "';");
+		$this->getDocument()->addScriptDeclaration("var token = '" . Session::getFormToken() . "';");
 		Html::_('script', $this->script, ['version' => 'auto']);
 		Html::_('script', "administrator/components/com_sermondistributor/views/local_listing/submitbutton.js", ['version' => 'auto']);
 		// add JavaScripts

@@ -145,7 +145,7 @@ class SermondistributorControllerApi extends FormController
 	protected function getApiUser()
 	{
 		// get params
-		$params = JComponentHelper::getParams('com_sermondistributor');
+		$params = \JComponentHelper::getParams('com_sermondistributor');
 		// return user object
 		return Factory::getUser($params->get('api', 0, 'INT'));
 	}

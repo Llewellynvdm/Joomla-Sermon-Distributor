@@ -40,10 +40,10 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 <div id="sermondistributor_loader">
 <form action="<?php echo Route::_('index.php?option=com_sermondistributor&layout=edit&id='. (int) $this->item->id . $this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
-	<?php echo LayoutHelper::render('statistic.details_above', $this); ?>
+<?php echo LayoutHelper::render('statistic.details_above', $this); ?>
 <div class="form-horizontal">
 
-	<?php echo Html::_('bootstrap.startTabSet', 'statisticTab', array('active' => 'details')); ?>
+	<?php echo Html::_('bootstrap.startTabSet', 'statisticTab', ['active' => 'details', 'recall' => true]); ?>
 
 	<?php echo Html::_('bootstrap.addTab', 'statisticTab', 'details', Text::_('COM_SERMONDISTRIBUTOR_STATISTIC_DETAILS', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">

@@ -206,7 +206,7 @@ abstract class SermondistributorHelper
 		}
 		$keyCounterRAW = $safe->encryptString(json_encode($keyCounter));
 		$keyCounter = self::base64_urlencode($keyCounterRAW);
-		$token = JSession::getFormToken();
+		$token = \JSession::getFormToken();
 		$downloadURL = Uri::root().'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
 		// check if local .htaccess should be set
 		$setHtaccess = false;
@@ -216,7 +216,7 @@ abstract class SermondistributorHelper
 		{
 			case 1:
 				// local file get local folder and check if outside root (if not then allow direct)
-				$localFolder = JComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images').'/';
+				$localFolder = \JComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images').'/';
 				// should we allow direct downloads
 				$allowDirect = false;
 				if (2 == $sermon->link_type && strpos($localFolder, JPATH_ROOT) !== false)
@@ -254,7 +254,7 @@ abstract class SermondistributorHelper
 				break;
 			case 2:
 				// Dropbox get global dropbox switch 
-				$addToButton = JComponentHelper::getParams('com_sermondistributor')->get('add_to_button', 0);
+				$addToButton = \JComponentHelper::getParams('com_sermondistributor')->get('add_to_button', 0);
 				if (1 == $sermon->build)
 				{
 					if (self::checkArray($sermon->manual_files))
@@ -774,7 +774,7 @@ abstract class SermondistributorHelper
 		if (!isset(self::$localkey[$type]))
 		{
 			// get the main key
-			self::$localkey[$type] = JComponentHelper::getParams('com_sermondistributor')->get($type, 'localKey34fdWEkl');
+			self::$localkey[$type] = \JComponentHelper::getParams('com_sermondistributor')->get($type, 'localKey34fdWEkl');
 		}
 		return self::$localkey[$type];
 	}

@@ -250,9 +250,9 @@ class SermondistributorModelSermon extends ItemModel
 			$this->_item[$pk]->series_slug = (isset($this->_item[$pk]->series_alias)) ? $this->_item[$pk]->series.':'.$this->_item[$pk]->series_alias : $this->_item[$pk]->series;
 			$this->_item[$pk]->category_slug = (isset($this->_item[$pk]->category_alias)) ? $this->_item[$pk]->catid.':'.$this->_item[$pk]->category_alias : $this->_item[$pk]->catid;
 			// now build the links
-			$this->_item[$pk]->preacher_link = JRoute::_(SermondistributorHelperRoute::getPreacherRoute($this->_item[$pk]->preacher_slug));
-			$this->_item[$pk]->series_link = JRoute::_(SermondistributorHelperRoute::getSeriesRoute($this->_item[$pk]->series_slug));
-			$this->_item[$pk]->category_link = JRoute::_(SermondistributorHelperRoute::getCategoryRoute($this->_item[$pk]->category_slug));
+			$this->_item[$pk]->preacher_link = \JRoute::_(SermondistributorHelperRoute::getPreacherRoute($this->_item[$pk]->preacher_slug));
+			$this->_item[$pk]->series_link = \JRoute::_(SermondistributorHelperRoute::getSeriesRoute($this->_item[$pk]->series_slug));
+			$this->_item[$pk]->category_link = \JRoute::_(SermondistributorHelperRoute::getCategoryRoute($this->_item[$pk]->category_slug));
 			// build the download links
 			SermondistributorHelper::getDownloadLinks($this->_item[$pk]);
 			// fix the scripture links that they will show

@@ -788,7 +788,7 @@ class Com_SermondistributorInstallerScript
 				$revert_rule = "ALTER TABLE `#__assets` CHANGE `rules` `rules` varchar(5120) NOT NULL COMMENT 'JSON encoded access control.';";
 				$db->setQuery($revert_rule);
 				$db->execute();
-				$app->enqueueMessage(Text::_('Reverted the <b>#__assets</b> table rules column back to its default size of varchar(5120)'));
+				$app->enqueueMessage(Text::_('COM_COMPONENTBUILDER_REVERTED_THE_B_ASSETSB_TABLE_RULES_COLUMN_BACK_TO_ITS_DEFAULT_SIZE_OF_VARCHARFIVE_THOUSAND_ONE_HUNDRED_AND_TWENTY'));
 			}
 			else
 			{
@@ -1091,7 +1091,7 @@ class Com_SermondistributorInstallerScript
 					}
 				}
 				// do an update by moving config data to the new external source area.
-				$this->comParams = JComponentHelper::getParams('com_sermondistributor');
+				$this->comParams = \JComponentHelper::getParams('com_sermondistributor');
 				// the number of links
 				$numbers = range(1, 4);
 				// the types of links
@@ -1847,7 +1847,7 @@ class Com_SermondistributorInstallerScript
 			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 3.0.3 Was Successful! Let us know if anything is not working as expected.</h3></div>';
+				<h3>Upgrade to Version 3.0.4 Was Successful! Let us know if anything is not working as expected.</h3></div>';
 
 			// Set db if not set already.
 			if (!isset($db))

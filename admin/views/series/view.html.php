@@ -237,7 +237,7 @@ class SermondistributorViewSeries extends HtmlView
 		Html::_('script', 'media/com_sermondistributor/footable-v2/js/footable.paginate.js', ['version' => 'auto']);
 
 		$footable = "jQuery(document).ready(function() { jQuery(function () { jQuery('.footable').footable(); }); jQuery('.nav-tabs').on('click', 'li', function() { setTimeout(tableFix, 10); }); }); function tableFix() { jQuery('.footable').trigger('footable_resize'); }";
-		$this->document->addScriptDeclaration($footable);
+		$this->getDocument()->addScriptDeclaration($footable);
 
 		Html::_('script', $this->script, ['version' => 'auto']);
 		Html::_('script', "administrator/components/com_sermondistributor/views/series/submitbutton.js", ['version' => 'auto']);

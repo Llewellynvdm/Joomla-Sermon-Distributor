@@ -222,7 +222,7 @@ class SermondistributorViewExternal_source extends HtmlView
 		$this->getDocument()->setTitle(Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_NEW' : 'COM_SERMONDISTRIBUTOR_EXTERNAL_SOURCE_EDIT'));
 		Html::_('stylesheet', "administrator/components/com_sermondistributor/assets/css/external_source.css", ['version' => 'auto']);
 		// Add Ajax Token
-		$this->document->addScriptDeclaration("var token = '" . Session::getFormToken() . "';");
+		$this->getDocument()->addScriptDeclaration("var token = '" . Session::getFormToken() . "';");
 		Html::_('script', $this->script, ['version' => 'auto']);
 		Html::_('script', "administrator/components/com_sermondistributor/views/external_source/submitbutton.js", ['version' => 'auto']);
 		Text::script('view not acceptable. Error');

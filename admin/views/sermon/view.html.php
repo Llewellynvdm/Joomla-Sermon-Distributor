@@ -216,7 +216,7 @@ class SermondistributorViewSermon extends HtmlView
 		$this->getDocument()->setTitle(Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERMON_NEW' : 'COM_SERMONDISTRIBUTOR_SERMON_EDIT'));
 		Html::_('stylesheet', "administrator/components/com_sermondistributor/assets/css/sermon.css", ['version' => 'auto']);
 		// Add Ajax Token
-		$this->document->addScriptDeclaration("var token = '" . Session::getFormToken() . "';");
+		$this->getDocument()->addScriptDeclaration("var token = '" . Session::getFormToken() . "';");
 
 		// Add the CSS for Footable.
 		Html::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.core.min.css', ['version' => 'auto']);
@@ -239,7 +239,7 @@ class SermondistributorViewSermon extends HtmlView
 		Html::_('script', 'media/com_sermondistributor/footable-v2/js/footable.paginate.js', ['version' => 'auto']);
 
 		$footable = "jQuery(document).ready(function() { jQuery(function () { jQuery('.footable').footable(); }); jQuery('.nav-tabs').on('click', 'li', function() { setTimeout(tableFix, 10); }); }); function tableFix() { jQuery('.footable').trigger('footable_resize'); }";
-		$this->document->addScriptDeclaration($footable);
+		$this->getDocument()->addScriptDeclaration($footable);
 
 		Html::_('script', $this->script, ['version' => 'auto']);
 		Html::_('script', "administrator/components/com_sermondistributor/views/sermon/submitbutton.js", ['version' => 'auto']);

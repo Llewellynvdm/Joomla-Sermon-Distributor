@@ -101,8 +101,8 @@ class SermondistributorModelPreacher extends ListModel
 			array('b.title','b.alias'),
 			array('category','category_alias')));
 		$query->join('LEFT', ($db->quoteName('#__categories', 'b')) . ' ON (' . $db->quoteName('a.catid') . ' = ' . $db->quoteName('b.id') . ')');
-		// Check if JRequest::getInt('id') is a string or numeric value.
-		$checkValue = JRequest::getInt('id');
+		// Check if $this->input->getInt('id', 0) is a string or numeric value.
+		$checkValue = $this->input->getInt('id', 0);
 		if (isset($checkValue) && StringHelper::check($checkValue))
 		{
 			$query->where('a.preacher = ' . $db->quote($checkValue));
@@ -219,9 +219,9 @@ class SermondistributorModelPreacher extends ListModel
 				// build category slug
 				$item->category_slug = (isset($item->category_alias)) ? $item->catid.':'.$item->category_alias : $item->catid;
 				// build needed links
-				$item->link = JRoute::_(SermondistributorHelperRoute::getSermonRoute($item->slug));
-				$item->series_link = JRoute::_(SermondistributorHelperRoute::getSeriesRoute($item->series_slug));
-				$item->category_link = JRoute::_(SermondistributorHelperRoute::getCategoryRoute($item->category_slug));
+				$item->link = \JRoute::_(SermondistributorHelperRoute::getSermonRoute($item->slug));
+				$item->series_link = \JRoute::_(SermondistributorHelperRoute::getSeriesRoute($item->series_slug));
+				$item->category_link = \JRoute::_(SermondistributorHelperRoute::getCategoryRoute($item->category_slug));
 				// set view key
 				$item->viewKey = 'preacher';
 				SermondistributorHelper::getDownloadLinks($item);
@@ -297,8 +297,8 @@ class SermondistributorModelPreacher extends ListModel
 			array('id','asset_id','name','alias','icon','email','website','description','published','created_by','modified_by','created','modified','version','hits','ordering','metadesc','metakey','metadata')));
 		$query->from($db->quoteName('#__sermondistributor_preacher', 'a'));
 		$query->where('a.access IN (' . implode(',', $this->levels) . ')');
-		// Check if JRequest::getInt('id') is a string or numeric value.
-		$checkValue = JRequest::getInt('id');
+		// Check if $this->input->getInt('id', 0) is a string or numeric value.
+		$checkValue = $this->input->getInt('id', 0);
 		if (isset($checkValue) && StringHelper::check($checkValue))
 		{
 			$query->where('a.id = ' . $db->quote($checkValue));
@@ -447,8 +447,8 @@ class SermondistributorModelPreacher extends ListModel
 			array('a.id','a.alias','a.preacher'),
 			array('id','alias','preacher')));
 		$query->from($db->quoteName('#__sermondistributor_sermon', 'a'));
-		// Check if JRequest::getInt('id') is a string or numeric value.
-		$checkValue = JRequest::getInt('id');
+		// Check if $this->input->getInt('id', 0) is a string or numeric value.
+		$checkValue = $this->input->getInt('id', 0);
 		if (isset($checkValue) && StringHelper::check($checkValue))
 		{
 			$query->where('a.preacher = ' . $db->quote($checkValue));
