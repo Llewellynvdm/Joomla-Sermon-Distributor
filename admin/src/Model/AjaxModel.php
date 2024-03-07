@@ -282,11 +282,11 @@ class AjaxModel extends ListModel
 			$result['error'] = '<span style="color: red;">' . Text::sprintf('COM_SERMONDISTRIBUTOR_NO_CRONJOB_PATH_FOUND_FOR_S', $type) . '</span>';
 			if ($this->hasCurl())
 			{
-				$path = '*/15 * * * * curl -s "' .JURI::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
+				$path = '*/15 * * * * curl -s "' .\JUri::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
 			}
 			else
 			{
-				$path = '*/15 * * * * wget "' .JURI::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
+				$path = '*/15 * * * * wget "' .\JUri::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
 			}
 			$result['path'] =  '<code>' . $path . '</code>';
 		}

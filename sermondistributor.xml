@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="4.0" method="upgrade">
+<extension type="component" version="5.0" method="upgrade">
 	<name>COM_SERMONDISTRIBUTOR</name>
-	<creationDate>2nd March, 2024</creationDate>
+	<creationDate>7th March, 2024</creationDate>
 	<author>Llewellyn van der Merwe</author>
 	<authorEmail>joomla@vdm.io</authorEmail>
 	<authorUrl>https://www.vdm.io/</authorUrl>
@@ -97,6 +97,6 @@
 
 	</administration>
 	<updateservers>
-		<server type="extension" enabled="1" element="com_sermondistributor" name="Sermon Distributor">https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/5.0/sermondistributor_update_server.xml</server>
+		<server type="extension" enabled="1" element="com_sermondistributor" name="Sermon Distributor">https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/5.x/sermondistributor_update_server.xml</server>
 	</updateservers>
 </extension>

@@ -1,6 +1,6 @@
 # v5.0.0-beta1
 
-- First release of [[[Component]]] towards Joomla 5
+- First release of Sermon Distributor towards Joomla 5
 
 # v3.0.3
 

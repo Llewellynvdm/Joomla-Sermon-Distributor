@@ -130,7 +130,7 @@ jQuery(document).ready(function($) {
 </div>
 <script>
 // token 
-var token = '<?php echo JSession::getFormToken(); ?>';
+var token = '<?php echo \JSession::getFormToken(); ?>';
 // nice little dot trick :)
 jQuery(document).ready( function($) {
   var x=0;
