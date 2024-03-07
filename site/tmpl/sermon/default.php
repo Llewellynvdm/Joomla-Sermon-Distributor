@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
+	@version		4.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -75,7 +75,7 @@ defined('_JEXEC') or die;
 	}
 	<?php if (1 == $this->item->playerKey) : ?>
 		soundManager.setup({
-			url: '<?php echo JURI::root(true); ?>/media/com_sermondistributor/soundmanager/swf',
+			url: '<?php echo \JUri::root(true); ?>/media/com_sermondistributor/soundmanager/swf',
 			flashVersion: 9,
 			onready: function() {
 				// Ready to use; soundManager.createSound() etc. can now be called.

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
+	@version		4.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default_seriessmall.php

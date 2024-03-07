@@ -1,4 +1,4 @@
-# Sermon Distributor (5.0.x)
+# Sermon Distributor (4.0.x)
 
  ![Sermon Distributor image](https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/master/admin/assets/images/vdm-component.jpg "The Sermon Distributor")
 
@@ -24,8 +24,8 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 2nd March, 2024
-+ *Version*: 5.0.x
++ *Last Build*: 7th March, 2024
++ *Version*: 4.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 

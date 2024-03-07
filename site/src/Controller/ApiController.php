@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
+	@version		4.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		ApiController.php
@@ -159,7 +159,7 @@ class ApiController extends FormController
 	protected function getApiUser()
 	{
 		// get params
-		$params = JComponentHelper::getParams('com_sermondistributor');
+		$params = \JComponentHelper::getParams('com_sermondistributor');
 		// return user object
 		return Factory::getUser($params->get('api', 0, 'INT'));
 	}

@@ -10,7 +10,7 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
+	@version		4.0.x
 	@created		22nd October, 2015
 	@package		Sermon Distributor
 	@subpackage		default.php
@@ -130,7 +130,7 @@ jQuery(document).ready(function($) {
 </div>
 <script>
 // token 
-var token = '<?php echo JSession::getFormToken(); ?>';
+var token = '<?php echo \JSession::getFormToken(); ?>';
 // nice little dot trick :)
 jQuery(document).ready( function($) {
   var x=0;
