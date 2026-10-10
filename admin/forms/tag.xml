@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
+>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
+	<fieldset name="details">
+		<!-- Default Fields. -->
+		<!-- Id Field. Type: Text (joomla) -->
+		<field
+			name="id"
+			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+			readonly="true"
+		/>
+		<!-- Date Created Field. Type: Calendar (joomla) -->
+		<field
+			name="created"
+			type="calendar"
+			label="COM_SERMONDISTRIBUTOR_TAG_CREATED_DATE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TAG_CREATED_DATE_DESC"
+			size="22"
+			format="%Y-%m-%d %H:%M:%S"
+			filter="user_utc"
+		/>
+		<!-- User Created Field. Type: User (joomla) -->
+		<field
+			name="created_by"
+			type="user"
+			label="COM_SERMONDISTRIBUTOR_TAG_CREATED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TAG_CREATED_BY_DESC"
+		/>
+		<!-- Date Modified Field. Type: Calendar (joomla) -->
+		<field name="modified" type="calendar" class="readonly"
+			label="COM_SERMONDISTRIBUTOR_TAG_MODIFIED_DATE_LABEL" description="COM_SERMONDISTRIBUTOR_TAG_MODIFIED_DATE_DESC"
+			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
+		<!-- User Modified Field. Type: User (joomla) -->
+		<field name="modified_by" type="user"
+			label="COM_SERMONDISTRIBUTOR_TAG_MODIFIED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TAG_MODIFIED_BY_DESC"
+			class="readonly"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Access Field. Type: Accesslevel (joomla) -->
+		<field name="access"
+			type="accesslevel"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+			default="1"
+			required="false"
+		/>
+		<!-- Ordering Field. Type: Numbers (joomla) -->
+		<field
+			name="ordering"
+			type="number"
+			class="inputbox validate-ordering"
+			label="COM_SERMONDISTRIBUTOR_TAG_ORDERING_LABEL"
+			description=""
+			default="0"
+			size="6"
+			required="false"
+		/>
+		<!-- Version Field. Type: Text (joomla) -->
+		<field
+			name="version"
+			type="text"
+			class="readonly"
+			label="COM_SERMONDISTRIBUTOR_TAG_VERSION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TAG_VERSION_DESC"
+			size="6"
+			default="1"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Metakey Field. Type: Textarea (joomla) -->
+		<field
+			name="metakey"
+			type="textarea"
+			label="JFIELD_META_KEYWORDS_LABEL"
+			description="JFIELD_META_KEYWORDS_DESC"
+			rows="3"
+			cols="30"
+		/>
+		<!-- Metadesc Field. Type: Textarea (joomla) -->
+		<field
+			name="metadesc"
+			type="textarea"
+			label="JFIELD_META_DESCRIPTION_LABEL"
+			description="JFIELD_META_DESCRIPTION_DESC"
+			rows="3"
+			cols="30"
+		/>
+		<!-- Was added due to Permissions JS needing a Title field -->
+		<!-- Let us know at gh-629 should this change -->
+		<!-- https://github.com/vdm-io/Joomla-Component-Builder/issues/629#issuecomment-750117235 -->
+		<field
+			name="title"
+			type="hidden"
+			default="sermondistributor tag"
+		/>
+		<!-- Dynamic Fields. -->
+		<!-- Name Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="name"
+			label="COM_SERMONDISTRIBUTOR_TAG_NAME_LABEL"
+			size="40"
+			maxlength="150"
+			description="COM_SERMONDISTRIBUTOR_TAG_NAME_DESCRIPTION"
+			class="text_area"
+			readonly="false"
+			disabled="false"
+			required="true"
+			filter="STRING"
+			message="COM_SERMONDISTRIBUTOR_TAG_NAME_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_TAG_NAME_HINT"
+		/>
+		<!-- Description Field. Type: Textarea. (joomla) -->
+		<field
+			type="textarea"
+			name="description"
+			label="COM_SERMONDISTRIBUTOR_TAG_DESCRIPTION_LABEL"
+			rows="11"
+			cols="10"
+			description="COM_SERMONDISTRIBUTOR_TAG_DESCRIPTION_DESCRIPTION"
+			class="text_area span12"
+			filter="HTML"
+			hint="COM_SERMONDISTRIBUTOR_TAG_DESCRIPTION_HINT"
+		/>
+		<!-- Parent_guid Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="parent_guid"
+			label="COM_SERMONDISTRIBUTOR_TAG_PARENT_GUID_LABEL"
+			sql_title_table="#__sermondistributor_tag"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=tags&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=tag.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=tag.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_TAG_PARENT_GUID_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_TAG_PARENT_GUID_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_TAG_PARENT_GUID_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="false"
+			filter="STRING"
+			class="input-large"
+			description="COM_SERMONDISTRIBUTOR_TAG_PARENT_GUID_DESCRIPTION"
+			hint="COM_SERMONDISTRIBUTOR_TAG_PARENT_GUID_HINT"
+		/>
+		<!-- Published Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="published"
+			label="COM_SERMONDISTRIBUTOR_TAG_PUBLISHED_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TAG_PUBLISHED_DESCRIPTION"
+			class="list_class"
+			multiple="false"
+			filter="INT"
+			required="true"
+			default="1">
+			<!-- Option Set. -->
+			<option value="1">
+				COM_SERMONDISTRIBUTOR_TAG_PUBLISHED</option>
+			<option value="0">
+				COM_SERMONDISTRIBUTOR_TAG_UNPUBLISHED</option>
+			<option value="2">
+				COM_SERMONDISTRIBUTOR_TAG_ARCHIVED</option>
+			<option value="-2">
+				COM_SERMONDISTRIBUTOR_TAG_TRASHED</option>
+		</field>
+		<!-- Guid Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="guid"
+			label="COM_SERMONDISTRIBUTOR_TAG_GUID_LABEL"
+			size="40"
+			maxlength="40"
+			description="COM_SERMONDISTRIBUTOR_TAG_GUID_DESCRIPTION"
+			class="text_area"
+			readonly="true"
+			filter="CMD"
+			validate="guid"
+			hint="COM_SERMONDISTRIBUTOR_TAG_GUID_HINT"
+		/>
+		<!-- Note_file_vdm_display Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_file_vdm_display" description="COM_SERMONDISTRIBUTOR_TAG_NOTE_FILE_VDM_DISPLAY_DESCRIPTION" class="uk-clearfix uk-width-1-1 uk-margin note_file_vdm_display" />
+		<!-- Note_file_vdm_uploader Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_file_vdm_uploader" description="COM_SERMONDISTRIBUTOR_TAG_NOTE_FILE_VDM_UPLOADER_DESCRIPTION" class="note_file_vdm_uploader" showon="file_type!:" />
+		<!-- File_type Field. Type: Entityfiletypes. (custom) -->
+		<field
+			type="entityfiletypes"
+			name="file_type"
+			label="COM_SERMONDISTRIBUTOR_TAG_FILE_TYPE_LABEL"
+			class="list_class"
+			layout="joomla.form.field.list-fancy-select"
+			multiple="false"
+			required="false"
+			button="false"
+			entity="tag"
+		/>
+		<!-- Lft Field. Type: Hidden. (joomla) -->
+		<field
+			type="hidden"
+			name="lft"
+			default="0"
+		/>
+		<!-- Rgt Field. Type: Hidden. (joomla) -->
+		<field
+			type="hidden"
+			name="rgt"
+			default="0"
+		/>
+		<!-- Alias Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="alias"
+			label="COM_SERMONDISTRIBUTOR_TAG_ALIAS_LABEL"
+			description="JFIELD_ALIAS_DESC"
+			filter="STRING"
+			hint="COM_SERMONDISTRIBUTOR_TAG_ALIAS_HINT"
+		/>
+	</fieldset>
+
+	<!-- Metadata Fields. -->
+	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+		<fieldset name="vdmmetadata"
+			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+			<!-- Robots Field. Type: List (joomla) -->
+			<field name="robots"
+				type="list"
+				label="JFIELD_METADATA_ROBOTS_LABEL"
+				description="JFIELD_METADATA_ROBOTS_DESC" >
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
+				<option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
+				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
+				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+			</field>
+			<!-- Author Field. Type: Text (joomla) -->
+			<field name="author"
+				type="text"
+				label="JAUTHOR" description="JFIELD_METADATA_AUTHOR_DESC"
+				size="20"
+			/>
+			<!-- Rights Field. Type: Textarea (joomla) -->
+			<field name="rights" type="textarea" label="JFIELD_META_RIGHTS_LABEL"
+				description="JFIELD_META_RIGHTS_DESC" required="false" filter="string"
+				cols="30" rows="2"
+			/>
+		</fieldset>
+	</fields>
+
+	<!-- Access Control Fields. -->
+	<fieldset name="accesscontrol">
+		<!-- Asset Id Field. Type: Hidden (joomla) -->
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+		<!-- Rules Field. Type: Rules (joomla) -->
+		<field
+			name="rules"
+			type="rules"
+			label="Permissions in relation to this tag"
+			translate_label="false"
+			filter="rules"
+			validate="rules"
+			class="inputbox"
+			component="com_sermondistributor"
+			section="tag"
+		/>
+	</fieldset>
+</form>

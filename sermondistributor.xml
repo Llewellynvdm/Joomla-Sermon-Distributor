@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="5.0" method="upgrade">
+<extension type="component" version="6.0" method="upgrade">
 	<name>COM_SERMONDISTRIBUTOR</name>
-	<creationDate>3rd May, 2024</creationDate>
+	<creationDate>10th October, 2026</creationDate>
 	<author>Llewellyn van der Merwe</author>
 	<authorEmail>joomla@vdm.io</authorEmail>
-	<authorUrl>https://www.vdm.io/</authorUrl>
-	<copyright>Copyright (C) 2015. All Rights Reserved</copyright>
+	<authorUrl>https://dev.vdm.io/</authorUrl>
+	<copyright>Copyright (C) 2026. All Rights Reserved</copyright>
 	<license>GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html</license>
-	<version>5.0.0-beta2</version>
+	<version>6.0.0</version>
 	<description><![CDATA[
-		<h1>Sermon Distributor (v.5.0.0-beta2)</h1>
+		<h1>Sermon Distributor (v.6.0.0)</h1>
 		<div style="clear: both;"></div>
-		<p>Distributor is a highly advanced sermon distributor that runs on the [Joomla 4.x & 5.x](http://www.joomla.org) framework. You can link a shared folder from Dropbox to the component and use Dropbox as your file host, not to mention the advanced auto builder that gives you the ability to simply load sermons to your website by only adding them to Dropbox.</p>
-		<p>Created by <a href="https://www.vdm.io/" target="_blank">Llewellyn van der Merwe</a><br /><small>Development started 22nd October, 2015</small></p>
+		<p>Sermon Distributor is a highly advanced sermon distributor that runs on the [Joomla 6x](http://www.joomla.org) framework. It is designed to help churches, ministries, and congregations manage, organize, publish, and distribute sermons with ease.
+
+The component provides a complete sermon management system, allowing administrators to maintain sermon records together with their related preacher, church, congregation, date, time, series, and media details. Sermons can be grouped into series, linked to specific preachers, associated with churches, and published in a structured way that makes them easy to browse, search, and share.
+
+Sermon Distributor supports both local sermon uploads and external sermon integrations. Administrators may upload sermon files directly into the component, or connect the component to an external folder where sermon files are discovered, listed, managed, and made available for download. This makes it suitable for ministries that already maintain sermon archives outside Joomla, as well as those that want to manage everything directly from within the site.
+
+With its flexible structure, Sermon Distributor helps preserve sermon archives, simplify media distribution, and provide visitors with organized access to sermons by preacher, series, church, date, or download source. It is built to serve both small congregations and larger ministries that require an advanced, reliable, and extensible sermon distribution solution.</p>
+		<p>Created by <a href="https://dev.vdm.io/" target="_blank">Llewellyn van der Merwe</a><br /><small>Development started 9th July, 2026</small></p>
 	]]></description>
-	<namespace path="src">TrueChristianChurch\Component\Sermondistributor</namespace>
+	<namespace path="src">JoomSermon\Component\Sermondistributor</namespace>
 
 	<!-- Runs on install -->
 	<install>
@@ -38,10 +44,6 @@
 		<folder>js</folder>
 		<folder>css</folder>
 		<folder>images</folder>
-		<folder>soundmanager</folder>
-		<folder>jplayer</folder>
-		<folder>uikit-v3</folder>
-		<folder>footable-v3</folder>
 	</media>
 
 	<!-- Update Schema -->
@@ -51,29 +53,26 @@
 		</schemas>
 	</update>
 
-	<files folder="site">
-		<filename>index.html</filename>
-		<folder>assets</folder>
-		<folder>forms</folder>
-		<folder>layouts</folder>
-		<folder>src</folder>
-		<folder>tmpl</folder>
-	</files>
+	
 
-	<languages folder="site">
-		<language tag="en-GB">language/en-GB/en-GB.com_sermondistributor.ini</language>
-		<language tag="en-GB">language/en-GB/en-GB.com_sermondistributor.sys.ini</language>
-	</languages>
+	
 
 	<administration>
 		<menu>COM_SERMONDISTRIBUTOR_MENU</menu>
 		<submenu>
 			<!-- Instead of link you can specify individual link attributes -->
 			<menu option="com_sermondistributor" view="sermondistributor">COM_SERMONDISTRIBUTOR_MENU_DASHBOARD</menu>
-			<menu option="com_sermondistributor" view="preachers">COM_SERMONDISTRIBUTOR_MENU_PREACHERS</menu>
 			<menu option="com_sermondistributor" view="sermons">COM_SERMONDISTRIBUTOR_MENU_SERMONS</menu>
+			<menu option="com_sermondistributor" view="preachers">COM_SERMONDISTRIBUTOR_MENU_PREACHERS</menu>
+			<menu option="com_sermondistributor" view="churches">COM_SERMONDISTRIBUTOR_MENU_CHURCHES</menu>
+			<menu option="com_sermondistributor" view="categories">COM_SERMONDISTRIBUTOR_MENU_CATEGORIES</menu>
 			<menu option="com_sermondistributor" view="series_list">COM_SERMONDISTRIBUTOR_MENU_SERIES_LIST</menu>
-			<menu option="com_sermondistributor" view="manual_updater">COM_SERMONDISTRIBUTOR_MENU_MANUAL_UPDATER</menu>
+			<menu option="com_sermondistributor" view="tags">COM_SERMONDISTRIBUTOR_MENU_TAGS</menu>
+			<menu option="com_sermondistributor" view="addresses">COM_SERMONDISTRIBUTOR_MENU_ADDRESSES</menu>
+			<menu option="com_sermondistributor" view="languages">COM_SERMONDISTRIBUTOR_MENU_LANGUAGES</menu>
+			<menu option="com_sermondistributor" view="files">COM_SERMONDISTRIBUTOR_MENU_FILES</menu>
+			<menu option="com_sermondistributor" view="address_types">COM_SERMONDISTRIBUTOR_MENU_ADDRESS_TYPES</menu>
+			<menu option="com_sermondistributor" view="file_types">COM_SERMONDISTRIBUTOR_MENU_FILE_TYPES</menu>
 		</submenu>
 		<files folder="admin">
 			<filename>access.xml</filename>
@@ -96,7 +95,15 @@
 		</languages>
 
 	</administration>
+
+	<api>
+		<files folder="api">
+			<filename>index.html</filename>
+			<folder>src</folder>
+		</files>
+	</api>
 	<updateservers>
-		<server type="extension" enabled="1" element="com_sermondistributor" name="Sermon Distributor">https://git.vdm.dev/christian/Joomla-Sermon-Distributor/raw/branch/5.x/sermondistributor_update_server.xml</server>
+		<server type="extension" enabled="1" element="com_sermondistributor" name="Sermon Distributor">https://github.com/trueChristian/Joomla-Sermon-Distributor/raw/branch/6.x/update_server.xml</server>
 	</updateservers>
+	<changelogurl>https://github.com/trueChristian/Joomla-Sermon-Distributor/raw/branch/6.x/changelog_server.xml</changelogurl>
 </extension>

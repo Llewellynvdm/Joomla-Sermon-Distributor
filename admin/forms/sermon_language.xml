@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
+>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
+	<fieldset name="details">
+		<!-- Default Fields. -->
+		<!-- Id Field. Type: Text (joomla) -->
+		<field
+			name="id"
+			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+			readonly="true"
+		/>
+		<!-- Date Created Field. Type: Calendar (joomla) -->
+		<field
+			name="created"
+			type="calendar"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_CREATED_DATE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_CREATED_DATE_DESC"
+			size="22"
+			format="%Y-%m-%d %H:%M:%S"
+			filter="user_utc"
+		/>
+		<!-- User Created Field. Type: User (joomla) -->
+		<field
+			name="created_by"
+			type="user"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_CREATED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_CREATED_BY_DESC"
+		/>
+		<!-- Published Field. Type: List (joomla) -->
+		<field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
+			filter="intval" size="1" default="1" >
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="2">
+				JARCHIVED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<!-- Date Modified Field. Type: Calendar (joomla) -->
+		<field name="modified" type="calendar" class="readonly"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_MODIFIED_DATE_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_MODIFIED_DATE_DESC"
+			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
+		<!-- User Modified Field. Type: User (joomla) -->
+		<field name="modified_by" type="user"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_MODIFIED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_MODIFIED_BY_DESC"
+			class="readonly"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Access Field. Type: Accesslevel (joomla) -->
+		<field name="access"
+			type="accesslevel"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+			default="1"
+			required="false"
+		/>
+		<!-- Ordering Field. Type: Numbers (joomla) -->
+		<field
+			name="ordering"
+			type="number"
+			class="inputbox validate-ordering"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_ORDERING_LABEL"
+			description=""
+			default="0"
+			size="6"
+			required="false"
+		/>
+		<!-- Version Field. Type: Text (joomla) -->
+		<field
+			name="version"
+			type="text"
+			class="readonly"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_VERSION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_VERSION_DESC"
+			size="6"
+			default="1"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Was added due to Permissions JS needing a Title field -->
+		<!-- Let us know at gh-629 should this change -->
+		<!-- https://github.com/vdm-io/Joomla-Component-Builder/issues/629#issuecomment-750117235 -->
+		<field
+			name="title"
+			type="hidden"
+			default="sermondistributor sermon_language"
+		/>
+		<!-- Dynamic Fields. -->
+		<!-- Language Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="language"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_LANGUAGE_LABEL"
+			sql_title_table="#__sermondistributor_language"
+			sql_title_column="name"
+			data-key-name="langtag"
+			sql_title_key="langtag"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=languages&amp;layout=modal&amp;tmpl=component&amp;titleKey=langtag"
+			urlNew="index.php?option=com_sermondistributor&amp;task=language.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=language.edit&amp;langtag={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=langtag"
+			titleSelect="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_LANGUAGE_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_LANGUAGE_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_LANGUAGE_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="true"
+			class="input-large"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_LANGUAGE_HINT"
+			default="en-GB"
+		/>
+		<!-- Sermon Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="sermon"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_SERMON_LABEL"
+			sql_title_table="#__sermondistributor_sermon"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=sermons&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=sermon.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=sermon.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_SERMON_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_SERMON_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_SERMON_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="false"
+			required="true"
+			filter="STRING"
+			class="input-large"
+			description="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_SERMON_DESCRIPTION"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_SERMON_HINT"
+		/>
+		<!-- Guid Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="guid"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_GUID_LABEL"
+			size="40"
+			maxlength="40"
+			description="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_GUID_DESCRIPTION"
+			class="text_area"
+			readonly="true"
+			filter="CMD"
+			validate="guid"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGE_GUID_HINT"
+		/>
+	</fieldset>
+
+	<!-- Access Control Fields. -->
+	<fieldset name="accesscontrol">
+		<!-- Asset Id Field. Type: Hidden (joomla) -->
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+		<!-- Rules Field. Type: Rules (joomla) -->
+		<field
+			name="rules"
+			type="rules"
+			label="Permissions in relation to this sermon_language"
+			translate_label="false"
+			filter="rules"
+			validate="rules"
+			class="inputbox"
+			component="com_sermondistributor"
+			section="sermon_language"
+		/>
+	</fieldset>
+</form>

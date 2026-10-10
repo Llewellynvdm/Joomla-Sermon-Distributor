@@ -10,15 +10,15 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		default.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -27,7 +27,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper as Html;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->getDocument()->getWebAssetManager();
@@ -37,24 +37,39 @@ Html::_('bootstrap.tooltip');
 // No direct access to this file
 defined('_JEXEC') or die;
 
+$layout  = $this->isModal ? 'modal' : 'edit';
+$tmpl    = $this->input->get('tmpl');
+$tmpl    = $tmpl ? '&tmpl=' . $tmpl : '';
 ?>
 <script type="text/javascript">
-	// waiting spinner
-	var outerDiv = document.querySelector('body');
-	var loadingDiv = document.createElement('div');
-	loadingDiv.id = 'loading';
-	loadingDiv.style.cssText = "background: rgba(255, 255, 255, .8) url('components/com_sermondistributor/assets/images/import.gif') 50% 15% no-repeat; top: " + (outerDiv.getBoundingClientRect().top + window.pageYOffset) + "px; left: " + (outerDiv.getBoundingClientRect().left + window.pageXOffset) + "px; width: " + outerDiv.offsetWidth + "px; height: " + outerDiv.offsetHeight + "px; position: fixed; opacity: 0.80; -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80); filter: alpha(opacity=80); display: none;";
-	outerDiv.appendChild(loadingDiv);
-	loadingDiv.style.display = 'block';
-	// when page is ready remove and show
-	window.addEventListener('load', function() {
-		var componentLoader = document.getElementById('sermondistributor_loader');
-		if (componentLoader) componentLoader.style.display = 'block';
-		loadingDiv.style.display = 'none';
-	});
+	(function() {
+		// create loading overlay
+		var loadingDiv = document.createElement('div');
+		loadingDiv.id = 'loading';
+		loadingDiv.style.position = 'fixed';
+		loadingDiv.style.top = '0';
+		loadingDiv.style.left = '0';
+		loadingDiv.style.right = '0';
+		loadingDiv.style.bottom = '0';
+		loadingDiv.style.width = '100%';
+		loadingDiv.style.height = '100%';
+		loadingDiv.style.background = "rgba(255,255,255,0.8) url('components/com_sermondistributor/assets/images/ajax.gif') 50% 35% no-repeat";
+		loadingDiv.style.opacity = '0.8';
+		loadingDiv.style.zIndex = '9999';
+		loadingDiv.style.display = 'block';
+		loadingDiv.style.msFilter = "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+		loadingDiv.style.filter = "alpha(opacity=80)";
+		document.body.appendChild(loadingDiv);
+		// remove overlay when page fully loaded
+		window.addEventListener('load', function() {
+			var componentLoader = document.getElementById('sermondistributor_loader');
+			if (componentLoader) componentLoader.style.display = 'block';
+			loadingDiv.style.display = 'none';
+		});
+	})();
 </script>
 <div id="sermondistributor_loader" style="display: none;">
-<form action="<?php echo Route::_('index.php?option=com_sermondistributor&layout=edit&id='. (int) $this->item->id . $this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
+<form action="<?php echo Route::_('index.php?option=com_sermondistributor&view=preacher&layout=' . $layout . $tmpl . '&id='. (int) $this->item->id . $this->referral); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 
 <?php echo LayoutHelper::render('preacher.details_above', $this); ?>
 <div class="main-card">
@@ -63,12 +78,6 @@ defined('_JEXEC') or die;
 
 	<?php echo Html::_('uitab.addTab', 'preacherTab', 'details', Text::_('COM_SERMONDISTRIBUTOR_PREACHER_DETAILS', true)); ?>
 		<div class="row">
-			<div class="col-md-6">
-				<?php echo LayoutHelper::render('preacher.details_left', $this); ?>
-			</div>
-			<div class="col-md-6">
-				<?php echo LayoutHelper::render('preacher.details_right', $this); ?>
-			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -77,17 +86,26 @@ defined('_JEXEC') or die;
 		</div>
 	<?php echo Html::_('uitab.endTab'); ?>
 
-	<?php if ($this->canDo->get('sermon.access')) : ?>
-	<?php echo Html::_('uitab.addTab', 'preacherTab', 'sermons', Text::_('COM_SERMONDISTRIBUTOR_PREACHER_SERMONS', true)); ?>
+	<?php echo Html::_('uitab.addTab', 'preacherTab', 'contact_info', Text::_('COM_SERMONDISTRIBUTOR_PREACHER_CONTACT_INFO', true)); ?>
+		<div class="row">
+			<div class="col-md-6">
+				<?php echo LayoutHelper::render('preacher.contact_info_left', $this); ?>
+			</div>
+			<div class="col-md-6">
+				<?php echo LayoutHelper::render('preacher.contact_info_right', $this); ?>
+			</div>
+		</div>
+	<?php echo Html::_('uitab.endTab'); ?>
+
+	<?php echo Html::_('uitab.addTab', 'preacherTab', 'media', Text::_('COM_SERMONDISTRIBUTOR_PREACHER_MEDIA', true)); ?>
 		<div class="row">
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<?php echo LayoutHelper::render('preacher.sermons_fullwidth', $this); ?>
+				<?php echo LayoutHelper::render('preacher.media_fullwidth', $this); ?>
 			</div>
 		</div>
 	<?php echo Html::_('uitab.endTab'); ?>
-	<?php endif; ?>
 
 	<?php $this->ignore_fieldsets = array('details','metadata','vdmmetadata','accesscontrol'); ?>
 	<?php $this->tab_name = 'preacherTab'; ?>
@@ -110,14 +128,10 @@ defined('_JEXEC') or die;
 	<?php echo Html::_('uitab.addTab', 'preacherTab', 'permissions', Text::_('COM_SERMONDISTRIBUTOR_PREACHER_PERMISSION', true)); ?>
 		<div class="row">
 			<div class="col-md-12">
-				<fieldset class="adminform">
-					<div class="adminformlist">
-					<?php foreach ($this->form->getFieldset('accesscontrol') as $field): ?>
-						<div>
-							<?php echo $field->label; echo $field->input;?>
-						</div>
-						<div class="clearfix"></div>
-					<?php endforeach; ?>
+				<fieldset id="fieldset-rules" class="options-form">
+					<legend><?php echo Text::_('COM_SERMONDISTRIBUTOR_PREACHER_PERMISSION'); ?></legend>
+					<div>
+						<?php echo $this->form->getInput('rules'); ?>
 					</div>
 				</fieldset>
 			</div>

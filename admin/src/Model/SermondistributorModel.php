@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		SermondistributorModel.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\Model;
+namespace JoomSermon\Component\Sermondistributor\Administrator\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -37,9 +37,9 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\User\User;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Input\Input;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use JoomSermon\Joomla\Utilities\StringHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -51,6 +51,105 @@ use TrueChristianChurch\Joomla\Utilities\StringHelper;
  */
 class SermondistributorModel extends ListModel
 {
+	/**
+	 * Represents the current user object.
+	 *
+	 * @var   User  The user object representing the current user.
+	 * @since 3.2.0
+	 */
+	protected User $user;
+
+	/**
+	 * View groups of this component
+	 *
+	 * @var   array<string, string>
+	 * @since 5.1.1
+	 */
+	protected array $viewGroups = [
+		'main' => ['png.sermons', 'png.preachers', 'png.churches', 'png.categories', 'png.series_list', 'png.tags', 'png.addresses', 'png.languages', 'png.files'],
+	];
+
+	/**
+	 * View access array.
+	 *
+	 * @var   array<string, string>
+	 * @since 5.1.1
+	 */
+	protected array $viewAccess = [
+		'sermon.create' => 'sermon.create',
+		'sermons.access' => 'sermon.access',
+		'sermon.access' => 'sermon.access',
+		'sermons.dashboard_list' => 'sermon.dashboard_list',
+		'preacher.create' => 'preacher.create',
+		'preachers.access' => 'preacher.access',
+		'preacher.access' => 'preacher.access',
+		'preachers.dashboard_list' => 'preacher.dashboard_list',
+		'church.create' => 'church.create',
+		'churches.access' => 'church.access',
+		'church.access' => 'church.access',
+		'churches.dashboard_list' => 'church.dashboard_list',
+		'category.create' => 'category.create',
+		'categories.access' => 'category.access',
+		'category.access' => 'category.access',
+		'categories.dashboard_list' => 'category.dashboard_list',
+		'series.create' => 'series.create',
+		'series_list.access' => 'series.access',
+		'series.access' => 'series.access',
+		'series_list.dashboard_list' => 'series.dashboard_list',
+		'tag.create' => 'tag.create',
+		'tags.access' => 'tag.access',
+		'tag.access' => 'tag.access',
+		'tags.dashboard_list' => 'tag.dashboard_list',
+		'address.create' => 'address.create',
+		'addresses.access' => 'address.access',
+		'address.access' => 'address.access',
+		'addresses.dashboard_list' => 'address.dashboard_list',
+		'language.create' => 'language.create',
+		'languages.access' => 'language.access',
+		'language.access' => 'language.access',
+		'languages.dashboard_list' => 'language.dashboard_list',
+		'file.create' => 'file.create',
+		'files.access' => 'file.access',
+		'file.access' => 'file.access',
+		'files.dashboard_list' => 'file.dashboard_list',
+		'address_type.create' => 'address_type.create',
+		'address_types.access' => 'address_type.access',
+		'address_type.access' => 'address_type.access',
+		'file_type.create' => 'file_type.create',
+		'file_types.access' => 'file_type.access',
+		'file_type.access' => 'file_type.access',
+		'region.create' => 'region.create',
+		'regions.access' => 'region.access',
+		'region.access' => 'region.access',
+		'subregion.create' => 'subregion.create',
+		'subregions.access' => 'subregion.access',
+		'subregion.access' => 'subregion.access',
+		'country.create' => 'country.create',
+		'countries.access' => 'country.access',
+		'country.access' => 'country.access',
+		'state.create' => 'state.create',
+		'states.access' => 'state.access',
+		'state.access' => 'state.access',
+		'city.create' => 'city.create',
+		'cities.access' => 'city.access',
+		'city.access' => 'city.access',
+		'timezone.create' => 'timezone.create',
+		'timezones.access' => 'timezone.access',
+		'timezone.access' => 'timezone.access',
+		'sermon_tag.create' => 'sermon_tag.create',
+		'sermon_tags.access' => 'sermon_tag.access',
+		'sermon_tag.access' => 'sermon_tag.access',
+		'sermon_language.create' => 'sermon_language.create',
+		'sermon_languages.access' => 'sermon_language.access',
+		'sermon_language.access' => 'sermon_language.access',
+		'preacher_language.create' => 'preacher_language.create',
+		'preacher_languages.access' => 'preacher_language.access',
+		'preacher_language.access' => 'preacher_language.access',
+		'church_elder.create' => 'church_elder.create',
+		'church_elders.access' => 'church_elder.access',
+		'church_elder.access' => 'church_elder.access',
+	];
+
 	/**
 	 * The styles array.
 	 *
@@ -72,244 +171,50 @@ class SermondistributorModel extends ListModel
 		'administrator/components/com_sermondistributor/assets/js/admin.js'
  	];
 
-	public function getIcons()
+	/**
+	 * Constructor
+	 *
+	 * @param   array                 $config   An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   ?MVCFactoryInterface  $factory  The factory.
+	 *
+	 * @since   1.6
+	 * @throws  \Exception
+	 */
+	public function __construct($config = [], ?MVCFactoryInterface $factory = null)
 	{
-		// load user for access menus
-		$user = Factory::getApplication()->getIdentity();
-		// reset icon array
-		$icons  = [];
-		// view groups array
-		$viewGroups = array(
-			'main' => array('png.preacher.add', 'png.preachers', 'png.sermon.add', 'png.sermons', 'png.sermons.catid_qpo0O0oqp_com_sermondistributor_po0O0oq_sermon', 'png.series.add', 'png.series_list', 'png.statistics', 'png.external_source.add', 'png.external_sources', 'png.manual_updater', 'png.local_listings', 'png.help_documents')
-		);
-		// view access array
-		$viewAccess = [
-			'manual_updater.access' => 'manual_updater.access',
-			'manual_updater.submenu' => 'manual_updater.submenu',
-			'manual_updater.dashboard_list' => 'manual_updater.dashboard_list',
-			'preacher.create' => 'preacher.create',
-			'preachers.access' => 'preacher.access',
-			'preacher.access' => 'preacher.access',
-			'preachers.submenu' => 'preacher.submenu',
-			'preachers.dashboard_list' => 'preacher.dashboard_list',
-			'preacher.dashboard_add' => 'preacher.dashboard_add',
-			'sermon.create' => 'sermon.create',
-			'sermons.access' => 'sermon.access',
-			'sermon.access' => 'sermon.access',
-			'sermons.submenu' => 'sermon.submenu',
-			'sermons.dashboard_list' => 'sermon.dashboard_list',
-			'sermon.dashboard_add' => 'sermon.dashboard_add',
-			'series.create' => 'series.create',
-			'series_list.access' => 'series.access',
-			'series.access' => 'series.access',
-			'series_list.submenu' => 'series.submenu',
-			'series_list.dashboard_list' => 'series.dashboard_list',
-			'series.dashboard_add' => 'series.dashboard_add',
-			'statistic.create' => 'statistic.create',
-			'statistics.access' => 'statistic.access',
-			'statistic.access' => 'statistic.access',
-			'statistics.submenu' => 'statistic.submenu',
-			'statistics.dashboard_list' => 'statistic.dashboard_list',
-			'external_source.create' => 'external_source.create',
-			'external_sources.access' => 'external_source.access',
-			'external_source.access' => 'external_source.access',
-			'external_sources.submenu' => 'external_source.submenu',
-			'external_sources.dashboard_list' => 'external_source.dashboard_list',
-			'external_source.dashboard_add' => 'external_source.dashboard_add',
-			'local_listing.create' => 'local_listing.create',
-			'local_listings.access' => 'local_listing.access',
-			'local_listing.access' => 'local_listing.access',
-			'local_listings.submenu' => 'local_listing.submenu',
-			'local_listings.dashboard_list' => 'local_listing.dashboard_list',
-			'help_document.create' => 'help_document.create',
-			'help_documents.access' => 'help_document.access',
-			'help_document.access' => 'help_document.access',
-			'help_documents.submenu' => 'help_document.submenu',
-			'help_documents.dashboard_list' => 'help_document.dashboard_list',
-		];
-		// loop over the $views
-		foreach($viewGroups as $group => $views)
+		parent::__construct($config, $factory);
+
+		$this->user ??= $this->getCurrentUser();
+	}
+
+	/**
+	 * Get dashboard icons, grouped by view sections.
+	 *
+	 * @return array<string, array<int, \stdClass|false>>
+	 * @since  5.1.1
+	 */
+	public function getIcons(): array
+	{
+		$icons = [];
+
+		foreach ($this->viewGroups as $group => $views)
 		{
-			$i = 0;
-			if (UtilitiesArrayHelper::check($views))
+			if (!UtilitiesArrayHelper::check($views))
 			{
-				foreach($views as $view)
+				$icons[$group][] = false;
+				continue;
+			}
+
+			foreach ($views as $view)
+			{
+				$icon = $this->buildIconObject($view);
+				if ($icon !== null)
 				{
-					$add = false;
-					// external views (links)
-					if (strpos($view,'||') !== false)
-					{
-						$dwd = explode('||', $view);
-						if (count($dwd) == 3)
-						{
-							list($type, $name, $url) = $dwd;
-							$viewName = $name;
-							$alt      = $name;
-							$url      = $url;
-							$image    = $name . '.' . $type;
-							$name     = 'COM_SERMONDISTRIBUTOR_DASHBOARD_' . StringHelper::safe($name,'U');
-						}
-					}
-					// internal views
-					elseif (strpos($view,'.') !== false)
-					{
-						$dwd = explode('.', $view);
-						if (count($dwd) == 3)
-						{
-							list($type, $name, $action) = $dwd;
-						}
-						elseif (count($dwd) == 2)
-						{
-							list($type, $name) = $dwd;
-							$action = false;
-						}
-						if ($action)
-						{
-							$viewName = $name;
-							switch($action)
-							{
-								case 'add':
-									$url   = 'index.php?option=com_sermondistributor&view=' . $name . '&layout=edit';
-									$image = $name . '_' . $action.  '.' . $type;
-									$alt   = $name . '&nbsp;' . $action;
-									$name  = 'COM_SERMONDISTRIBUTOR_DASHBOARD_'.StringHelper::safe($name,'U').'_ADD';
-									$add   = true;
-								break;
-								default:
-									// check for new convention (more stable)
-									if (strpos($action, '_qpo0O0oqp_') !== false)
-									{
-										list($action, $extension) = (array) explode('_qpo0O0oqp_', $action);
-										$extension = str_replace('_po0O0oq_', '.', $extension);
-									}
-									else
-									{
-										$extension = 'com_sermondistributor.' . $name;
-									}
-									$url   = 'index.php?option=com_categories&view=categories&extension=' . $extension;
-									$image = $name . '_' . $action . '.' . $type;
-									$alt   = $viewName . '&nbsp;' . $action;
-									$name  = 'COM_SERMONDISTRIBUTOR_DASHBOARD_' . StringHelper::safe($name,'U') . '_' . StringHelper::safe($action,'U');
-								break;
-							}
-						}
-						else
-						{
-							$viewName = $name;
-							$alt      = $name;
-							$url      = 'index.php?option=com_sermondistributor&view=' . $name;
-							$image    = $name . '.' . $type;
-							$name     = 'COM_SERMONDISTRIBUTOR_DASHBOARD_' . StringHelper::safe($name,'U');
-							$hover    = false;
-						}
-					}
-					else
-					{
-						$viewName = $view;
-						$alt      = $view;
-						$url      = 'index.php?option=com_sermondistributor&view=' . $view;
-						$image    = $view . '.png';
-						$name     = ucwords($view).'<br /><br />';
-						$hover    = false;
-					}
-					// first make sure the view access is set
-					if (UtilitiesArrayHelper::check($viewAccess))
-					{
-						// setup some defaults
-						$dashboard_add = false;
-						$dashboard_list = false;
-						$accessTo = '';
-						$accessAdd = '';
-						// access checking start
-						$accessCreate = (isset($viewAccess[$viewName.'.create'])) ? StringHelper::check($viewAccess[$viewName.'.create']):false;
-						$accessAccess = (isset($viewAccess[$viewName.'.access'])) ? StringHelper::check($viewAccess[$viewName.'.access']):false;
-						// set main controllers
-						$accessDashboard_add = (isset($viewAccess[$viewName.'.dashboard_add'])) ? StringHelper::check($viewAccess[$viewName.'.dashboard_add']):false;
-						$accessDashboard_list = (isset($viewAccess[$viewName.'.dashboard_list'])) ? StringHelper::check($viewAccess[$viewName.'.dashboard_list']):false;
-						// check for adding access
-						if ($add && $accessCreate)
-						{
-							$accessAdd = $viewAccess[$viewName.'.create'];
-						}
-						elseif ($add)
-						{
-							$accessAdd = 'core.create';
-						}
-						// check if access to view is set
-						if ($accessAccess)
-						{
-							$accessTo = $viewAccess[$viewName.'.access'];
-						}
-						// set main access controllers
-						if ($accessDashboard_add)
-						{
-							$dashboard_add    = $user->authorise($viewAccess[$viewName.'.dashboard_add'], 'com_sermondistributor');
-						}
-						if ($accessDashboard_list)
-						{
-							$dashboard_list = $user->authorise($viewAccess[$viewName.'.dashboard_list'], 'com_sermondistributor');
-						}
-						if (StringHelper::check($accessAdd) && StringHelper::check($accessTo))
-						{
-							// check access
-							if($user->authorise($accessAdd, 'com_sermondistributor') && $user->authorise($accessTo, 'com_sermondistributor') && $dashboard_add)
-							{
-								$icons[$group][$i]        = new \StdClass;
-								$icons[$group][$i]->url   = $url;
-								$icons[$group][$i]->name  = $name;
-								$icons[$group][$i]->image = $image;
-								$icons[$group][$i]->alt   = $alt;
-							}
-						}
-						elseif (StringHelper::check($accessTo))
-						{
-							// check access
-							if($user->authorise($accessTo, 'com_sermondistributor') && $dashboard_list)
-							{
-								$icons[$group][$i]        = new \StdClass;
-								$icons[$group][$i]->url   = $url;
-								$icons[$group][$i]->name  = $name;
-								$icons[$group][$i]->image = $image;
-								$icons[$group][$i]->alt   = $alt;
-							}
-						}
-						elseif (StringHelper::check($accessAdd))
-						{
-							// check access
-							if($user->authorise($accessAdd, 'com_sermondistributor') && $dashboard_add)
-							{
-								$icons[$group][$i]        = new \StdClass;
-								$icons[$group][$i]->url   = $url;
-								$icons[$group][$i]->name  = $name;
-								$icons[$group][$i]->image = $image;
-								$icons[$group][$i]->alt   = $alt;
-							}
-						}
-						else
-						{
-							$icons[$group][$i]        = new \StdClass;
-							$icons[$group][$i]->url   = $url;
-							$icons[$group][$i]->name  = $name;
-							$icons[$group][$i]->image = $image;
-							$icons[$group][$i]->alt   = $alt;
-						}
-					}
-					else
-					{
-						$icons[$group][$i]        = new \StdClass;
-						$icons[$group][$i]->url   = $url;
-						$icons[$group][$i]->name  = $name;
-						$icons[$group][$i]->image = $image;
-						$icons[$group][$i]->alt   = $alt;
-					}
-					$i++;
+					$icons[$group][] = $icon;
 				}
 			}
-			else
-			{
-					$icons[$group][$i] = false;
-			}
 		}
+
 		return $icons;
 	}
 
@@ -357,147 +262,186 @@ class SermondistributorModel extends ListModel
 		$this->scripts[] = $path;
 	}
 
-
-	public function getWiki()
+	/**
+	 * Build a single dashboard icon if access is granted.
+	 *
+	 * @param string $view The view string to parse.
+	 *
+	 * @return \stdClass|null  The icon object or null if access denied.
+	 * @since  5.1.1
+	 */
+	protected function buildIconObject(string $view): ?\stdClass
 	{
-		$document = Factory::getDocument();
-		$document->addScriptDeclaration('
-		var gewiki = "https://raw.githubusercontent.com/wiki/Llewellynvdm/Joomla-Sermon-Distributor/Home.md";
-		document.addEventListener("DOMContentLoaded", function () {
-			fetch(gewiki)
-				.then(response => {
-					if (!response.ok) {
-						throw new Error("Network response was not ok");
-					}
-					return response.text();
-				})
-				.then(wiki => {
-					document.getElementById("wiki-md").innerHTML = marked.parse(wiki);
-				})
-				.catch(error => {
-					console.error("There has been a problem with your fetch operation:", error);
-					document.getElementById("wiki-md").innerHTML = "'.Text::_('COM_SERMONDISTRIBUTOR_PLEASE_CHECK_AGAIN_LATTER').'";
-				});
-		});');
-
-		return '<div id="wiki-md"><small>'.Text::_('COM_SERMONDISTRIBUTOR_THE_WIKI_IS_LOADING').'.<span class="loading-dots">.</span></small></div>';
-	}
-
-	 
-
-	public function getNoticeboard()
-	{
-		// get the document to load the scripts
-		$document = Factory::getDocument();
-		Html::_('script', "media/com_sermondistributor/js/marked.js", ['version' => 'auto']);
-		$document->addScriptDeclaration('
-		var token = "' . Session::getFormToken() . '";
-		var noticeboard = "https://vdm.bz/sermondistributor-noticeboard-md";
-		document.addEventListener("DOMContentLoaded", function() {
-			fetch(noticeboard)
-			.then(response => {
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				return response.text();
-			})
-			.then(board => {
-				if (board.length > 5) {
-					document.getElementById("noticeboard-md").innerHTML = marked.parse(board);
-					getIS(1, board)
-					.then(result => {
-						if (result) {
-							document.querySelectorAll("#cpanel_tabTabs a").forEach(link => {
-								if (link.href.includes("#vast_development_method") || link.href.includes("#notice_board")) {
-									var textVDM = link.textContent;
-									link.innerHTML = "<span class=\"label label-important vdm-new-notice\">1</span> " + textVDM;
-									link.id = "vdm-new-notice";
-									document.getElementById("vdm-new-notice").addEventListener("click", () => {
-										getIS(2, board)
-										.then(result => {
-											if (result) {
-												document.querySelectorAll(".vdm-new-notice").forEach(element => {
-													element.style.opacity = 0;
-												});
-											}
-										});
-									});
-								}
-							});
-						}
-					});
-				} else {
-					document.getElementById("noticeboard-md").innerHTML = "'.Text::_('COM_SERMONDISTRIBUTOR_ALL_IS_GOOD_PLEASE_CHECK_AGAIN_LATER').'.";
-				}
-			})
-			.catch(error => {
-				console.error("There was an error!", error);
-				document.getElementById("noticeboard-md").innerHTML = "'.Text::_('COM_SERMONDISTRIBUTOR_ALL_IS_GOOD_PLEASE_CHECK_AGAIN_LATER').'.";
-			});
-		});
-
-		// to check is READ/NEW
-		function getIS(type, notice) {
-			let getUrl = "";
-			if (type === 1) {
-				getUrl = "index.php?option=com_sermondistributor&task=ajax.isNew&format=json&raw=true";
-			} else if (type === 2) {
-				getUrl = "index.php?option=com_sermondistributor&task=ajax.isRead&format=json&raw=true";
-			}
-			let request = new URLSearchParams();
-			if (token.length > 0 && notice.length) {
-				request.append(token, "1");
-				request.append("notice", notice);
-			}
-			return fetch(getUrl, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-				},
-				body: request
-			}).then(response => response.json());
+		$parsed = $this->parseViewDefinition($view);
+		if (!$parsed)
+		{
+			return null;
 		}
-		
-document.addEventListener("DOMContentLoaded", function() {
-	document.querySelectorAll(".loading-dots").forEach(function(loading_dots) {
-		let x = 0;
-		let intervalId = setInterval(function() {
-			if (!loading_dots.classList.contains("loading-dots")) {
-				clearInterval(intervalId);
-				return;
-			}
-			let dots = ".".repeat(x % 8);
-			loading_dots.textContent = dots;
-			x++;
-		}, 500);
-	});
-});');
 
-		return '<div id="noticeboard-md">'.Text::_('COM_SERMONDISTRIBUTOR_THE_NOTICE_BOARD_IS_LOADING').'.<span class="loading-dots">.</span></small></div>';
+		[
+			'type' => $type,
+			'name' => $name,
+			'url' => $url,
+			'image' => $image,
+			'alt' => $alt,
+			'viewName' => $viewName,
+			'add' => $add,
+		] = $parsed;
+
+		if (!$this->hasAccessToView($viewName, $add))
+		{
+			return null;
+		}
+
+		return $this->createIconObject($url, $name, $image, $alt);
 	}
 
-	public function getReadme()
+	/**
+	 * Parse a view string into structured components.
+	 *
+	 * @param string $view  The view definition string.
+	 *
+	 * @return array<string, mixed>|null  Parsed values or null on failure.
+	 * @since  5.1.1
+	 */
+	protected function parseViewDefinition(string $view): ?array
 	{
-		$document = Factory::getDocument();
-		$document->addScriptDeclaration('
-		var getreadme = "'. Uri::root() . 'administrator/components/com_sermondistributor/README.txt";
-		document.addEventListener("DOMContentLoaded", function () {
-			fetch(getreadme)
-			.then(response => {
-				if (!response.ok) {
-				    throw new Error("Network response was not ok");
-				}
-				return response.text();
-			})
-			.then(readme => {
-				document.getElementById("readme-md").innerHTML = marked.parse(readme);
-			})
-			.catch(error => {
-				console.error("There has been a problem with your fetch operation:", error);
-				document.getElementById("readme-md").innerHTML = "'.Text::_('COM_SERMONDISTRIBUTOR_PLEASE_CHECK_AGAIN_LATER').'.";
-			});
-		});');
+		$add = false;
 
-		return '<div id="readme-md"><small>'.Text::_('COM_SERMONDISTRIBUTOR_THE_README_IS_LOADING').'.<span class="loading-dots">.</span></small></div>';
+		if (strpos($view, '||') !== false)
+		{
+			$parts = explode('||', $view);
+			if (count($parts) === 3)
+			{
+				[$type, $name, $url] = $parts;
+				return [
+					'type' => $type,
+					'name' => 'COM_SERMONDISTRIBUTOR_DASHBOARD_' . StringHelper::safe($name, 'U'),
+					'url' => $url,
+					'image' => "{$name}.{$type}",
+					'alt' => $name,
+					'viewName' => $name,
+					'add' => false,
+				];
+			}
+		}
+
+		if (strpos($view, '.') !== false)
+		{
+			$parts = explode('.', $view);
+			$type = $parts[0] ?? '';
+			$name = $parts[1] ?? '';
+			$action = $parts[2] ?? null;
+			$viewName = $name;
+
+			if ($action)
+			{
+				if ($action === 'add')
+				{
+					$url = "index.php?option=com_sermondistributor&view={$name}&layout=edit";
+					$image = "{$name}_{$action}.{$type}";
+					$alt = "{$name}&nbsp;{$action}";
+					$name = 'COM_SERMONDISTRIBUTOR_DASHBOARD_' .
+							StringHelper::safe($name, 'U') . '_ADD';
+					$add = true;
+				}
+				else
+				{
+					if (strpos($action, '_qpo0O0oqp_') !== false)
+					{
+						[$action, $ext] = explode('_qpo0O0oqp_', $action);
+						$extension = str_replace('_po0O0oq_', '.', $ext);
+					}
+					else
+					{
+						$extension = "com_sermondistributor.{$name}";
+					}
+					$url = "index.php?option=com_categories&view=categories&extension={$extension}";
+					$image = "{$name}_{$action}.{$type}";
+					$alt = "{$name}&nbsp;{$action}";
+					$name = 'COM_SERMONDISTRIBUTOR_DASHBOARD_' .
+							StringHelper::safe($name, 'U') . '_' .
+							StringHelper::safe($action, 'U');
+				}
+			}
+			else
+			{
+				$url = "index.php?option=com_sermondistributor&view={$name}";
+				$image = "{$name}.{$type}";
+				$alt = $name;
+				$name = 'COM_SERMONDISTRIBUTOR_DASHBOARD_' .
+						StringHelper::safe($name, 'U');
+			}
+
+			return compact('type', 'name', 'url', 'image', 'alt', 'viewName', 'add');
+		}
+
+		return [
+			'type' => 'png',
+			'name' => ucwords($view) . '<br /><br />',
+			'url' => "index.php?option=com_sermondistributor&view={$view}",
+			'image' => "{$view}.png",
+			'alt' => $view,
+			'viewName' => $view,
+			'add' => false,
+		];
+	}
+
+	/**
+	 * Determine if the user has access to view or create the item.
+	 *
+	 * @param string $viewName The base name of the view.
+	 * @param bool $add If this is an add-action.
+	 *
+	 * @return bool
+	 * @since  5.1.1
+	 */
+	protected function hasAccessToView(string $viewName, bool $add): bool
+	{
+		$viewAccess = $this->viewAccess;
+		$accessAdd = $add && isset($viewAccess["{$viewName}.create"])
+			? $viewAccess["{$viewName}.create"]
+			: ($add ? 'core.create' : '');
+
+		$accessTo = $viewAccess["{$viewName}.access"] ?? '';
+
+		$dashboardAdd = isset($viewAccess["{$viewName}.dashboard_add"]) &&
+					$this->user->authorise($viewAccess["{$viewName}.dashboard_add"], 'com_sermondistributor');
+
+		$dashboardList = isset($viewAccess["{$viewName}.dashboard_list"]) &&
+					$this->user->authorise($viewAccess["{$viewName}.dashboard_list"], 'com_sermondistributor');
+
+		if ($add && StringHelper::check($accessAdd))
+		{
+			return $this->user->authorise($accessAdd, 'com_sermondistributor') && $dashboardAdd;
+		}
+
+		if (StringHelper::check($accessTo))
+		{
+			return $this->user->authorise($accessTo, 'com_sermondistributor') && $dashboardList;
+		}
+
+		return !$accessTo && !$accessAdd;
+	}
+
+	/**
+	 * Create a \stdClass icon object.
+	 *
+	 * @param string $url Icon URL.
+	 * @param string $name Language string or label.
+	 * @param string $image Image filename.
+	 * @param string $alt Alt text.
+	 *
+	 * @return \stdClass
+	 * @since  5.1.1
+	 */
+	protected function createIconObject(string $url, string $name, string $image, string $alt): \stdClass
+	{
+		$icon = new \stdClass;
+		$icon->url = $url;
+		$icon->name = $name;
+		$icon->image = $image;
+		$icon->alt = $alt;
+		return $icon;
 	}
 }

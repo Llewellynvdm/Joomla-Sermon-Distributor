@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<changelogs>
+  <changelog>
+    <element>com_sermondistributor</element>
+    <type>component</type>
+    <version>6.0.0</version>
+    <note>
+      <item>First build of Sermon Distributor for Joomla 6</item>
+    </note>
+  </changelog>
+</changelogs>

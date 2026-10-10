@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form
-	addruleprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Rule"
-	addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Field"
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
 >
 	<fields name="filter">
 		<field
@@ -30,6 +30,24 @@
 			class="js-select-submit-on-change"
 			layout="joomla.form.field.list-fancy-select"
 		/>
+		<field
+			type="ModalSelect"
+			sql_title_table="#__sermondistributor_church"
+			sql_title_column="name"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=churches&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			hint="COM_SERMONDISTRIBUTOR_PREACHER_CHURCH_HINT"
+			titleSelect="COM_SERMONDISTRIBUTOR_PREACHER_CHURCH_TITLESELECT"
+			iconSelect="icon-copy"
+			select="true"
+			edit="false"
+			clear="true"
+			onchange="form.submit()"
+			name="church"
+			label="COM_SERMONDISTRIBUTOR_PREACHER_CHURCH_LABEL"
+			multiple="false"
+			class="js-select-submit-on-change"
+		/>
 		<input type="hidden" name="form_submited" value="1"/>
 	</fields>
 
@@ -49,8 +67,8 @@
 			<option value="a.published DESC">JSTATUS_DESC</option>
 			<option value="a.name ASC">COM_SERMONDISTRIBUTOR_FILTER_NAME_ASCENDING</option>
 			<option value="a.name DESC">COM_SERMONDISTRIBUTOR_FILTER_NAME_DESCENDING</option>
-			<option value="a.description ASC">COM_SERMONDISTRIBUTOR_FILTER_DESCRIPTION_ASCENDING</option>
-			<option value="a.description DESC">COM_SERMONDISTRIBUTOR_FILTER_DESCRIPTION_DESCENDING</option>
+			<option value="g.name ASC">COM_SERMONDISTRIBUTOR_FILTER_CHURCH_ASCENDING</option>
+			<option value="g.name DESC">COM_SERMONDISTRIBUTOR_FILTER_CHURCH_DESCENDING</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>

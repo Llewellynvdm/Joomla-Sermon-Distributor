@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		HtmlView.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\View\Series_list;
+namespace JoomSermon\Component\Sermondistributor\Administrator\View\Series_list;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -29,6 +29,7 @@ use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User\User;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\HTML\HTMLHelper as Html;
 use Joomla\CMS\Layout\FileLayout;
@@ -36,9 +37,10 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Document\Document;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use TrueChristianChurch\Joomla\Utilities\ArrayHelper;
-use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Joomla\Sermondistributor\Utilities\Permitted\Actions;
+use JoomSermon\Joomla\Utilities\StringHelper;
+use Joomla\CMS\Toolbar\Button\DropdownButton;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -48,37 +50,161 @@ use TrueChristianChurch\Joomla\Utilities\StringHelper;
  *
  * @since  1.6
  */
+#[\AllowDynamicProperties]
 class HtmlView extends BaseHtmlView
 {
+	/**
+	 * The items from the model
+	 *
+	 * @var    mixed
+	 * @since  3.10.11
+	 */
+	public mixed $items;
+
+	/**
+	 * The state object
+	 *
+	 * @var    mixed
+	 * @since  3.10.11
+	 */
+	public mixed $state;
+
+	/**
+	 * The styles url array
+	 *
+	 * @var    array
+	 * @since  5.0.0
+	 */
+	protected array $styles;
+
+	/**
+	 * The scripts url array
+	 *
+	 * @var    array
+	 * @since  5.0.0
+	 */
+	protected array $scripts;
+
+	/**
+	 * The actions object
+	 *
+	 * @var    object
+	 * @since  3.10.11
+	 */
+	public object $canDo;
+
+	/**
+	 * The return here base64 url
+	 *
+	 * @var    string
+	 * @since  3.10.11
+	 */
+	public string $return_here;
+
+	/**
+	 * The title key used in modal
+	 *
+	 * @var    string
+	 * @since  5.2.1
+	 */
+	public string $modalTitleKey;
+
+	/**
+	 * The modal state
+	 *
+	 * @var    bool
+	 * @since  5.2.1
+	 */
+	public bool $isModal;
+
+	/**
+	 * The empty state
+	 *
+	 * @var    bool
+	 * @since  5.2.1
+	 */
+	protected bool $isEmptyState;
+
+	/**
+	 * The user object.
+	 *
+	 * @var    User
+	 * @since  3.10.11
+	 */
+	public User $user;
+
+	/**
+	 * The Can Edit permission
+	 *
+	 * @var    ?bool
+	 * @since  5.2.1
+	 */
+	public ?bool $canEdit = null;
+
+	/**
+	 * The Can Edit State permission
+	 *
+	 * @var    ?bool
+	 * @since  5.2.1
+	 */
+	public ?bool $canState = null;
+
+	/**
+	 * The Can Create permission
+	 *
+	 * @var    ?bool
+	 * @since  5.2.1
+	 */
+	public ?bool $canCreate = null;
+
+	/**
+	 * The Can Delete permission
+	 *
+	 * @var    ?bool
+	 * @since  5.2.1
+	 */
+	public ?bool $canDelete = null;
+
+	/**
+	 * The Can Batch permission
+	 *
+	 * @var    ?bool
+	 * @since  5.2.1
+	 */
+	public ?bool $canBatch = null;
+
 	/**
 	 * Series_list view display method
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 * @throws \Exception
 	 * @since  1.6
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
-		// Assign data to the view
-		$this->items = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->state = $this->get('State');
-		$this->styles = $this->get('Styles');
-		$this->scripts = $this->get('Scripts');
-		$this->user ??= Factory::getApplication()->getIdentity();
-		// Load the filter form from xml.
-		$this->filterForm = $this->get('FilterForm');
-		// Load the active filters.
-		$this->activeFilters = $this->get('ActiveFilters');
+		// Load module values
+		$model = $this->getModel();
+		$this->items = $model->getItems();
+		$this->pagination = $model->getPagination();
+		$this->state = $model->getState();
+		$this->isEmptyState = $model->getIsEmptyState();
+		$this->styles = $model->getStyles();
+		$this->scripts = $model->getScripts();
+		$this->user ??= $this->getCurrentUser();
+		// Load the filter form from xml for searchtools.
+		$this->filterForm = $model->getFilterForm();
+		// Load the active filters for searchtools.
+		$this->activeFilters = $model->getActiveFilters();
 		// Add the list ordering clause.
-		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
-		$this->listDirn = $this->escape($this->state->get('list.direction', 'DESC'));
+		$this->listOrder = $this->sanitize($this->state->get('list.ordering', 'a.id'));
+		$this->listDirn = $this->sanitize($this->state->get('list.direction', 'DESC'));
 		$this->saveOrder = $this->listOrder == 'a.ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) Uri::getInstance()));
-		// get global action permissions
-		$this->canDo = SermondistributorHelper::getActions('series');
+		// get the permitted actions the current user can do
+		$this->canDo = Actions::get('series');
 		$this->canEdit = $this->canDo->get('series.edit');
 		$this->canState = $this->canDo->get('series.edit.state');
 		$this->canCreate = $this->canDo->get('series.create');
@@ -86,14 +212,16 @@ class HtmlView extends BaseHtmlView
 		$this->canBatch = ($this->canDo->get('series.batch') && $this->canDo->get('core.batch'));
 
 		// If we don't have items we load the empty state
-		if (is_array($this->items) && !count((array) $this->items) && $this->isEmptyState = $this->get('IsEmptyState'))
+		if (is_array($this->items) && !count((array) $this->items) && $this->isEmptyState)
 		{
 			$this->setLayout('emptystate');
 		}
 
 		// We don't need toolbar in the modal window.
+		$this->isModal = true;
 		if ($this->getLayout() !== 'modal')
 		{
+			$this->isModal = false;
 			$this->addToolbar();
 		}
 
@@ -114,44 +242,58 @@ class HtmlView extends BaseHtmlView
 	 * Add the page title and toolbar.
 	 *
 	 * @return  void
+	 * @throws  \Exception
 	 * @since   1.6
 	 */
 	protected function addToolbar(): void
 	{
-		ToolbarHelper::title(Text::_('COM_SERMONDISTRIBUTOR_SERIES_LIST'), 'folder-open');
-
+		ToolbarHelper::title(Text::_('COM_SERMONDISTRIBUTOR_SERIES_LIST'), 'list');
+		/** @var  Toolbar $toolbar */
+		$toolbar = $this->getDocument()->getToolbar();
 		if ($this->canCreate)
 		{
-			ToolbarHelper::addNew('series.add');
+			$toolbar->addNew('series.add');
 		}
 
 		// Only load if there are items
-		if (ArrayHelper::check($this->items))
+		if (!$this->isEmptyState)
 		{
+			/** @var  DropdownButton $dropdown */
+			$dropdown = $toolbar->dropdownButton('status-group')
+				->text('JTOOLBAR_CHANGE_STATUS')
+				->toggleSplit(false)
+				->icon('icon-ellipsis-h')
+				->buttonClass('btn btn-action')
+				->listCheck(true);
+
+			$childBar = $dropdown->getChildToolbar();
+
 			if ($this->canEdit)
 			{
-				ToolbarHelper::editList('series.edit');
+				$childBar->edit('series.edit')->listCheck(true);
 			}
 
 			if ($this->canState)
 			{
-				ToolbarHelper::publishList('series_list.publish');
-				ToolbarHelper::unpublishList('series_list.unpublish');
-				ToolbarHelper::archiveList('series_list.archive');
+				$childBar->publish('series_list.publish')->listCheck(true);
+				$childBar->unpublish('series_list.unpublish')->listCheck(true);
+				$childBar->archive('series_list.archive')->listCheck(true);
 
 				if ($this->canDo->get('core.admin'))
 				{
-					ToolbarHelper::checkin('series_list.checkin');
+					$childBar->checkin('series_list.checkin')->listCheck(true);
 				}
-			}
 
-			if ($this->state->get('filter.published') == -2 && ($this->canState && $this->canDelete))
-			{
-				ToolbarHelper::deleteList('', 'series_list.delete', 'JTOOLBAR_EMPTY_TRASH');
-			}
-			elseif ($this->canState && $this->canDelete)
-			{
-				ToolbarHelper::trash('series_list.trash');
+				if ($this->state->get('filter.published') == -2 && $this->canDelete)
+				{
+					$toolbar->delete('series_list.delete', 'JTOOLBAR_DELETE_FROM_TRASH')
+						->message('JGLOBAL_CONFIRM_DELETE')
+						->listCheck(true);
+				}
+				elseif ($this->canDelete)
+				{
+					$childBar->trash('series_list.trash')->listCheck(true);
+				}
 			}
 		}
 
@@ -159,13 +301,13 @@ class HtmlView extends BaseHtmlView
 		$this->help_url = SermondistributorHelper::getHelpUrl('series_list');
 		if (StringHelper::check($this->help_url))
 		{
-			ToolbarHelper::help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
+			$toolbar->help('COM_SERMONDISTRIBUTOR_HELP_MANAGER', false, $this->help_url);
 		}
 
 		// add the options comp button
 		if ($this->canDo->get('core.admin') || $this->canDo->get('core.options'))
 		{
-			ToolbarHelper::preferences('com_sermondistributor');
+			$toolbar->preferences('com_sermondistributor');
 		}
 	}
 
@@ -179,7 +321,6 @@ class HtmlView extends BaseHtmlView
 	{
 		// Load jQuery
 		Html::_('jquery.framework');
-		$this->getDocument()->setTitle(Text::_('COM_SERMONDISTRIBUTOR_SERIES_LIST'));
 		// add styles
 		foreach ($this->styles as $style)
 		{
@@ -192,24 +333,37 @@ class HtmlView extends BaseHtmlView
 		}
 	}
 
+
+
 	/**
-	 * Escapes a value for output in a view script.
+	 * Sanitises a value to plain text for output in a view script.
 	 *
 	 * @param   mixed  $var     The output to escape.
 	 * @param   bool   $shorten The switch to shorten.
 	 * @param   int    $length  The shorting length.
 	 *
-	 * @return  mixed  The escaped value.
+	 * @return  mixed  The value as plain text.
 	 * @since   1.6
 	 */
-	public function escape($var, bool $shorten = true, int $length = 50)
+	public function sanitize($var, bool $shorten = true, int $length = 50)
 	{
 		if (!is_string($var))
 		{
 			return $var;
 		}
 
-		return StringHelper::html($var, $this->_charset ?? 'UTF-8', $shorten, $length);
+		return StringHelper::sanitize($var, $this->_charset ?? 'UTF-8', $shorten, $length);
+	}
+
+	/**
+	 * Get the modal data/title key
+	 *
+	 * @return  string  The key value.
+	 * @since   5.2.1
+	 */
+	public function getModalTitleKey(): string
+	{
+		return $this->modalTitleKey ?? 'id';
 	}
 
 	/**

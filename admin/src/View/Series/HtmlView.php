@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		HtmlView.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\View\Series;
+namespace JoomSermon\Component\Sermondistributor\Administrator\View\Series;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -29,6 +29,7 @@ use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User\User;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\HTML\HTMLHelper as Html;
 use Joomla\CMS\Layout\FileLayout;
@@ -36,8 +37,12 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Document\Document;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Joomla\Sermondistributor\Utilities\Permitted\Actions;
+use JoomSermon\Joomla\Utilities\StringHelper;
+use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\Input\Input;
+use Joomla\Registry\Registry;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -47,58 +52,188 @@ use TrueChristianChurch\Joomla\Utilities\StringHelper;
  *
  * @since  1.6
  */
+#[\AllowDynamicProperties]
 class HtmlView extends BaseHtmlView
 {
+	/**
+	 * The app class
+	 *
+	 * @var    CMSApplicationInterface
+	 * @since  5.2.1
+	 */
+	public CMSApplicationInterface $app;
+
+	/**
+	 * The input class
+	 *
+	 * @var    Input
+	 * @since  5.2.1
+	 */
+	public Input $input;
+
+	/**
+	 * The params registry
+	 *
+	 * @var    Registry
+	 * @since  5.2.1
+	 */
+	public Registry $params;
+
+	/**
+	 * The item from the model
+	 *
+	 * @var    mixed
+	 * @since  3.10.11
+	 */
+	public mixed $item;
+
+	/**
+	 * The state object
+	 *
+	 * @var    mixed
+	 * @since  3.10.11
+	 */
+	public mixed $state;
+
+	/**
+	 * The form from the model
+	 *
+	 * @var    mixed
+	 * @since  3.10.11
+	 */
+	public mixed $form;
+
+	/**
+	 * The toolbar object
+	 *
+	 * @var    Toolbar
+	 * @since  3.10.11
+	 */
+	public Toolbar $toolbar;
+
+	/**
+	 * The styles url array
+	 *
+	 * @var    array
+	 * @since  5.0.0
+	 */
+	protected array $styles;
+
+	/**
+	 * The scripts url array
+	 *
+	 * @var    array
+	 * @since  5.0.0
+	 */
+	protected array $scripts;
+
+	/**
+	 * The actions object
+	 *
+	 * @var    object
+	 * @since  3.10.11
+	 */
+	public object $canDo;
+
+	/**
+	 * The origin referral view name
+	 *
+	 * @var    string|null
+	 * @since  3.10.11
+	 */
+	public ?string $ref;
+
+	/**
+	 * The origin referral item id
+	 *
+	 * @var    int|null
+	 * @since  3.10.11
+	 */
+	public ?int $refid;
+
+	/**
+	 * The referral url suffix values
+	 *
+	 * @var    string
+	 * @since  3.10.11
+	 */
+	public string $referral;
+
+	/**
+	 * The modal state
+	 *
+	 * @var    bool
+	 * @since  5.2.1
+	 */
+	public bool $isModal;
+
+	/**
+	 * Constructor
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since   6.0.0
+	 */
+	public function __construct(array $config)
+	{
+		if (empty($config['option']))
+		{
+			$config['option'] = 'com_sermondistributor';
+		}
+
+		parent::__construct($config);
+
+		// get application
+		$this->app ??= Factory::getApplication();
+		// get input
+		$this->input ??= method_exists($this->app, 'getInput') ? $this->app->getInput() : $this->app->input;
+		// set params
+		$this->params ??= method_exists($this->app, 'getParams')
+			? $this->app->getParams()
+			: ComponentHelper::getParams('com_sermondistributor');
+
+		$this->useCoreUI = true;
+	}
+
 	/**
 	 * Series view display method
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 * @throws \Exception
 	 * @since  1.6
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
-		// set params
-		$this->params = ComponentHelper::getParams('com_sermondistributor');
-		$this->useCoreUI = true;
-		// Assign the variables
-		$this->form = $this->get('Form');
-		$this->item = $this->get('Item');
-		$this->styles = $this->get('Styles');
-		$this->scripts = $this->get('Scripts');
-		$this->state = $this->get('State');
-		// get action permissions
-		$this->canDo = SermondistributorHelper::getActions('series', $this->item);
-		// get input
-		$jinput = Factory::getApplication()->input;
-		$this->ref = $jinput->get('ref', 0, 'word');
-		$this->refid = $jinput->get('refid', 0, 'int');
-		$return = $jinput->get('return', null, 'base64');
-		// set the referral string
-		$this->referral = '';
-		if ($this->refid && $this->ref)
-		{
-			// return to the item that referred to this item
-			$this->referral = '&ref=' . (string) $this->ref . '&refid=' . (int) $this->refid;
-		}
-		elseif($this->ref)
-		{
-			// return to the list view that referred to this item
-			$this->referral = '&ref=' . (string) $this->ref;
-		}
-		// check return value
-		if (!is_null($return))
-		{
-			// add the return value
-			$this->referral .= '&return=' . (string) $return;
-		}
+		// Load module values
+		$model = $this->getModel();
+		$this->form ??= $model->getForm();
+		$this->item = $model->getItem();
+		$this->styles = $model->getStyles();
+		$this->scripts = $model->getScripts();
+		$this->state = $model->getState();
+
+		// get the permitted actions the current user can do.
+		$this->canDo = Actions::get('series', $this->item);
+
+		// Set the return
+		$this->setReturn();
 
 		// Get Linked view data
-		$this->vwcsermons = $this->get('Vwcsermons');
+		$this->vvxsermons = $this->get('Vvxsermons');
 
 		// Set the toolbar
-		$this->addToolBar();
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->isModal = false;
+			$this->addToolbar();
+		}
+		else
+		{
+			$this->isModal = true;
+			$this->addModalToolbar();
+		}
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -113,18 +248,48 @@ class HtmlView extends BaseHtmlView
 		parent::display($tpl);
 	}
 
+	/**
+	 * Set the redirection details.
+	 *
+	 * @return  void
+	 * @since   5.1.4
+	 */
+	protected function setReturn(): void
+	{
+		// This [ref,refid] will be removed in JCB.v7, use only [return]
+		$this->ref = $this->input->getWord('ref', null);
+		$this->refid = $this->input->getInt('refid', null);
+		$this->referral = '';
+		if (!empty($this->refid) && !empty($this->ref))
+		{
+			// return to the item that referred to this item
+			$this->referral = '&ref=' . (string) $this->ref . '&refid=' . (int) $this->refid;
+		}
+		elseif (!empty($this->ref))
+		{
+			// return to the list view that referred to this item
+			$this->referral = '&ref=' . (string) $this->ref;
+		}
+
+		$return = $this->input->getBase64('return', null);
+		if (!empty($return))
+		{
+			$this->referral .= '&return=' . (string) $return;
+		}
+	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
 	 * @return  void
+	 * @throws  \Exception
 	 * @since   1.6
 	 */
 	protected function addToolbar(): void
 	{
-		Factory::getApplication()->input->set('hidemainmenu', true);
-		$user = Factory::getApplication()->getIdentity();
-		$userId	= $user->id;
+		$this->input->set('hidemainmenu', true);
+		$user = $this->getCurrentUser();
+		$userId = $user->id;
 		$isNew = $this->item->id == 0;
 
 		ToolbarHelper::title( Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERIES_NEW' : 'COM_SERMONDISTRIBUTOR_SERIES_EDIT'), 'pencil-2 article-add');
@@ -143,7 +308,7 @@ class HtmlView extends BaseHtmlView
 			}
 			if ($isNew)
 			{
-				// Do not creat but cancel.
+				// Do not create but cancel.
 				ToolbarHelper::cancel('series.cancel', 'JTOOLBAR_CANCEL');
 			}
 			else
@@ -179,11 +344,6 @@ class HtmlView extends BaseHtmlView
 						ToolbarHelper::custom('series.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
 					}
 				}
-				$canVersion = ($this->canDo->get('core.version') && $this->canDo->get('series.version'));
-				if ($this->state->params->get('save_history', 1) && $this->canDo->get('series.edit') && $canVersion)
-				{
-					ToolbarHelper::versions('com_sermondistributor.series', $this->item->id);
-				}
 				if ($this->canDo->get('series.create'))
 				{
 					ToolbarHelper::custom('series.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
@@ -202,23 +362,68 @@ class HtmlView extends BaseHtmlView
 	}
 
 	/**
-	 * Escapes a value for output in a view script.
+	 * Add the modal toolbar.
 	 *
-	 * @param   mixed  $var     The output to escape.
-	 * @param   bool   $shorten The switch to shorten.
-	 * @param   int    $length  The shorting length.
-	 *
-	 * @return  mixed  The escaped value.
-	 * @since   1.6
+	 * @return  void
+	 * @throws  \Exception
+	 * @since   5.0.0
 	 */
-	public function escape($var, bool $shorten = true, int $length = 30)
+	protected function addModalToolbar()
 	{
-		if (!is_string($var))
-		{
-			return $var;
-		}
+		$this->input->set('hidemainmenu', true);
+		$user = $this->getCurrentUser();
+		$userId = $user->id;
+		$isNew = $this->item->id == 0;
 
-		return StringHelper::html($var, $this->_charset ?? 'UTF-8', $shorten, $length);
+		ToolbarHelper::title( Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERIES_NEW' : 'COM_SERMONDISTRIBUTOR_SERIES_EDIT'), 'pencil-2 article-add');
+		// Built the actions for new and existing records.
+		if (StringHelper::check($this->referral))
+		{
+			if ($this->canDo->get('series.create') && $isNew)
+			{
+				// We can create the record.
+				ToolbarHelper::save('series.save', 'JTOOLBAR_SAVE');
+			}
+			elseif ($this->canDo->get('series.edit'))
+			{
+				// We can save the record.
+				ToolbarHelper::save('series.save', 'JTOOLBAR_SAVE');
+			}
+			if ($isNew)
+			{
+				// Do not create but cancel.
+				ToolbarHelper::cancel('series.cancel', 'JTOOLBAR_CANCEL');
+			}
+			else
+			{
+				// We can close it.
+				ToolbarHelper::cancel('series.cancel', 'JTOOLBAR_CLOSE');
+			}
+		}
+		else
+		{
+			if ($isNew)
+			{
+				// For new records, check the create permission.
+				if ($this->canDo->get('series.create'))
+				{
+					ToolbarHelper::apply('series.apply', 'JTOOLBAR_APPLY');
+					ToolbarHelper::save('series.save', 'JTOOLBAR_SAVE');
+					ToolbarHelper::custom('series.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+				};
+				ToolbarHelper::cancel('series.cancel', 'JTOOLBAR_CANCEL');
+			}
+			else
+			{
+				if ($this->canDo->get('series.edit'))
+				{
+					// We can save the new record
+					ToolbarHelper::apply('series.apply', 'JTOOLBAR_APPLY');
+					ToolbarHelper::save('series.save', 'JTOOLBAR_SAVE');
+				}
+				ToolbarHelper::cancel('series.cancel', 'JTOOLBAR_CLOSE');
+			}
+		}
 	}
 
 	/**
@@ -232,26 +437,110 @@ class HtmlView extends BaseHtmlView
 		// Load jQuery
 		Html::_('jquery.framework');
 		$isNew = ($this->item->id < 1);
-		$this->getDocument()->setTitle(Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_SERIES_NEW' : 'COM_SERMONDISTRIBUTOR_SERIES_EDIT'));
 		// add styles
 		foreach ($this->styles as $style)
 		{
 			Html::_('stylesheet', $style, ['version' => 'auto']);
 		}
 
-		// Add the CSS for Footable
-		Html::_('stylesheet', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css', ['version' => 'auto']);
-		Html::_('stylesheet', 'media/com_sermondistributor/footable-v3/css/footable.standalone.min.css', ['version' => 'auto']);
-		// Add the JavaScript for Footable (adding all functions)
-		Html::_('script', 'media/com_sermondistributor/footable-v3/js/footable.min.js', ['version' => 'auto']);
+		// Add the CSS for Footable.
+		Html::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.core.min.css', ['version' => 'auto']);
 
-		$footable = "jQuery(document).ready(function() { jQuery(function () { jQuery('.footable').footable();});});";
-		$this->getDocument()->addScriptDeclaration($footable);
+		// Use the Metro Style
+		if (!isset($this->fooTableStyle) || 0 == $this->fooTableStyle)
+		{
+			Html::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.metro.min.css', ['version' => 'auto']);
+		}
+		// Use the Legacy Style.
+		elseif (isset($this->fooTableStyle) && 1 == $this->fooTableStyle)
+		{
+			Html::_('stylesheet', 'media/com_sermondistributor/footable-v2/css/footable.standalone.min.css', ['version' => 'auto']);
+		}
+
+		// Add the JavaScript for Footable
+		Html::_('script', 'media/com_sermondistributor/footable-v2/js/footable.js', ['version' => 'auto']);
+		Html::_('script', 'media/com_sermondistributor/footable-v2/js/footable.sort.js', ['version' => 'auto']);
+		Html::_('script', 'media/com_sermondistributor/footable-v2/js/footable.filter.js', ['version' => 'auto']);
+		Html::_('script', 'media/com_sermondistributor/footable-v2/js/footable.paginate.js', ['version' => 'auto']);
+
+		$footable = "jQuery(document).ready(function() { jQuery(function () { jQuery('.footable').footable(); }); jQuery('.nav-tabs').on('click', 'li', function() { setTimeout(tableFix, 10); }); }); function tableFix() { jQuery('.footable').trigger('footable_resize'); }";
+		$this->getDocument()->getWebAssetManager()->addInlineScript($footable);
 
 		// add scripts
 		foreach ($this->scripts as $script)
 		{
 			Html::_('script', $script, ['version' => 'auto']);
 		}
+
+		$app = $this->app ?? Factory::getApplication();
+
+		// set the url as needed
+		$url = '';
+		if (method_exists($app, 'isClient') && $app->isClient('site'))
+		{
+			$url = Uri::root();
+		}
+
+		// get the form token
+		$token = Session::getFormToken();
+		$entity ??= $this->item->guid ?? 0;
+		$target ??= base64_encode('series');
+
+		// Define the configuration for the uploader
+		$uploaderConfig = [
+			"endpoint_type" => "{$url}index.php?option=com_sermondistributor&task=ajax.getFileTypeDetails&format=json&raw=true&{$token}=1&target={$target}",
+			"target_class" => "vdm-uikit-uploader",
+			"file_vdm_uploader" => [
+				"endpoint_upload" => "{$url}index.php?option=com_sermondistributor&task=ajax.uploadFile&format=json&raw=true&{$token}=1&entity={$entity}&target={$target}",
+				"endpoint_display" => "{$url}index.php?option=com_sermondistributor&task=ajax.displayFiles&format=json&raw=true&{$token}=1&entity={$entity}&target={$target}",
+				"endpoint_delete" => "{$url}index.php?option=com_sermondistributor&task=ajax.deleteFile&format=json&raw=true&{$token}=1",
+			],
+		];
+
+		// Convert the PHP array to a JavaScript object
+		$uploaderConfigJson = json_encode($uploaderConfig);
+		$script = "(window.VDM ??= {}).uikit ??= {}; window.VDM.uikit.config = {$uploaderConfigJson};";
+
+		/** @var \Joomla\CMS\Document\Document $document */
+		$document ??= ($this->getDocument() ?? $app->getDocument());
+
+		// Use WebAssetManager if available (Joomla 4+), otherwise fallback
+		if (method_exists($document, 'getWebAssetManager'))
+		{
+			/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+			$wa = $document -> getWebAssetManager(); // note the ...ment[space]->[space]getWebAs... convention (without it JCB will convert the call to $this->getDocument())
+			$wa->addInlineScript($script);
+		}
+		else
+		{
+			$document -> addScriptDeclaration($script);
+		}
+/***[INSERTED$$$$]***//**398**/
+		Html::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit.min.js', ['version' => 'auto']);
+		Html::_('script', 'media/com_sermondistributor/uikit-v3/js/uikit-icons.min.js', ['version' => 'auto']);
+		Html::_('script', 'https://cdn.jsdelivr.net/gh/joomengine/uikit@3.0.2/dist/js/vdm.min.js', ['version' => 'auto']);
+		Html::_('stylesheet', 'media/com_sermondistributor/uikit-v3/css/uikit.min.css', ['version' => 'auto']);/***[/INSERTED$$$$]***/
+	}
+
+
+
+	/**
+	 * Sanitises a value to plain text for output in a view script.
+	 *
+	 * @param   mixed  $var     The output to escape.
+	 * @param   bool   $shorten The switch to shorten.
+	 * @param   int    $length  The shorting length.
+	 *
+	 * @return  mixed  The value as plain text.
+	 * @since   1.6
+	 */
+	public function sanitize($var, bool $shorten = true, int $length = 30)
+	{
+		if (!is_string($var))
+		{
+			return $var;
+		}
+
+		return StringHelper::sanitize($var, $this->_charset ?? 'UTF-8', $shorten, $length);
 	}
 }

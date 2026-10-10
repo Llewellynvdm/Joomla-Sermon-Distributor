@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		HtmlView.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\View\Sermondistributor;
+namespace JoomSermon\Component\Sermondistributor\Administrator\View\Sermondistributor;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -29,8 +29,8 @@ use Joomla\CMS\HTML\HTMLHelper as Html;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Document\Document;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Joomla\Utilities\StringHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -40,13 +40,71 @@ use TrueChristianChurch\Joomla\Utilities\StringHelper;
  *
  * @since  1.6
  */
+#[\AllowDynamicProperties]
 class HtmlView extends BaseHtmlView
 {
 	/**
-	 * View display method
-	 * @return void
+	 * @var array<string> List of icon identifiers to render in the dashboard view.
+	 * @since 1.6
 	 */
-	function display($tpl = null)
+	public array $icons = [];
+
+	/**
+	 * @var array<string> List of CSS file URLs to be added to the page.
+	 * @since 4.3
+	 */
+	public array $styles = [];
+
+	/**
+	 * @var array<string> List of JavaScript file URLs to be included on the page.
+	 * @since 4.3
+	 */
+	public array $scripts = [];
+
+	/**
+	 * @var array<int, object> List of contributor objects fetched via the helper.
+	 * @since 1.6
+	 */
+	public array $contributors = [];
+
+	/**
+	 * @var object|null The manifest metadata of the component as returned by `ComponentbuilderHelper::manifest()`.
+	 * @since 1.6
+	 */
+	public $manifest = null;
+
+	/**
+	 * @var string|null Markdown content of the component's wiki page.
+	 * @since 1.6
+	 */
+	public ?string $wiki = null;
+
+	/**
+	 * @var string|null The rendered or raw README markdown of the component.
+	 * @since 1.6
+	 */
+	public ?string $readme = null;
+
+	/**
+	 * @var string|null The current version of the component.
+	 * @since 1.6
+	 */
+	public ?string $version = null;
+
+	/**
+	 * @var string|null Help URL for the component dashboard view, if available.
+	 * @since 1.6
+	 */
+	public ?string $help_url = null;
+
+	/**
+	 * View display method
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since   1.6
+	 */
+	function display($tpl = null): void
 	{
 		// Assign data to the view
 		$this->icons          = $this->get('Icons');
@@ -56,9 +114,6 @@ class HtmlView extends BaseHtmlView
 
 		// get the manifest details of the component
 		$this->manifest = SermondistributorHelper::manifest();
-		$this->wiki = $this->get('Wiki');
-		$this->noticeboard = $this->get('Noticeboard');
-		$this->readme = $this->get('Readme');
 
 		// Set the toolbar
 		$this->addToolBar();
@@ -110,8 +165,12 @@ class HtmlView extends BaseHtmlView
 	{
 		// set page title
 		$this->getDocument()->setTitle(Text::_('COM_SERMONDISTRIBUTOR_DASHBOARD'));
-		// add manifest to page JavaScript
-		$this->getDocument()->addScriptDeclaration("var manifest = JSON.parse('" . json_encode($this->manifest) . "');", "text/javascript");
+		/** \Joomla\CMS\WebAsset\WebAssetManager $wa */
+		$wa = $this->getDocument()->getWebAssetManager();
+		// Register the inline script with properly encoded JSON
+		$wa->addInlineScript(
+			'var manifest = ' . json_encode($this->manifest, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';'
+		);
 		// add styles
 		foreach ($this->styles as $style)
 		{

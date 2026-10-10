@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
+>
+	<fields name="filter">
+		<field
+			type="text"
+			name="search"
+			inputmode="search"
+			label="COM_SERMONDISTRIBUTOR_FILTER_SEARCH"
+			description="COM_SERMONDISTRIBUTOR_FILTER_SEARCH_STATES"
+			hint="JSEARCH_FILTER"
+		/>
+		<field
+			type="status"
+			name="published"
+			label="COM_SERMONDISTRIBUTOR_FILTER_PUBLISHED"
+			description="COM_SERMONDISTRIBUTOR_FILTER_PUBLISHED_STATES"
+			class="js-select-submit-on-change"
+		>
+			<option value="">JOPTION_SELECT_PUBLISHED</option>
+		</field>
+		<field
+			type="accesslevel"
+			name="access"
+			label="JGRID_HEADING_ACCESS"
+			hint="JOPTION_SELECT_ACCESS"
+			multiple="true"
+			class="js-select-submit-on-change"
+			layout="joomla.form.field.list-fancy-select"
+		/>
+		<field
+			type="ModalSelect"
+			sql_title_table="#__sermondistributor_country"
+			sql_title_column="name"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=countries&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			hint="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_HINT"
+			titleSelect="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_TITLESELECT"
+			iconSelect="icon-copy"
+			select="true"
+			edit="false"
+			clear="true"
+			onchange="form.submit()"
+			name="country"
+			label="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_LABEL"
+			multiple="false"
+			class="js-select-submit-on-change"
+		/>
+		<input type="hidden" name="form_submited" value="1"/>
+	</fields>
+
+	<fields name="list">
+		<field
+			name="fullordering"
+			type="list"
+			label="JGLOBAL_SORT_BY"
+			class="js-select-submit-on-change"
+			default="a.id DESC"
+			validate="options"
+		>
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+			<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+			<option value="a.published ASC">JSTATUS_ASC</option>
+			<option value="a.published DESC">JSTATUS_DESC</option>
+			<option value="a.name ASC">COM_SERMONDISTRIBUTOR_FILTER_NAME_ASCENDING</option>
+			<option value="a.name DESC">COM_SERMONDISTRIBUTOR_FILTER_NAME_DESCENDING</option>
+			<option value="g.name ASC">COM_SERMONDISTRIBUTOR_FILTER_COUNTRY_ASCENDING</option>
+			<option value="g.name DESC">COM_SERMONDISTRIBUTOR_FILTER_COUNTRY_DESCENDING</option>
+			<option value="a.type ASC">COM_SERMONDISTRIBUTOR_FILTER_TYPE_ASCENDING</option>
+			<option value="a.type DESC">COM_SERMONDISTRIBUTOR_FILTER_TYPE_DESCENDING</option>
+			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+
+		<field
+			name="limit"
+			type="limitbox"
+			label="JGLOBAL_LIST_LIMIT"
+			default="25"
+			class="js-select-submit-on-change"
+		/>
+	</fields>
+</form>

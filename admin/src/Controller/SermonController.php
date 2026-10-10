@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		SermonController.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\Controller;
+namespace JoomSermon\Component\Sermondistributor\Administrator\Controller;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -36,7 +36,8 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Joomla\Utilities\GuidHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -76,6 +77,67 @@ class SermonController extends FormController
 	protected $view_list = 'sermons';
 
 	/**
+	 * Referral value
+	 *
+	 * @var    string
+	 * @since  5.0
+	 */
+	protected string $ref;
+
+	/**
+	 * Referral ID value
+	 *
+	 * @var    int
+	 * @since  5.0
+	 */
+	protected int $refid;
+
+/***[INSERTED$$$$]***//**412**/
+	/**
+	 * Method to edit an existing record.
+	 *
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key
+	 *                           (sometimes required to avoid router collisions).
+	 *
+	 * @return  boolean  True if access level check and checkout passes, false otherwise.
+	 *
+	 * @since   1.6
+	 */
+	public function edit($key = null, $urlVar = null)
+	{
+		// for modal title key selection (unique key to do mapping)
+		$titleKey = $this->input->get('titleKey', 'id', 'word');
+		$guid = null;
+		$value = null;
+
+ 		// Determine the name of the primary key for the data.
+		if (empty($key))
+		{
+			$model = $this->getModel();
+			$table = $model->getTable();
+			$key = $table->getKeyName();
+		}
+
+		if ($titleKey === 'guid')
+		{
+			$guid = $this->input->get('guid', null, 'string');
+		}
+
+		if ($guid !== null && GuidHelper::valid($guid))
+		{
+			$value = GuidHelper::item($guid, 'sermon', 'a.' . $key, 'sermondistributor');
+		}
+
+		if ($value !== null)
+		{
+			$this->input->set($key, $value);
+		}
+
+		return parent::edit($key, $urlVar);
+	}/***[/INSERTED$$$$]***/
+
+	/**
 	 * Method override to check if you can add a new record.
 	 *
 	 * @param   array  $data  An array of input data.
@@ -110,10 +172,11 @@ class SermonController extends FormController
 	 * @since   1.6
 	 */
 	protected function allowEdit($data = [], $key = 'id')
-	{		// get user object.
+	{
+		// get user object.
 		$user = $this->app->getIdentity();
 		// get record id.
-		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
+		$recordId = isset($data[$key]) ? (int) $data[$key] : 0;
 
 
 		// Access check.
@@ -129,23 +192,19 @@ class SermonController extends FormController
 			$permission = $user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int) $recordId);
 			if (!$permission)
 			{
-				if ($user->authorise('sermon.edit.own', 'com_sermondistributor.sermon.' . $recordId))
+				if ($user->authorise('sermon.edit.own', 'com_sermondistributor.sermon.' . (int) $recordId))
 				{
-					// Fallback on edit.own. Now test the owner is the user.
-					$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
-					if (empty($ownerId))
+					// Now test the owner is the user.
+					// The owner comes from the stored record, never from $data.
+					$record = $this->getModel()->getItem($recordId);
+
+					if (empty($record))
 					{
-						// Need to do a lookup from the model.
-						$record = $this->getModel()->getItem($recordId);
-
-						if (empty($record))
-						{
-							return false;
-						}
-						$ownerId = $record->created_by;
+						return false;
 					}
+					$ownerId = (int) $record->created_by;
 
-					// If the owner matches 'me' then do the test.
+					// If the owner matches 'me' then allow.
 					if ($ownerId == $user->id)
 					{
 						if ($user->authorise('sermon.edit.own', 'com_sermondistributor'))
@@ -173,12 +232,21 @@ class SermonController extends FormController
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
 	{
-		// get the referral options (old method use return instead see parent)
+		// get int-defaults (to int new items with default values dynamically)
+		$init_defaults = $this->input->get('init_defaults', null, 'STRING');
+
+		// get the referral options (old method use init_defaults or return instead see parent)
 		$ref = $this->input->get('ref', 0, 'string');
 		$refid = $this->input->get('refid', 0, 'int');
 
 		// get redirect info.
 		$append = parent::getRedirectToItemAppend($recordId, $urlVar);
+
+		// set int-defaults
+		if (!empty($init_defaults))
+		{
+			$append = '&init_defaults='. (string) $init_defaults . $append;
+		}
 
 		// set the referral options
 		if ($refid && $ref)
@@ -191,28 +259,6 @@ class SermonController extends FormController
 		}
 
 		return $append;
-	}
-
-	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   object  $model  The model.
-	 *
-	 * @return  boolean   True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	public function batch($model = null)
-	{
-		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
-
-		// Set the model
-		$model = $this->getModel('Sermon', '', []);
-
-		// Preset the redirect
-		$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=sermons' . $this->getRedirectToListAppend(), false));
-
-		return parent::batch($model);
 	}
 
 	/**
@@ -267,6 +313,15 @@ class SermonController extends FormController
 					'index.php?option=' . $this->option . $redirect, false
 				)
 			);
+		}
+		// When editing in modal then redirect to modalreturn layout
+		elseif ($cancel && $this->input->get('layout') === 'modal')
+		{
+			$id = $this->input->get('id');
+			$return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
+				. '&layout=modalreturn&from-task=cancel';
+
+			$this->setRedirect(Route::_($return, false));
 		}
 		return $cancel;
 	}
@@ -341,7 +396,7 @@ class SermonController extends FormController
 	 * Function that allows child controller access to model data
 	 * after the data has been saved.
 	 *
-	 * @param   BaseDatabaseModel  &$model     The data model object.
+	 * @param   BaseDatabaseModel  $model     The data model object.
 	 * @param   array              $validData  The validated data.
 	 *
 	 * @return  void
@@ -350,6 +405,15 @@ class SermonController extends FormController
 	 */
 	protected function postSaveHook(BaseDatabaseModel $model, $validData = [])
 	{
+		if ($this->input->get('layout') === 'modal' && $this->task === 'save')
+		{
+			// When editing in modal then redirect to modalreturn layout
+			$id = $model->getState('sermon.id', '');
+			$return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
+				. '&layout=modalreturn&from-task=save';
+
+			$this->setRedirect(Route::_($return, false));
+		}
 		return;
 	}
 }

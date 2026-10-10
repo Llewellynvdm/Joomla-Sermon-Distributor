@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
+>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
+	<fieldset name="details">
+		<!-- Default Fields. -->
+		<!-- Id Field. Type: Text (joomla) -->
+		<field
+			name="id"
+			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+			readonly="true"
+		/>
+		<!-- Date Created Field. Type: Calendar (joomla) -->
+		<field
+			name="created"
+			type="calendar"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_CREATED_DATE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_CREATED_DATE_DESC"
+			size="22"
+			format="%Y-%m-%d %H:%M:%S"
+			filter="user_utc"
+		/>
+		<!-- User Created Field. Type: User (joomla) -->
+		<field
+			name="created_by"
+			type="user"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_CREATED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_CREATED_BY_DESC"
+		/>
+		<!-- Published Field. Type: List (joomla) -->
+		<field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
+			filter="intval" size="1" default="1" >
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="2">
+				JARCHIVED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<!-- Date Modified Field. Type: Calendar (joomla) -->
+		<field name="modified" type="calendar" class="readonly"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_MODIFIED_DATE_LABEL" description="COM_SERMONDISTRIBUTOR_TIMEZONE_MODIFIED_DATE_DESC"
+			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
+		<!-- User Modified Field. Type: User (joomla) -->
+		<field name="modified_by" type="user"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_MODIFIED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_MODIFIED_BY_DESC"
+			class="readonly"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Access Field. Type: Accesslevel (joomla) -->
+		<field name="access"
+			type="accesslevel"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+			default="1"
+			required="false"
+		/>
+		<!-- Ordering Field. Type: Numbers (joomla) -->
+		<field
+			name="ordering"
+			type="number"
+			class="inputbox validate-ordering"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_ORDERING_LABEL"
+			description=""
+			default="0"
+			size="6"
+			required="false"
+		/>
+		<!-- Version Field. Type: Text (joomla) -->
+		<field
+			name="version"
+			type="text"
+			class="readonly"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_VERSION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_VERSION_DESC"
+			size="6"
+			default="1"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Metakey Field. Type: Textarea (joomla) -->
+		<field
+			name="metakey"
+			type="textarea"
+			label="JFIELD_META_KEYWORDS_LABEL"
+			description="JFIELD_META_KEYWORDS_DESC"
+			rows="3"
+			cols="30"
+		/>
+		<!-- Metadesc Field. Type: Textarea (joomla) -->
+		<field
+			name="metadesc"
+			type="textarea"
+			label="JFIELD_META_DESCRIPTION_LABEL"
+			description="JFIELD_META_DESCRIPTION_DESC"
+			rows="3"
+			cols="30"
+		/>
+		<!-- Was added due to Permissions JS needing a Title field -->
+		<!-- Let us know at gh-629 should this change -->
+		<!-- https://github.com/vdm-io/Joomla-Component-Builder/issues/629#issuecomment-750117235 -->
+		<field
+			name="title"
+			type="hidden"
+			default="sermondistributor timezone"
+		/>
+		<!-- Dynamic Fields. -->
+		<!-- Timezone_name Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="timezone_name"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_TIMEZONE_NAME_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_TIMEZONE_NAME_DESCRIPTION"
+			class="text_area"
+			message="COM_SERMONDISTRIBUTOR_TIMEZONE_TIMEZONE_NAME_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_TIMEZONE_TIMEZONE_NAME_HINT"
+		/>
+		<!-- Timezone_identifier Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="timezone_identifier"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_TIMEZONE_IDENTIFIER_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_TIMEZONE_IDENTIFIER_DESCRIPTION"
+			class="text_area"
+			message="COM_SERMONDISTRIBUTOR_TIMEZONE_TIMEZONE_IDENTIFIER_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_TIMEZONE_TIMEZONE_IDENTIFIER_HINT"
+		/>
+		<!-- Gmt_offset_name Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="gmt_offset_name"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_GMT_OFFSET_NAME_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_GMT_OFFSET_NAME_DESCRIPTION"
+			class="text_area"
+			message="COM_SERMONDISTRIBUTOR_TIMEZONE_GMT_OFFSET_NAME_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_TIMEZONE_GMT_OFFSET_NAME_HINT"
+		/>
+		<!-- Country Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="country"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_COUNTRY_LABEL"
+			sql_title_table="#__sermondistributor_country"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=countries&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=country.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=country.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_TIMEZONE_COUNTRY_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_TIMEZONE_COUNTRY_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_TIMEZONE_COUNTRY_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="true"
+			class="input-large"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_COUNTRY_DESCRIPTION"
+			hint="COM_SERMONDISTRIBUTOR_TIMEZONE_COUNTRY_HINT"
+		/>
+		<!-- Guid Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="guid"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_GUID_LABEL"
+			size="40"
+			maxlength="40"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_GUID_DESCRIPTION"
+			class="text_area"
+			readonly="true"
+			filter="CMD"
+			validate="guid"
+			hint="COM_SERMONDISTRIBUTOR_TIMEZONE_GUID_HINT"
+		/>
+		<!-- Gmt_offset_sec Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="gmt_offset_sec"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_GMT_OFFSET_SEC_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_GMT_OFFSET_SEC_DESCRIPTION"
+			class="text_area"
+			message="COM_SERMONDISTRIBUTOR_TIMEZONE_GMT_OFFSET_SEC_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_TIMEZONE_GMT_OFFSET_SEC_HINT"
+		/>
+		<!-- Abbreviation Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="abbreviation"
+			label="COM_SERMONDISTRIBUTOR_TIMEZONE_ABBREVIATION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_TIMEZONE_ABBREVIATION_DESCRIPTION"
+			class="text_area"
+			message="COM_SERMONDISTRIBUTOR_TIMEZONE_ABBREVIATION_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_TIMEZONE_ABBREVIATION_HINT"
+		/>
+	</fieldset>
+
+	<!-- Metadata Fields. -->
+	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+		<fieldset name="vdmmetadata"
+			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+			<!-- Robots Field. Type: List (joomla) -->
+			<field name="robots"
+				type="list"
+				label="JFIELD_METADATA_ROBOTS_LABEL"
+				description="JFIELD_METADATA_ROBOTS_DESC" >
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
+				<option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
+				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
+				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+			</field>
+			<!-- Author Field. Type: Text (joomla) -->
+			<field name="author"
+				type="text"
+				label="JAUTHOR" description="JFIELD_METADATA_AUTHOR_DESC"
+				size="20"
+			/>
+			<!-- Rights Field. Type: Textarea (joomla) -->
+			<field name="rights" type="textarea" label="JFIELD_META_RIGHTS_LABEL"
+				description="JFIELD_META_RIGHTS_DESC" required="false" filter="string"
+				cols="30" rows="2"
+			/>
+		</fieldset>
+	</fields>
+
+	<!-- Access Control Fields. -->
+	<fieldset name="accesscontrol">
+		<!-- Asset Id Field. Type: Hidden (joomla) -->
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+		<!-- Rules Field. Type: Rules (joomla) -->
+		<field
+			name="rules"
+			type="rules"
+			label="Permissions in relation to this timezone"
+			translate_label="false"
+			filter="rules"
+			validate="rules"
+			class="inputbox"
+			component="com_sermondistributor"
+			section="timezone"
+		/>
+	</fieldset>
+</form>

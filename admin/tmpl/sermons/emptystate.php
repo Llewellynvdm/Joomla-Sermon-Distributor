@@ -10,15 +10,15 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		emptystate.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -30,7 +30,7 @@ defined('_JEXEC') or die;
 $displayData = [
 	'textPrefix' => 'COM_SERMONDISTRIBUTOR_SERMONS',
 	'formURL'    => 'index.php?option=com_sermondistributor&view=sermons',
-	'icon'       => 'icon-book',
+	'icon'       => 'icon-music',
 ];
 
 if ($this->user->authorise('sermon.create', 'com_sermondistributor'))

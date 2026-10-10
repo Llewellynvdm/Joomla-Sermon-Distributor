@@ -9,168 +9,219 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		dashboard.css
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
-/* CSS Document */
+/* Dashboard icon grid */
 
-.dashboard-container {
-	margin-left: 10px;
-	margin-top: 10px;
+.dashboard-icons {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 1.25rem;
 	width: 100%;
+	margin: 0;
+	padding: 0;
 }
-.dashboard-container [class*="span"] {
+
+.dashboard-icon-item {
+	min-width: 0;
+}
+
+.dashboard-icon-link {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 1rem;
+	height: 100%;
+	min-height: 220px;
+	padding: 1.5rem 1.25rem;
+	border: 1px solid var(--border-color, #dfe3e7);
+	border-radius: 0.75rem;
+	background: var(--body-bg, #fff);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	color: var(--body-color, #1f2d3d);
+	text-align: center;
+	text-decoration: none;
+	transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.dashboard-icon-link:hover,
+.dashboard-icon-link:focus,
+.dashboard-icon-link:focus-visible {
+	color: var(--link-color, #0d6efd);
+	text-decoration: none;
+	border-color: var(--link-color, #0d6efd);
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+	transform: translateY(-2px);
+	outline: none;
+}
+
+.dashboard-icon-image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 110px;
+}
+
+.dashboard-icon-image img {
 	display: block;
-	float: none;
-	margin-left: 0;
+	max-width: 96px;
+	max-height: 96px;
 	width: auto;
+	height: auto;
+	margin: 0 auto;
+	object-fit: contain;
 }
-.dashboard-container:before, .dashboard-container:after {
-	content: "";
-	display: table;
-}
-.dashboard-container:after {
-	clear: both;
-}
-.dashboard-container [class*="span"] {
-	box-sizing: border-box;
+
+.dashboard-icon-title {
 	display: block;
-	float: left;
-	min-height: 145px;
-	min-width: 96px;
 	width: 100%;
+	font-size: 1.05rem;
+	font-weight: 500;
+	line-height: 1.4;
+	word-break: break-word;
+	overflow-wrap: anywhere;
 }
-.dashboard-container [class*="span"]:first-child {
-	margin-left: 0;
-}
-.dashboard-wraper {
-	background: none repeat scroll 0 0 hsl(0, 0%, 93%);
-	border-radius: 5px;
-	float: left;
-	margin: 1%;
-	padding: 3px;
-	width: 17%;
-	min-height: 194px;
-	min-width: 96px;
-}
-.dashboard-content a {
-	background: linear-gradient(to bottom, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 96%) 47%, hsl(0, 0%, 93%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
-	border: 1px solid hsl(0, 0%, 85%);
-	border-radius: 4px;
-	box-shadow: 0 0 3px hsla(0, 0%, 0%, 0.1) inset;
-	color: hsl(0, 0%, 20%);
-	display: block;
-	min-height: 89px;
-	padding: 10px;
-	text-align: center;
-	text-decoration: none;
-}
-.dashboard-content a:hover {
-	background: linear-gradient(to bottom, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 100%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
-	color: hsl(200, 100%, 30%);
-	text-decoration: none;
-}
-.dashboard-title {
-	display: block;
-	padding-top: 5px;
-}
+
+/* Optional info blocks if still used elsewhere */
 .dashboard-info {
-	background: linear-gradient(to bottom, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 96%) 47%, hsl(0, 0%, 93%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
-	border: 1px solid hsl(0, 0%, 85%);
-	border-radius: 4px;
-	box-shadow: 0 0 3px hsla(0, 0%, 0%, 0.1) inset;
-	color: hsl(0, 0%, 20%);
 	display: block;
-	font-size: 12px;
-	padding: 10px;
+	padding: 1rem 1.25rem;
+	border: 1px solid var(--border-color, #dfe3e7);
+	border-radius: 0.75rem;
+	background: var(--body-bg, #fff);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	color: var(--body-color, #1f2d3d);
 	text-align: center;
 }
+
 .dashboard-info span {
 	display: block;
 	text-align: center;
 }
+
 .dashboard-info img {
-	margin: 0 auto;
+	display: block;
+	margin: 0 auto 0.75rem;
+	max-width: 100%;
+	height: auto;
 }
-.dashboard-table {
-	border-top: 1px solid hsl(0, 0%, 87%);
-	margin-top: 5px;
-	width: 100%;
-}
-.dashboard-info h5 {
-	font-size: 11px;
-	font-weight: bold;
-}
+
+/* Legacy blocks modernized slightly, if still used */
 .dashboard-block {
-	background: linear-gradient(to bottom, hsl(0, 0%, 95%) 0%, hsl(0, 0%, 86%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
-	border: 1px solid hsl(0, 0%, 76%);
-	border-radius: 3px;
-	box-shadow: 0 1px 0 hsl(0, 0%, 98%) inset;
-	margin-bottom: 20px;
+	margin-bottom: 1.5rem;
+	border: 1px solid var(--border-color, #dfe3e7);
+	border-radius: 0.75rem;
+	background: var(--body-bg, #fff);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	overflow: hidden;
 }
+
 .dashboard-block .dashboard-block-head {
-	background: linear-gradient(to bottom, hsl(0, 0%, 95%) 0%, hsl(0, 0%, 86%) 100%) repeat scroll 0 0 hsla(0, 0%, 0%, 0);
-	border-bottom: 1px solid hsl(0, 0%, 76%);
-	border-radius: 3px 3px 0 0;
-	box-shadow: 0 1px 0 hsl(0, 0%, 98%) inset, 0 0 3px hsl(0, 0%, 87%);
-	height: 40px;
+	display: flex;
+	align-items: center;
+	min-height: 3rem;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--border-color, #dfe3e7);
+	background: var(--secondary-bg, #f8f9fa);
 	position: relative;
 }
+
 .dashboard-block .dashboard-block-head h5 {
-	font-size: 12px;
 	margin: 0;
-	padding-left: 10px;
-	padding-top: 11px;
+	font-size: 0.95rem;
+	font-weight: 600;
 	text-transform: uppercase;
+	letter-spacing: 0.02em;
 }
+
 .dashboard-block .dashboard-block-content {
-	background: none repeat scroll 0 0 hsl(0, 0%, 93%);
-	border-radius: 0 0 3px 3px;
+	padding: 1rem;
+	background: var(--body-bg, #fff);
 }
+
 .dashboard-block .dashboard-block-box {
-	background: none repeat scroll 0 0 hsl(0, 0%, 100%);
-	border-top: 1px solid hsl(0, 0%, 82%);
-	box-shadow: 0 0 5px hsl(0, 0%, 87%) inset;
+	background: transparent;
+	border-top: 1px solid var(--border-color, #dfe3e7);
+	box-shadow: none;
 }
-.dashboard-block .dashboard-block-content .dashboard-block-box {
-	margin-top: 0 !important;
-}
-.dashboard-block .dashboard-block-content .dashboard-block-box .dashboard-block-table {
-	margin-bottom: 0 !important;
-}
-.dashboard-block-table {
-	background-color: hsla(0, 0%, 0%, 0);
+
+.dashboard-block-table,
+.dashboard-table {
+	width: 100%;
 	border-collapse: collapse;
 	border-spacing: 0;
-	margin-bottom: 20px;
-	max-width: 100%;
-	width: 100%;
 }
-.dashboard-block-table th, .dashboard-block-table td {
-	border-top: 1px solid hsl(0, 0%, 87%);
-	line-height: 20px;
-	padding: 5px;
+
+.dashboard-block-table th,
+.dashboard-block-table td,
+.dashboard-table th,
+.dashboard-table td {
+	padding: 0.65rem 0.75rem;
+	border-top: 1px solid var(--border-color, #e5e7eb);
 	text-align: left;
 	vertical-align: middle;
 }
+
 .dashboard-badge {
-	background-color: hsl(0, 0%, 60%);
-	border-radius: 9px;
-	color: hsl(0, 0%, 100%);
-	font-size: 11.844px;
-	font-weight: bold;
-	line-height: 14px;
-	padding: 1px 9px 2px;
-	text-shadow: 0 -1px 0 hsla(0, 0%, 0%, 0.25);
-	vertical-align: baseline;
+	display: inline-block;
+	padding: 0.2rem 0.6rem;
+	border-radius: 999px;
+	background-color: #6c757d;
+	color: #fff;
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1.4;
 	white-space: nowrap;
+}
+
+/* Responsive refinements */
+@media (max-width: 991.98px) {
+	.dashboard-icons {
+		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+		gap: 1rem;
+	}
+
+	.dashboard-icon-link {
+		min-height: 200px;
+		padding: 1.25rem 1rem;
+	}
+}
+
+@media (max-width: 575.98px) {
+	.dashboard-icons {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.875rem;
+	}
+
+	.dashboard-icon-link {
+		min-height: 180px;
+		padding: 1rem 0.875rem;
+		border-radius: 0.625rem;
+	}
+
+	.dashboard-icon-image {
+		min-height: 84px;
+	}
+
+	.dashboard-icon-image img {
+		max-width: 72px;
+		max-height: 72px;
+	}
+
+	.dashboard-icon-title {
+		font-size: 0.95rem;
+		line-height: 1.3;
+	}
 }

@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		PreachersController.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\Controller;
+namespace JoomSermon\Component\Sermondistributor\Administrator\Controller;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -29,9 +29,7 @@ use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use TrueChristianChurch\Joomla\Utilities\ObjectHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -65,68 +63,5 @@ class PreachersController extends AdminController
 	public function getModel($name = 'Preacher', $prefix = 'Administrator', $config = ['ignore_request' => true])
 	{
 		return parent::getModel($name, $prefix, $config);
-	}
-
-	public function exportData()
-	{
-		// Check for request forgeries
-		Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
-		// check if export is allowed for this user.
-		$user = Factory::getApplication()->getIdentity();
-		if ($user->authorise('preacher.export', 'com_sermondistributor') && $user->authorise('core.export', 'com_sermondistributor'))
-		{
-			// Get the input
-			$input = Factory::getApplication()->input;
-			$pks = $input->post->get('cid', array(), 'array');
-			// Sanitize the input
-			$pks = ArrayHelper::toInteger($pks);
-			// Get the model
-			$model = $this->getModel('Preachers');
-			// get the data to export
-			$data = $model->getExportData($pks);
-			if (UtilitiesArrayHelper::check($data))
-			{
-				// now set the data to the spreadsheet
-				$date = Factory::getDate();
-				SermondistributorHelper::xls($data,'Preachers_'.$date->format('jS_F_Y'),'Preachers exported ('.$date->format('jS F, Y').')','preachers');
-			}
-		}
-		// Redirect to the list screen with error.
-		$message = Text::_('COM_SERMONDISTRIBUTOR_EXPORT_FAILED');
-		$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=preachers', false), $message, 'error');
-		return;
-	}
-
-
-	public function importData()
-	{
-		// Check for request forgeries
-		Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
-		// check if import is allowed for this user.
-		$user = Factory::getApplication()->getIdentity();
-		if ($user->authorise('preacher.import', 'com_sermondistributor') && $user->authorise('core.import', 'com_sermondistributor'))
-		{
-			// Get the import model
-			$model = $this->getModel('Preachers');
-			// get the headers to import
-			$headers = $model->getExImPortHeaders();
-			if (ObjectHelper::check($headers))
-			{
-				// Load headers to session.
-				$session = Factory::getSession();
-				$headers = json_encode($headers);
-				$session->set('preacher_VDM_IMPORTHEADERS', $headers);
-				$session->set('backto_VDM_IMPORT', 'preachers');
-				$session->set('dataType_VDM_IMPORTINTO', 'preacher');
-				// Redirect to import view.
-				$message = Text::_('COM_SERMONDISTRIBUTOR_IMPORT_SELECT_FILE_FOR_PREACHERS');
-				$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=import', false), $message);
-				return;
-			}
-		}
-		// Redirect to the list screen with error.
-		$message = Text::_('COM_SERMONDISTRIBUTOR_IMPORT_FAILED');
-		$this->setRedirect(Route::_('index.php?option=com_sermondistributor&view=preachers', false), $message, 'error');
-		return;
 	}
 }

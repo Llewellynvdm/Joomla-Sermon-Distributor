@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
+>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
+	<fieldset name="details">
+		<!-- Default Fields. -->
+		<!-- Id Field. Type: Text (joomla) -->
+		<field
+			name="id"
+			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+			readonly="true"
+		/>
+		<!-- Date Created Field. Type: Calendar (joomla) -->
+		<field
+			name="created"
+			type="calendar"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CREATED_DATE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CREATED_DATE_DESC"
+			size="22"
+			format="%Y-%m-%d %H:%M:%S"
+			filter="user_utc"
+		/>
+		<!-- User Created Field. Type: User (joomla) -->
+		<field
+			name="created_by"
+			type="user"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CREATED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CREATED_BY_DESC"
+		/>
+		<!-- Published Field. Type: List (joomla) -->
+		<field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
+			filter="intval" size="1" default="1" >
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="2">
+				JARCHIVED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<!-- Date Modified Field. Type: Calendar (joomla) -->
+		<field name="modified" type="calendar" class="readonly"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_MODIFIED_DATE_LABEL" description="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_MODIFIED_DATE_DESC"
+			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
+		<!-- User Modified Field. Type: User (joomla) -->
+		<field name="modified_by" type="user"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_MODIFIED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_MODIFIED_BY_DESC"
+			class="readonly"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Access Field. Type: Accesslevel (joomla) -->
+		<field name="access"
+			type="accesslevel"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+			default="1"
+			required="false"
+		/>
+		<!-- Ordering Field. Type: Numbers (joomla) -->
+		<field
+			name="ordering"
+			type="number"
+			class="inputbox validate-ordering"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_ORDERING_LABEL"
+			description=""
+			default="0"
+			size="6"
+			required="false"
+		/>
+		<!-- Version Field. Type: Text (joomla) -->
+		<field
+			name="version"
+			type="text"
+			class="readonly"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_VERSION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_VERSION_DESC"
+			size="6"
+			default="1"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Was added due to Permissions JS needing a Title field -->
+		<!-- Let us know at gh-629 should this change -->
+		<!-- https://github.com/vdm-io/Joomla-Component-Builder/issues/629#issuecomment-750117235 -->
+		<field
+			name="title"
+			type="hidden"
+			default="sermondistributor church_elder"
+		/>
+		<!-- Dynamic Fields. -->
+		<!-- Elder Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="elder"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_ELDER_LABEL"
+			sql_title_table="#__sermondistributor_preacher"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=preachers&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=preacher.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=preacher.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_ELDER_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_ELDER_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_ELDER_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="false"
+			class="input-large"
+			hint="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_ELDER_HINT"
+		/>
+		<!-- Church Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="church"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CHURCH_LABEL"
+			sql_title_table="#__sermondistributor_church"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=churches&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=church.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=church.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CHURCH_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CHURCH_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CHURCH_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="false"
+			class="input-large"
+			hint="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_CHURCH_HINT"
+		/>
+		<!-- Guid Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="guid"
+			label="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_GUID_LABEL"
+			size="40"
+			maxlength="40"
+			description="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_GUID_DESCRIPTION"
+			class="text_area"
+			readonly="true"
+			filter="CMD"
+			validate="guid"
+			hint="COM_SERMONDISTRIBUTOR_CHURCH_ELDER_GUID_HINT"
+		/>
+	</fieldset>
+
+	<!-- Access Control Fields. -->
+	<fieldset name="accesscontrol">
+		<!-- Asset Id Field. Type: Hidden (joomla) -->
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+		<!-- Rules Field. Type: Rules (joomla) -->
+		<field
+			name="rules"
+			type="rules"
+			label="Permissions in relation to this church_elder"
+			translate_label="false"
+			filter="rules"
+			validate="rules"
+			class="inputbox"
+			component="com_sermondistributor"
+			section="church_elder"
+		/>
+	</fieldset>
+</form>

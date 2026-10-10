@@ -10,15 +10,15 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		provider.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -40,8 +40,8 @@ use Joomla\CMS\Extension\Service\Provider\MVCFactory;
 use Joomla\CMS\Extension\Service\Provider\RouterFactory;
 use Joomla\CMS\HTML\Registry;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Extension\SermondistributorComponent;
-// (soon) use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\AssociationsHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Extension\SermondistributorComponent;
+// (soon) use JoomSermon\Component\Sermondistributor\Administrator\Helper\AssociationsHelper;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 
@@ -49,7 +49,7 @@ use Joomla\DI\ServiceProviderInterface;
 \defined('_JEXEC') or die;
 
 /**
- * The TrueChristianChurch Sermondistributor service provider.
+ * The JoomSermon Sermondistributor service provider.
  *
  * @since  4.0.0
  */
@@ -68,10 +68,10 @@ return new class () implements ServiceProviderInterface
 	{
 		// (soon) $container->set(AssociationExtensionInterface::class, new AssociationsHelper());
 
-		$container->registerServiceProvider(new CategoryFactory('\\TrueChristianChurch\\Component\\Sermondistributor'));
-		$container->registerServiceProvider(new MVCFactory('\\TrueChristianChurch\\Component\\Sermondistributor'));
-		$container->registerServiceProvider(new ComponentDispatcherFactory('\\TrueChristianChurch\\Component\\Sermondistributor'));
-		$container->registerServiceProvider(new RouterFactory('\\TrueChristianChurch\\Component\\Sermondistributor'));
+		$container->registerServiceProvider(new CategoryFactory('\\JoomSermon\\Component\\Sermondistributor'));
+		$container->registerServiceProvider(new MVCFactory('\\JoomSermon\\Component\\Sermondistributor'));
+		$container->registerServiceProvider(new ComponentDispatcherFactory('\\JoomSermon\\Component\\Sermondistributor'));
+		$container->registerServiceProvider(new RouterFactory('\\JoomSermon\\Component\\Sermondistributor'));
 
 		$container->set(
 			ComponentInterface::class,

@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		SermonModel.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\Model;
+namespace JoomSermon\Component\Sermondistributor\Administrator\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -40,11 +40,14 @@ use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Input\Input;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
 use Joomla\CMS\Helper\TagsHelper;
-use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use TrueChristianChurch\Joomla\Utilities\ObjectHelper;
-use TrueChristianChurch\Joomla\Utilities\StringHelper as UtilitiesStringHelper;
+use JoomSermon\Joomla\Data\Factory as DataFactory;
+use JoomSermon\Joomla\Utilities\GuidHelper;
+use JoomSermon\Joomla\Utilities\GetHelper;
+use JoomSermon\Joomla\Utilities\Component\Helper;
+use JoomSermon\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use Joomla\CMS\Access\Exception\NotAllowed;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -67,40 +70,28 @@ class SermonModel extends AdminModel
 	protected $tabLayoutFields = array(
 		'details' => array(
 			'left' => array(
-				'scripture',
-				'short_description',
-				'icon'
+				'church',
+				'preacher'
 			),
 			'right' => array(
+				'category',
 				'series',
-				'catid',
-				'tags'
+				'tags',
+				'languages'
 			),
 			'fullwidth' => array(
 				'description'
 			),
 			'above' => array(
 				'name',
-				'alias',
-				'preacher'
-			),
-			'under' => array(
-				'not_required',
-				'auto_sermons'
+				'alias'
 			)
 		),
-		'files' => array(
+		'media' => array(
 			'fullwidth' => array(
-				'link_type',
-				'note_link_directed',
-				'note_link_encrypted',
-				'source',
-				'build',
-				'note_manual_externalsource',
-				'note_auto_externalsource',
-				'manual_files',
-				'local_files',
-				'url'
+				'file_type',
+				'note_file_vdm_uploader',
+				'note_file_vdm_display'
 			)
 		)
 	);
@@ -170,149 +161,38 @@ class SermonModel extends AdminModel
 	{
 		if ($item = parent::getItem($pk))
 		{
-			if (!empty($item->params) && !is_array($item->params))
-			{
-				// Convert the params field to an array.
-				$registry = new Registry;
-				$registry->loadString($item->params);
-				$item->params = $registry->toArray();
-			}
-
-			if (!empty($item->metadata))
+			if (property_exists($item, 'metadata') && !is_array($item->metadata))
 			{
 				// Convert the metadata field to an array.
-				$registry = new Registry;
-				$registry->loadString($item->metadata);
-				$item->metadata = $registry->toArray();
+				$metadata       = new Registry($item->metadata);
+				$item->metadata = $metadata->toArray();
 			}
 
-			if (!empty($item->local_files))
-			{
-				// JSON Decode local_files.
-				$item->local_files = json_decode($item->local_files);
-			}
-
-			if (!empty($item->manual_files))
-			{
-				// JSON Decode manual_files.
-				$item->manual_files = json_decode($item->manual_files);
-			}
-
+			// API reads use read permissions; administrator editing keeps its edit guard.
 			if (!empty($item->id))
 			{
-				// Get Tag IDs.
-				$item->tags = new TagsHelper;
-				$item->tags->getTagIds($item->id, 'com_sermondistributor.sermon');
+				$app = Factory::getApplication();
+
+				if ($app->isClient('api'))
+				{
+					$user = $app->getIdentity();
+					if (!($user->authorise('sermon.access', 'com_sermondistributor.sermon.' . $item->id) && $user->authorise('sermon.access', 'com_sermondistributor')) || (!$user->authorise('core.options', 'com_sermondistributor') && !in_array((int) $item->access, $user->getAuthorisedViewLevels())))
+					{
+						throw new NotAllowed(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+					}
+				}
+				elseif (!$this->allowEdit((array) $item))
+				{
+					$app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+					$app->redirect('index.php?option=com_sermondistributor');
+					return false;
+				}
 			}
+			$item->languages = DataFactory::_('Data.Items')->table('sermon_language')->values([$item->guid], 'sermon', 'language');
+			$item->tags = DataFactory::_('Data.Items')->table('sermon_tag')->values([$item->guid], 'sermon', 'tag');
 		}
-		$this->sermonvvvw = $item->id;
 
 		return $item;
-	}
-
-	/**
-	 * Method to get list data.
-	 *
-	 * @return mixed  An array of data items on success, false on failure.
-	 */
-	public function getVwbstastics()
-	{
-		// Get the user object.
-		$user = Factory::getApplication()->getIdentity();
-		// Create a new query object.
-		$db = $this->getDatabase();
-		$query = $db->getQuery(true);
-
-		// Select some fields
-		$query->select('a.*');
-
-		// From the sermondistributor_statistic table
-		$query->from($db->quoteName('#__sermondistributor_statistic', 'a'));
-
-		// From the sermondistributor_sermon table.
-		$query->select($db->quoteName('g.name','sermon_name'));
-		$query->join('LEFT', $db->quoteName('#__sermondistributor_sermon', 'g') . ' ON (' . $db->quoteName('a.sermon') . ' = ' . $db->quoteName('g.id') . ')');
-
-		// From the sermondistributor_preacher table.
-		$query->select($db->quoteName('h.name','preacher_name'));
-		$query->join('LEFT', $db->quoteName('#__sermondistributor_preacher', 'h') . ' ON (' . $db->quoteName('a.preacher') . ' = ' . $db->quoteName('h.id') . ')');
-
-		// From the sermondistributor_series table.
-		$query->select($db->quoteName('i.name','series_name'));
-		$query->join('LEFT', $db->quoteName('#__sermondistributor_series', 'i') . ' ON (' . $db->quoteName('a.series') . ' = ' . $db->quoteName('i.id') . ')');
-
-		// Filter by sermonvvvw global.
-		$sermonvvvw = $this->sermonvvvw;
-		if (is_numeric($sermonvvvw ))
-		{
-			$query->where('a.sermon = ' . (int) $sermonvvvw );
-		}
-		elseif (is_string($sermonvvvw))
-		{
-			$query->where('a.sermon = ' . $db->quote($sermonvvvw));
-		}
-		else
-		{
-			$query->where('a.sermon = -5');
-		}
-
-		// Join over the asset groups.
-		$query->select('ag.title AS access_level');
-		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-		// Filter by access level.
-		$_access = $this->getState('filter.access');
-		if ($_access && is_numeric($_access))
-		{
-			$query->where('a.access = ' . (int) $_access);
-		}
-		elseif (UtilitiesArrayHelper::check($_access))
-		{
-			// Secure the array for the query
-			$_access = ArrayHelper::toInteger($_access);
-			// Filter by the Access Array.
-			$query->where('a.access IN (' . implode(',', $_access) . ')');
-		}
-		// Implement View Level Access
-		if (!$user->authorise('core.options', 'com_sermondistributor'))
-		{
-			$groups = implode(',', $user->getAuthorisedViewLevels());
-			$query->where('a.access IN (' . $groups . ')');
-		}
-
-		// Order the results by ordering
-		$query->order('a.published  ASC');
-		$query->order('a.ordering  ASC');
-
-		// Load the items
-		$db->setQuery($query);
-		$db->execute();
-		if ($db->getNumRows())
-		{
-			$items = $db->loadObjectList();
-
-			// Set values to display correctly.
-			if (UtilitiesArrayHelper::check($items))
-			{
-				// Get the user object if not set.
-				if (!isset($user) || !ObjectHelper::check($user))
-				{
-					$user = $this->getCurrentUser();
-				}
-				foreach ($items as $nr => &$item)
-				{
-					// Remove items the user can't access.
-					$access = ($user->authorise('statistic.access', 'com_sermondistributor.statistic.' . (int) $item->id) && $user->authorise('statistic.access', 'com_sermondistributor'));
-					if (!$access)
-					{
-						unset($items[$nr]);
-						continue;
-					}
-
-				}
-			}
-			return $items;
-		}
-		return false;
 	}
 
 	/**
@@ -352,10 +232,17 @@ class SermonModel extends AdminModel
 			return false;
 		}
 
-		$jinput = Factory::getApplication()->input;
+		$app = Factory::getApplication();
 
+		$jinput = method_exists($app, 'getInput') ? $app->getInput() : $app->input;
+
+		// The record being saved decides the permissions, so its id wins over the request.
+		if (is_array($data) && isset($data['id']) && (int) $data['id'] > 0)
+		{
+			$id = (int) $data['id'];
+		}
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id'))
+		elseif ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0, 'INT');
 		}
@@ -389,21 +276,217 @@ class SermonModel extends AdminModel
 		if ($id != 0 && (!$user->authorise('sermon.edit.created_by', 'com_sermondistributor.sermon.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('sermon.edit.created_by', 'com_sermondistributor')))
 		{
-			// Disable fields for display.
-			$form->setFieldAttribute('created_by', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('created_by', 'readonly', 'true');
-			// Disable fields while saving.
-			$form->setFieldAttribute('created_by', 'filter', 'unset');
+			if ($app->isClient('api'))
+			{
+				// Exclude protected metadata from API validation and binding.
+				$form->removeField('created_by');
+			}
+			else
+			{
+				// Retain disabled metadata controls in administrator forms.
+				$form->setFieldAttribute('created_by', 'disabled', 'true');
+				$form->setFieldAttribute('created_by', 'readonly', 'true');
+				$form->setFieldAttribute('created_by', 'filter', 'unset');
+			}
 		}
 		// Modify the form based on Edit Creaded Date access controls.
 		if ($id != 0 && (!$user->authorise('sermon.edit.created', 'com_sermondistributor.sermon.' . (int) $id))
 			|| ($id == 0 && !$user->authorise('sermon.edit.created', 'com_sermondistributor')))
 		{
-			// Disable fields for display.
-			$form->setFieldAttribute('created', 'disabled', 'true');
-			// Disable fields while saving.
-			$form->setFieldAttribute('created', 'filter', 'unset');
+			if ($app->isClient('api'))
+			{
+				// Exclude protected metadata from API validation and binding.
+				$form->removeField('created');
+			}
+			else
+			{
+				// Retain disabled metadata controls in administrator forms.
+				$form->setFieldAttribute('created', 'disabled', 'true');
+				$form->setFieldAttribute('created', 'filter', 'unset');
+			}
+		}
+
+		// Omitted PATCH metadata must not be filtered or rebound from storage.
+		if ($app->isClient('api') && $jinput->getMethod() === 'PATCH')
+		{
+			$submittedApiData = $jinput->get('data', json_decode($jinput->json->getRaw(), true), 'array');
+			foreach (['created', 'created_by'] as $metadataField)
+			{
+				if (!is_array($submittedApiData) || !array_key_exists($metadataField, $submittedApiData))
+				{
+					$form->removeField($metadataField);
+				}
+			}
+		}
+		// Modify the form based on Edit Name access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.name', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.name', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('name', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('name', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('name'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('name', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('name', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Category access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.category', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.category', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('category', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('category', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('category'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('category', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('category', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Series access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.series', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.series', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('series', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('series', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('series'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('series', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('series', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Church access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.church', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.church', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('church', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('church', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('church'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('church', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('church', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Preacher access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.preacher', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.preacher', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('preacher', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('preacher', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('preacher'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('preacher', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('preacher', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Guid access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.guid', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.guid', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('guid', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('guid', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('guid'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('guid', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('guid', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit File Type access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.file_type', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.file_type', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('file_type', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('file_type', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('file_type'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('file_type', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('file_type', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Description access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.description', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.description', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('description', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('description', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('description'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('description', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('description', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Languages access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.languages', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.languages', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('languages', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('languages', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('languages'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('languages', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('languages', 'required', 'false');
+			}
+		}
+		// Modify the form based on Edit Tags access controls.
+		if ($id != 0 && (!$user->authorise('sermon.edit.tags', 'com_sermondistributor.sermon.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('sermon.edit.tags', 'com_sermondistributor')))
+		{
+			// Disable field on display.
+			$form->setFieldAttribute('tags', 'disabled', 'true');
+			// Make field readonly on display.
+			$form->setFieldAttribute('tags', 'readonly', 'true');
+			// If there is no value continue.
+			if (!$form->getValue('tags'))
+			{
+				// Disable field while saving.
+				$form->setFieldAttribute('tags', 'filter', 'unset');
+				// Disable field while saving.
+				$form->setFieldAttribute('tags', 'required', 'false');
+			}
 		}
 		// Only load these values if no id is found
 		if (0 == $id)
@@ -421,6 +504,30 @@ class SermonModel extends AdminModel
 				// Now set the local-redirected field default value
 				$form->setValue($redirectedField, null, $redirectedValue);
 			}
+			$initDefaults = $jinput->get('init_defaults', null, 'STRING');
+			if (!empty($initDefaults))
+			{
+				// Now check if this json values are valid
+				$initDefaults = json_decode(urldecode($initDefaults), true);
+				if (is_array($initDefaults))
+				{
+					foreach ($initDefaults as $field => $value)
+					{
+						$form->setValue($field, null, $value);
+					}
+				}
+			}
+		}
+/***[INSERTED$$$$]***//**362**/
+		// Only load the GUID if new item (or empty)
+		if (0 == $id || !($val = $form->getValue('guid')))
+		{
+			$form->setValue('guid', null, GuidHelper::get());
+		}
+/***[/INSERTED$$$$]***/
+		if ($app->isClient('api') && $jinput->getMethod() === 'PATCH')
+		{
+			$this->setState('jcb.api.patch.form', $form);
 		}
 		return $form;
 	}
@@ -515,20 +622,60 @@ class SermonModel extends AdminModel
 	}
 
 	/**
-	 * Method override to check if you can edit an existing record.
+	 * Method to check if you can edit an existing record.
+	 *   We know this is a double access check (Controller already does an allowEdit check)
+	 *   But when the item is directly accessed the controller is skipped (2025_).
 	 *
 	 * @param    array    $data   An array of input data.
 	 * @param    string   $key    The name of the key for the primary key.
 	 *
-	 * @return   boolean
+	 * @return   boolean  True if allowed to edit the record. Defaults to the permission set in the component.
 	 * @since    2.5
 	 */
-	protected function allowEdit($data = [], $key = 'id')
+	protected function allowEdit(array $data = [], string $key = 'id'): bool
 	{
-		// Check specific edit permission then general edit permission.
-		$user = Factory::getApplication()->getIdentity();
+		// get user object.
+		$user = $this->getCurrentUser();
+		// get record id.
+		$recordId = isset($data[$key]) ? (int) $data[$key] : 0;
 
-		return $user->authorise('sermon.edit', 'com_sermondistributor.sermon.'. ((int) isset($data[$key]) ? $data[$key] : 0)) or $user->authorise('sermon.edit',  'com_sermondistributor');
+
+		// Access check.
+		$access = ($user->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $recordId) && $user->authorise('sermon.access', 'com_sermondistributor'));
+		if (!$access)
+		{
+			return false;
+		}
+
+		if ($recordId)
+		{
+			// The record has been set. Check the record permissions.
+			$permission = $user->authorise('sermon.edit', 'com_sermondistributor.sermon.' . (int) $recordId);
+			if (!$permission)
+			{
+				if ($user->authorise('sermon.edit.own', 'com_sermondistributor.sermon.' . (int) $recordId))
+				{
+					// Now test the owner is the user.
+					$ownerId = isset($data['created_by']) ? (int) $data['created_by'] : 0;
+					if (empty($ownerId))
+					{
+						return false;
+					}
+
+					// If the owner matches 'me' then allow.
+					if ($ownerId == $user->id)
+					{
+						if ($user->authorise('sermon.edit.own', 'com_sermondistributor'))
+						{
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		}
+		// Since there is no permission, revert to the component permissions.
+		return $user->authorise('sermon.edit', $this->option);
 	}
 
 	/**
@@ -604,46 +751,10 @@ class SermonModel extends AdminModel
 			$data = $this->getItem();
 		}
 
-		// run the perprocess of the data
+		// run the per process of the data
 		$this->preprocessData('com_sermondistributor.sermon', $data);
 
 		return $data;
-	}
-
-	/**
-	 * Method to validate the form data.
-	 *
-	 * @param   JForm   $form   The form to validate against.
-	 * @param   array   $data   The data to validate.
-	 * @param   string  $group  The name of the field group to validate.
-	 *
-	 * @return  mixed  Array of filtered data if valid, false otherwise.
-	 *
-	 * @see     JFormRule
-	 * @see     JFilterInput
-	 * @since   12.2
-	 */
-	public function validate($form, $data, $group = null)
-	{
-		// check if the not_required field is set
-		if (isset($data['not_required']) && UtilitiesStringHelper::check($data['not_required']))
-		{
-			$requiredFields = (array) explode(',',(string) $data['not_required']);
-			$requiredFields = array_unique($requiredFields);
-			// now change the required field attributes value
-			foreach ($requiredFields as $requiredField)
-			{
-				// make sure there is a string value
-				if (UtilitiesStringHelper::check($requiredField))
-				{
-					// change to false
-					$form->setFieldAttribute($requiredField, 'required', 'false');
-					// also clear the data set
-					$data[$requiredField] = '';
-				}
-			}
-		}
-		return parent::validate($form, $data, $group);
 	}
 
 	/**
@@ -655,7 +766,7 @@ class SermonModel extends AdminModel
 	 */
 	protected function getUniqueFields()
 	{
-		return false;
+		return array('guid');
 	}
 
 	/**
@@ -696,385 +807,6 @@ class SermonModel extends AdminModel
 	}
 
 	/**
-	 * Method to perform batch operations on an item or a set of items.
-	 *
-	 * @param   array  $commands  An array of commands to perform.
-	 * @param   array  $pks       An array of item ids.
-	 * @param   array  $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  Returns true on success, false on failure.
-	 * @since   12.2
-	 */
-	public function batch($commands, $pks, $contexts)
-	{
-		// Sanitize ids.
-		$pks = array_unique($pks);
-		ArrayHelper::toInteger($pks);
-
-		// Remove any values of zero.
-		if (array_search(0, $pks, true))
-		{
-			unset($pks[array_search(0, $pks, true)]);
-		}
-
-		if (empty($pks))
-		{
-			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
-			return false;
-		}
-
-		$done = false;
-
-		// Set some needed variables.
-		$this->user ??= $this->getCurrentUser();
-		$this->table = $this->getTable();
-		$this->tableClassName = get_class($this->table);
-		$this->contentType = new UCMType;
-		$this->type = $this->contentType->getTypeByTable($this->tableClassName);
-		$this->canDo = SermondistributorHelper::getActions('sermon');
-		$this->batchSet = true;
-
-		if (!$this->canDo->get('core.batch'))
-		{
-			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
-			return false;
-		}
-
-		if ($this->type == false)
-		{
-			$type = new UCMType;
-			$this->type = $type->getTypeByAlias($this->typeAlias);
-		}
-
-		$this->tagsObserver = $this->table->getObserverOfClass('JTableObserverTags');
-
-		if (!empty($commands['move_copy']))
-		{
-			$cmd = ArrayHelper::getValue($commands, 'move_copy', 'c');
-
-			if ($cmd == 'c')
-			{
-				$result = $this->batchCopy($commands, $pks, $contexts);
-
-				if (is_array($result))
-				{
-					foreach ($result as $old => $new)
-					{
-						$contexts[$new] = $contexts[$old];
-					}
-					$pks = array_values($result);
-				}
-				else
-				{
-					return false;
-				}
-			}
-			elseif ($cmd == 'm' && !$this->batchMove($commands, $pks, $contexts))
-			{
-				return false;
-			}
-
-			$done = true;
-		}
-
-		if (!$done)
-		{
-			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
-			return false;
-		}
-
-		// Clear the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Batch copy items to a new category or current.
-	 *
-	 * @param   integer  $values    The new values.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
-	 *
-	 * @return  mixed  An array of new IDs on success, boolean false on failure.
-	 *
-	 * @since 12.2
-	 */
-	protected function batchCopy($values, $pks, $contexts)
-	{
-		if (empty($this->batchSet))
-		{
-			// Set some needed variables.
-			$this->user 		= Factory::getApplication()->getIdentity();
-			$this->table 		= $this->getTable();
-			$this->tableClassName	= get_class($this->table);
-			$this->canDo		= SermondistributorHelper::getActions('sermon');
-		}
-
-		if (!$this->canDo->get('sermon.create') && !$this->canDo->get('sermon.batch'))
-		{
-			return false;
-		}
-
-		// get list of unique fields
-		$uniqueFields = $this->getUniqueFields();
-		// remove move_copy from array
-		unset($values['move_copy']);
-
-		// make sure published is set
-		if (!isset($values['published']))
-		{
-			$values['published'] = 0;
-		}
-		elseif (isset($values['published']) && !$this->canDo->get('sermon.edit.state'))
-		{
-				$values['published'] = 0;
-		}
-
-		if (isset($values['category']) && (int) $values['category'] > 0 && !static::checkCategoryId($values['category']))
-		{
-			return false;
-		}
-		elseif (isset($values['category']) && (int) $values['category'] > 0)
-		{
-			// move the category value to correct field name
-			$values['catid'] = $values['category'];
-			unset($values['category']);
-		}
-		elseif (isset($values['category']))
-		{
-			unset($values['category']);
-		}
-
-		$newIds = [];
-		// Parent exists so let's proceed
-		while (!empty($pks))
-		{
-			// Pop the first ID off the stack
-			$pk = array_shift($pks);
-
-			$this->table->reset();
-
-			// only allow copy if user may edit this item.
-			if (!$this->user->authorise('sermon.edit', $contexts[$pk]))
-			{
-				// Not fatal error
-				$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-				continue;
-			}
-
-			// Check that the row actually exists
-			if (!$this->table->load($pk))
-			{
-				if ($error = $this->table->getError())
-				{
-					// Fatal error
-					$this->setError($error);
-					return false;
-				}
-				else
-				{
-					// Not fatal error
-					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-					continue;
-				}
-			}
-
-			if (isset($values['catid']))
-			{
-				list($this->table->name, $this->table->alias) = $this->generateNewTitle($values['catid'], $this->table->alias, $this->table->name);
-			}
-			else
-			{
-				list($this->table->name, $this->table->alias) = $this->generateNewTitle($this->table->catid, $this->table->alias, $this->table->name);
-			}
-
-			// insert all set values
-			if (UtilitiesArrayHelper::check($values))
-			{
-				foreach ($values as $key => $value)
-				{
-					if (strlen($value) > 0 && isset($this->table->$key))
-					{
-						$this->table->$key = $value;
-					}
-				}
-			}
-
-			// update all unique fields
-			if (UtilitiesArrayHelper::check($uniqueFields))
-			{
-				foreach ($uniqueFields as $uniqueField)
-				{
-					$this->table->$uniqueField = $this->generateUnique($uniqueField,$this->table->$uniqueField);
-				}
-			}
-
-			// Reset the ID because we are making a copy
-			$this->table->id = 0;
-
-			// TODO: Deal with ordering?
-			// $this->table->ordering = 1;
-
-			// Check the row.
-			if (!$this->table->check())
-			{
-				$this->setError($this->table->getError());
-
-				return false;
-			}
-
-			if (!empty($this->type))
-			{
-				$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
-			}
-
-			// Store the row.
-			if (!$this->table->store())
-			{
-				$this->setError($this->table->getError());
-
-				return false;
-			}
-
-			// Get the new item ID
-			$newId = $this->table->get('id');
-
-			// Add the new ID to the array
-			$newIds[$pk] = $newId;
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return $newIds;
-	}
-
-	/**
-	 * Batch move items to a new category
-	 *
-	 * @param   integer  $value     The new category ID.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since 12.2
-	 */
-	protected function batchMove($values, $pks, $contexts)
-	{
-		if (empty($this->batchSet))
-		{
-			// Set some needed variables.
-			$this->user		= Factory::getApplication()->getIdentity();
-			$this->table		= $this->getTable();
-			$this->tableClassName	= get_class($this->table);
-			$this->canDo		= SermondistributorHelper::getActions('sermon');
-		}
-
-		if (!$this->canDo->get('sermon.edit') && !$this->canDo->get('sermon.batch'))
-		{
-			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-			return false;
-		}
-
-		// make sure published only updates if user has the permission.
-		if (isset($values['published']) && !$this->canDo->get('sermon.edit.state'))
-		{
-			unset($values['published']);
-		}
-		// remove move_copy from array
-		unset($values['move_copy']);
-
-		if (isset($values['category']) && (int) $values['category'] > 0 && !static::checkCategoryId($values['category']))
-		{
-			return false;
-		}
-		elseif (isset($values['category']) && (int) $values['category'] > 0)
-		{
-			// move the category value to correct field name
-			$values['catid'] = $values['category'];
-			unset($values['category']);
-		}
-		elseif (isset($values['category']))
-		{
-			unset($values['category']);
-		}
-
-
-		// Parent exists so we proceed
-		foreach ($pks as $pk)
-		{
-			if (!$this->user->authorise('sermon.edit', $contexts[$pk]))
-			{
-				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-				return false;
-			}
-
-			// Check that the row actually exists
-			if (!$this->table->load($pk))
-			{
-				if ($error = $this->table->getError())
-				{
-					// Fatal error
-					$this->setError($error);
-					return false;
-				}
-				else
-				{
-					// Not fatal error
-					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-					continue;
-				}
-			}
-
-			// insert all set values.
-			if (UtilitiesArrayHelper::check($values))
-			{
-				foreach ($values as $key => $value)
-				{
-					// Do special action for access.
-					if ('access' === $key && strlen($value) > 0)
-					{
-						$this->table->$key = $value;
-					}
-					elseif (strlen($value) > 0 && isset($this->table->$key))
-					{
-						$this->table->$key = $value;
-					}
-				}
-			}
-
-
-			// Check the row.
-			if (!$this->table->check())
-			{
-				$this->setError($this->table->getError());
-
-				return false;
-			}
-
-			if (!empty($this->type))
-			{
-				$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
-			}
-
-			// Store the row.
-			if (!$this->table->store())
-			{
-				$this->setError($this->table->getError());
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
 	 * Method to save the form data.
 	 *
 	 * @param   array  $data  The form data.
@@ -1097,16 +829,263 @@ class SermonModel extends AdminModel
 			$data['metadata'] = (string) $metadata;
 		}
 
-		// Set the local_files string to JSON string.
-		if (isset($data['local_files']))
+		// The record keys, as every line below expects them: the primary key as an
+		// integer that is never taken from the request (null from the API on create).
+		$data['id'] = (int) ($data['id'] ?? 0);
+
+		// The guid is the server's: an existing record keeps the guid it was stored
+		// with, and the API never takes one from the request.
+		if ($data['id'] > 0)
 		{
-			$data['local_files'] = (string) json_encode($data['local_files']);
+			$data['guid'] = (string) GetHelper::var('sermon', $data['id'], 'id', 'guid', '=', 'sermondistributor');
+		}
+		elseif (Factory::getApplication()->isClient('api'))
+		{
+			$data['guid'] = '';
+		}
+		else
+		{
+			$data['guid'] = (string) ($data['guid'] ?? '');
 		}
 
-		// Set the manual_files string to JSON string.
-		if (isset($data['manual_files']))
+		// Set the guid while it is empty, not valid, or not unique in this table.
+		while (!GuidHelper::valid($data['guid'], 'sermon', $data['id'], 'sermondistributor'))
 		{
-			$data['manual_files'] = (string) json_encode($data['manual_files']);
+			$data['guid'] = (string) GuidHelper::get();
+		}
+
+		// A new record without an alias gets one from its title when the table checks it.
+		if ($data['id'] === 0 && !isset($data['alias']))
+		{
+			$data['alias'] = '';
+		}
+
+		// Preserve omitted API PATCH values in their original storage representation.
+		$jcbPatchStored = [];
+		$jcbPatchInput = [];
+		$jcbPatchId = $data['id'];
+
+		if ($input->getMethod() === 'PATCH' && Factory::getApplication()->isClient('api') && $jcbPatchId > 0)
+		{
+			$jcbPatchSubmitted = $input->get('data', json_decode($input->json->getRaw(), true), 'array');
+			$jcbPatchSubmitted = is_array($jcbPatchSubmitted) ? $jcbPatchSubmitted : [];
+			// Joomla's API inserts an empty tags array after validation. It must not
+			// clear omitted relationships or bypass the form's field permissions.
+			$jcbPatchForm = $this->getState('jcb.api.patch.form');
+			if (!array_key_exists('tags', $jcbPatchSubmitted)
+				|| ($jcbPatchForm !== null && (!$jcbPatchForm->getField('tags')
+					|| strtolower((string) $jcbPatchForm->getFieldAttribute('tags', 'filter', '')) === 'unset'
+					|| in_array(strtolower((string) $jcbPatchForm->getFieldAttribute('tags', 'disabled', '')), ['true', '1'], true))))
+			{
+				unset($data['tags']);
+			}
+
+			$jcbPatchTable = $this->getTable();
+
+			if (!$jcbPatchTable->load($jcbPatchId))
+			{
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_RECORD_LOAD'));
+
+				return false;
+			}
+
+			foreach ($jcbPatchTable->getFields() as $jcbPatchField)
+			{
+				$jcbPatchName = $jcbPatchField->Field;
+
+				if ($jcbPatchName !== $jcbPatchTable->getKeyName() && $jcbPatchName !== 'guid'
+					&& !array_key_exists($jcbPatchName, $jcbPatchSubmitted)
+					&& array_key_exists($jcbPatchName, $data))
+				{
+					$jcbPatchStored[$jcbPatchName] = $jcbPatchTable->{$jcbPatchName};
+					$jcbPatchInput[$jcbPatchName] = serialize($data[$jcbPatchName]);
+				}
+			}
+		}
+
+
+/***[JCBGUI.admin_view.php_before_save.365.$$$$]***/
+
+		// Set the GUID if empty or not valid
+		if (empty($data['guid']) && $data['id'] > 0)
+		{
+			// get the existing one
+			$data['guid'] = (string) GetHelper::var('sermon', $data['id'], 'id', 'guid');
+		}
+
+		// Set the GUID if empty or not valid
+		while (!GuidHelper::valid($data['guid'], "sermon", $data['id']))
+		{
+			// must always be set
+			$data['guid'] = (string) GuidHelper::get();
+		}/***[/JCBGUI$$$$]***/
+
+
+		// A copy or a custom derivation must follow the normal storage transforms.
+		if ((int) $data['id'] !== $jcbPatchId)
+		{
+			$jcbPatchStored = [];
+		}
+		else
+		{
+			foreach ($jcbPatchStored as $jcbPatchName => $jcbPatchValue)
+			{
+				if (!array_key_exists($jcbPatchName, $data)
+					|| serialize($data[$jcbPatchName]) !== $jcbPatchInput[$jcbPatchName])
+				{
+					unset($jcbPatchStored[$jcbPatchName]);
+				}
+			}
+		}
+
+		if (array_key_exists('languages', $jcbPatchStored)
+			&& (!array_key_exists('languages', $data) || serialize($data['languages']) !== $jcbPatchInput['languages']))
+		{
+			unset($jcbPatchStored['languages']);
+		}
+
+		if (array_key_exists('tags', $jcbPatchStored)
+			&& (!array_key_exists('tags', $data) || serialize($data['tags']) !== $jcbPatchInput['tags']))
+		{
+			unset($jcbPatchStored['tags']);
+		}
+
+		if (!array_key_exists('languages', $jcbPatchStored) || !array_key_exists('tags', $jcbPatchStored))
+		{
+
+			if (array_key_exists('languages', $jcbPatchStored)
+				&& (!array_key_exists('languages', $data) || serialize($data['languages']) !== $jcbPatchInput['languages']))
+			{
+				unset($jcbPatchStored['languages']);
+			}
+			if (!array_key_exists('languages', $jcbPatchStored))
+			{
+				if (!empty($data['languages']) && is_array($data['languages']))
+				{
+					$langSub = [];
+					$sermonGuid = $data['guid'] ?? 'error';
+				
+					// Retrieve existing language records for this sermon
+					$existing = DataFactory::_('Data.Items')
+						->table('sermon_language')
+						->get([$sermonGuid], 'sermon');
+				
+					// Index existing records by language for quick lookup
+					$existingMap = [];
+					if (!empty($existing))
+					{
+						foreach ($existing as $row)
+						{
+							if (!empty($row->language))
+							{
+								$existingMap[$row->language] = $row->guid ?? '';
+							}
+						}
+					}
+				
+					// get max allowed number of items
+					$max = Helper::getParams()->get('max_languages', 5);
+					$m = 0;
+				
+					// Build subform data entries
+					foreach ($data['languages'] as $n => $lang)
+					{
+						if (!is_string($lang) || $lang === '')
+						{
+							continue; // Skip invalid entries
+						}
+				
+						if ($m >= $max)
+						{
+							break;
+						}
+				
+						$langSub["language{$n}"] = [
+							'guid'     => $existingMap[$lang] ?? '',
+							'language' => $lang
+						];
+				
+						$m++;
+					}
+				
+					DataFactory::_('Data.Subform')
+						->table('sermon_language')
+						->set($langSub, 'guid', 'sermon', $sermonGuid);
+						unset($data['languages']);
+				}
+			}
+
+			if (array_key_exists('tags', $jcbPatchStored)
+				&& (!array_key_exists('tags', $data) || serialize($data['tags']) !== $jcbPatchInput['tags']))
+			{
+				unset($jcbPatchStored['tags']);
+			}
+			if (!array_key_exists('tags', $jcbPatchStored))
+			{
+				if (!empty($data['tags']) && is_array($data['tags']))
+				{
+					$tagSub = [];
+					$sermonGuid = $data['guid'] ?? 'error';
+				
+					// Retrieve existing tag records for this sermon
+					$existing = DataFactory::_('Data.Items')
+						->table('sermon_tag')
+						->get([$sermonGuid], 'sermon');
+				
+					// Index existing records by tag for quick lookup
+					$existingMap = [];
+					if (!empty($existing))
+					{
+						foreach ($existing as $row)
+						{
+							if (!empty($row->tag))
+							{
+								$existingMap[$row->tag] = $row->guid ?? '';
+							}
+						}
+					}
+				
+					// get max allowed number of items
+					$max = Helper::getParams()->get('max_tags', 5);
+					$m = 0;
+				
+					// Build subform data entries
+					foreach ($data['tags'] as $n => $tag)
+					{
+						if (!is_string($tag) || $tag === '')
+						{
+							continue; // Skip invalid entries
+						}
+				
+						if ($m >= $max)
+						{
+							break;
+						}
+				
+						$tagSub["tag{$n}"] = [
+							'guid'     => $existingMap[$tag] ?? '',
+							'tag' => $tag
+						];
+				
+						$m++;
+					}
+				
+					DataFactory::_('Data.Subform')
+						->table('sermon_tag')
+						->set($tagSub, 'guid', 'sermon', $sermonGuid);
+						unset($data['tags']);
+				}
+			}
+		}
+
+		// Restore unchanged omitted columns without a lossy decode/encode round trip.
+		foreach ($jcbPatchStored as $jcbPatchName => $jcbPatchValue)
+		{
+			if (array_key_exists($jcbPatchName, $data)
+				&& serialize($data[$jcbPatchName]) === $jcbPatchInput[$jcbPatchName])
+			{
+				$data[$jcbPatchName] = $jcbPatchValue;
+			}
 		}
 
 		// Set the Params Items to data
@@ -1125,7 +1104,7 @@ class SermonModel extends AdminModel
 
 			if ($data['name'] == $origTable->name)
 			{
-				list($name, $alias) = $this->generateNewTitle($data['catid'], $data['alias'], $data['name']);
+				list($name, $alias) = $this->_generateNewTitle($data['alias'], $data['name']);
 				$data['name'] = $name;
 				$data['alias'] = $alias;
 			}
@@ -1156,13 +1135,12 @@ class SermonModel extends AdminModel
 
 				$table = clone $this->getTable();
 
-				if ($table->load(['alias' => $data['alias'], 'catid' => $data['catid']]) && ($table->id != $data['id'] || $data['id'] == 0))
+				if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0))
 				{
 					$msg = Text::_('COM_SERMONDISTRIBUTOR_SERMON_SAVE_WARNING');
 				}
 
-				list($name, $alias) = $this->generateNewTitle($data['catid'], $data['alias'], $data['name']);
-				$data['alias'] = $alias;
+				$data['alias'] = $this->_generateNewTitle($data['alias']);
 
 				if (isset($msg))
 				{

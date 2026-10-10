@@ -10,22 +10,24 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		default_body.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper as Html;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Joomla\Sermondistributor\Utilities\Permitted\Actions;
+use Joomla\CMS\User\UserFactoryInterface;
 
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -37,13 +39,13 @@ $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 	<?php
 		$canCheckin = $this->user->authorise('core.manage', 'com_checkin') || $item->checked_out == $this->user->id || $item->checked_out == 0;
 		$userChkOut = Factory::getContainer()->
-			get(\Joomla\CMS\User\UserFactoryInterface::class)->
-				loadUserById($item->checked_out);
-		$canDo = SermondistributorHelper::getActions('sermon',$item,'sermons');
+			get(UserFactoryInterface::class)->
+				loadUserById((int) ($item->checked_out ?? 0));
+		$canDo = Actions::get('sermon', $item, 'sermons');
 	?>
 	<tr class="row<?php echo $i % 2; ?>">
 		<td class="order nowrap center hidden-phone">
-		<?php if ($canDo->get('sermon.edit.state')): ?>
+		<?php if (!$this->isModal && $canDo->get('sermon.edit.state')): ?>
 			<?php
 				$iconClass = '';
 				if (!$this->saveOrder)
@@ -63,7 +65,7 @@ $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 		<?php endif; ?>
 		</td>
 		<td class="nowrap center">
-		<?php if ($canDo->get('sermon.edit')): ?>
+		<?php if (!$this->isModal && $canDo->get('sermon.edit')): ?>
 				<?php if ($item->checked_out) : ?>
 					<?php if ($canCheckin) : ?>
 						<?php echo Html::_('grid.id', $i, $item->id); ?>
@@ -79,54 +81,70 @@ $edit = "index.php?option=com_sermondistributor&view=sermons&task=sermon.edit";
 		</td>
 		<td class="nowrap">
 			<div class="name">
-				<?php if ($canDo->get('sermon.edit')): ?>
-					<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>"><?php echo $this->escape($item->name); ?></a>
+				<?php if (!$this->isModal && $canDo->get('sermon.edit')): ?>
+					<a href="<?php echo $edit; ?>&id=<?php echo $item->id; ?>"><?php echo $this->sanitize($item->name); ?></a>
 					<?php if ($item->checked_out): ?>
 						<?php echo Html::_('jgrid.checkedout', $i, $userChkOut->name, $item->checked_out_time, 'sermons.', $canCheckin); ?>
 					<?php endif; ?>
 				<?php else: ?>
-					<?php echo $this->escape($item->name); ?>
+					<?php if (!$this->isModal): ?>
+						<?php echo $this->sanitize($item->name); ?>
+					<?php else: ?>
+						<?php
+							$link = "{$edit}&id={$item->id}";
+							$dataId = $item->{$this->getModalTitleKey()} ?? 0;
+							$itemHtml = '<a href="' . $this->sanitize($link, false) . '">' . $this->sanitize($item->name, false) . '</a>';
+							$attribs = 'data-content-select data-content-type="com_sermondistributor.sermon"'
+								. ' data-id="' . $this->sanitize($dataId, false) . '"'
+								. ' data-title="' . $this->sanitize($item->name, false) . '"'
+								. ' data-uri="' . $this->sanitize($link, false) . '"'
+								. ' data-html="' . $this->sanitize($itemHtml, false) . '"';
+						?>
+						<a class="select-link" href="javascript:void(0)" <?php echo $attribs; ?>>
+							<?php echo $this->sanitize($item->name); ?>
+						</a>
+					<?php endif; ?>
 				<?php endif; ?>
 			</div>
 		</td>
 		<td class="nowrap">
 			<div class="name">
-				<?php if ($this->user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int) $item->preacher)): ?>
-					<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->escape($item->preacher_name); ?></a>
+				<?php if (!$this->isModal && $this->user->authorise('category.edit', 'com_sermondistributor.category.' . (int) ($item->category_id ?? 0))): ?>
+					<a href="index.php?option=com_sermondistributor&view=categories&task=category.edit&id=<?php echo $item->category_id; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->sanitize($item->category_name); ?></a>
 				<?php else: ?>
-					<?php echo $this->escape($item->preacher_name); ?>
+					<?php echo $this->sanitize($item->category_name); ?>
 				<?php endif; ?>
 			</div>
 		</td>
 		<td class="nowrap">
 			<div class="name">
-				<?php if ($this->user->authorise('series.edit', 'com_sermondistributor.series.' . (int) $item->series)): ?>
-					<a href="index.php?option=com_sermondistributor&view=all_series&task=series.edit&id=<?php echo $item->series; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->escape($item->series_name); ?></a>
+				<?php if (!$this->isModal && $this->user->authorise('series.edit', 'com_sermondistributor.series.' . (int) ($item->series_id ?? 0))): ?>
+					<a href="index.php?option=com_sermondistributor&view=series_list&task=series.edit&id=<?php echo $item->series_id; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->sanitize($item->series_name); ?></a>
 				<?php else: ?>
-					<?php echo $this->escape($item->series_name); ?>
+					<?php echo $this->sanitize($item->series_name); ?>
 				<?php endif; ?>
 			</div>
-		</td>
-		<td class="hidden-phone">
-			<?php echo $this->escape($item->short_description); ?>
 		</td>
 		<td class="nowrap">
 			<div class="name">
-				<?php if ($this->user->authorise('core.edit', 'com_sermondistributor.sermon.category.' . (int)$item->catid)): ?>
-					<a href="index.php?option=com_categories&task=category.edit&id=<?php echo (int)$item->catid; ?>&extension=com_sermondistributor.sermon"><?php echo $this->escape($item->category_title); ?></a>
+				<?php if (!$this->isModal && $this->user->authorise('church.edit', 'com_sermondistributor.church.' . (int) ($item->church_id ?? 0))): ?>
+					<a href="index.php?option=com_sermondistributor&view=churches&task=church.edit&id=<?php echo $item->church_id; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->sanitize($item->church_name); ?></a>
 				<?php else: ?>
-					<?php echo $this->escape($item->category_title); ?>
+					<?php echo $this->sanitize($item->church_name); ?>
 				<?php endif; ?>
 			</div>
 		</td>
-		<td class="hidden-phone">
-			<?php echo Text::_($item->link_type); ?>
-		</td>
-		<td class="hidden-phone">
-			<?php echo Text::_($item->source); ?>
+		<td class="nowrap">
+			<div class="name">
+				<?php if (!$this->isModal && $this->user->authorise('preacher.edit', 'com_sermondistributor.preacher.' . (int) ($item->preacher_id ?? 0))): ?>
+					<a href="index.php?option=com_sermondistributor&view=preachers&task=preacher.edit&id=<?php echo $item->preacher_id; ?>&return=<?php echo $this->return_here; ?>"><?php echo $this->sanitize($item->preacher_name); ?></a>
+				<?php else: ?>
+					<?php echo $this->sanitize($item->preacher_name); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="center">
-		<?php if ($canDo->get('sermon.edit.state')) : ?>
+		<?php if (!$this->isModal && $canDo->get('sermon.edit.state')) : ?>
 				<?php if ($item->checked_out) : ?>
 					<?php if ($canCheckin) : ?>
 						<?php echo Html::_('jgrid.published', $item->published, $i, 'sermons.', true, 'cb'); ?>

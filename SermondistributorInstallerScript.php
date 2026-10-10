@@ -10,30 +10,30 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		SermondistributorInstallerScript.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScriptInterface;
-use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Version;
 use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Database\DatabaseInterface;
-use TrueChristianChurch\Joomla\SermonDistributor\Table\Schema;
+use JoomSermon\Joomla\Sermondistributor\PHPConfigurationChecker;
+use JoomSermon\Joomla\Sermondistributor\Table\SchemaChecker;
 
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -48,10 +48,9 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * The CMS Application.
 	 *
-	 * @var   CMSApplication
 	 * @since 4.4.2
 	 */
-	protected CMSApplication $app;
+	protected $app;
 
 	/**
 	 * The database class.
@@ -63,7 +62,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * The version number of the extension.
 	 *
-	 * @var   string
+	 * @var    string
 	 * @since  3.6
 	 */
 	protected $release;
@@ -71,7 +70,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * The table the parameters are stored in.
 	 *
-	 * @var   string
+	 * @var    string
 	 * @since  3.6
 	 */
 	protected $paramTable;
@@ -79,7 +78,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * The extension name. This should be set in the installer script.
 	 *
-	 * @var   string
+	 * @var    string
 	 * @since  3.6
 	 */
 	protected $extension;
@@ -87,7 +86,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * A list of files to be deleted
 	 *
-	 * @var   array
+	 * @var    array
 	 * @since  3.6
 	 */
 	protected $deleteFiles = [];
@@ -95,7 +94,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * A list of folders to be deleted
 	 *
-	 * @var   array
+	 * @var    array
 	 * @since  3.6
 	 */
 	protected $deleteFolders = [];
@@ -103,7 +102,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * A list of CLI script files to be copied to the cli directory
 	 *
-	 * @var   array
+	 * @var    array
 	 * @since  3.6
 	 */
 	protected $cliScriptFiles = [];
@@ -111,7 +110,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * Minimum PHP version required to install the extension
 	 *
-	 * @var   string
+	 * @var    string
 	 * @since  3.6
 	 */
 	protected $minimumPhp;
@@ -119,7 +118,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	/**
 	 * Minimum Joomla! version required to install the extension
 	 *
-	 * @var   string
+	 * @var    string
 	 * @since  3.6
 	 */
 	protected $minimumJoomla;
@@ -143,6 +142,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 			$this->deleteFiles = [
 				'/administrator/components/com_sermondistributor/sermondistributor.php',
 				'/administrator/components/com_sermondistributor/controller.php',
+				'/administrator/components/com_sermondistributor/script.php',
 				'/components/com_sermondistributor/sermondistributor.php',
 				'/components/com_sermondistributor/controller.php',
 				'/components/com_sermondistributor/router.php',
@@ -173,7 +173,6 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   InstallerAdapter  $adapter  The adapter calling this method
 	 *
 	 * @return  boolean  True on success
-	 *
 	 * @since   4.2.0
 	 */
 	public function install(InstallerAdapter $adapter): bool {return true;}
@@ -195,36 +194,71 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   InstallerAdapter   $adapter  The adapter calling this method
 	 *
 	 * @return  boolean  True on success
-	 *
 	 * @since   4.2.0
 	 */
 	public function uninstall(InstallerAdapter $adapter): bool
 	{
 		// Remove Related Component Data.
 
-		// Remove Preacher Data
-		$this->removeViewData("com_sermondistributor.preacher");
-
 		// Remove Sermon Data
 		$this->removeViewData("com_sermondistributor.sermon");
 
-		// Remove Sermon catid Data
-		$this->removeViewData("com_sermondistributor.sermon.category");
+		// Remove Preacher Data
+		$this->removeViewData("com_sermondistributor.preacher");
 
-		// Remove Series Data
-		$this->removeViewData("com_sermondistributor.series");
+		// Remove Church Data
+		$this->removeViewData("com_sermondistributor.church");
 
-		// Remove Statistic Data
-		$this->removeViewData("com_sermondistributor.statistic");
+		// Remove Category Data
+		$this->removeViewData("com_sermondistributor.category");
 
-		// Remove External source Data
-		$this->removeViewData("com_sermondistributor.external_source");
+		// Remove Tag Data
+		$this->removeViewData("com_sermondistributor.tag");
 
-		// Remove Local listing Data
-		$this->removeViewData("com_sermondistributor.local_listing");
+		// Remove Address Data
+		$this->removeViewData("com_sermondistributor.address");
 
-		// Remove Help document Data
-		$this->removeViewData("com_sermondistributor.help_document");
+		// Remove Language Data
+		$this->removeViewData("com_sermondistributor.language");
+
+		// Remove File Data
+		$this->removeViewData("com_sermondistributor.file");
+
+		// Remove Address type Data
+		$this->removeViewData("com_sermondistributor.address_type");
+
+		// Remove File type Data
+		$this->removeViewData("com_sermondistributor.file_type");
+
+		// Remove Region Data
+		$this->removeViewData("com_sermondistributor.region");
+
+		// Remove Subregion Data
+		$this->removeViewData("com_sermondistributor.subregion");
+
+		// Remove Country Data
+		$this->removeViewData("com_sermondistributor.country");
+
+		// Remove State Data
+		$this->removeViewData("com_sermondistributor.state");
+
+		// Remove City Data
+		$this->removeViewData("com_sermondistributor.city");
+
+		// Remove Timezone Data
+		$this->removeViewData("com_sermondistributor.timezone");
+
+		// Remove Sermon tag Data
+		$this->removeViewData("com_sermondistributor.sermon_tag");
+
+		// Remove Sermon language Data
+		$this->removeViewData("com_sermondistributor.sermon_language");
+
+		// Remove Preacher language Data
+		$this->removeViewData("com_sermondistributor.preacher_language");
+
+		// Remove Church elder Data
+		$this->removeViewData("com_sermondistributor.church_elder");
 
 		// Remove Asset Data.
 		$this->removeAssetData();
@@ -235,33 +269,75 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 		// Remove component from action logs extensions table.
 		$this->removeActionLogsExtensions();
 
+		// Remove Sermon from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.sermon');
+
 		// Remove Preacher from action logs config table.
 		$this->removeActionLogConfig('com_sermondistributor.preacher');
 
-		// Remove Sermon from action logs config table.
-		$this->removeActionLogConfig('com_sermondistributor.sermon');
+		// Remove Church from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.church');
+
+		// Remove Category from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.category');
 
 		// Remove Series from action logs config table.
 		$this->removeActionLogConfig('com_sermondistributor.series');
 
-		// Remove Statistic from action logs config table.
-		$this->removeActionLogConfig('com_sermondistributor.statistic');
+		// Remove Tag from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.tag');
 
-		// Remove External_source from action logs config table.
-		$this->removeActionLogConfig('com_sermondistributor.external_source');
+		// Remove Address from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.address');
 
-		// Remove Local_listing from action logs config table.
-		$this->removeActionLogConfig('com_sermondistributor.local_listing');
+		// Remove Language from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.language');
 
-		// Remove Help_document from action logs config table.
-		$this->removeActionLogConfig('com_sermondistributor.help_document');
+		// Remove File from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.file');
+
+		// Remove Address_type from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.address_type');
+
+		// Remove File_type from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.file_type');
+
+		// Remove Region from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.region');
+
+		// Remove Subregion from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.subregion');
+
+		// Remove Country from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.country');
+
+		// Remove State from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.state');
+
+		// Remove City from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.city');
+
+		// Remove Timezone from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.timezone');
+
+		// Remove Sermon_tag from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.sermon_tag');
+
+		// Remove Sermon_language from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.sermon_language');
+
+		// Remove Preacher_language from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.preacher_language');
+
+		// Remove Church_elder from action logs config table.
+		$this->removeActionLogConfig('com_sermondistributor.church_elder');
 		// little notice as after service, in case of bad experience with component.
 		echo '<div style="background-color: #fff;" class="alert alert-info">
 		<h2>Did something go wrong? Are you disappointed?</h2>
 		<p>Please let me know at <a href="mailto:joomla@vdm.io">joomla@vdm.io</a>.
 		<br />We at Vast Development Method are committed to building extensions that performs proficiently! You can help us, really!
 		<br />Send me your thoughts on improvements that is needed, trust me, I will be very grateful!
-		<br />Visit us at <a href="https://www.vdm.io/" target="_blank">https://www.vdm.io/</a> today!</p></div>';
+		<br />Visit us at <a href="https://dev.vdm.io/" target="_blank">https://dev.vdm.io/</a> today!</p></div>';
 
 		return true;
 	}
@@ -273,7 +349,6 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   InstallerAdapter  $adapter  The adapter calling this method
 	 *
 	 * @return  boolean  True on success
-	 *
 	 * @since   4.2.0
 	 */
 	public function preflight(string $type, InstallerAdapter $adapter): bool
@@ -301,17 +376,35 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 		// do any updates needed
 		if ($type === 'update')
 		{
+/***[INSERTED$$$$]***//**387**/
+			// Check that the PHP configurations are sufficient 
+			if ($this->classExists(PHPConfigurationChecker::class))
+			{
+				(new PHPConfigurationChecker())->run();
+			}/***[/INSERTED$$$$]***/
+/***[INSERTED$$$$]***//**442**/
+			// all things to clear out
+			$removeFolders = [];
+			$removeFolders[] = JPATH_LIBRARIES . '/vendor_sermondistributor/TrueChristianChurch.Joomla';
+			$removeFolders[] = JPATH_LIBRARIES . '/vendor_sermondistributor/TrueChristianChurch.Joomla.SermonDistributor';
+			$removeFolders[] = JPATH_LIBRARIES . '/vendor_sermondistributor/TrueChristianChurch.Joomla.FOF';
+			$removeFolders[] = JPATH_LIBRARIES . '/vendor_sermondistributor/TrueChristianSermon.Joomla/src/SermonDistributor';
 
-			// Check that the required configuration are set for PHP
-			$this->phpConfigurationCheck($this->app);
+			foreach ($removeFolders as $folder)
+			{
+				$this->removeFolder($folder);
+			}/***[/INSERTED$$$$]***/
 		}
 
 		// do any install needed
 		if ($type === 'install')
 		{
-
-			// Check that the required configuration are set for PHP
-			$this->phpConfigurationCheck($this->app);
+/***[INSERTED$$$$]***//**387**/
+			// Check that the PHP configurations are sufficient 
+			if ($this->classExists(PHPConfigurationChecker::class))
+			{
+				(new PHPConfigurationChecker())->run();
+			}/***[/INSERTED$$$$]***/
 		}
 
 		return true;
@@ -324,7 +417,6 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   InstallerAdapter  $adapter  The adapter calling this method
 	 *
 	 * @return  boolean  True on success
-	 *
 	 * @since   4.2.0
 	 */
 	public function postflight(string $type, InstallerAdapter $adapter): bool
@@ -336,23 +428,6 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 		if ($type === 'install')
 		{
 
-			// Install Preacher Content Types.
-			$this->setContentType(
-				// typeTitle
-				'Sermondistributor Preacher',
-				// typeAlias
-				'com_sermondistributor.preacher',
-				// table
-				'{"special": {"dbtable": "#__sermondistributor_preacher","key": "id","type": "PreacherTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
-				// rules
-				'',
-				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","website":"website","email":"email","icon":"icon","alias":"alias"}}',
-				// router
-				'',
-				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
-			);
 			// Install Sermon Content Types.
 			$this->setContentType(
 				// typeTitle
@@ -360,143 +435,378 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 				// typeAlias
 				'com_sermondistributor.sermon',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "SermonTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "SermonTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "catid","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","preacher":"preacher","series":"series","short_description":"short_description","link_type":"link_type","source":"source","local_files":"local_files","alias":"alias","description":"description","tags":"tags","icon":"icon","build":"build","manual_files":"manual_files","auto_sermons":"auto_sermons","url":"url","scripture":"scripture"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","category":"category","series":"series","church":"church","preacher":"preacher","guid":"guid","alias":"alias","description":"description"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","preacher","series","catid","link_type","source","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "category","targetTable": "#__sermondistributor_category","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "church","targetTable": "#__sermondistributor_church","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "languages","targetTable": "#__sermondistributor_language","targetColumn": "langtag","displayColumn": "name"},{"sourceColumn": "tags","targetTable": "#__sermondistributor_tag","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Install Sermon category Content Types.
+			// Install Preacher Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Sermon Catid',
+				'Sermondistributor Preacher',
 				// typeAlias
-				'com_sermondistributor.sermon.category',
+				'com_sermondistributor.preacher',
 				// table
-				'{"special":{"dbtable":"#__categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}',
+				'{"special": {"dbtable": "#__sermondistributor_preacher","key": "id","type": "PreacherTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", "core_urls":"null", "core_version":"version", "core_ordering":"null", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"parent_id", "core_xreference":"null", "asset_id":"asset_id"}, "special":{"parent_id":"parent_id","lft":"lft","rgt":"rgt","level":"level","path":"path","extension":"extension","note":"note"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","church":"church","guid":"guid","phone":"phone","email":"email","contactname":"contactname","alias":"alias"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile":"administrator\/components\/com_categories\/forms\/category.xml", "hideFields":["asset_id","checked_out","checked_out_time","version","lft","rgt","level","path","extension"], "ignoreChanges":["modified_user_id", "modified_time", "checked_out", "checked_out_time", "version", "hits", "path"],"convertToInt":["publish_up", "publish_down"], "displayLookup":[{"sourceColumn":"created_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"access","targetTable":"#__viewlevels","targetColumn":"id","displayColumn":"title"},{"sourceColumn":"modified_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"parent_id","targetTable":"#__categories","targetColumn":"id","displayColumn":"title"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "church","targetTable": "#__sermondistributor_church","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "languages","targetTable": "#__sermondistributor_language","targetColumn": "langtag","displayColumn": "name"}]}'
 			);
-			// Install Series Content Types.
+			// Install Church Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Series',
+				'Sermondistributor Church',
 				// typeAlias
-				'com_sermondistributor.series',
+				'com_sermondistributor.church',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_series","key": "id","type": "SeriesTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_church","key": "id","type": "ChurchTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","scripture":"scripture","icon":"icon","alias":"alias"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","guid":"guid","alias":"alias","description":"description","website":"website","phone":"phone","email":"email","contactname":"contactname"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/series.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/church.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "elders","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Install Statistic Content Types.
+			// Install Category Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Statistic',
+				'Sermondistributor Category',
 				// typeAlias
-				'com_sermondistributor.statistic',
+				'com_sermondistributor.category',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_statistic","key": "id","type": "StatisticTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_category","key": "id","type": "CategoryTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "filename","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"filename":"filename","sermon":"sermon","preacher":"preacher","series":"series","counter":"counter"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","parent_guid":"parent_guid","guid":"guid","lft":"lft","rgt":"rgt","alias":"alias"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/statistic.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","sermon","preacher","series","counter"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/category.xml","hideFields": ["asset_id","checked_out","checked_out_time","lft","rgt"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","published"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "parent_guid","targetTable": "#__sermondistributor_category","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Install External source Content Types.
+			// Install Tag Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor External_source',
+				'Sermondistributor Tag',
 				// typeAlias
-				'com_sermondistributor.external_source',
+				'com_sermondistributor.tag',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_external_source","key": "id","type": "External_sourceTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_tag","key": "id","type": "TagTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","not_required":"not_required","update_timer":"update_timer","dropboxoptions":"dropboxoptions","permissiontype":"permissiontype","oauthtoken":"oauthtoken"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","parent_guid":"parent_guid","guid":"guid","lft":"lft","rgt":"rgt","alias":"alias"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","externalsources","update_method","build","not_required","update_timer","dropboxoptions"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/tag.xml","hideFields": ["asset_id","checked_out","checked_out_time","lft","rgt"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","published"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "parent_guid","targetTable": "#__sermondistributor_tag","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Install Local listing Content Types.
+			// Install Address Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Local_listing',
+				'Sermondistributor Address',
 				// typeAlias
-				'com_sermondistributor.local_listing',
+				'com_sermondistributor.address',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_local_listing","key": "id","type": "Local_listingTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_address","key": "id","type": "AddressTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","build":"build","size":"size","external_source":"external_source","key":"key","url":"url"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "line_one","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"line_one":"line_one","type":"type","country":"country","state":"state","city":"city","preacher":"preacher","church":"church","guid":"guid","postal":"postal","line_two":"line_two"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/local_listing.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","build","size","external_source"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "external_source","targetTable": "#__sermondistributor_external_source","targetColumn": "id","displayColumn": "description"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/address.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "type","targetTable": "#__sermondistributor_address_type","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "country","targetTable": "#__sermondistributor_country","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "state","targetTable": "#__sermondistributor_state","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "city","targetTable": "#__sermondistributor_city","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "church","targetTable": "#__sermondistributor_church","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Install Help document Content Types.
+			// Install Language Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Help_document',
+				'Sermondistributor Language',
 				// typeAlias
-				'com_sermondistributor.help_document',
+				'com_sermondistributor.language',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_help_document","key": "id","type": "Help_documentTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_language","key": "id","type": "LanguageTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","langtag":"langtag"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/language.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+			);
+			// Install File Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor File',
+				// typeAlias
+				'com_sermondistributor.file',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_file","key": "id","type": "FileTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","file_type":"file_type","size":"size","entity_type":"entity_type","guid":"guid","entity":"entity","file_path":"file_path","extension":"extension","mime":"mime"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/file.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","size"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install Address type Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Address_type',
+				// typeAlias
+				'com_sermondistributor.address_type',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_address_type","key": "id","type": "Address_typeTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/address_type.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+			);
+			// Install File type Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor File_type',
+				// typeAlias
+				'com_sermondistributor.file_type',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_file_type","key": "id","type": "File_typeTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","type":"type","path":"path","download_access":"download_access","quantity":"quantity","guid":"guid","target":"target","file_formats":"file_formats","document_formats":"document_formats","media_formats":"media_formats","image_formats":"image_formats"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/file_type.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","type","download_access","quantity"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+			);
+			// Install Region Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Region',
+				// typeAlias
+				'com_sermondistributor.region',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_region","key": "id","type": "RegionTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","guid":"guid","wikidataid":"wikidataid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/region.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+			);
+			// Install Subregion Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Subregion',
+				// typeAlias
+				'com_sermondistributor.subregion',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_subregion","key": "id","type": "SubregionTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","region":"region","guid":"guid","wikidataid":"wikidataid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/subregion.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "region","targetTable": "#__sermondistributor_region","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install Country Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Country',
+				// typeAlias
+				'com_sermondistributor.country',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_country","key": "id","type": "CountryTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","subregion":"subregion","capital":"capital","currency_name":"currency_name","latitude":"latitude","emojiu":"emojiu","emoji":"emoji","tld":"tld","iso2":"iso2","codethree":"codethree","nationality":"nationality","native":"native","longitude":"longitude","symbol":"symbol","numeric_code":"numeric_code","wikidataid":"wikidataid","phonecode":"phonecode","guid":"guid","iso3":"iso3"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/country.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","numeric_code"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "subregion","targetTable": "#__sermondistributor_subregion","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "capital","targetTable": "#__sermondistributor_city","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install State Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor State',
+				// typeAlias
+				'com_sermondistributor.state',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_state","key": "id","type": "StateTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","country":"country","type":"type","guid":"guid","wikidataid":"wikidataid","fips_code":"fips_code","iso2":"iso2","longitude":"longitude","latitude":"latitude"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/state.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "country","targetTable": "#__sermondistributor_country","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install City Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor City',
+				// typeAlias
+				'com_sermondistributor.city',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_city","key": "id","type": "CityTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","state":"state","latitude":"latitude","longitude":"longitude","guid":"guid","wikidataid":"wikidataid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/city.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "state","targetTable": "#__sermondistributor_state","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install Timezone Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Timezone',
+				// typeAlias
+				'com_sermondistributor.timezone',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_timezone","key": "id","type": "TimezoneTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "timezone_name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"timezone_name":"timezone_name","timezone_identifier":"timezone_identifier","gmt_offset_name":"gmt_offset_name","country":"country","guid":"guid","gmt_offset_sec":"gmt_offset_sec","abbreviation":"abbreviation"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/timezone.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "country","targetTable": "#__sermondistributor_country","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install Sermon tag Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Sermon_tag',
+				// typeAlias
+				'com_sermondistributor.sermon_tag',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_sermon_tag","key": "id","type": "Sermon_tagTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "tag","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"tag":"tag","sermon":"sermon","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/sermon_tag.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "tag","targetTable": "#__sermondistributor_tag","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install Sermon language Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Sermon_language',
+				// typeAlias
+				'com_sermondistributor.sermon_language',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_sermon_language","key": "id","type": "Sermon_languageTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "language","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"language":"language","sermon":"sermon","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/sermon_language.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "language","targetTable": "#__sermondistributor_language","targetColumn": "langtag","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install Preacher language Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Preacher_language',
+				// typeAlias
+				'com_sermondistributor.preacher_language',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_preacher_language","key": "id","type": "Preacher_languageTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "language","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"language":"language","preacher":"preacher","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/preacher_language.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "language","targetTable": "#__sermondistributor_language","targetColumn": "langtag","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Install Church elder Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Church_elder',
+				// typeAlias
+				'com_sermondistributor.church_elder',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_church_elder","key": "id","type": "Church_elderTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "elder","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"elder":"elder","church":"church","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/church_elder.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "elder","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "church","targetTable": "#__sermondistributor_church","targetColumn": "guid","displayColumn": "name"}]}'
 			);
 
 
 			// Fix the assets table rules column size.
-			$this->setDatabaseAssetsRulesFix(22240, "TEXT");
-			// Install the global extension assets permission.
-			$this->setAssetsRules(
-				'{"site.preachers.access":{"1":1},"site.preacher.access":{"1":1},"site.categories.access":{"1":1},"site.category.access":{"1":1},"site.serieslist.access":{"1":1},"site.series.access":{"1":1},"site.sermon.access":{"1":1}}'
-			);
-
+			$this->setDatabaseAssetsRulesFix(63520, "TEXT");
 			// Install the global extension params.
 			$this->setExtensionsParams(
-				'{"autorName":"Llewellyn van der Merwe","autorEmail":"joomla@vdm.io","player":"1","add_to_button":"0","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"0","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"0","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"1","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","max_execution_time":"500","check_in":"-1 day","save_history":"1","history_limit":"10","add_jquery_framework":"1","uikit_load":"1","uikit_min":""}'
+				'{"autorName":"Llewellyn van der Merwe","autorEmail":"joomla@vdm.io","check_in":"-1 day","save_history":"1","history_limit":"10"}'
 			);
 
 
-
+/***[INSERTED$$$$]***//**388**/
 			// Check that the database is up-to date
-			$this->databaseSchemaCheck($this->app);
+			if ($this->classExists(SchemaChecker::class))
+			{
+				(new SchemaChecker())->run();
+			}/***[/INSERTED$$$$]***/
 
-			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
+			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://dev.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a></div>';
 
 			// Add component to the action logs extensions table.
 			$this->setActionLogsExtensions();
+
+			// Add Sermon to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'SERMON',
+				// typeAlias
+				'com_sermondistributor.sermon',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_sermon',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
 
 			// Add Preacher to the action logs config table.
 			$this->setActionLogConfig(
@@ -514,18 +824,34 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 				'COM_SERMONDISTRIBUTOR'
 			);
 
-			// Add Sermon to the action logs config table.
+			// Add Church to the action logs config table.
 			$this->setActionLogConfig(
 				// typeTitle
-				'SERMON',
+				'CHURCH',
 				// typeAlias
-				'com_sermondistributor.sermon',
+				'com_sermondistributor.church',
 				// idHolder
 				'id',
 				// titleHolder
 				'name',
 				// tableName
-				'#__sermondistributor_sermon',
+				'#__sermondistributor_church',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Category to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'CATEGORY',
+				// typeAlias
+				'com_sermondistributor.category',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_category',
 				// textPrefix
 				'COM_SERMONDISTRIBUTOR'
 			);
@@ -546,66 +872,258 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 				'COM_SERMONDISTRIBUTOR'
 			);
 
-			// Add Statistic to the action logs config table.
+			// Add Tag to the action logs config table.
 			$this->setActionLogConfig(
 				// typeTitle
-				'STATISTIC',
+				'TAG',
 				// typeAlias
-				'com_sermondistributor.statistic',
-				// idHolder
-				'id',
-				// titleHolder
-				'filename',
-				// tableName
-				'#__sermondistributor_statistic',
-				// textPrefix
-				'COM_SERMONDISTRIBUTOR'
-			);
-
-			// Add External_source to the action logs config table.
-			$this->setActionLogConfig(
-				// typeTitle
-				'EXTERNAL_SOURCE',
-				// typeAlias
-				'com_sermondistributor.external_source',
-				// idHolder
-				'id',
-				// titleHolder
-				'description',
-				// tableName
-				'#__sermondistributor_external_source',
-				// textPrefix
-				'COM_SERMONDISTRIBUTOR'
-			);
-
-			// Add Local_listing to the action logs config table.
-			$this->setActionLogConfig(
-				// typeTitle
-				'LOCAL_LISTING',
-				// typeAlias
-				'com_sermondistributor.local_listing',
+				'com_sermondistributor.tag',
 				// idHolder
 				'id',
 				// titleHolder
 				'name',
 				// tableName
-				'#__sermondistributor_local_listing',
+				'#__sermondistributor_tag',
 				// textPrefix
 				'COM_SERMONDISTRIBUTOR'
 			);
 
-			// Add Help_document to the action logs config table.
+			// Add Address to the action logs config table.
 			$this->setActionLogConfig(
 				// typeTitle
-				'HELP_DOCUMENT',
+				'ADDRESS',
 				// typeAlias
-				'com_sermondistributor.help_document',
+				'com_sermondistributor.address',
 				// idHolder
 				'id',
 				// titleHolder
-				'title',
+				'line_one',
 				// tableName
-				'#__sermondistributor_help_document',
+				'#__sermondistributor_address',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Language to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'LANGUAGE',
+				// typeAlias
+				'com_sermondistributor.language',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_language',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add File to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'FILE',
+				// typeAlias
+				'com_sermondistributor.file',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_file',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Address_type to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'ADDRESS_TYPE',
+				// typeAlias
+				'com_sermondistributor.address_type',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_address_type',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add File_type to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'FILE_TYPE',
+				// typeAlias
+				'com_sermondistributor.file_type',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_file_type',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Region to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'REGION',
+				// typeAlias
+				'com_sermondistributor.region',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_region',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Subregion to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'SUBREGION',
+				// typeAlias
+				'com_sermondistributor.subregion',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_subregion',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Country to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'COUNTRY',
+				// typeAlias
+				'com_sermondistributor.country',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_country',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add State to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'STATE',
+				// typeAlias
+				'com_sermondistributor.state',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_state',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add City to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'CITY',
+				// typeAlias
+				'com_sermondistributor.city',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_city',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Timezone to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'TIMEZONE',
+				// typeAlias
+				'com_sermondistributor.timezone',
+				// idHolder
+				'id',
+				// titleHolder
+				'timezone_name',
+				// tableName
+				'#__sermondistributor_timezone',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Sermon_tag to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'SERMON_TAG',
+				// typeAlias
+				'com_sermondistributor.sermon_tag',
+				// idHolder
+				'id',
+				// titleHolder
+				'tag',
+				// tableName
+				'#__sermondistributor_sermon_tag',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Sermon_language to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'SERMON_LANGUAGE',
+				// typeAlias
+				'com_sermondistributor.sermon_language',
+				// idHolder
+				'id',
+				// titleHolder
+				'language',
+				// tableName
+				'#__sermondistributor_sermon_language',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Preacher_language to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'PREACHER_LANGUAGE',
+				// typeAlias
+				'com_sermondistributor.preacher_language',
+				// idHolder
+				'id',
+				// titleHolder
+				'language',
+				// tableName
+				'#__sermondistributor_preacher_language',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add Church_elder to the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'CHURCH_ELDER',
+				// typeAlias
+				'com_sermondistributor.church_elder',
+				// idHolder
+				'id',
+				// titleHolder
+				'elder',
+				// tableName
+				'#__sermondistributor_church_elder',
 				// textPrefix
 				'COM_SERMONDISTRIBUTOR'
 			);
@@ -615,23 +1133,6 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 		if ($type === 'update')
 		{
 
-			// Update Preacher Content Types.
-			$this->setContentType(
-				// typeTitle
-				'Sermondistributor Preacher',
-				// typeAlias
-				'com_sermondistributor.preacher',
-				// table
-				'{"special": {"dbtable": "#__sermondistributor_preacher","key": "id","type": "PreacherTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
-				// rules
-				'',
-				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","website":"website","email":"email","icon":"icon","alias":"alias"}}',
-				// router
-				'',
-				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
-			);
 			// Update Sermon Content Types.
 			$this->setContentType(
 				// typeTitle
@@ -639,132 +1140,372 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 				// typeAlias
 				'com_sermondistributor.sermon',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "SermonTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_sermon","key": "id","type": "SermonTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "catid","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","preacher":"preacher","series":"series","short_description":"short_description","link_type":"link_type","source":"source","local_files":"local_files","alias":"alias","description":"description","tags":"tags","icon":"icon","build":"build","manual_files":"manual_files","auto_sermons":"auto_sermons","url":"url","scripture":"scripture"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","category":"category","series":"series","church":"church","preacher":"preacher","guid":"guid","alias":"alias","description":"description"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time","auto_sermons"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","preacher","series","catid","link_type","source","build"],"displayLookup": [{"sourceColumn": "catid","targetTable": "#__categories","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/sermon.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "category","targetTable": "#__sermondistributor_category","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "church","targetTable": "#__sermondistributor_church","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "languages","targetTable": "#__sermondistributor_language","targetColumn": "langtag","displayColumn": "name"},{"sourceColumn": "tags","targetTable": "#__sermondistributor_tag","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Update Sermon category Content Types.
+			// Update Preacher Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Sermon Catid',
+				'Sermondistributor Preacher',
 				// typeAlias
-				'com_sermondistributor.sermon.category',
+				'com_sermondistributor.preacher',
 				// table
-				'{"special":{"dbtable":"#__categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}',
+				'{"special": {"dbtable": "#__sermondistributor_preacher","key": "id","type": "PreacherTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", "core_urls":"null", "core_version":"version", "core_ordering":"null", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"parent_id", "core_xreference":"null", "asset_id":"asset_id"}, "special":{"parent_id":"parent_id","lft":"lft","rgt":"rgt","level":"level","path":"path","extension":"extension","note":"note"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","church":"church","guid":"guid","phone":"phone","email":"email","contactname":"contactname","alias":"alias"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile":"administrator\/components\/com_categories\/forms\/category.xml", "hideFields":["asset_id","checked_out","checked_out_time","version","lft","rgt","level","path","extension"], "ignoreChanges":["modified_user_id", "modified_time", "checked_out", "checked_out_time", "version", "hits", "path"],"convertToInt":["publish_up", "publish_down"], "displayLookup":[{"sourceColumn":"created_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"access","targetTable":"#__viewlevels","targetColumn":"id","displayColumn":"title"},{"sourceColumn":"modified_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"parent_id","targetTable":"#__categories","targetColumn":"id","displayColumn":"title"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/preacher.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "church","targetTable": "#__sermondistributor_church","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "languages","targetTable": "#__sermondistributor_language","targetColumn": "langtag","displayColumn": "name"}]}'
 			);
-			// Update Series Content Types.
+			// Update Church Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Series',
+				'Sermondistributor Church',
 				// typeAlias
-				'com_sermondistributor.series',
+				'com_sermondistributor.church',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_series","key": "id","type": "SeriesTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_church","key": "id","type": "ChurchTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "description","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","scripture":"scripture","icon":"icon","alias":"alias"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","guid":"guid","alias":"alias","description":"description","website":"website","phone":"phone","email":"email","contactname":"contactname"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/series.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/church.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "elders","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Update Statistic Content Types.
+			// Update Category Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Statistic',
+				'Sermondistributor Category',
 				// typeAlias
-				'com_sermondistributor.statistic',
+				'com_sermondistributor.category',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_statistic","key": "id","type": "StatisticTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_category","key": "id","type": "CategoryTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "filename","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"filename":"filename","sermon":"sermon","preacher":"preacher","series":"series","counter":"counter"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","parent_guid":"parent_guid","guid":"guid","lft":"lft","rgt":"rgt","alias":"alias"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/statistic.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","sermon","preacher","series","counter"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "series","targetTable": "#__sermondistributor_series","targetColumn": "id","displayColumn": "name"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/category.xml","hideFields": ["asset_id","checked_out","checked_out_time","lft","rgt"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","published"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "parent_guid","targetTable": "#__sermondistributor_category","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Update External source Content Types.
+			// Update Tag Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor External_source',
+				'Sermondistributor Tag',
 				// typeAlias
-				'com_sermondistributor.external_source',
+				'com_sermondistributor.tag',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_external_source","key": "id","type": "External_sourceTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_tag","key": "id","type": "TagTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "description","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"description":"description","externalsources":"externalsources","update_method":"update_method","filetypes":"filetypes","build":"build","not_required":"not_required","update_timer":"update_timer","dropboxoptions":"dropboxoptions","permissiontype":"permissiontype","oauthtoken":"oauthtoken"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","parent_guid":"parent_guid","guid":"guid","lft":"lft","rgt":"rgt","alias":"alias"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/external_source.xml","hideFields": ["asset_id","checked_out","checked_out_time","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","externalsources","update_method","build","not_required","update_timer","dropboxoptions"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/tag.xml","hideFields": ["asset_id","checked_out","checked_out_time","lft","rgt"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","published"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "parent_guid","targetTable": "#__sermondistributor_tag","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Update Local listing Content Types.
+			// Update Address Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Local_listing',
+				'Sermondistributor Address',
 				// typeAlias
-				'com_sermondistributor.local_listing',
+				'com_sermondistributor.address',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_local_listing","key": "id","type": "Local_listingTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_address","key": "id","type": "AddressTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","build":"build","size":"size","external_source":"external_source","key":"key","url":"url"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "line_one","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"line_one":"line_one","type":"type","country":"country","state":"state","city":"city","preacher":"preacher","church":"church","guid":"guid","postal":"postal","line_two":"line_two"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/local_listing.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","build","size","external_source"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "external_source","targetTable": "#__sermondistributor_external_source","targetColumn": "id","displayColumn": "description"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/address.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "type","targetTable": "#__sermondistributor_address_type","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "country","targetTable": "#__sermondistributor_country","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "state","targetTable": "#__sermondistributor_state","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "city","targetTable": "#__sermondistributor_city","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "church","targetTable": "#__sermondistributor_church","targetColumn": "guid","displayColumn": "name"}]}'
 			);
-			// Update Help document Content Types.
+			// Update Language Content Types.
 			$this->setContentType(
 				// typeTitle
-				'Sermondistributor Help_document',
+				'Sermondistributor Language',
 				// typeAlias
-				'com_sermondistributor.help_document',
+				'com_sermondistributor.language',
 				// table
-				'{"special": {"dbtable": "#__sermondistributor_help_document","key": "id","type": "Help_documentTable","prefix": "TrueChristianChurch\Component\Sermondistributor\Administrator\Table"}}',
+				'{"special": {"dbtable": "#__sermondistributor_language","key": "id","type": "LanguageTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
 				// rules
 				'',
 				// fieldMappings
-				'{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}',
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","langtag":"langtag"}}',
 				// router
 				'',
 				// contentHistoryOptions
-				'{"formFile": "administrator/components/com_sermondistributor/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}'
+				'{"formFile": "administrator/components/com_sermondistributor/forms/language.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+			);
+			// Update File Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor File',
+				// typeAlias
+				'com_sermondistributor.file',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_file","key": "id","type": "FileTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","file_type":"file_type","size":"size","entity_type":"entity_type","guid":"guid","entity":"entity","file_path":"file_path","extension":"extension","mime":"mime"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/file.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","size"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "file_type","targetTable": "#__sermondistributor_file_type","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update Address type Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Address_type',
+				// typeAlias
+				'com_sermondistributor.address_type',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_address_type","key": "id","type": "Address_typeTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","description":"description","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/address_type.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+			);
+			// Update File type Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor File_type',
+				// typeAlias
+				'com_sermondistributor.file_type',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_file_type","key": "id","type": "File_typeTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","type":"type","path":"path","download_access":"download_access","quantity":"quantity","guid":"guid","target":"target","file_formats":"file_formats","document_formats":"document_formats","media_formats":"media_formats","image_formats":"image_formats"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/file_type.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","type","download_access","quantity"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+			);
+			// Update Region Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Region',
+				// typeAlias
+				'com_sermondistributor.region',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_region","key": "id","type": "RegionTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","guid":"guid","wikidataid":"wikidataid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/region.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"}]}'
+			);
+			// Update Subregion Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Subregion',
+				// typeAlias
+				'com_sermondistributor.subregion',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_subregion","key": "id","type": "SubregionTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","region":"region","guid":"guid","wikidataid":"wikidataid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/subregion.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "region","targetTable": "#__sermondistributor_region","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update Country Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Country',
+				// typeAlias
+				'com_sermondistributor.country',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_country","key": "id","type": "CountryTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","subregion":"subregion","capital":"capital","currency_name":"currency_name","latitude":"latitude","emojiu":"emojiu","emoji":"emoji","tld":"tld","iso2":"iso2","codethree":"codethree","nationality":"nationality","native":"native","longitude":"longitude","symbol":"symbol","numeric_code":"numeric_code","wikidataid":"wikidataid","phonecode":"phonecode","guid":"guid","iso3":"iso3"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/country.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits","numeric_code"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "subregion","targetTable": "#__sermondistributor_subregion","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "capital","targetTable": "#__sermondistributor_city","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update State Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor State',
+				// typeAlias
+				'com_sermondistributor.state',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_state","key": "id","type": "StateTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","country":"country","type":"type","guid":"guid","wikidataid":"wikidataid","fips_code":"fips_code","iso2":"iso2","longitude":"longitude","latitude":"latitude"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/state.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "country","targetTable": "#__sermondistributor_country","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update City Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor City',
+				// typeAlias
+				'com_sermondistributor.city',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_city","key": "id","type": "CityTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"name":"name","state":"state","latitude":"latitude","longitude":"longitude","guid":"guid","wikidataid":"wikidataid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/city.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "state","targetTable": "#__sermondistributor_state","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update Timezone Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Timezone',
+				// typeAlias
+				'com_sermondistributor.timezone',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_timezone","key": "id","type": "TimezoneTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "timezone_name","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "metadata","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "metakey","core_metadesc": "metadesc","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"timezone_name":"timezone_name","timezone_identifier":"timezone_identifier","gmt_offset_name":"gmt_offset_name","country":"country","guid":"guid","gmt_offset_sec":"gmt_offset_sec","abbreviation":"abbreviation"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/timezone.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "country","targetTable": "#__sermondistributor_country","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update Sermon tag Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Sermon_tag',
+				// typeAlias
+				'com_sermondistributor.sermon_tag',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_sermon_tag","key": "id","type": "Sermon_tagTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "tag","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"tag":"tag","sermon":"sermon","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/sermon_tag.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "tag","targetTable": "#__sermondistributor_tag","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update Sermon language Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Sermon_language',
+				// typeAlias
+				'com_sermondistributor.sermon_language',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_sermon_language","key": "id","type": "Sermon_languageTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "language","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"language":"language","sermon":"sermon","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/sermon_language.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "language","targetTable": "#__sermondistributor_language","targetColumn": "langtag","displayColumn": "name"},{"sourceColumn": "sermon","targetTable": "#__sermondistributor_sermon","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update Preacher language Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Preacher_language',
+				// typeAlias
+				'com_sermondistributor.preacher_language',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_preacher_language","key": "id","type": "Preacher_languageTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "language","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"language":"language","preacher":"preacher","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/preacher_language.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "language","targetTable": "#__sermondistributor_language","targetColumn": "langtag","displayColumn": "name"},{"sourceColumn": "preacher","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"}]}'
+			);
+			// Update Church elder Content Types.
+			$this->setContentType(
+				// typeTitle
+				'Sermondistributor Church_elder',
+				// typeAlias
+				'com_sermondistributor.church_elder',
+				// table
+				'{"special": {"dbtable": "#__sermondistributor_church_elder","key": "id","type": "Church_elderTable","prefix": "JoomSermon\Component\Sermondistributor\Administrator\Table"}}',
+				// rules
+				'',
+				// fieldMappings
+				'{"common": {"core_content_item_id": "id","core_title": "elder","core_state": "published","core_alias": "null","core_created_time": "created","core_modified_time": "modified","core_body": "null","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "access","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"elder":"elder","church":"church","guid":"guid"}}',
+				// router
+				'',
+				// contentHistoryOptions
+				'{"formFile": "administrator/components/com_sermondistributor/forms/church_elder.xml","hideFields": ["asset_id","checked_out","checked_out_time"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","version","hits"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "access","targetTable": "#__viewlevels","targetColumn": "id","displayColumn": "title"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "elder","targetTable": "#__sermondistributor_preacher","targetColumn": "guid","displayColumn": "name"},{"sourceColumn": "church","targetTable": "#__sermondistributor_church","targetColumn": "guid","displayColumn": "name"}]}'
 			);
 
 
 
-
+/***[INSERTED$$$$]***//**388**/
 			// Check that the database is up-to date
-			$this->databaseSchemaCheck($this->app);
+			if ($this->classExists(SchemaChecker::class))
+			{
+				(new SchemaChecker())->run();
+			}/***[/INSERTED$$$$]***/
 
-			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
+			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://dev.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 5.0.0-beta2 Was Successful! Let us know if anything is not working as expected.</h3></div>';
+				<h3>Upgrade to Version 6.0.0 Was Successful! Let us know if anything is not working as expected.</h3></div>';
 
 			// Add/Update component in the action logs extensions table.
 			$this->setActionLogsExtensions();
+
+			// Add/Update Sermon in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'SERMON',
+				// typeAlias
+				'com_sermondistributor.sermon',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_sermon',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
 
 			// Add/Update Preacher in the action logs config table.
 			$this->setActionLogConfig(
@@ -782,18 +1523,34 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 				'COM_SERMONDISTRIBUTOR'
 			);
 
-			// Add/Update Sermon in the action logs config table.
+			// Add/Update Church in the action logs config table.
 			$this->setActionLogConfig(
 				// typeTitle
-				'SERMON',
+				'CHURCH',
 				// typeAlias
-				'com_sermondistributor.sermon',
+				'com_sermondistributor.church',
 				// idHolder
 				'id',
 				// titleHolder
 				'name',
 				// tableName
-				'#__sermondistributor_sermon',
+				'#__sermondistributor_church',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Category in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'CATEGORY',
+				// typeAlias
+				'com_sermondistributor.category',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_category',
 				// textPrefix
 				'COM_SERMONDISTRIBUTOR'
 			);
@@ -814,66 +1571,258 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 				'COM_SERMONDISTRIBUTOR'
 			);
 
-			// Add/Update Statistic in the action logs config table.
+			// Add/Update Tag in the action logs config table.
 			$this->setActionLogConfig(
 				// typeTitle
-				'STATISTIC',
+				'TAG',
 				// typeAlias
-				'com_sermondistributor.statistic',
-				// idHolder
-				'id',
-				// titleHolder
-				'filename',
-				// tableName
-				'#__sermondistributor_statistic',
-				// textPrefix
-				'COM_SERMONDISTRIBUTOR'
-			);
-
-			// Add/Update External_source in the action logs config table.
-			$this->setActionLogConfig(
-				// typeTitle
-				'EXTERNAL_SOURCE',
-				// typeAlias
-				'com_sermondistributor.external_source',
-				// idHolder
-				'id',
-				// titleHolder
-				'description',
-				// tableName
-				'#__sermondistributor_external_source',
-				// textPrefix
-				'COM_SERMONDISTRIBUTOR'
-			);
-
-			// Add/Update Local_listing in the action logs config table.
-			$this->setActionLogConfig(
-				// typeTitle
-				'LOCAL_LISTING',
-				// typeAlias
-				'com_sermondistributor.local_listing',
+				'com_sermondistributor.tag',
 				// idHolder
 				'id',
 				// titleHolder
 				'name',
 				// tableName
-				'#__sermondistributor_local_listing',
+				'#__sermondistributor_tag',
 				// textPrefix
 				'COM_SERMONDISTRIBUTOR'
 			);
 
-			// Add/Update Help_document in the action logs config table.
+			// Add/Update Address in the action logs config table.
 			$this->setActionLogConfig(
 				// typeTitle
-				'HELP_DOCUMENT',
+				'ADDRESS',
 				// typeAlias
-				'com_sermondistributor.help_document',
+				'com_sermondistributor.address',
 				// idHolder
 				'id',
 				// titleHolder
-				'title',
+				'line_one',
 				// tableName
-				'#__sermondistributor_help_document',
+				'#__sermondistributor_address',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Language in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'LANGUAGE',
+				// typeAlias
+				'com_sermondistributor.language',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_language',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update File in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'FILE',
+				// typeAlias
+				'com_sermondistributor.file',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_file',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Address_type in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'ADDRESS_TYPE',
+				// typeAlias
+				'com_sermondistributor.address_type',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_address_type',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update File_type in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'FILE_TYPE',
+				// typeAlias
+				'com_sermondistributor.file_type',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_file_type',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Region in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'REGION',
+				// typeAlias
+				'com_sermondistributor.region',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_region',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Subregion in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'SUBREGION',
+				// typeAlias
+				'com_sermondistributor.subregion',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_subregion',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Country in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'COUNTRY',
+				// typeAlias
+				'com_sermondistributor.country',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_country',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update State in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'STATE',
+				// typeAlias
+				'com_sermondistributor.state',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_state',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update City in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'CITY',
+				// typeAlias
+				'com_sermondistributor.city',
+				// idHolder
+				'id',
+				// titleHolder
+				'name',
+				// tableName
+				'#__sermondistributor_city',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Timezone in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'TIMEZONE',
+				// typeAlias
+				'com_sermondistributor.timezone',
+				// idHolder
+				'id',
+				// titleHolder
+				'timezone_name',
+				// tableName
+				'#__sermondistributor_timezone',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Sermon_tag in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'SERMON_TAG',
+				// typeAlias
+				'com_sermondistributor.sermon_tag',
+				// idHolder
+				'id',
+				// titleHolder
+				'tag',
+				// tableName
+				'#__sermondistributor_sermon_tag',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Sermon_language in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'SERMON_LANGUAGE',
+				// typeAlias
+				'com_sermondistributor.sermon_language',
+				// idHolder
+				'id',
+				// titleHolder
+				'language',
+				// tableName
+				'#__sermondistributor_sermon_language',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Preacher_language in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'PREACHER_LANGUAGE',
+				// typeAlias
+				'com_sermondistributor.preacher_language',
+				// idHolder
+				'id',
+				// titleHolder
+				'language',
+				// tableName
+				'#__sermondistributor_preacher_language',
+				// textPrefix
+				'COM_SERMONDISTRIBUTOR'
+			);
+
+			// Add/Update Church_elder in the action logs config table.
+			$this->setActionLogConfig(
+				// typeTitle
+				'CHURCH_ELDER',
+				// typeAlias
+				'com_sermondistributor.church_elder',
+				// idHolder
+				'id',
+				// titleHolder
+				'elder',
+				// tableName
+				'#__sermondistributor_church_elder',
 				// textPrefix
 				'COM_SERMONDISTRIBUTOR'
 			);
@@ -889,10 +1838,83 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	}
 
 	/**
+	 * Remove folders with files (with ignore options)
+	 *
+	 * @param   string	    $dir	 The path to the folder to remove.
+	 * @param   array|null  $ignore  The folders and files to ignore and not remove.
+	 *
+	 * @return  bool   True if all specified files/folders are removed, false otherwise.
+	 * @since   3.2.2
+	 */
+	protected function removeFolder(string $dir, ?array $ignore = null): bool
+	{
+		if (!is_dir($dir))
+		{
+			return false;
+		}
+
+		$it = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
+		$it = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::CHILD_FIRST);
+
+		// Remove trailing slash
+		$dir = rtrim($dir, '/');
+
+		foreach ($it as $file)
+		{
+			$filePath = $file->getPathname();
+			$relativePath = str_replace($dir . '/', '', $filePath);
+
+			if ($ignore !== null && in_array($relativePath, $ignore, true))
+			{
+				continue;
+			}
+
+			if ($file->isDir())
+			{
+				Folder::delete($filePath);
+			}
+			else
+			{
+				File::delete($filePath);
+			}
+		}
+
+		// Delete the root folder if there are no ignored files/folders left
+		if ($ignore === null || $this->isDirEmpty($dir, $ignore))
+		{
+			return Folder::delete($dir);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if a directory is empty considering ignored files/folders.
+	 *
+	 * @param   string  $dir	 The path to the folder to check.
+	 * @param   array   $ignore  The folders and files to ignore.
+	 *
+	 * @return  bool    True if the directory is empty or contains only ignored items, false otherwise.
+     * @since   3.2.1
+	 */
+	protected function isDirEmpty(string $dir, array $ignore): bool
+	{
+		$it = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS);
+		foreach ($it as $file)
+		{
+			$relativePath = str_replace($dir . '/', '', $file->getPathname());
+			if (!in_array($relativePath, $ignore, true))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Remove the files and folders in the given array from
 	 *
 	 * @return  void
-	 *
 	 * @since   3.6
 	 */
 	protected function removeFiles()
@@ -924,7 +1946,6 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * Moves the CLI scripts into the CLI folder in the CMS
 	 *
 	 * @return  void
-	 *
 	 * @since   3.6
 	 */
 	protected function moveCliFiles()
@@ -955,7 +1976,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $contentHistoryOptions
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function setContentType(
 		string $typeTitle,
@@ -1017,7 +2038,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $textPrefix
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function setActionLogConfig(
 		string $typeTitle,
@@ -1070,7 +2091,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * Set action logs extensions integration
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function setActionLogsExtensions(): void
 	{
@@ -1111,7 +2132,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $rules   The component rules
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function setAssetsRules(string $rules): void
 	{
@@ -1149,7 +2170,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $params   The component rules
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function setExtensionsParams(string $params): void
 	{
@@ -1192,7 +2213,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string  $dataType          This datatype we will change the rules column to if it to small.
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function setDatabaseAssetsRulesFix(int $accessWorseCase, string $dataType): void
 	{
@@ -1227,7 +2248,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   bool     $fields    The switch to also remove related field data
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeViewData(string $context, bool $fields = false): void
 	{
@@ -1250,7 +2271,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $context   The view context
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeContentTypes(string $context): void
 	{
@@ -1307,7 +2328,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $context   The view context
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeFields(string $context): void
 	{
@@ -1369,7 +2390,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   array    $ids       The view context
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeFieldsValues(string $context, array $ids): void
 	{
@@ -1400,7 +2421,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $context   The view context
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeFieldsGroups(string $context): void
 	{
@@ -1455,7 +2476,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $context   The view context
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeViewHistory(string $context): void
 	{
@@ -1487,7 +2508,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   array   $ids   The type ids
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeUcmBase(array $ids): void
 	{
@@ -1520,7 +2541,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $context   The view context
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeUcmContent(string $context): void
 	{
@@ -1552,7 +2573,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $context   The view context
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeContentItemTagMap(string $context): void
 	{
@@ -1587,7 +2608,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * @param   string   $context   The view context
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeActionLogConfig(string $context): void
 	{
@@ -1617,7 +2638,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * Remove Asset Table Integrated
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeAssetData(): void
 	{
@@ -1645,7 +2666,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * Remove action logs extensions integrated
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeActionLogsExtensions(): void
 	{
@@ -1675,7 +2696,7 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	 * Remove remove database fix (if possible)
 	 *
 	 * @return void
-	 * @since 4.4.2
+	 * @since  4.4.2
 	 */
 	protected function removeDatabaseAssetsRulesFix(): void
 	{
@@ -1707,171 +2728,41 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 	}
 
 	/**
-	 * Define the required limits with specific messages for success and warning scenarios
-	 *
-	 * @var array
-	 * @since 3.0.5
-	 */
-	protected array $requiredPHPConfigs = [
-		'upload_max_filesize' => [
-			'value'   => '64M',
-			'success' => 'The upload_max_filesize is appropriately set to handle large files, which is essential for uploading substantial components and media.',
-			'warning' => 'The current upload_max_filesize may not support large file uploads effectively, potentially causing failures during component installation.'
-		],
-		'post_max_size' => [
-			'value'   => '128M',
-			'success' => 'The post_max_size setting is sufficient to manage large data submissions, ensuring smooth data processing within forms and uploads.',
-			'warning' => 'An insufficient post_max_size can lead to truncated data submissions, affecting form functionality and data integrity.'
-		],
-		'max_execution_time' => [
-			'value'   => 60,
-			'success' => 'Max execution time is set high enough to execute complex operations without premature termination, which is crucial for lengthy operations.',
-			'warning' => 'A low max execution time could lead to script timeouts, especially during intensive operations, which might interrupt execution and cause failures during the compiling of a large extension.'
-		],
-		'max_input_vars' => [
-			'value'   => 5000,
-			'success' => 'The max_input_vars setting supports a high number of input variables, facilitating complex forms and detailed component configurations.',
-			'warning' => 'Too few max_input_vars may result in lost data during processing complex forms, which can lead to incomplete configurations and operational issues.'
-		],
-		'max_input_time' => [
-			'value'   => 60,
-			'success' => 'Max input time is adequate for processing inputs efficiently during high-load operations, ensuring no premature timeouts.',
-			'warning' => 'An insufficient max input time could result in incomplete data processing during input-heavy operations, potentially leading to errors and data loss.'
-		],
-		'memory_limit' => [
-			'value'   => '256M',
-			'success' => 'The memory limit is set high to accommodate extensive operations and data processing, which enhances overall performance and stability.',
-			'warning' => 'A low memory limit can lead to frequent crashes and performance issues, particularly when processing large amounts of data or complex calculations.'
-		]
-	];
-
-	/**
-	 * Helper function to convert PHP INI memory values to bytes
-	 *
-	 * @param  string  $value     The value to convert
-	 *
-	 * @return int   The bytes value
-	 * @since 3.0.5
-	 */
-	protected function convertToBytes(string $value): int
-	{
-		$value = trim($value);
-		$lastChar = strtolower($value[strlen($value) - 1]);
-		$numValue = substr($value, 0, -1);
-
-		switch ($lastChar)
-		{
-			case 'g':
-				return $numValue * 1024 * 1024 * 1024;
-			case 'm':
-				return $numValue * 1024 * 1024;
-			case 'k':
-				return $numValue * 1024;
-			default:
-				return (int) $value;
-		}
-	}
-
-	/**
-	 * Check that the required configurations are set for PHP
-	 *
-	 * @param  $app  The application
-	 *
-	 * @return void
-	 * @since 3.0.5
-	 */
-	protected function phpConfigurationCheck($app): void
-	{
-		$showHelp = false;
-
-		// Check each configuration and provide detailed feedback
-		foreach ($this->requiredPHPConfigs as $configName => $configDetails)
-		{
-			$currentValue = ini_get($configName);
-			if ($currentValue === false)
-			{
-				$app->enqueueMessage("Error: Unable to retrieve current setting for '{$configName}'.", 'error');
-				continue;
-			}
-
-			$isMemoryValue = strpbrk($configDetails['value'], 'KMG') !== false;
-			$requiredValueBytes = $isMemoryValue ? $this->convertToBytes($configDetails['value']) : (int) $configDetails['value'];
-			$currentValueBytes = $isMemoryValue ? $this->convertToBytes($currentValue) : (int) $currentValue;
-			$conditionMet = $currentValueBytes >= $requiredValueBytes;
-
-			$messageType = $conditionMet ? 'message' : 'warning';
-			$messageText = $conditionMet ? 
-				"Success: {$configName} is set to {$currentValue}. " . $configDetails['success'] :
-				"Warning: {$configName} configuration should be at least {$configDetails['value']} but is currently {$currentValue}. " . $configDetails['warning'];
-			$showHelp = ($showHelp || $messageType === 'warning') ? true : false;
-			$app->enqueueMessage($messageText, $messageType);
-		}
-
-		if ($showHelp)
-		{
-			$app->enqueueMessage('To optimize your Sermon Distributor environment, specific PHP settings must be enhanced.<br>These settings are crucial for ensuring the successful installation and stable functionality of the extension.<br>We\'ve identified that certain configurations currently do not meet the recommended standards.<br>To adjust these settings and prevent potential issues, please consult our detailed guide available at <a href="https://git.vdm.dev/christian/Joomla-Sermon-Distributor/wiki/PHP-Settings" target="_blank">Sermon Distributor PHP Settings Wiki</a>.
-', 'notice');
-		}
-	}
-
-	/**
-	 * Make sure that the sermondistributor database schema is up to date.
-	 *
-	 * @return void
-	 * @since 3.0.5
-	 */
-	protected function databaseSchemaCheck($app): void
-	{
-		// try to load the schema class
-		try
-		{
-			// make sure the class is loaded
-			$this->ensureClassExists(
-				Schema::class
-			);
-
-			// instantiate the schema class and check/update the database
-			$messages = (new Schema())->update();
-		}
-		catch (\Exception $e)
-		{
-			$app->enqueueMessage($e->getMessage(), 'warning');
-			return;
-		}
-
-		foreach ($messages as $message)
-		{
-			$app->enqueueMessage($message, 'message');
-		}
-	}
-
-	/**
 	 * Ensures that a class in the namespace is available.
-	 * If the class is not already loaded, it attempts to load it via the power autoloader.
+	 * If the class is not already loaded, it attempts to load it via the specified autoloader.
 	 *
-	 * @param mixed    $nameClass    The name::class we are looking for.
+	 * @param string  $className   The fully qualified name of the class to check.
 	 *
-	 * @return void
-	 * @since 3.0.5
-	 * @throws \Exception If the class could not be loaded.
+	 * @return bool True if the class exists or was successfully loaded, false otherwise.
+	 * @since  4.0.1
 	 */
-	protected function ensureClassExists($nameClass): void
+	protected function classExists(string $className): bool
 	{
-		if (!class_exists($nameClass, true))
+		if (class_exists($className, true))
 		{
-			// The power autoloader for this project admin area.
-			$power_autoloader = JPATH_ADMINISTRATOR . '/components/com_sermondistributor/src/Helper/PowerloaderHelper.php';
-			if (file_exists($power_autoloader))
-			{
-				require_once $power_autoloader;
-			}
+			return true;
+		}
 
-			// Check again if the class now exists after requiring it
-			if (!class_exists($nameClass, true))
+		// Autoloaders to check
+		$autoloaders = [
+			__DIR__ . '/SermondistributorInstallerPowerloader.php',
+			JPATH_ADMINISTRATOR . '/components/com_sermondistributor/src/Helper/PowerloaderHelper.php'
+		];
+
+		foreach ($autoloaders as $autoloader)
+		{
+			if (file_exists($autoloader))
 			{
-				throw new \Exception("We failed to find/load the $nameClass");
+				require_once $autoloader;
+
+				if (class_exists($className, true))
+				{
+					return true;
+				}
 			}
 		}
+
+		return false;
 	}
 
 	/**

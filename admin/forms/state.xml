@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
+>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
+	<fieldset name="details">
+		<!-- Default Fields. -->
+		<!-- Id Field. Type: Text (joomla) -->
+		<field
+			name="id"
+			type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+			readonly="true"
+		/>
+		<!-- Date Created Field. Type: Calendar (joomla) -->
+		<field
+			name="created"
+			type="calendar"
+			label="COM_SERMONDISTRIBUTOR_STATE_CREATED_DATE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_CREATED_DATE_DESC"
+			size="22"
+			format="%Y-%m-%d %H:%M:%S"
+			filter="user_utc"
+		/>
+		<!-- User Created Field. Type: User (joomla) -->
+		<field
+			name="created_by"
+			type="user"
+			label="COM_SERMONDISTRIBUTOR_STATE_CREATED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_CREATED_BY_DESC"
+		/>
+		<!-- Published Field. Type: List (joomla) -->
+		<field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
+			filter="intval" size="1" default="1" >
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="2">
+				JARCHIVED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<!-- Date Modified Field. Type: Calendar (joomla) -->
+		<field name="modified" type="calendar" class="readonly"
+			label="COM_SERMONDISTRIBUTOR_STATE_MODIFIED_DATE_LABEL" description="COM_SERMONDISTRIBUTOR_STATE_MODIFIED_DATE_DESC"
+			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
+		<!-- User Modified Field. Type: User (joomla) -->
+		<field name="modified_by" type="user"
+			label="COM_SERMONDISTRIBUTOR_STATE_MODIFIED_BY_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_MODIFIED_BY_DESC"
+			class="readonly"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Access Field. Type: Accesslevel (joomla) -->
+		<field name="access"
+			type="accesslevel"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+			default="1"
+			required="false"
+		/>
+		<!-- Ordering Field. Type: Numbers (joomla) -->
+		<field
+			name="ordering"
+			type="number"
+			class="inputbox validate-ordering"
+			label="COM_SERMONDISTRIBUTOR_STATE_ORDERING_LABEL"
+			description=""
+			default="0"
+			size="6"
+			required="false"
+		/>
+		<!-- Version Field. Type: Text (joomla) -->
+		<field
+			name="version"
+			type="text"
+			class="readonly"
+			label="COM_SERMONDISTRIBUTOR_STATE_VERSION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_VERSION_DESC"
+			size="6"
+			default="1"
+			readonly="true"
+			filter="unset"
+		/>
+		<!-- Metakey Field. Type: Textarea (joomla) -->
+		<field
+			name="metakey"
+			type="textarea"
+			label="JFIELD_META_KEYWORDS_LABEL"
+			description="JFIELD_META_KEYWORDS_DESC"
+			rows="3"
+			cols="30"
+		/>
+		<!-- Metadesc Field. Type: Textarea (joomla) -->
+		<field
+			name="metadesc"
+			type="textarea"
+			label="JFIELD_META_DESCRIPTION_LABEL"
+			description="JFIELD_META_DESCRIPTION_DESC"
+			rows="3"
+			cols="30"
+		/>
+		<!-- Was added due to Permissions JS needing a Title field -->
+		<!-- Let us know at gh-629 should this change -->
+		<!-- https://github.com/vdm-io/Joomla-Component-Builder/issues/629#issuecomment-750117235 -->
+		<field
+			name="title"
+			type="hidden"
+			default="sermondistributor state"
+		/>
+		<!-- Dynamic Fields. -->
+		<!-- Name Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="name"
+			label="COM_SERMONDISTRIBUTOR_STATE_NAME_LABEL"
+			size="40"
+			maxlength="150"
+			description="COM_SERMONDISTRIBUTOR_STATE_NAME_DESCRIPTION"
+			class="text_area"
+			readonly="false"
+			disabled="false"
+			required="true"
+			filter="STRING"
+			message="COM_SERMONDISTRIBUTOR_STATE_NAME_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_STATE_NAME_HINT"
+		/>
+		<!-- Country Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="country"
+			label="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_LABEL"
+			sql_title_table="#__sermondistributor_country"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=countries&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=country.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=country.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="true"
+			class="input-large"
+			description="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_DESCRIPTION"
+			hint="COM_SERMONDISTRIBUTOR_STATE_COUNTRY_HINT"
+		/>
+		<!-- Type Field. Type: List. (joomla) -->
+		<field
+			type="list"
+			name="type"
+			label="COM_SERMONDISTRIBUTOR_STATE_TYPE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_TYPE_DESCRIPTION"
+			message="COM_SERMONDISTRIBUTOR_STATE_TYPE_MESSAGE"
+			class="list_class"
+			layout="joomla.form.field.list-fancy-select"
+			multiple="false">
+			<!-- Option Set. -->
+			<option value="department">
+				COM_SERMONDISTRIBUTOR_STATE_DEPARTMENT</option>
+			<option value="district">
+				COM_SERMONDISTRIBUTOR_STATE_DISTRICT</option>
+			<option value="region">
+				COM_SERMONDISTRIBUTOR_STATE_REGION</option>
+			<option value="province">
+				COM_SERMONDISTRIBUTOR_STATE_PROVINCE</option>
+			<option value="municipality">
+				COM_SERMONDISTRIBUTOR_STATE_MUNICIPALITY</option>
+			<option value="geographical region">
+				COM_SERMONDISTRIBUTOR_STATE_GEOGRAPHICAL_REGION</option>
+			<option value="popularate">
+				COM_SERMONDISTRIBUTOR_STATE_POPULARATE</option>
+			<option value="oblast">
+				COM_SERMONDISTRIBUTOR_STATE_OBLAST</option>
+			<option value="city">
+				COM_SERMONDISTRIBUTOR_STATE_CITY</option>
+			<option value="land">
+				COM_SERMONDISTRIBUTOR_STATE_LAND</option>
+			<option value="county">
+				COM_SERMONDISTRIBUTOR_STATE_COUNTY</option>
+			<option value="governorate">
+				COM_SERMONDISTRIBUTOR_STATE_GOVERNORATE</option>
+			<option value="administered area">
+				COM_SERMONDISTRIBUTOR_STATE_ADMINISTERED_AREA</option>
+			<option value="federal capital territory">
+				COM_SERMONDISTRIBUTOR_STATE_FEDERAL_CAPITAL_TERRITORY</option>
+			<option value="emirate">
+				COM_SERMONDISTRIBUTOR_STATE_EMIRATE</option>
+			<option value="special municipality">
+				COM_SERMONDISTRIBUTOR_STATE_SPECIAL_MUNICIPALITY</option>
+			<option value="state">
+				COM_SERMONDISTRIBUTOR_STATE_STATE</option>
+			<option value="metropolitan administration">
+				COM_SERMONDISTRIBUTOR_STATE_METROPOLITAN_ADMINISTRATION</option>
+			<option value="parish">
+				COM_SERMONDISTRIBUTOR_STATE_PARISH</option>
+			<option value="metropolitan city">
+				COM_SERMONDISTRIBUTOR_STATE_METROPOLITAN_CITY</option>
+			<option value="special self-governing province">
+				COM_SERMONDISTRIBUTOR_STATE_SPECIAL_SELFGOVERNING_PROVINCE</option>
+			<option value="special self-governing city">
+				COM_SERMONDISTRIBUTOR_STATE_SPECIAL_SELFGOVERNING_CITY</option>
+			<option value="dependency">
+				COM_SERMONDISTRIBUTOR_STATE_DEPENDENCY</option>
+			<option value="territory">
+				COM_SERMONDISTRIBUTOR_STATE_TERRITORY</option>
+			<option value="division">
+				COM_SERMONDISTRIBUTOR_STATE_DIVISION</option>
+			<option value="island council">
+				COM_SERMONDISTRIBUTOR_STATE_ISLAND_COUNCIL</option>
+			<option value="special city">
+				COM_SERMONDISTRIBUTOR_STATE_SPECIAL_CITY</option>
+			<option value="union territory">
+				COM_SERMONDISTRIBUTOR_STATE_UNION_TERRITORY</option>
+			<option value="autonomous territorial unit">
+				COM_SERMONDISTRIBUTOR_STATE_AUTONOMOUS_TERRITORIAL_UNIT</option>
+			<option value="overseas collectivity">
+				COM_SERMONDISTRIBUTOR_STATE_OVERSEAS_COLLECTIVITY</option>
+			<option value="metropolitan region">
+				COM_SERMONDISTRIBUTOR_STATE_METROPOLITAN_REGION</option>
+			<option value="metropolitan collectivity with special status">
+				COM_SERMONDISTRIBUTOR_STATE_METROPOLITAN_COLLECTIVITY_WITH_SPECIAL_STATUS</option>
+			<option value="overseas region">
+				COM_SERMONDISTRIBUTOR_STATE_OVERSEAS_REGION</option>
+			<option value="autonomous region">
+				COM_SERMONDISTRIBUTOR_STATE_AUTONOMOUS_REGION</option>
+			<option value="administrative region">
+				COM_SERMONDISTRIBUTOR_STATE_ADMINISTRATIVE_REGION</option>
+			<option value="capital district">
+				COM_SERMONDISTRIBUTOR_STATE_CAPITAL_DISTRICT</option>
+			<option value="prefecture">
+				COM_SERMONDISTRIBUTOR_STATE_PREFECTURE</option>
+			<option value="canton">
+				COM_SERMONDISTRIBUTOR_STATE_CANTON</option>
+			<option value="metropolitan department">
+				COM_SERMONDISTRIBUTOR_STATE_METROPOLITAN_DEPARTMENT</option>
+			<option value="overseas territory">
+				COM_SERMONDISTRIBUTOR_STATE_OVERSEAS_TERRITORY</option>
+			<option value="island">
+				COM_SERMONDISTRIBUTOR_STATE_ISLAND</option>
+			<option value="autonomous community">
+				COM_SERMONDISTRIBUTOR_STATE_AUTONOMOUS_COMMUNITY</option>
+			<option value="autonomous city">
+				COM_SERMONDISTRIBUTOR_STATE_AUTONOMOUS_CITY</option>
+			<option value="village">
+				COM_SERMONDISTRIBUTOR_STATE_VILLAGE</option>
+			<option value="sheadings">
+				COM_SERMONDISTRIBUTOR_STATE_SHEADINGS</option>
+			<option value="capital city">
+				COM_SERMONDISTRIBUTOR_STATE_CAPITAL_CITY</option>
+			<option value="district municipality">
+				COM_SERMONDISTRIBUTOR_STATE_DISTRICT_MUNICIPALITY</option>
+		</field>
+		<!-- Guid Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="guid"
+			label="COM_SERMONDISTRIBUTOR_STATE_GUID_LABEL"
+			size="40"
+			maxlength="40"
+			description="COM_SERMONDISTRIBUTOR_STATE_GUID_DESCRIPTION"
+			class="text_area"
+			readonly="true"
+			filter="CMD"
+			validate="guid"
+			hint="COM_SERMONDISTRIBUTOR_STATE_GUID_HINT"
+		/>
+		<!-- Cities Field. Type: Subform. (joomla) -->
+		<field
+			type="subform"
+			name="cities"
+			label="COM_SERMONDISTRIBUTOR_STATE_CITIES_LABEL"
+			layout="joomla.form.field.subform.repeatable"
+			multiple="true"
+			buttons="add,remove"
+			icon="list"
+			max="50"
+			min="0">
+			<form hidden="true" name="list_cities_modal" repeat="true">
+				<!-- Guid Field. Type: Hidden. (joomla) -->
+				<field
+					type="hidden"
+					name="guid"
+					default="0"
+					filter="STRING"
+				/>
+				<!-- Name Field. Type: Text. (joomla) -->
+				<field
+					type="text"
+					name="name"
+					label="COM_SERMONDISTRIBUTOR_STATE_NAME_LABEL"
+					size="40"
+					maxlength="150"
+					description="COM_SERMONDISTRIBUTOR_STATE_NAME_DESCRIPTION"
+					class="text_area"
+					readonly="false"
+					disabled="false"
+					required="true"
+					filter="STRING"
+					message="COM_SERMONDISTRIBUTOR_STATE_NAME_MESSAGE"
+					hint="COM_SERMONDISTRIBUTOR_STATE_NAME_HINT"
+				/>
+				<!-- Latitude Field. Type: Text. (joomla) -->
+				<field
+					type="text"
+					name="latitude"
+					label="COM_SERMONDISTRIBUTOR_STATE_LATITUDE_LABEL"
+					description="COM_SERMONDISTRIBUTOR_STATE_LATITUDE_DESCRIPTION"
+					class="text_area"
+					message="COM_SERMONDISTRIBUTOR_STATE_LATITUDE_MESSAGE"
+					hint="COM_SERMONDISTRIBUTOR_STATE_LATITUDE_HINT"
+				/>
+				<!-- Longitude Field. Type: Text. (joomla) -->
+				<field
+					type="text"
+					name="longitude"
+					label="COM_SERMONDISTRIBUTOR_STATE_LONGITUDE_LABEL"
+					description="COM_SERMONDISTRIBUTOR_STATE_LONGITUDE_DESCRIPTION"
+					class="text_area"
+					message="COM_SERMONDISTRIBUTOR_STATE_LONGITUDE_MESSAGE"
+					hint="COM_SERMONDISTRIBUTOR_STATE_LONGITUDE_HINT"
+				/>
+				<!-- Wikidataid Field. Type: Text. (joomla) -->
+				<field
+					type="text"
+					name="wikidataid"
+					label="COM_SERMONDISTRIBUTOR_STATE_WIKIDATAID_LABEL"
+					description="COM_SERMONDISTRIBUTOR_STATE_WIKIDATAID_DESCRIPTION"
+					hint="COM_SERMONDISTRIBUTOR_STATE_WIKIDATAID_HINT"
+				/>
+			</form>
+		</field>
+		<!-- Wikidataid Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="wikidataid"
+			label="COM_SERMONDISTRIBUTOR_STATE_WIKIDATAID_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_WIKIDATAID_DESCRIPTION"
+			hint="COM_SERMONDISTRIBUTOR_STATE_WIKIDATAID_HINT"
+		/>
+		<!-- Fips_code Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="fips_code"
+			label="COM_SERMONDISTRIBUTOR_STATE_FIPS_CODE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_FIPS_CODE_DESCRIPTION"
+			class="text_area"
+			message="COM_SERMONDISTRIBUTOR_STATE_FIPS_CODE_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_STATE_FIPS_CODE_HINT"
+		/>
+		<!-- Iso2 Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="iso2"
+			label="COM_SERMONDISTRIBUTOR_STATE_ISO2_LABEL"
+			size="40"
+			maxlength="2"
+			description="COM_SERMONDISTRIBUTOR_STATE_ISO2_DESCRIPTION"
+			class="text_area"
+			required="true"
+			filter="WORD"
+			message="COM_SERMONDISTRIBUTOR_STATE_ISO2_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_STATE_ISO2_HINT"
+		/>
+		<!-- Longitude Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="longitude"
+			label="COM_SERMONDISTRIBUTOR_STATE_LONGITUDE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_LONGITUDE_DESCRIPTION"
+			class="text_area"
+			message="COM_SERMONDISTRIBUTOR_STATE_LONGITUDE_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_STATE_LONGITUDE_HINT"
+		/>
+		<!-- Latitude Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="latitude"
+			label="COM_SERMONDISTRIBUTOR_STATE_LATITUDE_LABEL"
+			description="COM_SERMONDISTRIBUTOR_STATE_LATITUDE_DESCRIPTION"
+			class="text_area"
+			message="COM_SERMONDISTRIBUTOR_STATE_LATITUDE_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_STATE_LATITUDE_HINT"
+		/>
+	</fieldset>
+
+	<!-- Metadata Fields. -->
+	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+		<fieldset name="vdmmetadata"
+			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+			<!-- Robots Field. Type: List (joomla) -->
+			<field name="robots"
+				type="list"
+				label="JFIELD_METADATA_ROBOTS_LABEL"
+				description="JFIELD_METADATA_ROBOTS_DESC" >
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
+				<option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
+				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
+				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+			</field>
+			<!-- Author Field. Type: Text (joomla) -->
+			<field name="author"
+				type="text"
+				label="JAUTHOR" description="JFIELD_METADATA_AUTHOR_DESC"
+				size="20"
+			/>
+			<!-- Rights Field. Type: Textarea (joomla) -->
+			<field name="rights" type="textarea" label="JFIELD_META_RIGHTS_LABEL"
+				description="JFIELD_META_RIGHTS_DESC" required="false" filter="string"
+				cols="30" rows="2"
+			/>
+		</fieldset>
+	</fields>
+
+	<!-- Access Control Fields. -->
+	<fieldset name="accesscontrol">
+		<!-- Asset Id Field. Type: Hidden (joomla) -->
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+		<!-- Rules Field. Type: Rules (joomla) -->
+		<field
+			name="rules"
+			type="rules"
+			label="Permissions in relation to this state"
+			translate_label="false"
+			filter="rules"
+			validate="rules"
+			class="inputbox"
+			component="com_sermondistributor"
+			section="state"
+		/>
+	</fieldset>
+</form>

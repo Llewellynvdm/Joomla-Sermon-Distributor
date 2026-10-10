@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form
-	addruleprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Rule"
-	addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Field"
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
 >
 	<config>
 		<inlinehelp button="show"/>
@@ -131,42 +131,47 @@
 			message="COM_SERMONDISTRIBUTOR_SERIES_NAME_MESSAGE"
 			hint="COM_SERMONDISTRIBUTOR_SERIES_NAME_HINT"
 		/>
-		<!-- Description Field. Type: Editor. (joomla) -->
+		<!-- Description Field. Type: Textarea. (joomla) -->
 		<field
-			type="editor"
+			type="textarea"
 			name="description"
 			label="COM_SERMONDISTRIBUTOR_SERIES_DESCRIPTION_LABEL"
-			width="100%"
-			height="500"
-			cols="13"
-			rows="50"
-			buttons="false"
-			filter="safehtml"
+			rows="11"
+			cols="10"
+			description="COM_SERMONDISTRIBUTOR_SERIES_DESCRIPTION_DESCRIPTION"
+			class="text_area span12"
+			filter="HTML"
+			hint="COM_SERMONDISTRIBUTOR_SERIES_DESCRIPTION_HINT"
 		/>
-		<!-- Scripture Field. Type: Text. (joomla) -->
+		<!-- Guid Field. Type: Text. (joomla) -->
 		<field
 			type="text"
-			name="scripture"
-			label="COM_SERMONDISTRIBUTOR_SERIES_SCRIPTURE_LABEL"
-			size="90"
-			maxlength="150"
-			default=""
-			description="COM_SERMONDISTRIBUTOR_SERIES_SCRIPTURE_DESCRIPTION"
+			name="guid"
+			label="COM_SERMONDISTRIBUTOR_SERIES_GUID_LABEL"
+			size="40"
+			maxlength="40"
+			description="COM_SERMONDISTRIBUTOR_SERIES_GUID_DESCRIPTION"
 			class="text_area"
-			readonly="false"
-			disabled="false"
-			required="false"
-			filter="STRING"
-			message="COM_SERMONDISTRIBUTOR_SERIES_SCRIPTURE_MESSAGE"
-			hint="COM_SERMONDISTRIBUTOR_SERIES_SCRIPTURE_HINT"
+			readonly="true"
+			filter="CMD"
+			validate="guid"
+			hint="COM_SERMONDISTRIBUTOR_SERIES_GUID_HINT"
 		/>
-		<!-- Icon Field. Type: Media. (joomla) -->
+		<!-- Note_file_vdm_display Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_file_vdm_display" description="COM_SERMONDISTRIBUTOR_SERIES_NOTE_FILE_VDM_DISPLAY_DESCRIPTION" class="uk-clearfix uk-width-1-1 uk-margin note_file_vdm_display" />
+		<!-- Note_file_vdm_uploader Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_file_vdm_uploader" description="COM_SERMONDISTRIBUTOR_SERIES_NOTE_FILE_VDM_UPLOADER_DESCRIPTION" class="note_file_vdm_uploader" showon="file_type!:" />
+		<!-- File_type Field. Type: Entityfiletypes. (custom) -->
 		<field
-			type="media"
-			name="icon"
-			label="COM_SERMONDISTRIBUTOR_SERIES_ICON_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERIES_ICON_DESCRIPTION"
-			directory=""
+			type="entityfiletypes"
+			name="file_type"
+			label="COM_SERMONDISTRIBUTOR_SERIES_FILE_TYPE_LABEL"
+			class="list_class"
+			layout="joomla.form.field.list-fancy-select"
+			multiple="false"
+			required="false"
+			button="false"
+			entity="series"
 		/>
 		<!-- Alias Field. Type: Text. (joomla) -->
 		<field

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form
-	addruleprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Rule"
-	addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Field"
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
 >
 	<config>
 		<inlinehelp button="show"/>
@@ -131,106 +131,137 @@
 			message="COM_SERMONDISTRIBUTOR_SERMON_NAME_MESSAGE"
 			hint="COM_SERMONDISTRIBUTOR_SERMON_NAME_HINT"
 		/>
-		<!-- Preacher Field. Type: Preachers. (custom) -->
+		<!-- Category Field. Type: Modalselect. (custom) -->
 		<field
-			type="preachers"
-			name="preacher"
-			label="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_DESCRIPTION"
-			class="list_class"
-			multiple="false"
-			default="0"
-			button="true"
+			type="ModalSelect"
+			name="category"
+			label="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_LABEL"
+			sql_title_table="#__sermondistributor_category"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=categories&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=category.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=category.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="false"
+			filter="STRING"
+			class="input-large"
+			description="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_DESCRIPTION"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_HINT"
 		/>
-		<!-- Series Field. Type: Series. (custom) -->
+		<!-- Series Field. Type: Modalselect. (custom) -->
 		<field
-			type="series"
+			type="ModalSelect"
 			name="series"
 			label="COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL"
+			sql_title_table="#__sermondistributor_series"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=series_list&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=series.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=series.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_SERMON_SERIES_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_SERMON_SERIES_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_SERMON_SERIES_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			filter="STRING"
+			class="input-large"
 			description="COM_SERMONDISTRIBUTOR_SERMON_SERIES_DESCRIPTION"
-			class="list_class"
-			multiple="false"
-			default="0"
-			button="true"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_SERIES_HINT"
 		/>
-		<!-- Short_description Field. Type: Text. (joomla) -->
+		<!-- Church Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="church"
+			label="COM_SERMONDISTRIBUTOR_SERMON_CHURCH_LABEL"
+			sql_title_table="#__sermondistributor_church"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=churches&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=church.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=church.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_SERMON_CHURCH_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_SERMON_CHURCH_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_SERMON_CHURCH_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="false"
+			class="input-large"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_CHURCH_HINT"
+		/>
+		<!-- Preacher Field. Type: Modalselect. (custom) -->
+		<field
+			type="ModalSelect"
+			name="preacher"
+			label="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL"
+			sql_title_table="#__sermondistributor_preacher"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=preachers&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=preacher.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=preacher.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="false"
+			filter="STRING"
+			class="input-large"
+			description="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_DESCRIPTION"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_HINT"
+		/>
+		<!-- Guid Field. Type: Text. (joomla) -->
 		<field
 			type="text"
-			name="short_description"
-			label="COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_LABEL"
+			name="guid"
+			label="COM_SERMONDISTRIBUTOR_SERMON_GUID_LABEL"
 			size="40"
-			maxlength="150"
-			description="COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_DESCRIPTION"
+			maxlength="40"
+			description="COM_SERMONDISTRIBUTOR_SERMON_GUID_DESCRIPTION"
 			class="text_area"
-			required="true"
-			filter="HTML"
-			message="COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_MESSAGE"
-			hint="COM_SERMONDISTRIBUTOR_SERMON_SHORT_DESCRIPTION_HINT"
+			readonly="true"
+			filter="CMD"
+			validate="guid"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_GUID_HINT"
 		/>
-		<!-- Catid Field. Type: Category. (joomla) -->
+		<!-- Note_file_vdm_display Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_file_vdm_display" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_FILE_VDM_DISPLAY_DESCRIPTION" class="uk-clearfix uk-width-1-1 uk-margin note_file_vdm_display" />
+		<!-- Note_file_vdm_uploader Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_file_vdm_uploader" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_FILE_VDM_UPLOADER_DESCRIPTION" class="note_file_vdm_uploader" showon="file_type!:" />
+		<!-- File_type Field. Type: Entityfiletypes. (custom) -->
 		<field
-			type="category"
-			name="catid"
-			label="COM_SERMONDISTRIBUTOR_SERMON_CATID_LABEL"
-			extension="com_sermondistributor.sermon"
-			required="false"
-			description="COM_SERMONDISTRIBUTOR_SERMON_CATID_DESCRIPTION"
-			class="inputbox"
-		/>
-		<!-- Link_type Field. Type: Radio. (joomla) -->
-		<field
-			type="radio"
-			name="link_type"
-			label="COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_DESCRIPTION"
-			class="btn-group btn-group-yesno"
-			default="1"
-			required="true">
-			<!-- Option Set. -->
-			<option value="1">
-				COM_SERMONDISTRIBUTOR_SERMON_ENCRYPTED</option>
-			<option value="2">
-				COM_SERMONDISTRIBUTOR_SERMON_DIRECT</option>
-		</field>
-		<!-- Source Field. Type: List. (joomla) -->
-		<field
-			type="list"
-			name="source"
-			label="COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_SOURCE_DESCRIPTION"
+			type="entityfiletypes"
+			name="file_type"
+			label="COM_SERMONDISTRIBUTOR_SERMON_FILE_TYPE_LABEL"
 			class="list_class"
+			layout="joomla.form.field.list-fancy-select"
 			multiple="false"
-			filter="INT"
-			required="true"
-			default="">
-			<!-- Option Set. -->
-			<option value="">
-				COM_SERMONDISTRIBUTOR_SERMON_SELECT_SOURCE</option>
-			<option value="1">
-				COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FOLDER</option>
-			<option value="2">
-				COM_SERMONDISTRIBUTOR_SERMON_EXTERNAL_SOURCE</option>
-			<option value="3">
-				COM_SERMONDISTRIBUTOR_SERMON_URL</option>
-		</field>
-		<!-- Note_link_encrypted Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_link_encrypted" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_ENCRYPTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_encrypted" close="true" />
-		<!-- Note_link_directed Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_link_directed" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_LINK_DIRECTED_DESCRIPTION" heading="h4" class="alert alert-info note_link_directed" close="true" />
-		<!-- Local_files Field. Type: Localfiles. (custom) -->
-		<field
-			type="localfiles"
-			name="local_files"
-			label="COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FILES_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_LOCAL_FILES_DESCRIPTION"
-			class="list_class"
-			multiple="true"
-			default="0"
-			required="true"
+			required="false"
 			button="false"
+			entity="sermon"
 		/>
-		<!-- Note_auto_externalsource Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_auto_externalsource" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_AUTO_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_auto_externalsource" />
 		<!-- Alias Field. Type: Text. (joomla) -->
 		<field
 			type="text"
@@ -245,108 +276,41 @@
 			type="editor"
 			name="description"
 			label="COM_SERMONDISTRIBUTOR_SERMON_DESCRIPTION_LABEL"
+			description="COM_SERMONDISTRIBUTOR_SERMON_DESCRIPTION_DESCRIPTION"
+			message="COM_SERMONDISTRIBUTOR_SERMON_DESCRIPTION_MESSAGE"
 			width="100%"
-			height="500"
-			cols="13"
-			rows="50"
+			height="400"
 			buttons="false"
-			filter="safehtml"
+			syntax="markdown"
+			editor="codemirror|none"
+			filter="STRING"
+			required="true"
+			validate="maxlength"
 		/>
-		<!-- Tags Field. Type: Tag. (joomla) -->
+		<!-- Languages Field. Type: Lang. (custom) -->
 		<field
-			type="tag"
+			type="lang"
+			name="languages"
+			label="COM_SERMONDISTRIBUTOR_SERMON_LANGUAGES_LABEL"
+			class="list_class"
+			layout="joomla.form.field.list-fancy-select"
+			multiple="true"
+			default="en-GB"
+			required="true"
+			button="true"
+		/>
+		<!-- Tags Field. Type: Tags. (custom) -->
+		<field
+			type="tags"
 			name="tags"
-			mode="ajax"
 			label="COM_SERMONDISTRIBUTOR_SERMON_TAGS_LABEL"
 			description="COM_SERMONDISTRIBUTOR_SERMON_TAGS_DESCRIPTION"
-			published="true"
-			multiple="true"
-		/>
-		<!-- Icon Field. Type: Media. (joomla) -->
-		<field
-			type="media"
-			name="icon"
-			label="COM_SERMONDISTRIBUTOR_SERMON_ICON_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_ICON_DESCRIPTION"
-			directory=""
-		/>
-		<!-- Build Field. Type: List. (joomla) -->
-		<field
-			type="list"
-			name="build"
-			label="COM_SERMONDISTRIBUTOR_SERMON_BUILD_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_BUILD_DESCRIPTION"
 			class="list_class"
-			multiple="false"
-			filter="INT"
-			required="true"
-			default="">
-			<!-- Option Set. -->
-			<option value="">
-				COM_SERMONDISTRIBUTOR_SERMON_SELECT_AN_OPTION</option>
-			<option value="1">
-				COM_SERMONDISTRIBUTOR_SERMON_MANUAL_LOCAL_SELECTION</option>
-			<option value="2">
-				COM_SERMONDISTRIBUTOR_SERMON_DYNAMIC_AUTOMATIC_BUILD</option>
-		</field>
-		<!-- Note_manual_externalsource Field. Type: Note. A None Database Field. (joomla) -->
-		<field type="note" name="note_manual_externalsource" label="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_EXTERNALSOURCE_LABEL" description="COM_SERMONDISTRIBUTOR_SERMON_NOTE_MANUAL_EXTERNALSOURCE_DESCRIPTION" heading="h4" class="alert alert-info note_manual_externalsource" />
-		<!-- Not_required Field. Type: Hidden. (joomla) -->
-		<field
-			type="hidden"
-			name="not_required"
-			default="一_一"
-		/>
-		<!-- Manual_files Field. Type: Externalsourcefiles. (custom) -->
-		<field
-			type="externalsourcefiles"
-			name="manual_files"
-			label="COM_SERMONDISTRIBUTOR_SERMON_MANUAL_FILES_LABEL"
-			description="COM_SERMONDISTRIBUTOR_SERMON_MANUAL_FILES_DESCRIPTION"
-			class="list_class"
+			layout="joomla.form.field.list-fancy-select"
 			multiple="true"
-			default="0"
-			required="true"
-			button="false"
-		/>
-		<!-- Auto_sermons Field. Type: Hidden. (joomla) -->
-		<field
-			type="hidden"
-			name="auto_sermons"
-			default="1"
-		/>
-		<!-- Url Field. Type: Url. (joomla) -->
-		<field
-			type="url"
-			name="url"
-			label="COM_SERMONDISTRIBUTOR_SERMON_URL_LABEL"
-			size="10"
-			maxlength="50"
-			default=""
-			description="COM_SERMONDISTRIBUTOR_SERMON_URL_DESCRIPTION"
-			class="text_area"
-			required="true"
-			filter="url"
-			validated="url"
-			message="COM_SERMONDISTRIBUTOR_SERMON_URL_MESSAGE"
-			hint="COM_SERMONDISTRIBUTOR_SERMON_URL_HINT"
-		/>
-		<!-- Scripture Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="scripture"
-			label="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_LABEL"
-			size="90"
-			maxlength="150"
-			default=""
-			description="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_DESCRIPTION"
-			class="text_area"
-			readonly="false"
-			disabled="false"
 			required="false"
-			filter="STRING"
-			message="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_MESSAGE"
-			hint="COM_SERMONDISTRIBUTOR_SERMON_SCRIPTURE_HINT"
+			button="false"
+			entity="sermon"
 		/>
 	</fieldset>
 

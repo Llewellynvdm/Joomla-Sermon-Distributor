@@ -10,32 +10,32 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		ImportModel.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\Model;
+namespace JoomSermon\Component\Sermondistributor\Administrator\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -110,7 +110,8 @@ class ImportModel extends BaseDatabaseModel
 		$package = null;
 		$continue = false;
 		// get import type
-		$this->getType = $app->input->getString('gettype', NULL);
+		$input = method_exists($app, 'getInput') ? $app->getInput() : $app->input;
+		$this->getType = $input->getString('gettype', NULL);
 		// get import type
 		$this->dataType    = $session->get('dataType_VDM_IMPORTINTO', NULL);
 
@@ -216,7 +217,7 @@ class ImportModel extends BaseDatabaseModel
 	{
 		// Get the uploaded file information
 		$app = Factory::getApplication();
-		$input = $app->input;
+		$input = method_exists($app, 'getInput') ? $app->getInput() : $app->input;
 
 		// Do not change the filter type 'raw'. We need this to let files containing PHP code to upload. See JInputFiles::get.
 		$userfile = $input->files->get('import_package', null, 'raw');
@@ -276,7 +277,7 @@ class ImportModel extends BaseDatabaseModel
 	protected function _getPackageFromFolder()
 	{
 		$app = Factory::getApplication();
-		$input = $app->input;
+		$input = method_exists($app, 'getInput') ? $app->getInput() : $app->input;
 
 		// Get the path to the package to import
 		$p_dir = $input->getString('import_directory');
@@ -321,7 +322,7 @@ class ImportModel extends BaseDatabaseModel
 	protected function _getPackageFromUrl()
 	{
 		$app = Factory::getApplication();
-		$input = $app->input;
+		$input = method_exists($app, 'getInput') ? $app->getInput() : $app->input;
 
 		// Get the URL of the package to import
 		$url = $input->getString('import_url');
@@ -449,7 +450,7 @@ class ImportModel extends BaseDatabaseModel
 		{
 			// make sure the file is loaded
 			SermondistributorHelper::composerAutoload('phpspreadsheet');
-			$jinput = Factory::getApplication()->input;
+			$jinput = Factory::getApplication()->getInput();
 			foreach($target_headers as $header)
 			{
 				if (($column = $jinput->getString($header, false)) !== false ||
@@ -492,7 +493,7 @@ class ImportModel extends BaseDatabaseModel
 		if(UtilitiesArrayHelper::check($data['array']))
 		{
 			// get user object
-			$user		= Factory::getUser();
+			$user		= Factory::getApplication()->getIdentity();
 			// remove header if it has headers
 			$id_key	= $data['target_headers']['id'];
 			$published_key	= $data['target_headers']['published'];
@@ -512,7 +513,7 @@ class ImportModel extends BaseDatabaseModel
 				// set target.
 				$target	= array_flip($data['target_headers']);
 				// Get a db connection.
-				$db = Factory::getDbo();
+				$db = Factory::getContainer()->get(DatabaseInterface::class);
 				// set some defaults
 				$todayDate		= Factory::getDate()->toSql();
 				// get global action permissions

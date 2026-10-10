@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form
-	addruleprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Rule"
-	addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Field"
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
 >
 	<fields name="filter">
 		<field
@@ -22,17 +22,6 @@
 			<option value="">JOPTION_SELECT_PUBLISHED</option>
 		</field>
 		<field
-			type="category"
-			name="category_id"
-			label="COM_SERMONDISTRIBUTOR_SERMON_SERMONS_CATEGORIES"
-			description="JOPTION_FILTER_CATEGORY_DESC"
-			multiple="true"
-			class="js-select-submit-on-change"
-			extension="com_sermondistributor.sermon"
-			layout="joomla.form.field.list-fancy-select"
-			published="0,1,2"
-		/>
-		<field
 			type="accesslevel"
 			name="access"
 			label="JGRID_HEADING_ACCESS"
@@ -42,34 +31,38 @@
 			layout="joomla.form.field.list-fancy-select"
 		/>
 		<field
-			type="preachers"
-			name="preacher"
-			label="COM_SERMONDISTRIBUTOR_SERMON_PREACHER_LABEL"
-			layout="joomla.form.field.list-fancy-select"
-			multiple="true"
-			hint="COM_SERMONDISTRIBUTOR_FILTER_SELECT_PREACHER"
-			class="js-select-submit-on-change"
-		/>
-		<field
-			type="series"
-			name="series"
-			label="COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL"
-			layout="joomla.form.field.list-fancy-select"
-			multiple="true"
-			hint="COM_SERMONDISTRIBUTOR_FILTER_SELECT_SERIES"
-			class="js-select-submit-on-change"
-		/>
-		<field
-			type="sermonsfilterlinktype"
-			name="link_type"
-			label="COM_SERMONDISTRIBUTOR_SERMON_LINK_TYPE_LABEL"
+			type="ModalSelect"
+			sql_title_table="#__sermondistributor_category"
+			sql_title_column="name"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=categories&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_HINT"
+			titleSelect="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_TITLESELECT"
+			iconSelect="icon-copy"
+			select="true"
+			edit="false"
+			clear="true"
+			onchange="form.submit()"
+			name="category"
+			label="COM_SERMONDISTRIBUTOR_SERMON_CATEGORY_LABEL"
 			multiple="false"
 			class="js-select-submit-on-change"
 		/>
 		<field
-			type="sermonsfiltersource"
-			name="source"
-			label="COM_SERMONDISTRIBUTOR_SERMON_SOURCE_LABEL"
+			type="ModalSelect"
+			sql_title_table="#__sermondistributor_series"
+			sql_title_column="name"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=series_list&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			hint="COM_SERMONDISTRIBUTOR_SERMON_SERIES_HINT"
+			titleSelect="COM_SERMONDISTRIBUTOR_SERMON_SERIES_TITLESELECT"
+			iconSelect="icon-copy"
+			select="true"
+			edit="false"
+			clear="true"
+			onchange="form.submit()"
+			name="series"
+			label="COM_SERMONDISTRIBUTOR_SERMON_SERIES_LABEL"
 			multiple="false"
 			class="js-select-submit-on-change"
 		/>
@@ -92,18 +85,10 @@
 			<option value="a.published DESC">JSTATUS_DESC</option>
 			<option value="a.name ASC">COM_SERMONDISTRIBUTOR_FILTER_NAME_ASCENDING</option>
 			<option value="a.name DESC">COM_SERMONDISTRIBUTOR_FILTER_NAME_DESCENDING</option>
-			<option value="g.name ASC">COM_SERMONDISTRIBUTOR_FILTER_PREACHER_ASCENDING</option>
-			<option value="g.name DESC">COM_SERMONDISTRIBUTOR_FILTER_PREACHER_DESCENDING</option>
+			<option value="g.name ASC">COM_SERMONDISTRIBUTOR_FILTER_CATEGORY_ASCENDING</option>
+			<option value="g.name DESC">COM_SERMONDISTRIBUTOR_FILTER_CATEGORY_DESCENDING</option>
 			<option value="h.name ASC">COM_SERMONDISTRIBUTOR_FILTER_SERIES_ASCENDING</option>
 			<option value="h.name DESC">COM_SERMONDISTRIBUTOR_FILTER_SERIES_DESCENDING</option>
-			<option value="a.short_description ASC">COM_SERMONDISTRIBUTOR_FILTER_SHORT_DESCRIPTION_ASCENDING</option>
-			<option value="a.short_description DESC">COM_SERMONDISTRIBUTOR_FILTER_SHORT_DESCRIPTION_DESCENDING</option>
-			<option value="category_title ASC">COM_SERMONDISTRIBUTOR_FILTER_SERMONS_CATEGORIES_ASCENDING</option>
-			<option value="category_title DESC">COM_SERMONDISTRIBUTOR_FILTER_SERMONS_CATEGORIES_DESCENDING</option>
-			<option value="a.link_type ASC">COM_SERMONDISTRIBUTOR_FILTER_DOWNLOAD_LINK_OPTION_ASCENDING</option>
-			<option value="a.link_type DESC">COM_SERMONDISTRIBUTOR_FILTER_DOWNLOAD_LINK_OPTION_DESCENDING</option>
-			<option value="a.source ASC">COM_SERMONDISTRIBUTOR_FILTER_FILE_SOURCE_ASCENDING</option>
-			<option value="a.source DESC">COM_SERMONDISTRIBUTOR_FILTER_FILE_SOURCE_DESCENDING</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>

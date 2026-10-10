@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		PreachersModel.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\Model;
+namespace JoomSermon\Component\Sermondistributor\Administrator\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -34,11 +34,11 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\User\User;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Input\Input;
-use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
+use JoomSermon\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
 use Joomla\CMS\Helper\TagsHelper;
-use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use TrueChristianChurch\Joomla\Utilities\ObjectHelper;
-use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use JoomSermon\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use JoomSermon\Joomla\Utilities\ObjectHelper;
+use JoomSermon\Joomla\Utilities\StringHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -88,7 +88,7 @@ class PreachersModel extends ListModel
 	 * @since   1.6
 	 * @throws  \Exception
 	 */
-	public function __construct($config = [], MVCFactoryInterface $factory = null)
+	public function __construct($config = [], ?MVCFactoryInterface $factory = null)
 	{
 		if (empty($config['filter_fields']))
 		{
@@ -99,8 +99,8 @@ class PreachersModel extends ListModel
 				'a.ordering','ordering',
 				'a.created_by','created_by',
 				'a.modified_by','modified_by',
-				'a.name','name',
-				'a.description','description'
+				'g.name','church',
+				'a.name','name'
 			);
 		}
 
@@ -123,20 +123,21 @@ class PreachersModel extends ListModel
 	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = $this->app;
+		$input = $this->app->getInput();
 
 		// Adjust the context to support modal layouts.
-		if ($layout = $app->input->get('layout'))
+		if ($layout = $input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
 
 		// Check if the form was submitted
-		$formSubmited = $app->input->post->get('form_submited');
+		$formSubmited = $input->post->get('form_submited');
 
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
 		if ($formSubmited)
 		{
-			$access = $app->input->post->get('access');
+			$access = $input->post->get('access');
 			$this->setState('filter.access', $access);
 		}
 
@@ -155,18 +156,18 @@ class PreachersModel extends ListModel
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
+		$church = $this->getUserStateFromRequest($this->context . '.filter.church', 'filter_church');
+		if ($formSubmited)
+		{
+			$church = $input->post->get('church');
+			$this->setState('filter.church', $church);
+		}
+
 		$name = $this->getUserStateFromRequest($this->context . '.filter.name', 'filter_name');
 		if ($formSubmited)
 		{
-			$name = $app->input->post->get('name');
+			$name = $input->post->get('name');
 			$this->setState('filter.name', $name);
-		}
-
-		$description = $this->getUserStateFromRequest($this->context . '.filter.description', 'filter_description');
-		if ($formSubmited)
-		{
-			$description = $app->input->post->get('description');
-			$this->setState('filter.description', $description);
 		}
 
 		// List state information.
@@ -232,6 +233,10 @@ class PreachersModel extends ListModel
 		// From the sermondistributor_item table
 		$query->from($db->quoteName('#__sermondistributor_preacher', 'a'));
 
+		// From the sermondistributor_church table.
+		$query->select($db->quoteName(['g.name','g.id'],['church_name','church_id']));
+		$query->join('LEFT', $db->quoteName('#__sermondistributor_church', 'g') . ' ON (' . $db->quoteName('a.church') . ' = ' . $db->quoteName('g.guid') . ')');
+
 		// Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published))
@@ -276,10 +281,27 @@ class PreachersModel extends ListModel
 			else
 			{
 				$search = $db->quote('%' . $db->escape($search) . '%');
-				$query->where('(a.name LIKE '.$search.' OR a.description LIKE '.$search.')');
+				$query->where('(a.name LIKE '.$search.' OR a.church LIKE '.$search.' OR g.name LIKE '.$search.')');
 			}
 		}
 
+		// Filter by Church.
+		$_church = $this->getState('filter.church');
+		if (is_numeric($_church))
+		{
+			if (is_float($_church))
+			{
+				$query->where('a.church = ' . (float) $_church);
+			}
+			else
+			{
+				$query->where('a.church = ' . (int) $_church);
+			}
+		}
+		elseif (StringHelper::check($_church))
+		{
+			$query->where('a.church = ' . $db->quote($db->escape($_church)));
+		}
 
 		// Add the list ordering clause.
 		$orderCol = $this->getState('list.ordering', 'a.id');
@@ -292,128 +314,6 @@ class PreachersModel extends ListModel
 		}
 
 		return $query;
-	}
-
-	/**
-	 * Method to get list export data.
-	 *
-	 * @param   array  $pks  The ids of the items to get
-	 * @param   JUser  $user  The user making the request
-	 *
-	 * @return mixed  An array of data items on success, false on failure.
-	 */
-	public function getExportData($pks, $user = null)
-	{
-		// setup the query
-		if (($pks_size = UtilitiesArrayHelper::check($pks)) !== false || 'bulk' === $pks)
-		{
-			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
-			$_export = true;
-			// Get the user object if not set.
-			if (!isset($user) || !ObjectHelper::check($user))
-			{
-				$user = $this->getCurrentUser();
-			}
-			// Create a new query object.
-			$db = $this->getDatabase();
-			$query = $db->getQuery(true);
-
-			// Select some fields
-			$query->select('a.*');
-
-			// From the sermondistributor_preacher table
-			$query->from($db->quoteName('#__sermondistributor_preacher', 'a'));
-			// The bulk export path
-			if ('bulk' === $pks)
-			{
-				$query->where('a.id > 0');
-			}
-			// A large array of ID's will not work out well
-			elseif ($pks_size > 500)
-			{
-				// Use lowest ID
-				$query->where('a.id >= ' . (int) min($pks));
-				// Use highest ID
-				$query->where('a.id <= ' . (int) max($pks));
-			}
-			// The normal default path
-			else
-			{
-				$query->where('a.id IN (' . implode(',',$pks) . ')');
-			}
-			// Implement View Level Access
-			if (!$user->authorise('core.options', 'com_sermondistributor'))
-			{
-				$groups = implode(',', $user->getAuthorisedViewLevels());
-				$query->where('a.access IN (' . $groups . ')');
-			}
-
-			// Order the results by ordering
-			$query->order('a.ordering  ASC');
-
-			// Load the items
-			$db->setQuery($query);
-			$db->execute();
-			if ($db->getNumRows())
-			{
-				$items = $db->loadObjectList();
-
-				// Set values to display correctly.
-				if (UtilitiesArrayHelper::check($items))
-				{
-					foreach ($items as $nr => &$item)
-					{
-						// Remove items the user can't access.
-						$access = ($user->authorise('preacher.access', 'com_sermondistributor.preacher.' . (int) $item->id) && $user->authorise('preacher.access', 'com_sermondistributor'));
-						if (!$access)
-						{
-							unset($items[$nr]);
-							continue;
-						}
-
-						// unset the values we don't want exported.
-						unset($item->asset_id);
-						unset($item->checked_out);
-						unset($item->checked_out_time);
-					}
-				}
-				// Add headers to items array.
-				$headers = $this->getExImPortHeaders();
-				if (ObjectHelper::check($headers))
-				{
-					array_unshift($items,$headers);
-				}
-				return $items;
-			}
-		}
-		return false;
-	}
-
-	/**
-	* Method to get header.
-	*
-	* @return mixed  An array of data items on success, false on failure.
-	*/
-	public function getExImPortHeaders()
-	{
-		// Get a db connection.
-		$db = Factory::getDbo();
-		// get the columns
-		$columns = $db->getTableColumns("#__sermondistributor_preacher");
-		if (UtilitiesArrayHelper::check($columns))
-		{
-			// remove the headers you don't import/export.
-			unset($columns['asset_id']);
-			unset($columns['checked_out']);
-			unset($columns['checked_out_time']);
-			$headers = new \stdClass();
-			foreach ($columns as $column => $type)
-			{
-				$headers->{$column} = $column;
-			}
-			return $headers;
-		}
-		return false;
 	}
 
 	/**
@@ -443,8 +343,8 @@ class PreachersModel extends ListModel
 		$id .= ':' . $this->getState('filter.ordering');
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.modified_by');
+		$id .= ':' . $this->getState('filter.church');
 		$id .= ':' . $this->getState('filter.name');
-		$id .= ':' . $this->getState('filter.description');
 
 		return parent::getStoreId($id);
 	}
@@ -494,12 +394,13 @@ class PreachersModel extends ListModel
 	}
 
 	/**
-	 * Build an SQL query to checkin all items left checked out longer then a set time.
+	 * Build an SQL query to check in all items left checked out longer then a set time.
 	 *
-	 * @return bool
+	 * @return void
+	 * @throws \DateMalformedStringException
 	 * @since 3.2.0
 	 */
-	protected function checkInNow(): bool
+	protected function checkInNow(): void
 	{
 		// Get set check in time
 		$time = ComponentHelper::getParams('com_sermondistributor')->get('check_in');
@@ -513,37 +414,36 @@ class PreachersModel extends ListModel
 			$query->select('*');
 			$query->from($db->quoteName('#__sermondistributor_preacher'));
 			// Only select items that are checked out.
-			$query->where($db->quoteName('checked_out') . '!=0');
+			$query->where($db->quoteName('checked_out') . ' >= 0');
+			// Query only to see if we have a rows
 			$db->setQuery($query, 0, 1);
 			$db->execute();
 			if ($db->getNumRows())
 			{
-				// Get Yesterdays date.
+				// Get target date in the past.
 				$date = Factory::getDate()->modify($time)->toSql();
 				// Reset query.
 				$query = $db->getQuery(true);
 
 				// Fields to update.
-				$fields = array(
-					$db->quoteName('checked_out_time') . '=\'0000-00-00 00:00:00\'',
-					$db->quoteName('checked_out') . '=0'
-				);
+				$fields = [
+					$db->quoteName('checked_out_time') . ' = NULL',
+					$db->quoteName('checked_out') . ' = NULL'
+				];
 
 				// Conditions for which records should be updated.
-				$conditions = array(
-					$db->quoteName('checked_out') . '!=0', 
-					$db->quoteName('checked_out_time') . '<\''.$date.'\''
-				);
+				$conditions = [
+					$db->quoteName('checked_out') . ' = 0 OR ' . $db->quoteName('checked_out') . ' > 0',
+					$db->quoteName('checked_out_time') . ' < ' . $db->quote($date)
+				];
 
 				// Check table.
 				$query->update($db->quoteName('#__sermondistributor_preacher'))->set($fields)->where($conditions); 
 
 				$db->setQuery($query);
 
-				return $db->execute();
+				$db->execute();
 			}
 		}
-
-		return false;
 	}
 }

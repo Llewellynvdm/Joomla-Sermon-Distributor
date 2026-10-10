@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form
-	addruleprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Rule"
-	addfieldprefix="TrueChristianChurch\Component\Sermondistributor\Administrator\Field"
+	addruleprefix="JoomSermon\Component\Sermondistributor\Administrator\Rule"
+	addfieldprefix="JoomSermon\Component\Sermondistributor\Administrator\Field"
 >
 	<config>
 		<inlinehelp button="show"/>
@@ -131,32 +131,208 @@
 			message="COM_SERMONDISTRIBUTOR_PREACHER_NAME_MESSAGE"
 			hint="COM_SERMONDISTRIBUTOR_PREACHER_NAME_HINT"
 		/>
-		<!-- Description Field. Type: Editor. (joomla) -->
+		<!-- Description Field. Type: Textarea. (joomla) -->
 		<field
-			type="editor"
+			type="textarea"
 			name="description"
 			label="COM_SERMONDISTRIBUTOR_PREACHER_DESCRIPTION_LABEL"
-			width="100%"
-			height="500"
-			cols="13"
-			rows="50"
-			buttons="false"
-			filter="safehtml"
+			rows="11"
+			cols="10"
+			description="COM_SERMONDISTRIBUTOR_PREACHER_DESCRIPTION_DESCRIPTION"
+			class="text_area span12"
+			filter="HTML"
+			hint="COM_SERMONDISTRIBUTOR_PREACHER_DESCRIPTION_HINT"
 		/>
-		<!-- Website Field. Type: Url. (joomla) -->
+		<!-- Church Field. Type: Modalselect. (custom) -->
 		<field
-			type="url"
-			name="website"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_LABEL"
-			size="60"
-			maxlength="150"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_DESCRIPTION"
+			type="ModalSelect"
+			name="church"
+			label="COM_SERMONDISTRIBUTOR_PREACHER_CHURCH_LABEL"
+			sql_title_table="#__sermondistributor_church"
+			sql_title_column="name"
+			data-key-name="guid"
+			sql_title_key="guid"
+			urlSelect="index.php?option=com_sermondistributor&amp;view=churches&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			urlNew="index.php?option=com_sermondistributor&amp;task=church.add&amp;layout=modal&amp;tmpl=component"
+			urlEdit="index.php?option=com_sermondistributor&amp;task=church.edit&amp;guid={id}&amp;layout=modal&amp;tmpl=component&amp;titleKey=guid"
+			titleSelect="COM_SERMONDISTRIBUTOR_PREACHER_CHURCH_TITLESELECT"
+			titleNew="COM_SERMONDISTRIBUTOR_PREACHER_CHURCH_TITLENEW"
+			titleEdit="COM_SERMONDISTRIBUTOR_PREACHER_CHURCH_TITLEEDIT"
+			iconSelect="icon-copy"
+			select="true"
+			new="true"
+			edit="true"
+			clear="true"
+			required="false"
+			class="input-large"
+			hint="COM_SERMONDISTRIBUTOR_PREACHER_CHURCH_HINT"
+		/>
+		<!-- Guid Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="guid"
+			label="COM_SERMONDISTRIBUTOR_PREACHER_GUID_LABEL"
+			size="40"
+			maxlength="40"
+			description="COM_SERMONDISTRIBUTOR_PREACHER_GUID_DESCRIPTION"
 			class="text_area"
-			filter="url"
-			validated="url"
-			scheme="http,https"
-			message="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_MESSAGE"
-			hint="COM_SERMONDISTRIBUTOR_PREACHER_WEBSITE_HINT"
+			readonly="true"
+			filter="CMD"
+			validate="guid"
+			hint="COM_SERMONDISTRIBUTOR_PREACHER_GUID_HINT"
+		/>
+		<!-- Note_file_vdm_display Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_file_vdm_display" description="COM_SERMONDISTRIBUTOR_PREACHER_NOTE_FILE_VDM_DISPLAY_DESCRIPTION" class="uk-clearfix uk-width-1-1 uk-margin note_file_vdm_display" />
+		<!-- Note_file_vdm_uploader Field. Type: Note. A None Database Field. (joomla) -->
+		<field type="note" name="note_file_vdm_uploader" description="COM_SERMONDISTRIBUTOR_PREACHER_NOTE_FILE_VDM_UPLOADER_DESCRIPTION" class="note_file_vdm_uploader" showon="file_type!:" />
+		<!-- File_type Field. Type: Entityfiletypes. (custom) -->
+		<field
+			type="entityfiletypes"
+			name="file_type"
+			label="COM_SERMONDISTRIBUTOR_PREACHER_FILE_TYPE_LABEL"
+			class="list_class"
+			layout="joomla.form.field.list-fancy-select"
+			multiple="false"
+			required="false"
+			button="false"
+			entity="preacher"
+		/>
+		<!-- Addresses Field. Type: Subform. (joomla) -->
+		<field
+			type="subform"
+			name="addresses"
+			label="COM_SERMONDISTRIBUTOR_PREACHER_ADDRESSES_LABEL"
+			layout="joomla.form.field.subform.repeatable"
+			multiple="true"
+			buttons="add,remove"
+			icon="list"
+			max="10"
+			min="0">
+			<form hidden="true" name="list_addresses_modal" repeat="true">
+				<!-- Guid Field. Type: Hidden. (joomla) -->
+				<field
+					type="hidden"
+					name="guid"
+					default="0"
+					filter="STRING"
+				/>
+				<!-- Type Field. Type: Addresstype. (custom) -->
+				<field
+					type="addresstype"
+					name="type"
+					label="COM_SERMONDISTRIBUTOR_PREACHER_TYPE_LABEL"
+					description="COM_SERMONDISTRIBUTOR_PREACHER_TYPE_DESCRIPTION"
+					class="list_class"
+					layout="joomla.form.field.list-fancy-select"
+					multiple="false"
+					required="true"
+					button="false"
+					entity="preacher"
+				/>
+				<!-- Line_one Field. Type: Text. (joomla) -->
+				<field
+					type="text"
+					name="line_one"
+					label="COM_SERMONDISTRIBUTOR_PREACHER_LINE_ONE_LABEL"
+					description="COM_SERMONDISTRIBUTOR_PREACHER_LINE_ONE_DESCRIPTION"
+					class="text_area"
+					required="true"
+					filter="STRING"
+					message="COM_SERMONDISTRIBUTOR_PREACHER_LINE_ONE_MESSAGE"
+					hint="COM_SERMONDISTRIBUTOR_PREACHER_LINE_ONE_HINT"
+				/>
+				<!-- Line_two Field. Type: Text. (joomla) -->
+				<field
+					type="text"
+					name="line_two"
+					label="COM_SERMONDISTRIBUTOR_PREACHER_LINE_TWO_LABEL"
+					description="COM_SERMONDISTRIBUTOR_PREACHER_LINE_TWO_DESCRIPTION"
+					class="text_area"
+					required="false"
+					filter="STRING"
+					hint="COM_SERMONDISTRIBUTOR_PREACHER_LINE_TWO_HINT"
+				/>
+				<!-- Country Field. Type: Countries. (custom) -->
+				<field
+					type="countries"
+					name="country"
+					label="COM_SERMONDISTRIBUTOR_PREACHER_COUNTRY_LABEL"
+					description="COM_SERMONDISTRIBUTOR_PREACHER_COUNTRY_DESCRIPTION"
+					message="COM_SERMONDISTRIBUTOR_PREACHER_COUNTRY_MESSAGE"
+					class="list_class"
+					layout="joomla.form.field.list-fancy-select"
+					multiple="false"
+					required="true"
+					button="false"
+					entity="preacher"
+				/>
+				<!-- State Field. Type: List. (joomla) -->
+				<field
+					type="list"
+					name="state"
+					label="COM_SERMONDISTRIBUTOR_PREACHER_STATE_LABEL"
+					description="COM_SERMONDISTRIBUTOR_PREACHER_STATE_DESCRIPTION"
+					class="list_class"
+					layout="joomla.form.field.list-fancy-select"
+					multiple="false"
+					required="true">
+					<!-- Option Set. -->
+					<option value="">
+						COM_SERMONDISTRIBUTOR_PREACHER_SELECT_A_COUNTRY</option>
+				</field>
+				<!-- City Field. Type: List. (joomla) -->
+				<field
+					type="list"
+					name="city"
+					label="COM_SERMONDISTRIBUTOR_PREACHER_CITY_LABEL"
+					description="COM_SERMONDISTRIBUTOR_PREACHER_CITY_DESCRIPTION"
+					class="list_class"
+					layout="joomla.form.field.list-fancy-select"
+					multiple="false">
+					<!-- Option Set. -->
+					<option value="">
+						COM_SERMONDISTRIBUTOR_PREACHER_SELECT_A_STATE</option>
+				</field>
+				<!-- Postal Field. Type: Text. (joomla) -->
+				<field
+					type="text"
+					name="postal"
+					label="COM_SERMONDISTRIBUTOR_PREACHER_POSTAL_LABEL"
+					description="COM_SERMONDISTRIBUTOR_PREACHER_POSTAL_DESCRIPTION"
+					class="text_area"
+					required="false"
+					hint="COM_SERMONDISTRIBUTOR_PREACHER_POSTAL_HINT"
+				/>
+			</form>
+		</field>
+		<!-- Languages Field. Type: Lang. (custom) -->
+		<field
+			type="lang"
+			name="languages"
+			label="COM_SERMONDISTRIBUTOR_PREACHER_LANGUAGES_LABEL"
+			class="list_class"
+			layout="joomla.form.field.list-fancy-select"
+			multiple="true"
+			default="en-GB"
+			required="true"
+			button="true"
+		/>
+		<!-- Phone Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="phone"
+			label="COM_SERMONDISTRIBUTOR_PREACHER_PHONE_LABEL"
+			size="10"
+			maxlength="50"
+			default=""
+			description="COM_SERMONDISTRIBUTOR_PREACHER_PHONE_DESCRIPTION"
+			class="text_area"
+			readonly="false"
+			disabled="false"
+			required="true"
+			validated="tel"
+			message="COM_SERMONDISTRIBUTOR_PREACHER_PHONE_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_PREACHER_PHONE_HINT"
 		/>
 		<!-- Email Field. Type: Text. (joomla) -->
 		<field
@@ -167,18 +343,28 @@
 			maxlength="50"
 			description="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_DESCRIPTION"
 			class="text_area"
-			required="false"
+			required="true"
 			filter="STRING"
 			message="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_MESSAGE"
 			hint="COM_SERMONDISTRIBUTOR_PREACHER_EMAIL_HINT"
 		/>
-		<!-- Icon Field. Type: Media. (joomla) -->
+		<!-- Contactname Field. Type: Text. (joomla) -->
 		<field
-			type="media"
-			name="icon"
-			label="COM_SERMONDISTRIBUTOR_PREACHER_ICON_LABEL"
-			description="COM_SERMONDISTRIBUTOR_PREACHER_ICON_DESCRIPTION"
-			directory=""
+			type="text"
+			name="contactname"
+			label="COM_SERMONDISTRIBUTOR_PREACHER_CONTACTNAME_LABEL"
+			size="10"
+			maxlength="50"
+			default=""
+			description="COM_SERMONDISTRIBUTOR_PREACHER_CONTACTNAME_DESCRIPTION"
+			class="text_area"
+			readonly="false"
+			disabled="false"
+			required="true"
+			filter="STRING"
+			message="COM_SERMONDISTRIBUTOR_PREACHER_CONTACTNAME_MESSAGE"
+			hint="COM_SERMONDISTRIBUTOR_PREACHER_CONTACTNAME_HINT"
+			autocomplete="on"
 		/>
 		<!-- Alias Field. Type: Text. (joomla) -->
 		<field

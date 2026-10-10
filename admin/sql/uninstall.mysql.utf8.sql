@@ -1,8 +1,22 @@
-DROP TABLE IF EXISTS `#__sermondistributor_preacher`;
 DROP TABLE IF EXISTS `#__sermondistributor_sermon`;
+DROP TABLE IF EXISTS `#__sermondistributor_preacher`;
+DROP TABLE IF EXISTS `#__sermondistributor_church`;
+DROP TABLE IF EXISTS `#__sermondistributor_category`;
 DROP TABLE IF EXISTS `#__sermondistributor_series`;
-DROP TABLE IF EXISTS `#__sermondistributor_statistic`;
-DROP TABLE IF EXISTS `#__sermondistributor_external_source`;
-DROP TABLE IF EXISTS `#__sermondistributor_local_listing`;
-DROP TABLE IF EXISTS `#__sermondistributor_help_document`;
+DROP TABLE IF EXISTS `#__sermondistributor_tag`;
+DROP TABLE IF EXISTS `#__sermondistributor_address`;
+DROP TABLE IF EXISTS `#__sermondistributor_language`;
+DROP TABLE IF EXISTS `#__sermondistributor_file`;
+DROP TABLE IF EXISTS `#__sermondistributor_address_type`;
+DROP TABLE IF EXISTS `#__sermondistributor_file_type`;
+DROP TABLE IF EXISTS `#__sermondistributor_region`;
+DROP TABLE IF EXISTS `#__sermondistributor_subregion`;
+DROP TABLE IF EXISTS `#__sermondistributor_country`;
+DROP TABLE IF EXISTS `#__sermondistributor_state`;
+DROP TABLE IF EXISTS `#__sermondistributor_city`;
+DROP TABLE IF EXISTS `#__sermondistributor_timezone`;
+DROP TABLE IF EXISTS `#__sermondistributor_sermon_tag`;
+DROP TABLE IF EXISTS `#__sermondistributor_sermon_language`;
+DROP TABLE IF EXISTS `#__sermondistributor_preacher_language`;
+DROP TABLE IF EXISTS `#__sermondistributor_church_elder`;
 

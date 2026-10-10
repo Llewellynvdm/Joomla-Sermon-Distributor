@@ -10,18 +10,18 @@
 
 /------------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		5.0.x
-	@created		22nd October, 2015
+	@version		6.0.0
+	@created		9th July, 2026
 	@package		Sermon Distributor
 	@subpackage		AjaxController.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
-	@copyright		Copyright (C) 2015. All Rights Reserved
+	@author			Llewellyn van der Merwe <https://dev.vdm.io/>	
+	@copyright		Copyright (C) 2026. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
 
-	A sermon distributor that links to Dropbox. 
+	A sermon distributor that effectively manages sermons. 
 
 /----------------------------------------------------------------------------------------------------------------------------------*/
-namespace TrueChristianChurch\Component\Sermondistributor\Administrator\Controller;
+namespace JoomSermon\Component\Sermondistributor\Administrator\Controller;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\CMSApplication;
@@ -62,12 +62,10 @@ class AjaxController extends BaseController
 		$this->app->setHeader('Content-Disposition','attachment;filename="getajax.json"');
 		$this->app->setHeader('Access-Control-Allow-Origin', '*');
 		// load the tasks
-		$this->registerTask('isNew', 'ajax');
-		$this->registerTask('isRead', 'ajax');
-		$this->registerTask('getBuildTable', 'ajax');
-		$this->registerTask('getSourceStatus', 'ajax');
-		$this->registerTask('getCronPath', 'ajax');
-		$this->registerTask('updateLocalListingExternal', 'ajax');
+		$this->registerTask('getFileTypeDetails', 'ajax');
+		$this->registerTask('uploadFile', 'ajax');
+		$this->registerTask('deleteFile', 'ajax');
+		$this->registerTask('displayFiles', 'ajax');
 	}
 
     /**
@@ -80,7 +78,7 @@ class AjaxController extends BaseController
 		// get the user for later use
 		$user         = $this->app->getIdentity();
 		// get the input values
-		$jinput       = $this->input ?? $this->app->input;
+		$jinput       = $this->input ?? (method_exists($this->app, 'getInput') ? $this->app->getInput() : $this->app->input);
 		// check if we should return raw (DEFAULT TRUE SINCE J4)
 		$returnRaw    = $jinput->get('raw', true, 'BOOLEAN');
 		// return to a callback function
@@ -94,16 +92,17 @@ class AjaxController extends BaseController
 			$task = $this->getTask();
 			switch($task)
 			{
-				case 'isNew':
+				case 'getFileTypeDetails':
 					try
 					{
-						$noticeValue = $jinput->get('notice', NULL, 'STRING');
-						if($noticeValue && $user->id != 0)
+						$guidValue = $jinput->get('guid', NULL, 'STRING');
+						$targetValue = $jinput->get('target', NULL, 'BASE64');
+						if($guidValue && $user->id != 0 && $targetValue)
 						{
 							$ajaxModule = $this->getModel('ajax', 'Administrator');
 							if ($ajaxModule)
 							{
-								$result = $ajaxModule->isNew($noticeValue);
+								$result = $ajaxModule->getFileTypeDetails($guidValue, $targetValue);
 							}
 							else
 							{
@@ -143,16 +142,18 @@ class AjaxController extends BaseController
 						}
 					}
 				break;
-				case 'isRead':
+				case 'uploadFile':
 					try
 					{
-						$noticeValue = $jinput->get('notice', NULL, 'STRING');
-						if($noticeValue && $user->id != 0)
+						$guidValue = $jinput->get('guid', NULL, 'STRING');
+						$entityValue = $jinput->get('entity', NULL, 'STRING');
+						$targetValue = $jinput->get('target', NULL, 'BASE64');
+						if($guidValue && $user->id != 0 && $entityValue && $targetValue)
 						{
 							$ajaxModule = $this->getModel('ajax', 'Administrator');
 							if ($ajaxModule)
 							{
-								$result = $ajaxModule->isRead($noticeValue);
+								$result = $ajaxModule->uploadFile($guidValue, $entityValue, $targetValue);
 							}
 							else
 							{
@@ -192,17 +193,16 @@ class AjaxController extends BaseController
 						}
 					}
 				break;
-				case 'getBuildTable':
+				case 'deleteFile':
 					try
 					{
-						$idNameValue = $jinput->get('idName', NULL, 'WORD');
-						$ojectValue = $jinput->get('oject', NULL, 'STRING');
-						if($idNameValue && $user->id != 0 && $ojectValue)
+						$guidValue = $jinput->get('guid', NULL, 'STRING');
+						if($guidValue && $user->id != 0)
 						{
 							$ajaxModule = $this->getModel('ajax', 'Administrator');
 							if ($ajaxModule)
 							{
-								$result = $ajaxModule->getBuildTable($idNameValue, $ojectValue);
+								$result = $ajaxModule->deleteFile($guidValue);
 							}
 							else
 							{
@@ -242,117 +242,17 @@ class AjaxController extends BaseController
 						}
 					}
 				break;
-				case 'getSourceStatus':
+				case 'displayFiles':
 					try
 					{
-						$idValue = $jinput->get('id', NULL, 'INT');
-						if($idValue && $user->id != 0)
+						$entityValue = $jinput->get('entity', NULL, 'STRING');
+						$targetValue = $jinput->get('target', NULL, 'BASE64');
+						if($entityValue && $user->id != 0 && $targetValue)
 						{
 							$ajaxModule = $this->getModel('ajax', 'Administrator');
 							if ($ajaxModule)
 							{
-								$result = $ajaxModule->getSourceStatus($idValue);
-							}
-							else
-							{
-								$result = ['error' => 'There was an error! [149]'];
-							}
-						}
-						else
-						{
-							$result = ['error' => 'There was an error! [149]'];
-						}
-						if($callback)
-						{
-							echo $callback . "(".json_encode($result).");";
-						}
-						elseif($returnRaw)
-						{
-							echo json_encode($result);
-						}
-						else
-						{
-							echo "(".json_encode($result).");";
-						}
-					}
-					catch(\Exception $e)
-					{
-						if($callback)
-						{
-							echo $callback."(".json_encode($e).");";
-						}
-						elseif($returnRaw)
-						{
-							echo json_encode($e);
-						}
-						else
-						{
-							echo "(".json_encode($e).");";
-						}
-					}
-				break;
-				case 'getCronPath':
-					try
-					{
-						$getTypeValue = $jinput->get('getType', NULL, 'WORD');
-						if($getTypeValue && $user->id != 0)
-						{
-							$ajaxModule = $this->getModel('ajax', 'Administrator');
-							if ($ajaxModule)
-							{
-								$result = $ajaxModule->getCronPath($getTypeValue);
-							}
-							else
-							{
-								$result = ['error' => 'There was an error! [149]'];
-							}
-						}
-						else
-						{
-							$result = ['error' => 'There was an error! [149]'];
-						}
-						if($callback)
-						{
-							echo $callback . "(".json_encode($result).");";
-						}
-						elseif($returnRaw)
-						{
-							echo json_encode($result);
-						}
-						else
-						{
-							echo "(".json_encode($result).");";
-						}
-					}
-					catch(\Exception $e)
-					{
-						if($callback)
-						{
-							echo $callback."(".json_encode($e).");";
-						}
-						elseif($returnRaw)
-						{
-							echo json_encode($e);
-						}
-						else
-						{
-							echo "(".json_encode($e).");";
-						}
-					}
-				break;
-				case 'updateLocalListingExternal':
-					try
-					{
-						$idValue = $jinput->get('id', NULL, 'INT');
-						$targetValue = $jinput->get('target', NULL, 'INT');
-						$typeValue = $jinput->get('type', NULL, 'INT');
-						$sleutelValue = $jinput->get('sleutel', NULL, 'CMD');
-						if($idValue && $user->id != 0 && $targetValue && $typeValue && $sleutelValue)
-						{
-							$ajaxModule = $this->getModel('ajax', 'Administrator');
-							if ($ajaxModule)
-							{
-								$result = $ajaxModule->updateLocalListingExternal($idValue, $targetValue, $typeValue, $sleutelValue);
+								$result = $ajaxModule->displayFiles($entityValue, $targetValue);
 							}
 							else
 							{
